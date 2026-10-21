@@ -233,3 +233,13 @@ footer {font-size:12px;line-height:1.8;margin-top:32px;padding-top:14px;border-t
 .brand-stamp {display:flex;flex-wrap:nowrap;justify-content:flex-end;align-items:center;gap:5px;margin-top:10px;font-family:var(--font-brand);font-size:17px;line-height:1;color:var(--muted);opacity:.85;pointer-events:none;user-select:none}
 .brand-stamp span {display:inline-grid;place-items:center;width:18px;height:18px;border:1px solid var(--border);border-radius:3px;background:var(--accent);color:var(--ink);font-family:var(--font-reading);font-size:13px}
 .phone-summary>.brand-stamp {grid-column:2/-1;flex-direction:row;align-self:center;margin-top:0;white-space:nowrap}
+/* Phone header: language switch beside the title, small links in one row. */
+@media(max-width:680px) {
+  .site-header {position:relative;display:block}
+  .site-header .brand {padding-right:118px}
+  .site-header .header-actions {margin:12px 0 0;justify-content:flex-start;gap:8px}
+  #language-switch {position:absolute;top:4px;right:0}
+  .header-link {padding:5px 9px;font-size:11px}
+}
+.strategy-graph[data-compact] .graph-node strong {font-size:12px;line-height:17px}
+.strategy-graph[data-compact] .graph-node span {font-size:10px;line-height:15px}

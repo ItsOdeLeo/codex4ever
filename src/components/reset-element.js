@@ -10,7 +10,7 @@ export function resetOpportunityLayout(width=Infinity) {
   return {stacked,height:stacked ? 48 : 32};
 }
 
-export function renderResetOpportunity(opportunity,{timeZone,escape,locale='zh-CN',compact=false,width=Infinity}) {
+export function renderResetOpportunity(opportunity,{timeZone,escape,locale='zh-CN',compact=false,width=Infinity,dateOnly=false}) {
   const t=translator(locale);
   if(!opportunity)return '';
   const time=new Intl.DateTimeFormat(uiLocale(locale),{timeZone,month:uiLocale(locale)==='zh-CN' ? 'numeric' : 'short',
@@ -21,7 +21,7 @@ export function renderResetOpportunity(opportunity,{timeZone,escape,locale='zh-C
   const layout=resetOpportunityLayout(width);
   const day=compact ? new Intl.DateTimeFormat(uiLocale(locale),{timeZone,month:'2-digit',day:'2-digit'}).format(new Date(opportunity.until)) : null;
   const clock=compact ? new Intl.DateTimeFormat('en-GB',{timeZone,hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(new Date(opportunity.until)) : null;
-  const content=compact ? `<span class="phase-probability-value">${probability(opportunity.probability)}%</span><span class="phase-probability-until"><time datetime="${escape(opportunity.until)}"><span>${escape(day)}</span> <span>${escape(clock)}</span></time></span>`
+  const content=compact ? `<span class="phase-probability-value">${probability(opportunity.probability)}%</span><span class="phase-probability-until"><time datetime="${escape(opportunity.until)}"><span>${escape(day)}</span>${dateOnly ? '' : ` <span>${escape(clock)}</span>`}</time></span>`
     : `<span>${fullLabel}</span><span class="phase-probability-until">${escape(t('{time}之前',{time:until}))}</span>`;
   return `<small class="reset-element phase-reset-opportunity" data-reset-element="${sequence>=2 ? 2 : 1}" data-reset-opportunity data-next-extra-sequence="${sequence}" data-probability="${opportunity.probability}" ${compact ? `data-compact-probability data-cutoff-layout="${layout.stacked ? 'stacked' : 'inline'}"` : ''} title="${escape(fullLabel+' · '+t('截至 {time}；以本段开始前未再发生额外reset为条件{renewal}',{time:until,renewal:opportunity.previousExtraResetAt ? t('，从最近选择的额外reset重新计时') : ''}))}">${content}</small>`;
 }

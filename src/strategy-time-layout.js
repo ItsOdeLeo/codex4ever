@@ -12,6 +12,8 @@ import { timelineUsagePhases } from './usage-timeline-phases.js';
 const round = value => Number(value.toFixed(1));
 // Below this timeline width the label gutter folds into captions above rows.
 export const COMPACT_TIMELINE_WIDTH=480;
+// Phone event cards: narrow enough that two share a row.
+const COMPACT_CARD_WIDTH=112;
 
 /** Place the solved policy on a shared date axis, without changing decisions. */
 export function layoutTimeStrategy(result, { prediction = null, viewportWidth,displayEndHours:fixedEndHours=null,locale='zh-CN' } = {}) {
@@ -156,7 +158,7 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
   const annotations = [];
   const pointIndex = hours => points.findIndex(point => Math.abs(point.hours - hours) < 1e-6);
   const card = (hours, node, kind) => annotations.push({ ...node, anchorX: axis.xAtHours(hours),
-    atHours: hours, edgeKind: kind, width: Math.min(node.width??190,plotLabelWidth), height: 64,
+    atHours: hours, edgeKind: kind, width: Math.min(compact ? COMPACT_CARD_WIDTH : node.width??190,plotLabelWidth), height: 64,
     from: `decision:${Math.max(0, pointIndex(hours))}` });
   const expires = reset => t('{date} 24:00到期（估算）',{date:reset.expiresOn.slice(5).replace('-', '/')});
   const scenario=result.forecastScenario;

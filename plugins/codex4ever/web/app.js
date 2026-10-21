@@ -3766,7 +3766,7 @@ function resetOpportunityLayout(width = Infinity) {
   const stacked = width < 80;
   return { stacked, height: stacked ? 48 : 32 };
 }
-function renderResetOpportunity(opportunity, { timeZone: timeZone2, escape: escape3, locale = "zh-CN", compact = false, width = Infinity }) {
+function renderResetOpportunity(opportunity, { timeZone: timeZone2, escape: escape3, locale = "zh-CN", compact = false, width = Infinity, dateOnly = false }) {
   const t2 = translator(locale);
   if (!opportunity) return "";
   const time = new Intl.DateTimeFormat(uiLocale(locale), {
@@ -3783,7 +3783,7 @@ function renderResetOpportunity(opportunity, { timeZone: timeZone2, escape: esca
   const layout = resetOpportunityLayout(width);
   const day = compact ? new Intl.DateTimeFormat(uiLocale(locale), { timeZone: timeZone2, month: "2-digit", day: "2-digit" }).format(new Date(opportunity.until)) : null;
   const clock = compact ? new Intl.DateTimeFormat("en-GB", { timeZone: timeZone2, hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date(opportunity.until)) : null;
-  const content = compact ? `<span class="phase-probability-value">${probability(opportunity.probability)}%</span><span class="phase-probability-until"><time datetime="${escape3(opportunity.until)}"><span>${escape3(day)}</span> <span>${escape3(clock)}</span></time></span>` : `<span>${fullLabel}</span><span class="phase-probability-until">${escape3(t2("{time}\u4E4B\u524D", { time: until }))}</span>`;
+  const content = compact ? `<span class="phase-probability-value">${probability(opportunity.probability)}%</span><span class="phase-probability-until"><time datetime="${escape3(opportunity.until)}"><span>${escape3(day)}</span>${dateOnly ? "" : ` <span>${escape3(clock)}</span>`}</time></span>` : `<span>${fullLabel}</span><span class="phase-probability-until">${escape3(t2("{time}\u4E4B\u524D", { time: until }))}</span>`;
   return `<small class="reset-element phase-reset-opportunity" data-reset-element="${sequence >= 2 ? 2 : 1}" data-reset-opportunity data-next-extra-sequence="${sequence}" data-probability="${opportunity.probability}" ${compact ? `data-compact-probability data-cutoff-layout="${layout.stacked ? "stacked" : "inline"}"` : ""} title="${escape3(fullLabel + " \xB7 " + t2("\u622A\u81F3 {time}\uFF1B\u4EE5\u672C\u6BB5\u5F00\u59CB\u524D\u672A\u518D\u53D1\u751F\u989D\u5916reset\u4E3A\u6761\u4EF6{renewal}", { time: until, renewal: opportunity.previousExtraResetAt ? t2("\uFF0C\u4ECE\u6700\u8FD1\u9009\u62E9\u7684\u989D\u5916reset\u91CD\u65B0\u8BA1\u65F6") : "" }))}">${content}</small>`;
 }
 var resetActionCopy = {
@@ -3877,6 +3877,7 @@ function timelineUsagePhases(phases, xAtHours) {
 // src/strategy-time-layout.js
 var round4 = (value) => Number(value.toFixed(1));
 var COMPACT_TIMELINE_WIDTH = 480;
+var COMPACT_CARD_WIDTH = 112;
 function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayEndHours: fixedEndHours = null, locale = "zh-CN" } = {}) {
   const t2 = translator(locale);
   if (!result.predictionEnabled) prediction = null;
@@ -4085,7 +4086,7 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
     anchorX: axis.xAtHours(hours),
     atHours: hours,
     edgeKind: kind,
-    width: Math.min(node.width ?? 190, plotLabelWidth),
+    width: Math.min(compact ? COMPACT_CARD_WIDTH : node.width ?? 190, plotLabelWidth),
     height: 64,
     from: `decision:${Math.max(0, pointIndex(hours))}`
   });
@@ -4352,7 +4353,7 @@ function renderPhaseControl(phase, { timeZone: timeZone2, escape: escape3, local
   const review = phase.stageReason === "if-no-extra-reset-after-48h" ? t2("\u82E5\u4E24\u5929\u540E\u4ECD\u672A\u989D\u5916 reset") : phase.stageReason === "if-no-extra-reset-at-review" ? t2("\u82E5\u4ECD\u672A\u989D\u5916 reset") : "";
   const detail = phase.reason === "no-resource" ? t2("\u6682\u505C") : usageRateDetail(phase.baselineDailyPercent, phase.dailyPercent, locale);
   const labelHeight = phase.labelHeight ?? (phase.nextResetOpportunity ? 36 + resetOpportunityLayout(phase.width).height : 34);
-  return `<div class="phase-controls" data-phase-start-at="${escape3(phase.startAt)}" data-phase-daily="${phase.dailyPercent}" data-phase-baseline="${phase.baselineDailyPercent}" ${quotaLabel ? "data-quota-label" : ""} title="${escape3([review, detail].filter(Boolean).join(" \xB7 "))}" style="${position2(phase)}${quotaLabel ? `;--phase-label-height:${labelHeight}px` : ""}">${review && !quotaLabel ? `<small class="review-condition">${review}</small>` : ""}${label}${tooNarrow || phase.compact && phase.width < COMPACT_CHANCE_WIDTH ? "" : renderResetOpportunity(phase.nextResetOpportunity, { timeZone: timeZone2, escape: escape3, locale, compact: quotaLabel, width: phase.width })}</div>`;
+  return `<div class="phase-controls" data-phase-start-at="${escape3(phase.startAt)}" data-phase-daily="${phase.dailyPercent}" data-phase-baseline="${phase.baselineDailyPercent}" ${quotaLabel ? "data-quota-label" : ""} title="${escape3([review, detail].filter(Boolean).join(" \xB7 "))}" style="${position2(phase)}${quotaLabel ? `;--phase-label-height:${labelHeight}px` : ""}">${review && !quotaLabel ? `<small class="review-condition">${review}</small>` : ""}${label}${tooNarrow || phase.compact && phase.width < COMPACT_CHANCE_WIDTH ? "" : renderResetOpportunity(phase.nextResetOpportunity, { timeZone: timeZone2, escape: escape3, locale, compact: quotaLabel, width: phase.width, dateOnly: !!phase.compact })}</div>`;
 }
 function renderStrategyNode(node, escape3, locale = "zh-CN") {
   const t2 = translator(locale);
