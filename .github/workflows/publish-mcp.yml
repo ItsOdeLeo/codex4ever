@@ -1,0 +1,26 @@
+# Publishes server.json to the official MCP Registry. Run it manually after the
+# matching npm version is live; GitHub OIDC proves the io.github.ItsOdeLeo
+# namespace, so no token or secret is needed.
+name: Publish to MCP Registry
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install mcp-publisher
+        run: |
+          curl -fsSL "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_linux_amd64.tar.gz" | tar xz mcp-publisher
+      - name: Check the npm version is live
+        run: |
+          version=$(node -p "require('./server.json').version")
+          test "$(npm view "codex4ever@$version" version)" = "$version"
+      - run: ./mcp-publisher login github-oidc
+      - run: ./mcp-publisher publish
