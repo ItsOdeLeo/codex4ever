@@ -33,6 +33,7 @@ var english = {
   "\u89C4\u5212\u63A5\u4E0B\u6765\u600E\u4E48\u7528\uFF0C\u4EC0\u4E48\u65F6\u5019\u8865\u7ED9\u3002": "Plan your usage and your next reset.",
   "OpenAI Codex \u7684\u975E\u5B98\u65B9\u53EF\u89C6\u5316\u7528\u91CF\u89C4\u5212\u5DE5\u5177\u3002\u4E0E OpenAI \u65E0\u96B6\u5C5E\u5173\u7CFB\u3002": "Unofficial visual usage planner for OpenAI Codex. Not affiliated with OpenAI.",
   "\u2605 \u5728 GitHub \u70B9\u4E2A Star": "\u2605 Star on GitHub",
+  "\u5728 X \u5173\u6CE8\u6211": "Follow on X",
   "\u72B6\u6001\u4E0E\u9884\u6D4B": "State and forecast",
   "\u7B97\u6CD5\u8F93\u5165": "Usage inputs",
   "\u9884\u6D4B\u4F9D\u636E": "Forecast evidence",
@@ -4737,13 +4738,16 @@ function renderStaticLanguage() {
   for (const [selector, label] of [
     [".affiliation-notice", "OpenAI Codex \u7684\u975E\u5B98\u65B9\u53EF\u89C6\u5316\u7528\u91CF\u89C4\u5212\u5DE5\u5177\u3002\u4E0E OpenAI \u65E0\u96B6\u5C5E\u5173\u7CFB\u3002"],
     ["#github-star", "\u2605 \u5728 GitHub \u70B9\u4E2A Star"],
+    ["#follow-x", "\u5728 X \u5173\u6CE8\u6211"],
     ["#calculate", "\u66F4\u65B0\u6570\u636E"],
     ["#source-code", "GitHub \u5F00\u6E90"],
     ["#creator-contact", "\u5982\u679C\u4F60\u559C\u6B22\u8FD9\u4E2A\u4F5C\u54C1\uFF0C\u6B22\u8FCE\u5728 X \u4E0A\u5173\u6CE8\u6211"],
     ["#output>h2", "\u63A5\u4E0B\u6765\u600E\u4E48\u7528"],
     ["[data-credit-label]", "\u91CD\u7F6E\u6570\u636E\u6765\u6E90"]
-  ])
-    $(selector).textContent = t(label);
+  ]) {
+    const element = $(selector);
+    if (element) element.textContent = t(label);
+  }
   $("#calculate").setAttribute?.("title", t("\u91C7\u7528\u8F93\u5165\u4FEE\u6539\u5E76\u5237\u65B0\u91CD\u7F6E\u8BC1\u636E"));
   $("#planner-guide").textContent = language === "zh-CN" ? "\u4F7F\u7528\u8BF4\u660E" : "How it works";
   $("#planner-guide").setAttribute?.("href", language === "zh-CN" ? "/zh/guide/" : "/guide/");
