@@ -17,9 +17,9 @@ const archive = { retrievedAt: '2026-10-16', campaignTimeZone: 'America/Los_Ange
   events: [6, 9, 12, 15].map(day => ({ kind: 'automatic',
     at: `2026-10-${String(day).padStart(2, '0')}T05:00:00Z` })) };
 const fixtures = [
-  { zone: 'America/New_York', expiry: '2026-10-18T04:00:00.000Z', last: '10/15 01:00', point: '10月18日 00:30' },
-  { zone: 'Asia/Shanghai', expiry: '2026-10-17T16:00:00.000Z', last: '10/15 13:00', point: '10月18日 12:30' },
-  { zone: 'UTC', expiry: '2026-10-18T00:00:00.000Z', last: '10/15 05:00', point: '10月18日 04:30' }
+  { zone: 'America/New_York', expiry: '2026-10-18T04:00:00.000Z', last: '10/15 01:00', point: '10月19日 01:00' },
+  { zone: 'Asia/Shanghai', expiry: '2026-10-17T16:00:00.000Z', last: '10/15 13:00', point: '10月19日 13:00' },
+  { zone: 'UTC', expiry: '2026-10-18T00:00:00.000Z', last: '10/15 05:00', point: '10月19日 05:00' }
 ];
 
 test('库默认跟随调用时的当地时区：预测显示、备用到期日和规划入口不固定柏林', () => {

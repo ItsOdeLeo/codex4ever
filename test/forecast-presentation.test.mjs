@@ -7,7 +7,7 @@ import { conservativeResetTimes } from '../src/reset-forecast.js';
 import { layoutStrategyTree,renderStrategyTree } from '../src/strategy-tree-layout.js';
 import { activePaletteSource,paletteValue } from './helpers/theme-source.mjs';
 
-test('两条曲线各自最高峰与竖线对齐，动作与补满点对齐保守时刻；标签区分首次和第二次',()=>{
+test('竖线、动作和补满点都对齐规划计入的保守时刻，不早于各自曲线最高峰；标签区分首次和第二次',()=>{
   const now=new Date('2026-10-17T12:00:00Z');
   const prediction=predictReset({now:now.toISOString(),timeZone:'Europe/Berlin',campaignTimeZone:'America/Los_Angeles',
     resetTimes:[3,7,11,13,15].map(day=>`2026-10-${String(day).padStart(2,'0')}T05:00:00Z`)});
@@ -17,13 +17,14 @@ test('两条曲线各自最高峰与竖线对齐，动作与补满点对齐保�
   for(const [sequence,focus,plot,peaks] of [[1,graph.forecastFocus,graph.probabilityPlot,graph.forecastPeaks],
     [2,graph.forecastFollowing,graph.followingPlot,graph.followingPeaks]]) {
     const peak=plot.bins.reduce((a,b)=>a.densityPerHour>=b.densityPerHour ? a : b);
-    assert.ok(Math.abs(focus.x-peak.x)<1e-6);
     const action=graph.nodes.find(node=>node.type==='forecast-assumption'&&node.sequence===sequence);
     const refill=graph.funnel.refills.find(refill=>refill.sequence===sequence);
     // The plan counts each reset at its conservative time, not at the peak;
-    // the card and the plotted refill share that time.
+    // the guide line, the card and the plotted refill share that time.
     assert.equal(action.anchorX,refill.x);
-    assert.ok(refill.x>=focus.x-1e-6,'保守时刻不早于最可能时刻');
+    assert.ok(Math.abs(focus.x-action.anchorX)<1e-6,'竖线标在规划计入的时刻');
+    assert.equal(focus.planned,true);
+    assert.ok(focus.x>=peak.x-1e-6,'保守时刻不早于最可能时刻');
     assert.equal(action.selected,true);
     const boxes=[{left:focus.left,y:focus.y,width:focus.width,height:34},...peaks];
     for(let i=0;i<boxes.length;i++)for(let j=i+1;j<boxes.length;j++) {
@@ -33,8 +34,8 @@ test('两条曲线各自最高峰与竖线对齐，动作与补满点对齐保�
     }
   }
   const html=renderStrategyTree(graph,String);
-  assert.match(html,/首次 reset · 最可能/);
-  assert.match(html,/第二次 reset · 最可能/);
+  assert.match(html,/首次 reset · 规划时刻/);
+  assert.match(html,/第二次 reset · 规划时刻/);
   assert.match(html,/已假设首次发布/);
   assert.match(html,/已假设第二次发布/);
   assert.equal([...html.matchAll(/class="reset-action-cancel">取消假设<\/small>/g)].length,2);

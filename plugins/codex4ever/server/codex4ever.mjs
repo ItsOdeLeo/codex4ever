@@ -24687,7 +24687,8 @@ function planUsagePath({
   }
   const assumptions = primary.trace.events.filter((event) => event.kind === "assumed-extra-reset");
   const following = result.resetForecast.followingReset;
-  const firstAt = assumptions[0]?.at ?? prediction.resetTimeMode.pointAt;
+  const conservative = conservativeResetTimes(result, prediction);
+  const firstAt = assumptions[0]?.at ?? conservative[0] ?? prediction.resetTimeMode.pointAt;
   result.forecastScenario = {
     available: true,
     conditional: true,
@@ -24704,7 +24705,7 @@ function planUsagePath({
       ...following,
       available: !!following,
       selected: assumptions.length > 1,
-      hours: (Date.parse(assumptions[1]?.at ?? following?.pointAt) - Date.parse(result.now)) / HOUR12
+      hours: (Date.parse(assumptions[1]?.at ?? conservative[1] ?? following?.pointAt) - Date.parse(result.now)) / HOUR12
     },
     plannedResetIndices: primary.trace.events.filter((event) => event.kind === "backup").map((event) => event.resetIndex),
     onObservedReset: "replan-from-actual-account"

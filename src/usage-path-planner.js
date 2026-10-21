@@ -1,6 +1,6 @@
 import { planIntensityUsage } from './intensity-plan.js';
 import { resetProbabilityByHours } from './local-predictor.js';
-import { strategyResetForecast,forecastAssumptionCards } from './reset-forecast.js';
+import { strategyResetForecast,forecastAssumptionCards,conservativeResetTimes } from './reset-forecast.js';
 import { phaseResetOpportunities } from './phase-reset-opportunities.js';
 import { paceChoices } from './usage-pace-steps.js';
 import { recommendedUsagePath,DEFAULT_RECOMMENDATION_MODE } from './recommended-usage-path.js';
@@ -78,7 +78,8 @@ export function planUsagePath({ input, now = new Date(), timeZone = Intl.DateTim
   const assumptions=primary.trace.events.filter(event=>event.kind==='assumed-extra-reset');
   const following=result.resetForecast.followingReset;
   // Cards sit where the plotted refill happens: the assumed, conservative time.
-  const firstAt=assumptions[0]?.at??prediction.resetTimeMode.pointAt;
+  const conservative=conservativeResetTimes(result,prediction);
+  const firstAt=assumptions[0]?.at??conservative[0]??prediction.resetTimeMode.pointAt;
   result.forecastScenario={available:true,conditional:true,selected:assumptions.length>0,
     secondSelected:assumptions.length>1,at:firstAt,
     hours:(Date.parse(firstAt)-Date.parse(result.now))/HOUR,
@@ -87,7 +88,7 @@ export function planUsagePath({ input, now = new Date(), timeZone = Intl.DateTim
     recommendedDailyPercent:primary.firstAction.dailyPercent,phases:result.phasePlans,
     assumptions:assumptions.map(event=>({...event,selected:true,hours:event.atHours})),
     following:{...following,available:!!following,selected:assumptions.length>1,
-      hours:(Date.parse(assumptions[1]?.at??following?.pointAt)-Date.parse(result.now))/HOUR},
+      hours:(Date.parse(assumptions[1]?.at??conservative[1]??following?.pointAt)-Date.parse(result.now))/HOUR},
     plannedResetIndices:primary.trace.events.filter(event=>event.kind==='backup').map(event=>event.resetIndex),
     onObservedReset:'replan-from-actual-account'};
   return phaseResetOpportunities(result,prediction);

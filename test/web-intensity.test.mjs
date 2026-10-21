@@ -239,7 +239,7 @@ test('实时证据、条件用量、备用切换和精简累计概率；保持�
     assert.match(mode(), /data-reset-estimate=/);
     assert.match(mode(), /<small>累计 [\d.]+%<\/small>/);
     assert.doesNotMatch(output.innerHTML+evidence.innerHTML,/每小时|(?<!\d)1小时 [\d.]+%|此段 [\d.]+%|该 [\d.]+ 小时 [\d.]+%/);
-    assert.match(mode(), /<strong>首次 reset · 最可能 \d{2}:\d{2}<small>/);
+    assert.match(mode(), /<strong>首次 reset · 规划时刻 \d{2}:\d{2}<small>/);
     assert.match(summary(),/data-forecast-stat="next-reset-mode"/);
     assert.doesNotMatch(mode(), /更早|更晚|附近/);
     const originalMode = mode();
@@ -254,7 +254,7 @@ test('实时证据、条件用量、备用切换和精简累计概率；保持�
     assert.doesNotMatch(output.innerHTML,/data-usage-calculation|60% ÷ 72小时 × 24/,
       '页面任何位置都不展示日均用量计算公式');
     const second=()=>withoutPosition(output.innerHTML.match(/<div class="forecast-following"[\s\S]*?<\/div>/)?.[0]);
-    assert.match(second(),/第二次 reset · 最可能/);
+    assert.match(second(),/第二次 reset · 规划时刻/);
     assert.match(output.innerHTML,/<span class="timeline-lane-text">第二次额外重置<\/span>/);
     const originalSecond=second();
     assert.match(depletion(),/10月16日 14:00/,'初次打开默认按当前用量，2天耗尽');

@@ -87,19 +87,27 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
   const followingPlot=layoutResetProbabilityPlot({distribution:secondDistribution,endHours:plotEndHours,
     xAtHours:axis.xAtHours,topY:(probabilityPlot?.bottomY??forecastEndY)+64,height:42});
   const focusWidth = Math.min(probabilityPlot ? 200 : 480,plotLabelWidth);
-  const forecastFocus = focusEstimate ? { ...focusEstimate, x: axis.xAtHours(focusEstimate.pointHours),
-    fromX: axis.xAtHours(focusEstimate.fromHours), toX: axis.xAtHours(focusEstimate.toHours),
-    left: clamp(axis.xAtHours(focusEstimate.pointHours) - focusWidth / 2, focusWidth),
+  // The guide lines mark the conservative times the plan counts (and where
+  // the assumption cards sit), not the curves' most likely hours.
+  const planned=(marker,hours)=>marker&&Number.isFinite(hours)&&hours>0 ? {...marker,pointHours:hours,
+    pointAt:new Date(Date.parse(result.now)+hours*3600000).toISOString(),planned:true} : marker;
+  const firstMarker=planned(focusEstimate,result.forecastScenario?.available ? result.forecastScenario.hours : NaN);
+  const secondMarker=planned(following,result.forecastScenario?.following?.available ? result.forecastScenario.following.hours : NaN);
+  const forecastFocus = firstMarker ? { ...firstMarker, x: axis.xAtHours(firstMarker.pointHours),
+    fromX: axis.xAtHours(firstMarker.fromHours), toX: axis.xAtHours(firstMarker.toHours),
+    left: clamp(axis.xAtHours(firstMarker.pointHours) - focusWidth / 2, focusWidth),
     y: forecastEndY + 8, width: focusWidth,
-    label: time(focusEstimate.pointAt), clockLabel: clock(focusEstimate.pointAt) } : null;
+    label: time(firstMarker.pointAt), clockLabel: clock(firstMarker.pointAt) } : null;
   if (forecastFocus && probabilityPlot) {
     forecastFocus.y = probabilityPlot.topY - 38;
-    forecastFocus.cumulativeProbability = resetProbabilityByHours(prediction, focusEstimate.pointHours);
+    forecastFocus.cumulativeProbability = resetProbabilityByHours(prediction, firstMarker.pointHours);
   }
-  const forecastFollowing=following ? {...following,x:axis.xAtHours(following.pointHours),
-    left:clamp(axis.xAtHours(following.pointHours)-focusWidth/2,focusWidth),width:focusWidth,
+  const forecastFollowing=secondMarker ? {...secondMarker,x:axis.xAtHours(secondMarker.pointHours),
+    left:clamp(axis.xAtHours(secondMarker.pointHours)-focusWidth/2,focusWidth),width:focusWidth,
     y:followingPlot ? followingPlot.topY-38 : forecastFocus?.y??forecastEndY+8,
-    label:time(following.pointAt),clockLabel:clock(following.pointAt)} : null;
+    label:time(secondMarker.pointAt),clockLabel:clock(secondMarker.pointAt)} : null;
+  if(forecastFollowing?.planned)forecastFollowing.cumulativeProbability=
+    followingResetProbabilityByHours(prediction,result.now,secondMarker.pointHours,secondCondition)??forecastFollowing.cumulativeProbability;
   const forecastPeaks=layoutResetProbabilityPeaks({plot:probabilityPlot,timeZone:result.timeZone,
     focus:forecastFocus,otherLabels:forecastFollowing ? [{...forecastFollowing,height:34}] : [],
     cumulativeAtHours:hours=>resetProbabilityByHours(prediction,hours)});

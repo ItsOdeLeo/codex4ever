@@ -65,7 +65,9 @@ test('第二次预测与用量／备用独立，共用时间轴，不产生未�
   const graphs=results.map(result=>layoutStrategyTree(result,{prediction}));
   for(const [index,graph] of graphs.entries()) {
     const next=graph.forecastFollowing;
-    assert.equal(next.pointAt,expected[index]);
+    const second=graph.nodes.find(node=>node.type==='forecast-assumption'&&node.sequence===2);
+    if(second)assert.ok(Math.abs(next.x-second.anchorX)<1e-6,'第二条竖线标在规划计入的时刻');
+    else assert.equal(next.pointAt,expected[index]);
     assert.ok(next.x>graph.forecastFocus.x);
     assert.ok(next.x<graph.width);
     assert.ok(graph.dayAxis.days.at(-1).endHours>=next.pointHours);
@@ -81,7 +83,8 @@ test('第二次预测与用量／备用独立，共用时间轴，不产生未�
   assert.deepEqual([24,48,96,168].map(hour=>resetProbabilityByHours(prediction,hour)),cdf);
   assert.equal(graphs[0].funnel.refills.filter(refill=>refill.kind==='assumed-extra').length,0);
   assert.equal(graphs[2].funnel.refills.filter(refill=>refill.kind==='assumed-extra').length,1);
-  const expectedDelta=(Date.parse(expected[0])-Date.parse(prediction.resetTimeMode.pointAt))/HOUR;
+  const expectedDelta=(Date.parse(graphs[0].forecastFollowing.pointAt)-Date.parse(graphs[0].forecastFocus.pointAt))/HOUR;
+  assert.ok(expectedDelta>0);
   assert.ok(Math.abs(graphs[0].forecastFollowing.x-graphs[0].forecastFocus.x-expectedDelta*180/24)<1e-6);
 });
 

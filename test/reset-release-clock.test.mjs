@@ -30,11 +30,12 @@ test('平均间隔参考仍可读取，页面最可能时间来自小时分布�
   const result = planUsagePath({ now: new Date(now), timeZone: 'Europe/Berlin', prediction,
     input: { weeklyRemaining: 40, weeklyResetDays: 4, weeklyResetHours: 0, resetDates: [] } });
   const graph = layoutStrategyTree(result, { prediction });
-  assert.equal(graph.forecastFocus.pointAt, prediction.resetTimeMode.pointAt);
-  assert.equal(graph.forecastFocus.pointAt,'2026-10-18T04:30:00.000Z');
+  assert.equal(prediction.resetTimeMode.pointAt,'2026-10-18T04:30:00.000Z');
+  assert.equal(graph.forecastFocus.planned,true,'页面竖线标规划计入的保守时刻');
+  assert.ok(Date.parse(graph.forecastFocus.pointAt)>=Date.parse(prediction.resetTimeMode.pointAt));
   const html = renderStrategyTree(graph, String);
-  assert.ok(html.includes('data-reset-estimate="2026-10-18T04:30:00.000Z"'));
-  assert.ok(html.includes('10月18日 06:30'));
+  assert.ok(html.includes(`data-reset-estimate="${graph.forecastFocus.pointAt}"`));
+  assert.ok(html.includes(graph.forecastFocus.label),'标签显示规划时刻的当地时间');
   assert.doesNotMatch(html, /最可能 reset · \d+\/\d+|当天 [\d.]+%/);
 });
 

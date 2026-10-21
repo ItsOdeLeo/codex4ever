@@ -127,6 +127,7 @@ const english={
   '假设两次均发布，计算各段用量':'Assume both resets and calculate each phase',
   '假设首次发布，计算各段用量':'Assume the first reset and calculate each phase',
   '最可能':'likely','累计':'Cumulative','范围外 {percent}%':'Beyond view {percent}%',
+  '规划时刻':'planned','标线是规划计入这次 reset 的保守时刻：正常刷新前可能发生的部分，有 75% 在此之前。':'The line marks the conservative time the plan counts this reset: 75% of its chance before the normal refresh falls before it.',
   '额外 reset':'extra reset','假设首次发生':'assuming the first occurs','概率分布':'distribution',
   '首次发生后':'after the first','第二次（假设首次发生）':'Second (assuming the first)',
   '首次额外reset的概率分布。':'First extra reset distribution. ',

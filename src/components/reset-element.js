@@ -55,7 +55,7 @@ function renderMode({sequence,focus,plot,vertical=false,escape,locale}) {
     return `<div class="forecast-mode" ${data} ${position(focus)} title="${t(mode ? '标线对应概率分布的最高峰。' : '上次reset加近期平均间隔，再校准到常见发布钟点的参考时间。')}${t('左右为估计范围之外的概率。')}"><span data-estimate-earlier="${focus.earlierProbability}">${t('← 更早 {percent}%',{percent:round(focus.earlierProbability*100)})}</span><strong>${t(mode ? '最可能额外 reset' : '预计额外 reset')}<small>${escape(focus.label)}</small></strong><span data-estimate-later="${focus.laterProbability}">${t('更晚 {percent}% →',{percent:round(focus.laterProbability*100)})}</span></div>`;
   }
   const className=sequence===1 ? 'forecast-mode forecast-mode-on-plot' : 'forecast-following';
-  return `<div class="${className}" ${data} data-reset-marker ${position(focus)} aria-label="${name(sequence,locale)} ${t('最可能')} reset · ${escape(focus.label)}" title="${t('标线对应本条分布最高峰。')}${sequence===2 ? t('第二次以首次在预测点发生为前提。') : ''}"><strong>${name(sequence,locale)} reset · ${t('最可能')} ${escape(focus.clockLabel??focus.label)}<small>${t('累计')} ${probability(focus.cumulativeProbability)}%</small></strong></div>`;
+  return `<div class="${className}" ${data} data-reset-marker ${position(focus)} aria-label="${name(sequence,locale)} ${t(focus.planned ? '规划时刻' : '最可能')} reset · ${escape(focus.label)}" title="${t(focus.planned ? '标线是规划计入这次 reset 的保守时刻：正常刷新前可能发生的部分，有 75% 在此之前。' : '标线对应本条分布最高峰。')}${sequence===2 ? t('第二次以首次在预测点发生为前提。') : ''}"><strong>${name(sequence,locale)} reset · ${t(focus.planned ? '规划时刻' : '最可能')} ${escape(focus.clockLabel??focus.label)}<small>${t('累计')} ${probability(focus.cumulativeProbability)}%</small></strong></div>`;
 }
 
 function renderAction(action,escape,locale) {

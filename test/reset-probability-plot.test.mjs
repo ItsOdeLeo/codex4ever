@@ -52,10 +52,10 @@ test('曲线、累计概率、预计钟点和额度共用当地日期轴，单�
   const plot = graph.probabilityPlot, focus = graph.forecastFocus;
   assert.ok(plot && focus);
   const peak=plot.bins.reduce((best,bin)=>bin.densityPerHour>best.densityPerHour ? bin : best);
-  near(focus.x,peak.x);
+  const action=graph.nodes.find(node=>node.type==='forecast-assumption'&&node.sequence===1);
+  near(focus.x,action.anchorX);
+  assert.ok(focus.x>=peak.x-1e-6,'规划时刻不早于曲线最高峰');
   near(peak.y,plot.topY);
-  near(focus.probability,peak.probability);
-  assert.equal(focus.pointAt,prediction.resetTimeMode.pointAt);
   near(focus.cumulativeProbability, resetProbabilityByHours(prediction, focus.pointHours));
   for (const bin of plot.bins) {
     assert.ok(bin.y >= plot.topY - 1e-8 && bin.y <= plot.bottomY);
@@ -82,7 +82,7 @@ test('曲线、累计概率、预计钟点和额度共用当地日期轴，单�
   assert.match(html, /data-reset-density-plot/);
   assert.match(html, /概率分布/);
   assert.match(html, /累计 [\d.]+%/);
-  assert.ok(html.includes('<strong>首次 reset · 最可能 12:30<small>'));
+  assert.match(html,/<strong>首次 reset · 规划时刻 \d{2}:\d{2}<small>/);
   assert.match(html,/<small>累计 [\d.]+%<\/small>/);
   assert.doesNotMatch(html,/每小时|\d+小时 [\d.]+%|此段 [\d.]+%/);
   assert.doesNotMatch(html,/class="forecast-calendar forecast-aligned"/);

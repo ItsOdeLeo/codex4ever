@@ -56,9 +56,10 @@ test('独立预测、页面摘要和主标记取同一最高小时窗口，均�
   const result=planUsagePath({now,timeZone,prediction:p,input:{weeklyRemaining:40,weeklyResetDays:4,weeklyResetHours:0,resetDates:[]}});
   const graph=layoutStrategyTree(result,{prediction:p});
   const peak=graph.probabilityPlot.bins.reduce((best,bin)=>bin.probability>best.probability ? bin : best);
-  assert.equal(graph.forecastFocus.pointAt,mode.pointAt);
-  near(graph.forecastFocus.x,peak.x);
-  near(graph.forecastFocus.probability,peak.probability);
+  // The guide line marks the planned (conservative) time, at or after the peak.
+  const action=graph.nodes.find(node=>node.type==='forecast-assumption'&&node.sequence===1);
+  near(graph.forecastFocus.x,action.anchorX);
+  assert.ok(graph.forecastFocus.x>=peak.x-1e-6);
   near(peak.y,graph.probabilityPlot.topY);
   near(mode.earlierProbability+mode.probability+mode.laterProbability,1);
   const html=renderResetForecastSummary({source:{available:true,prediction:p},prediction:p,now,timeZone});

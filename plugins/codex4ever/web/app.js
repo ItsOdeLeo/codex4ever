@@ -206,6 +206,8 @@ var english = {
   "\u6700\u53EF\u80FD": "likely",
   "\u7D2F\u8BA1": "Cumulative",
   "\u8303\u56F4\u5916 {percent}%": "Beyond view {percent}%",
+  "\u89C4\u5212\u65F6\u523B": "planned",
+  "\u6807\u7EBF\u662F\u89C4\u5212\u8BA1\u5165\u8FD9\u6B21 reset \u7684\u4FDD\u5B88\u65F6\u523B\uFF1A\u6B63\u5E38\u5237\u65B0\u524D\u53EF\u80FD\u53D1\u751F\u7684\u90E8\u5206\uFF0C\u6709 75% \u5728\u6B64\u4E4B\u524D\u3002": "The line marks the conservative time the plan counts this reset: 75% of its chance before the normal refresh falls before it.",
   "\u989D\u5916 reset": "extra reset",
   "\u5047\u8BBE\u9996\u6B21\u53D1\u751F": "assuming the first occurs",
   "\u6982\u7387\u5206\u5E03": "distribution",
@@ -3087,7 +3089,8 @@ function planUsagePath({
   }
   const assumptions = primary.trace.events.filter((event) => event.kind === "assumed-extra-reset");
   const following = result.resetForecast.followingReset;
-  const firstAt = assumptions[0]?.at ?? prediction.resetTimeMode.pointAt;
+  const conservative = conservativeResetTimes(result, prediction);
+  const firstAt = assumptions[0]?.at ?? conservative[0] ?? prediction.resetTimeMode.pointAt;
   result.forecastScenario = {
     available: true,
     conditional: true,
@@ -3104,7 +3107,7 @@ function planUsagePath({
       ...following,
       available: !!following,
       selected: assumptions.length > 1,
-      hours: (Date.parse(assumptions[1]?.at ?? following?.pointAt) - Date.parse(result.now)) / HOUR13
+      hours: (Date.parse(assumptions[1]?.at ?? conservative[1] ?? following?.pointAt) - Date.parse(result.now)) / HOUR13
     },
     plannedResetIndices: primary.trace.events.filter((event) => event.kind === "backup").map((event) => event.resetIndex),
     onObservedReset: "replan-from-actual-account"
@@ -3794,7 +3797,7 @@ function renderMode({ sequence, focus, plot, vertical = false, escape: escape3, 
     return `<div class="forecast-mode" ${data} ${position(focus)} title="${t2(mode ? "\u6807\u7EBF\u5BF9\u5E94\u6982\u7387\u5206\u5E03\u7684\u6700\u9AD8\u5CF0\u3002" : "\u4E0A\u6B21reset\u52A0\u8FD1\u671F\u5E73\u5747\u95F4\u9694\uFF0C\u518D\u6821\u51C6\u5230\u5E38\u89C1\u53D1\u5E03\u949F\u70B9\u7684\u53C2\u8003\u65F6\u95F4\u3002")}${t2("\u5DE6\u53F3\u4E3A\u4F30\u8BA1\u8303\u56F4\u4E4B\u5916\u7684\u6982\u7387\u3002")}"><span data-estimate-earlier="${focus.earlierProbability}">${t2("\u2190 \u66F4\u65E9 {percent}%", { percent: round3(focus.earlierProbability * 100) })}</span><strong>${t2(mode ? "\u6700\u53EF\u80FD\u989D\u5916 reset" : "\u9884\u8BA1\u989D\u5916 reset")}<small>${escape3(focus.label)}</small></strong><span data-estimate-later="${focus.laterProbability}">${t2("\u66F4\u665A {percent}% \u2192", { percent: round3(focus.laterProbability * 100) })}</span></div>`;
   }
   const className = sequence === 1 ? "forecast-mode forecast-mode-on-plot" : "forecast-following";
-  return `<div class="${className}" ${data} data-reset-marker ${position(focus)} aria-label="${name(sequence, locale)} ${t2("\u6700\u53EF\u80FD")} reset \xB7 ${escape3(focus.label)}" title="${t2("\u6807\u7EBF\u5BF9\u5E94\u672C\u6761\u5206\u5E03\u6700\u9AD8\u5CF0\u3002")}${sequence === 2 ? t2("\u7B2C\u4E8C\u6B21\u4EE5\u9996\u6B21\u5728\u9884\u6D4B\u70B9\u53D1\u751F\u4E3A\u524D\u63D0\u3002") : ""}"><strong>${name(sequence, locale)} reset \xB7 ${t2("\u6700\u53EF\u80FD")} ${escape3(focus.clockLabel ?? focus.label)}<small>${t2("\u7D2F\u8BA1")} ${probability(focus.cumulativeProbability)}%</small></strong></div>`;
+  return `<div class="${className}" ${data} data-reset-marker ${position(focus)} aria-label="${name(sequence, locale)} ${t2(focus.planned ? "\u89C4\u5212\u65F6\u523B" : "\u6700\u53EF\u80FD")} reset \xB7 ${escape3(focus.label)}" title="${t2(focus.planned ? "\u6807\u7EBF\u662F\u89C4\u5212\u8BA1\u5165\u8FD9\u6B21 reset \u7684\u4FDD\u5B88\u65F6\u523B\uFF1A\u6B63\u5E38\u5237\u65B0\u524D\u53EF\u80FD\u53D1\u751F\u7684\u90E8\u5206\uFF0C\u6709 75% \u5728\u6B64\u4E4B\u524D\u3002" : "\u6807\u7EBF\u5BF9\u5E94\u672C\u6761\u5206\u5E03\u6700\u9AD8\u5CF0\u3002")}${sequence === 2 ? t2("\u7B2C\u4E8C\u6B21\u4EE5\u9996\u6B21\u5728\u9884\u6D4B\u70B9\u53D1\u751F\u4E3A\u524D\u63D0\u3002") : ""}"><strong>${name(sequence, locale)} reset \xB7 ${t2(focus.planned ? "\u89C4\u5212\u65F6\u523B" : "\u6700\u53EF\u80FD")} ${escape3(focus.clockLabel ?? focus.label)}<small>${t2("\u7D2F\u8BA1")} ${probability(focus.cumulativeProbability)}%</small></strong></div>`;
 }
 function renderAction(action, escape3, locale) {
   if (!action) return "";
@@ -3962,30 +3965,39 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
     height: 42
   });
   const focusWidth = Math.min(probabilityPlot ? 200 : 480, plotLabelWidth);
-  const forecastFocus = focusEstimate ? {
-    ...focusEstimate,
-    x: axis.xAtHours(focusEstimate.pointHours),
-    fromX: axis.xAtHours(focusEstimate.fromHours),
-    toX: axis.xAtHours(focusEstimate.toHours),
-    left: clamp3(axis.xAtHours(focusEstimate.pointHours) - focusWidth / 2, focusWidth),
+  const planned = (marker, hours) => marker && Number.isFinite(hours) && hours > 0 ? {
+    ...marker,
+    pointHours: hours,
+    pointAt: new Date(Date.parse(result.now) + hours * 36e5).toISOString(),
+    planned: true
+  } : marker;
+  const firstMarker = planned(focusEstimate, result.forecastScenario?.available ? result.forecastScenario.hours : NaN);
+  const secondMarker = planned(following, result.forecastScenario?.following?.available ? result.forecastScenario.following.hours : NaN);
+  const forecastFocus = firstMarker ? {
+    ...firstMarker,
+    x: axis.xAtHours(firstMarker.pointHours),
+    fromX: axis.xAtHours(firstMarker.fromHours),
+    toX: axis.xAtHours(firstMarker.toHours),
+    left: clamp3(axis.xAtHours(firstMarker.pointHours) - focusWidth / 2, focusWidth),
     y: forecastEndY + 8,
     width: focusWidth,
-    label: time(focusEstimate.pointAt),
-    clockLabel: clock(focusEstimate.pointAt)
+    label: time(firstMarker.pointAt),
+    clockLabel: clock(firstMarker.pointAt)
   } : null;
   if (forecastFocus && probabilityPlot) {
     forecastFocus.y = probabilityPlot.topY - 38;
-    forecastFocus.cumulativeProbability = resetProbabilityByHours(prediction, focusEstimate.pointHours);
+    forecastFocus.cumulativeProbability = resetProbabilityByHours(prediction, firstMarker.pointHours);
   }
-  const forecastFollowing = following ? {
-    ...following,
-    x: axis.xAtHours(following.pointHours),
-    left: clamp3(axis.xAtHours(following.pointHours) - focusWidth / 2, focusWidth),
+  const forecastFollowing = secondMarker ? {
+    ...secondMarker,
+    x: axis.xAtHours(secondMarker.pointHours),
+    left: clamp3(axis.xAtHours(secondMarker.pointHours) - focusWidth / 2, focusWidth),
     width: focusWidth,
     y: followingPlot ? followingPlot.topY - 38 : forecastFocus?.y ?? forecastEndY + 8,
-    label: time(following.pointAt),
-    clockLabel: clock(following.pointAt)
+    label: time(secondMarker.pointAt),
+    clockLabel: clock(secondMarker.pointAt)
   } : null;
+  if (forecastFollowing?.planned) forecastFollowing.cumulativeProbability = followingResetProbabilityByHours(prediction, result.now, secondMarker.pointHours, secondCondition) ?? forecastFollowing.cumulativeProbability;
   const forecastPeaks = layoutResetProbabilityPeaks({
     plot: probabilityPlot,
     timeZone: result.timeZone,

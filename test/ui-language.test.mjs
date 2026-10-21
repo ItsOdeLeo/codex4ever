@@ -68,7 +68,7 @@ test('整页切换中英不重新抓取或改变分支，记住语言，英文�
     assert.match(element('#strategy-controls').innerHTML,/Weekend focus/);
     assert.doesNotMatch(output.innerHTML,/data-plan-mode|policy-recommendation|data-usage-strategy/);
     assert.doesNotMatch(output.innerHTML,/Auto-reset:/);
-    assert.match(output.innerHTML,/First reset · likely/);
+    assert.match(output.innerHTML,/First reset · planned/);
     assert.match(output.innerHTML,/title="Second extra reset prediction · Probability density · Given 1st reset/);
     assert.match(output.innerHTML,/data-forecast-method/);
     assert.match(output.innerHTML,/data-forecast-formula/);
