@@ -86,15 +86,26 @@ test('三个轨道名称统一放在独立最左栏，分别与两条分布及�
     assert.equal(graph.width,viewportWidth);
     for(const [index,plot] of [graph.probabilityPlot,graph.followingPlot].entries()) {
       const label=graph.resetLaneLabels[index];
-      assert.equal(label.x,0);
-      assert.ok(label.x+label.width<graph.dayAxis.days[0].x);
-      assert.ok(label.x+label.width<plot.startX);
-      assert.equal(label.y+label.height/2,plot.topY+plot.height/2);
+      if(graph.compact) {
+        // Phones: the lane name is a caption above its curve, left-aligned with the plot.
+        assert.equal(label.x,graph.dayAxis.leftPadding);
+        assert.ok(label.y+label.height<=plot.topY-38,'名称在标记标签上方');
+      } else {
+        assert.equal(label.x,0);
+        assert.ok(label.x+label.width<graph.dayAxis.days[0].x);
+        assert.ok(label.x+label.width<plot.startX);
+        assert.equal(label.y+label.height/2,plot.topY+plot.height/2);
+      }
       assert.equal(label.inline,true);
       assert.equal(label.detail,'');
       assert.match(label.tooltip,/Probability density/);
     }
     const consumption=graph.headings.find(item=>item.kind==='consumption');
+    if(graph.compact) {
+      // Phones drop the quota caption: the band and its percentages say it.
+      assert.equal(consumption,undefined);
+      continue;
+    }
     assert.equal(consumption.x,0);
     assert.ok(consumption.x+consumption.width<graph.funnel.bands[0].x1);
     assert.equal(consumption.y+consumption.height/2,(graph.dayAxis.quotaTopY+graph.dayAxis.centerY)/2);

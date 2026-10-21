@@ -5,7 +5,7 @@ import { translator } from '../ui-language.js';
 const position=node=>`left:${node.viewportWidth ? `${node.x/node.viewportWidth*100}%` : `${node.x}px`};top:${node.y}px;width:${node.viewportWidth ? `${node.width/node.viewportWidth*100}%` : `${node.width}px`}`;
 
 /** Read-only phase labels for either timeline. */
-const MINIMUM_LABEL_WIDTH=36;
+const MINIMUM_LABEL_WIDTH=36,COMPACT_MINIMUM_LABEL_WIDTH=30,COMPACT_CHANCE_WIDTH=46;
 
 export function renderPhaseControl(phase,{timeZone,escape,locale='zh-CN'}) {
   const t=translator(locale);
@@ -17,7 +17,7 @@ export function renderPhaseControl(phase,{timeZone,escape,locale='zh-CN'}) {
     : advice||usageRateDetail(phase.baselineDailyPercent,phase.dailyPercent,locale);
   // A phase too narrow for its figure shows none; the title keeps the detail
   // and the quota row still marks the gap.
-  const tooNarrow=quotaLabel&&Number.isFinite(phase.width)&&phase.width<MINIMUM_LABEL_WIDTH;
+  const tooNarrow=quotaLabel&&Number.isFinite(phase.width)&&phase.width<(phase.compact ? COMPACT_MINIMUM_LABEL_WIDTH : MINIMUM_LABEL_WIDTH);
   const label=phase.reason==='no-resource'&&!quotaLabel ? `<strong>${t('暂停')}</strong>`
     : tooNarrow ? '<strong aria-hidden="true"></strong>'
     : `<strong class="${advice ? 'phase-advice' : 'phase-budget'}">${escape(value)}</strong>`;
@@ -25,7 +25,7 @@ export function renderPhaseControl(phase,{timeZone,escape,locale='zh-CN'}) {
     : phase.stageReason==='if-no-extra-reset-at-review' ? t('若仍未额外 reset') : '';
   const detail=phase.reason==='no-resource' ? t('暂停') : usageRateDetail(phase.baselineDailyPercent,phase.dailyPercent,locale);
   const labelHeight=phase.labelHeight??(phase.nextResetOpportunity ? 36+resetOpportunityLayout(phase.width).height : 34);
-  return `<div class="phase-controls" data-phase-start-at="${escape(phase.startAt)}" data-phase-daily="${phase.dailyPercent}" data-phase-baseline="${phase.baselineDailyPercent}" ${quotaLabel ? 'data-quota-label' : ''} title="${escape([review,detail].filter(Boolean).join(' · '))}" style="${position(phase)}${quotaLabel ? `;--phase-label-height:${labelHeight}px` : ''}">${review&&!quotaLabel ? `<small class="review-condition">${review}</small>` : ''}${label}${tooNarrow ? '' : renderResetOpportunity(phase.nextResetOpportunity,{timeZone,escape,locale,compact:quotaLabel,width:phase.width})}</div>`;
+  return `<div class="phase-controls" data-phase-start-at="${escape(phase.startAt)}" data-phase-daily="${phase.dailyPercent}" data-phase-baseline="${phase.baselineDailyPercent}" ${quotaLabel ? 'data-quota-label' : ''} title="${escape([review,detail].filter(Boolean).join(' · '))}" style="${position(phase)}${quotaLabel ? `;--phase-label-height:${labelHeight}px` : ''}">${review&&!quotaLabel ? `<small class="review-condition">${review}</small>` : ''}${label}${tooNarrow||phase.compact&&phase.width<COMPACT_CHANCE_WIDTH ? '' : renderResetOpportunity(phase.nextResetOpportunity,{timeZone,escape,locale,compact:quotaLabel,width:phase.width})}</div>`;
 }
 
 export function renderStrategyNode(node,escape,locale='zh-CN') {

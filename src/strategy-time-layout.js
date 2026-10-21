@@ -10,6 +10,8 @@ import { resetAssumptionContent,resetOpportunityLayout } from './components/rese
 import { timelineUsagePhases } from './usage-timeline-phases.js';
 
 const round = value => Number(value.toFixed(1));
+// Below this timeline width the label gutter folds into captions above rows.
+export const COMPACT_TIMELINE_WIDTH=480;
 
 /** Place the solved policy on a shared date axis, without changing decisions. */
 export function layoutTimeStrategy(result, { prediction = null, viewportWidth,displayEndHours:fixedEndHours=null,locale='zh-CN' } = {}) {
@@ -42,8 +44,11 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
     else forecasts.push(point);
   }
   forecasts.sort((a,b)=>a.hours-b.hours);
-  const laneWidth=Number.isFinite(viewportWidth)&&viewportWidth<680 ? 128 : 176;
-  const leftPadding=laneWidth+16;
+  // Phones: no label gutter. Lane names sit above their rows instead, so the
+  // whole horizon fits the screen width without sideways scrolling.
+  const compact=Number.isFinite(viewportWidth)&&viewportWidth<COMPACT_TIMELINE_WIDTH;
+  const laneWidth=compact ? 0 : Number.isFinite(viewportWidth)&&viewportWidth<680 ? 128 : 176;
+  const leftPadding=compact ? 6 : laneWidth+16;
   let axis = strategyTimeAxis({ now: result.now, timeZone: result.timeZone,
     endHours: displayEndHours,leftPadding });
   if(Number.isFinite(viewportWidth)&&viewportWidth>0) {
@@ -108,10 +113,11 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
     label:time(secondMarker.pointAt),clockLabel:clock(secondMarker.pointAt)} : null;
   if(forecastFollowing?.planned)forecastFollowing.cumulativeProbability=
     followingResetProbabilityByHours(prediction,result.now,secondMarker.pointHours,secondCondition)??forecastFollowing.cumulativeProbability;
-  const forecastPeaks=layoutResetProbabilityPeaks({plot:probabilityPlot,timeZone:result.timeZone,
+  // Phones keep only the marker's cumulative value; peak labels would crowd the curve.
+  const forecastPeaks=compact ? [] : layoutResetProbabilityPeaks({plot:probabilityPlot,timeZone:result.timeZone,
     focus:forecastFocus,otherLabels:forecastFollowing ? [{...forecastFollowing,height:34}] : [],
     cumulativeAtHours:hours=>resetProbabilityByHours(prediction,hours)});
-  const followingPeaks=layoutResetProbabilityPeaks({plot:followingPlot,timeZone:result.timeZone,
+  const followingPeaks=compact ? [] : layoutResetProbabilityPeaks({plot:followingPlot,timeZone:result.timeZone,
     focus:forecastFollowing,cumulativeAtHours:hours=>followingResetProbabilityByHours(prediction,result.now,hours,secondCondition)});
   const lastPlot=followingPlot??probabilityPlot;
   const headingY = lastPlot ? lastPlot.bottomY+20 : forecastEndY + (forecastFocus ? 92 : 0) + 12;
@@ -123,12 +129,12 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
   for(const [index,phase] of shownPhases.entries()) {
     const startX=axis.xAtHours(phase.startHours);
     const endX=axis.xAtHours(restPeriods.length ? phase.endHours : shownPhases[index+1]?.startHours??phase.endHours);
-    const inset=Math.min(8,Math.max(0,(endX-startX)/4));
+    const inset=Math.min(compact ? 2 : 8,Math.max(0,(endX-startX)/4));
     const x=startX+inset;
     // A label belongs to its own quota span. Short spans clip text with a
     // full-text tooltip instead of moving another phase to a distant row.
     phaseControls.push({...phase,x,y:phaseY,width:Math.max(1,Math.min(phaseWidth,endX-x-inset)),
-      quotaLabel:true,
+      quotaLabel:true,compact,
       options:result.paceChoices});
   }
   const opportunityHeight=Math.max(0,...phaseControls.map(phase=>phase.nextResetOpportunity
@@ -255,19 +261,22 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
   }
   const gutterWidth=Math.max(0,axis.leftPadding-16);
   const resetLaneLabels=[probabilityPlot,followingPlot].map((plot,index)=>plot ? {
-    id:`reset-${index+1}`,x:0,y:plot.topY+plot.height/2-10,width:gutterWidth,height:20,inline:true,
+    id:`reset-${index+1}`,...(compact ? {x:axis.leftPadding,y:plot.topY-62,width:plotLabelWidth,height:18}
+      : {x:0,y:plot.topY+plot.height/2-10,width:gutterWidth,height:20}),inline:true,
     title:t(index===0 ? '首次额外重置' : '第二次额外重置'),detail:'',
     tooltip:[t(index===0 ? '首次额外重置预测' : '第二次额外重置预测'),t('概率密度'),
       index===1 ? t('以首次发生为前提') : ''].filter(Boolean).join(' · ')} : null);
   const suggested=shownPhases.some(phase=>!phase.fixed&&!phase.constrained&&phase.reason!=='no-resource'
     &&Math.abs(phase.dailyPercent-phase.baselineDailyPercent)>1e-5);
-  const headings = [{x:0,y:phaseY,width:gutterWidth,height:20,kind:'usage',inline:true,
+  const headings = compact ? [{x:axis.leftPadding,y:phaseY-22,width:plotLabelWidth,height:18,kind:'usage',inline:true,
+    date:[t(suggested ? '建议 / 天' : '用量 / 天'),...(opportunityHeight ? [t('重置概率 · 截至')] : [])].join(' · '),state:''}]
+    : [{x:0,y:phaseY,width:gutterWidth,height:20,kind:'usage',inline:true,
     date:t(gutterWidth<160 ? suggested ? '建议 / 天' : '用量 / 天' : suggested ? '建议用量 / 天' : '日均用量'),state:''},
     ...(opportunityHeight ? [{x:0,y:phaseY+36,width:gutterWidth,height:opportunityHeight,kind:'opportunity',
       inline:true,date:t('重置概率 · 截至'),state:'',tooltip:t('固定日期之前至少发生一次额外重置的累计概率')}] : []),
     {x:0,y:centerY-quotaThickness/2-10,width:gutterWidth,height:20,kind:'consumption',inline:true,
     date:t('剩余额度'),state:''}];
-  return { nodes, edges, headings, controls: [], phaseControls,bankedCount,retainedBanks, compactForecast: result.flexibleSchedule,
+  return { compact,nodes, edges, headings, controls: [], phaseControls,bankedCount,retainedBanks, compactForecast: result.flexibleSchedule,
     width: axis.width, height,
     levels: strategyTreeView(result), displayLevels: strategyMilestoneView(result), funnel,
     locale,timeZone: result.timeZone,resetLaneLabels, forecastCalendar: result.forecastCalendar,

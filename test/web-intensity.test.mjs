@@ -85,10 +85,10 @@ test('反复切换双假设及备用，仅使用建议有日期节点；正常�
     for(const width of [340,480,640,800,960,1180,2560,640]) {
       // Use the observer's measurement even if clientWidth has not caught up.
       resized([{contentRect:{width}}]);
-      const graphWidth=Number(output.innerHTML.match(/class="strategy-graph" style="width:([\d.]+)px/)?.[1]);
+      const graphWidth=Number(output.innerHTML.match(/class="strategy-graph"(?: data-compact)? style="width:([\d.]+)px/)?.[1]);
       const padding=width<680 ? 14 : 24;
-      // Phones keep a 640px canvas and scroll sideways instead of squeezing labels.
-      const expected=Math.max(width-padding*2-2,width<680 ? 640 : 0);
+      // Phones fit the screen (captions replace the label gutter); mid widths keep a 640px scrolling canvas.
+      const expected=width<480 ? width-padding*2-2 : Math.max(width-padding*2-2,width<680 ? 640 : 0);
       assert.ok(Math.abs(graphWidth-expected)<1e-6,graphWidth+' must fit '+width);
       assertVisible();
       assert.deepEqual(state(),banksBefore);

@@ -2273,6 +2273,58 @@ footer {
 .tree-edges .quota-label {
   stroke: transparent;
 }
+.strategy-graph[data-compact] .timeline-lane-label {
+  background: none;
+}
+.strategy-graph[data-compact] .timeline-lane-label[data-lane-inline] > .timeline-lane-text {
+  font-size: 11px;
+  line-height: 18px;
+  font-weight: 600;
+}
+.strategy-graph[data-compact] .phase-controls[data-quota-label] > strong {
+  font-size: 15px;
+}
+.phone-summary {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 10px 14px;
+  align-items: end;
+  padding: 14px;
+  margin: 0 0 16px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  box-shadow: 2px 2px 0 color-mix(in srgb, var(--shadow) 18%, transparent);
+}
+.phone-summary > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.phone-summary small {
+  font-size: 11px;
+  color: var(--muted);
+}
+.phone-summary strong {
+  font-size: 17px;
+  line-height: 22px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.phone-summary [data-summary=next-reset] strong {
+  color: var(--pool-rose-deep);
+}
+.phone-summary span {
+  font-size: 11px;
+  color: var(--muted);
+}
+.phone-summary [data-edit-quota] {
+  grid-column: 1/-1;
+  justify-self: start;
+  font-size: 12px;
+  padding: 6px 10px;
+}
 
 /* src/styles/theme.css */
 

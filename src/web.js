@@ -7,6 +7,7 @@ import { renderAvailabilityControls } from './components/availability-controls.j
 import { usageConsumptionSummary } from './usage-consumption-summary.js';
 import { createUsagePlannerState,updateUsagePlanner,activePlannerPrediction } from './usage-planner-state.js';
 import { layoutStrategyTree, renderStrategyTree } from './strategy-tree-layout.js';
+import { COMPACT_TIMELINE_WIDTH } from './strategy-time-layout.js';
 import { workspaceLayout } from './workspace-layout.js';
 import { syncPlannerMetadata } from './page-metadata.js';
 import { pluginPageClient } from './plugin-page-client.js';
@@ -157,9 +158,10 @@ function renderResult(availableWidth=$('#result').clientWidth) {
     return;
   }
   const graph = layoutStrategyTree(result, { expandedLevel: null, prediction: planningPrediction,
-    // Phones get a wider canvas that scrolls sideways (lane labels stay pinned);
-    // squeezing every day into ~300px makes phase labels collide.
-    viewportWidth:Math.max(workspace.timelineWidth,availableWidth<680 ? MOBILE_TIMELINE_WIDTH : 0),
+    // Phones fit the whole horizon to the screen (lane names move above their
+    // rows); mid widths keep a wider canvas that scrolls sideways.
+    viewportWidth:availableWidth<COMPACT_TIMELINE_WIDTH ? workspace.timelineWidth
+      : Math.max(workspace.timelineWidth,availableWidth<680 ? MOBILE_TIMELINE_WIDTH : 0),
     displayEndHours:planner.displayEndHours,locale:language });
   const consumption=usageConsumptionSummary(result,{locale:language});
   const sourceDescription = forecastSource.available ? forecastSource.coverage?.history.status==='live'
@@ -168,13 +170,26 @@ function renderResult(availableWidth=$('#result').clientWidth) {
   const socialDescription = forecastSource.coverage?.social.status==='unavailable' ? t(' · X 回复暂缺')
     : forecastSource.classification==='llm' ? t(' · LLM 分析帖子') : '';
   const policyData=result.recommendation ? ` data-policy-search="${result.recommendation.method}"${result.recommendation.primary ? ' data-plan-basis="predicted-extra-resets-first"' : ''}` : '';
-  $('#result').innerHTML = `<section class="strategy-panel" aria-label="${t('用量计划')}"${policyData} style="--panel-padding:${workspace.panelPadding}px"><div class="pace-controls"><div data-current-consumption data-daily="${consumption.dailyPercent}"><span>${t('当前日均消耗 {daily}% / 天',{daily:round(consumption.dailyPercent)})}</span><small>${escape(t('本周剩 {remaining}% · 刷新剩 {time}',{remaining:round(consumption.remainingPercent),time:consumption.refreshLabel}))}</small></div>
+  $('#result').innerHTML = `<section class="strategy-panel" aria-label="${t('用量计划')}"${policyData} style="--panel-padding:${workspace.panelPadding}px">${graph.compact ? phoneSummary(graph,planningPrediction) : ''}<div class="pace-controls"><div data-current-consumption data-daily="${consumption.dailyPercent}"><span>${t('当前日均消耗 {daily}% / 天',{daily:round(consumption.dailyPercent)})}</span><small>${escape(t('本周剩 {remaining}% · 刷新剩 {time}',{remaining:round(consumption.remainingPercent),time:consumption.refreshLabel}))}</small></div>
     </div>
     <div class="timeline-toolbar"><span>${t(result.recommendation&&!result.recommendation.primary ? '若始终没有额外重置' : '用量与重置 · 每天一格')}</span></div>
     ${renderStrategyTree(graph, escape)}
     </section>
     ${renderForecastMethod({source:forecastSource,prediction:planningPrediction,result,timeZone,locale:language},escape)}
     <p class="forecast-data-status">${escape(sourceDescription+socialDescription)}</p>`;
+}
+
+// Phones: the numbers people come for, above the timeline, plus a jump to the inputs.
+function phoneSummary(graph,prediction) {
+  const percent=value=>`${round(value*100)}%`;
+  const focus=prediction&&graph.forecastFocus;
+  const today=graph.phaseControls?.[0];
+  const cells=[
+    focus ? `<div data-summary="next-reset"><small>${escape(t('下次额外 reset'))}</small><strong>${escape(focus.label)}</strong>${Number.isFinite(focus.cumulativeProbability) ? `<span>${escape(t('到那时已发生的概率 {percent}',{percent:percent(focus.cumulativeProbability)}))}</span>` : ''}</div>` : '',
+    Number.isFinite(prediction?.next48Probability) ? `<div data-summary="next-48h"><small>${escape(t('未来 48 小时'))}</small><strong>${percent(prediction.next48Probability)}</strong></div>` : '',
+    today ? `<div data-summary="today"><small>${escape(t('现在每天'))}</small><strong>${round(today.dailyPercent)}%</strong></div>` : ''
+  ].filter(Boolean).join('');
+  return `<div class="phone-summary" data-phone-summary>${cells}<button type="button" data-edit-quota>${escape(t('修改额度'))}</button></div>`;
 }
 
 function dispatchPlanning(action) {
@@ -303,6 +318,9 @@ $('#inputs').addEventListener('click', event => {
 
 $('#calculate').addEventListener('click', calculate);
 function handlePlanClick(event) {
+  if(event.target.closest('[data-edit-quota]')) {
+    document.querySelector('.input-state')?.scrollIntoView?.({block:'start'});return;
+  }
   if (!planner.result) return;
   const availability=event.target.closest('button[data-availability-mode]');
   if(availability) {

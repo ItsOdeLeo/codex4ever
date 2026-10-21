@@ -112,6 +112,13 @@ test('每段用量统一紧贴绿色额度上沿；假设、备用、窄屏均�
       for(const viewportWidth of [270,640,1400,2200]) {
         const graph=layoutStrategyTree(result,{prediction,viewportWidth});
         const usage=graph.headings.find(heading=>heading.kind==='usage');
+        if(graph.compact) {
+          // Phones: one caption above the row names both lines; no left gutter.
+          assert.equal(viewportWidth,270);
+          assert.ok(usage.y+usage.height<=graph.phaseControls[0].y,'说明在数字行上方');
+          assert.equal(graph.headings.some(heading=>heading.kind==='opportunity'),false);
+          continue;
+        }
         assert.equal(usage.x,0,'用量名称位于时间轴外的左侧公共栏');
         assert.ok(usage.width<=graph.dayAxis.leftPadding);
         assert.equal(usage.y,graph.phaseControls[0].y,'公共名称与各段数字对齐同一行');

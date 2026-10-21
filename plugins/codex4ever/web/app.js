@@ -47,6 +47,11 @@ var english = {
   "\u81EA\u5B9A\u4E49\u7528\u91CF": "Customize usage",
   "\u5982\u679C\u4F60\u559C\u6B22\u8FD9\u4E2A\u4F5C\u54C1\uFF0C\u6B22\u8FCE\u5728 X \u4E0A\u5173\u6CE8\u6211": "If you like this work, follow me on X",
   "GitHub \u5F00\u6E90": "Open source on GitHub",
+  "\u4E0B\u6B21\u989D\u5916 reset": "Next extra reset",
+  "\u5230\u90A3\u65F6\u5DF2\u53D1\u751F\u7684\u6982\u7387 {percent}": "{percent} likely by then",
+  "\u672A\u6765 48 \u5C0F\u65F6": "Next 48h",
+  "\u73B0\u5728\u6BCF\u5929": "Use now",
+  "\u4FEE\u6539\u989D\u5EA6": "Edit quota",
   "\u70B9\u51FB\u300C\u8BA1\u7B97\u7B56\u7565\u300D\u67E5\u770B\u7ED3\u679C\u3002": "Calculate a plan to see your timeline.",
   "\u91CD\u7F6E\u6570\u636E\u6765\u6E90": "Reset data",
   "\u672C\u5730\u4F30\u7B97 \xB7 \u4E0D\u6267\u884C\u5151\u6362 \xB7 \u7528\u91CF\u6216\u91CD\u7F6E\u53D8\u5316\u540E\u91CD\u65B0\u8BA1\u7B97": "Local estimate \xB7 No resets redeemed \xB7 Recalculate after usage or resets change",
@@ -3871,6 +3876,7 @@ function timelineUsagePhases(phases, xAtHours) {
 
 // src/strategy-time-layout.js
 var round4 = (value) => Number(value.toFixed(1));
+var COMPACT_TIMELINE_WIDTH = 480;
 function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayEndHours: fixedEndHours = null, locale = "zh-CN" } = {}) {
   const t2 = translator(locale);
   if (!result.predictionEnabled) prediction = null;
@@ -3904,8 +3910,9 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
     else forecasts.push(point);
   }
   forecasts.sort((a, b) => a.hours - b.hours);
-  const laneWidth = Number.isFinite(viewportWidth) && viewportWidth < 680 ? 128 : 176;
-  const leftPadding = laneWidth + 16;
+  const compact = Number.isFinite(viewportWidth) && viewportWidth < COMPACT_TIMELINE_WIDTH;
+  const laneWidth = compact ? 0 : Number.isFinite(viewportWidth) && viewportWidth < 680 ? 128 : 176;
+  const leftPadding = compact ? 6 : laneWidth + 16;
   let axis = strategyTimeAxis({
     now: result.now,
     timeZone: result.timeZone,
@@ -4009,14 +4016,14 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
     clockLabel: clock(secondMarker.pointAt)
   } : null;
   if (forecastFollowing?.planned) forecastFollowing.cumulativeProbability = followingResetProbabilityByHours(prediction, result.now, secondMarker.pointHours, secondCondition) ?? forecastFollowing.cumulativeProbability;
-  const forecastPeaks = layoutResetProbabilityPeaks({
+  const forecastPeaks = compact ? [] : layoutResetProbabilityPeaks({
     plot: probabilityPlot,
     timeZone: result.timeZone,
     focus: forecastFocus,
     otherLabels: forecastFollowing ? [{ ...forecastFollowing, height: 34 }] : [],
     cumulativeAtHours: (hours) => resetProbabilityByHours(prediction, hours)
   });
-  const followingPeaks = layoutResetProbabilityPeaks({
+  const followingPeaks = compact ? [] : layoutResetProbabilityPeaks({
     plot: followingPlot,
     timeZone: result.timeZone,
     focus: forecastFollowing,
@@ -4032,7 +4039,7 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
   for (const [index, phase] of shownPhases.entries()) {
     const startX = axis.xAtHours(phase.startHours);
     const endX = axis.xAtHours(restPeriods.length ? phase.endHours : shownPhases[index + 1]?.startHours ?? phase.endHours);
-    const inset = Math.min(8, Math.max(0, (endX - startX) / 4));
+    const inset = Math.min(compact ? 2 : 8, Math.max(0, (endX - startX) / 4));
     const x = startX + inset;
     phaseControls.push({
       ...phase,
@@ -4040,6 +4047,7 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
       y: phaseY,
       width: Math.max(1, Math.min(phaseWidth, endX - x - inset)),
       quotaLabel: true,
+      compact,
       options: result.paceChoices
     });
   }
@@ -4221,10 +4229,7 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
   const gutterWidth = Math.max(0, axis.leftPadding - 16);
   const resetLaneLabels = [probabilityPlot, followingPlot].map((plot, index) => plot ? {
     id: `reset-${index + 1}`,
-    x: 0,
-    y: plot.topY + plot.height / 2 - 10,
-    width: gutterWidth,
-    height: 20,
+    ...compact ? { x: axis.leftPadding, y: plot.topY - 62, width: plotLabelWidth, height: 18 } : { x: 0, y: plot.topY + plot.height / 2 - 10, width: gutterWidth, height: 20 },
     inline: true,
     title: t2(index === 0 ? "\u9996\u6B21\u989D\u5916\u91CD\u7F6E" : "\u7B2C\u4E8C\u6B21\u989D\u5916\u91CD\u7F6E"),
     detail: "",
@@ -4235,7 +4240,16 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
     ].filter(Boolean).join(" \xB7 ")
   } : null);
   const suggested = shownPhases.some((phase) => !phase.fixed && !phase.constrained && phase.reason !== "no-resource" && Math.abs(phase.dailyPercent - phase.baselineDailyPercent) > 1e-5);
-  const headings = [
+  const headings = compact ? [{
+    x: axis.leftPadding,
+    y: phaseY - 22,
+    width: plotLabelWidth,
+    height: 18,
+    kind: "usage",
+    inline: true,
+    date: [t2(suggested ? "\u5EFA\u8BAE / \u5929" : "\u7528\u91CF / \u5929"), ...opportunityHeight ? [t2("\u91CD\u7F6E\u6982\u7387 \xB7 \u622A\u81F3")] : []].join(" \xB7 "),
+    state: ""
+  }] : [
     {
       x: 0,
       y: phaseY,
@@ -4269,6 +4283,7 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
     }
   ];
   return {
+    compact,
     nodes,
     edges,
     headings,
@@ -4325,17 +4340,19 @@ function usageRateDetail(baselineDailyPercent, dailyPercent, locale = "zh-CN") {
 // src/components/strategy-annotations.js
 var position2 = (node) => `left:${node.viewportWidth ? `${node.x / node.viewportWidth * 100}%` : `${node.x}px`};top:${node.y}px;width:${node.viewportWidth ? `${node.width / node.viewportWidth * 100}%` : `${node.width}px`}`;
 var MINIMUM_LABEL_WIDTH = 36;
+var COMPACT_MINIMUM_LABEL_WIDTH = 30;
+var COMPACT_CHANCE_WIDTH = 46;
 function renderPhaseControl(phase, { timeZone: timeZone2, escape: escape3, locale = "zh-CN" }) {
   const t2 = translator(locale);
   const advice = !phase.fixed && !phase.constrained ? usageRateAdvice(phase.baselineDailyPercent, phase.dailyPercent, locale) : "";
   const quotaLabel = phase.quotaLabel && !phase.viewportWidth;
   const value = quotaLabel ? `${Number(phase.dailyPercent.toFixed(1))}%` : advice || usageRateDetail(phase.baselineDailyPercent, phase.dailyPercent, locale);
-  const tooNarrow = quotaLabel && Number.isFinite(phase.width) && phase.width < MINIMUM_LABEL_WIDTH;
+  const tooNarrow = quotaLabel && Number.isFinite(phase.width) && phase.width < (phase.compact ? COMPACT_MINIMUM_LABEL_WIDTH : MINIMUM_LABEL_WIDTH);
   const label = phase.reason === "no-resource" && !quotaLabel ? `<strong>${t2("\u6682\u505C")}</strong>` : tooNarrow ? '<strong aria-hidden="true"></strong>' : `<strong class="${advice ? "phase-advice" : "phase-budget"}">${escape3(value)}</strong>`;
   const review = phase.stageReason === "if-no-extra-reset-after-48h" ? t2("\u82E5\u4E24\u5929\u540E\u4ECD\u672A\u989D\u5916 reset") : phase.stageReason === "if-no-extra-reset-at-review" ? t2("\u82E5\u4ECD\u672A\u989D\u5916 reset") : "";
   const detail = phase.reason === "no-resource" ? t2("\u6682\u505C") : usageRateDetail(phase.baselineDailyPercent, phase.dailyPercent, locale);
   const labelHeight = phase.labelHeight ?? (phase.nextResetOpportunity ? 36 + resetOpportunityLayout(phase.width).height : 34);
-  return `<div class="phase-controls" data-phase-start-at="${escape3(phase.startAt)}" data-phase-daily="${phase.dailyPercent}" data-phase-baseline="${phase.baselineDailyPercent}" ${quotaLabel ? "data-quota-label" : ""} title="${escape3([review, detail].filter(Boolean).join(" \xB7 "))}" style="${position2(phase)}${quotaLabel ? `;--phase-label-height:${labelHeight}px` : ""}">${review && !quotaLabel ? `<small class="review-condition">${review}</small>` : ""}${label}${tooNarrow ? "" : renderResetOpportunity(phase.nextResetOpportunity, { timeZone: timeZone2, escape: escape3, locale, compact: quotaLabel, width: phase.width })}</div>`;
+  return `<div class="phase-controls" data-phase-start-at="${escape3(phase.startAt)}" data-phase-daily="${phase.dailyPercent}" data-phase-baseline="${phase.baselineDailyPercent}" ${quotaLabel ? "data-quota-label" : ""} title="${escape3([review, detail].filter(Boolean).join(" \xB7 "))}" style="${position2(phase)}${quotaLabel ? `;--phase-label-height:${labelHeight}px` : ""}">${review && !quotaLabel ? `<small class="review-condition">${review}</small>` : ""}${label}${tooNarrow || phase.compact && phase.width < COMPACT_CHANCE_WIDTH ? "" : renderResetOpportunity(phase.nextResetOpportunity, { timeZone: timeZone2, escape: escape3, locale, compact: quotaLabel, width: phase.width })}</div>`;
 }
 function renderStrategyNode(node, escape3, locale = "zh-CN") {
   const t2 = translator(locale);
@@ -4666,7 +4683,7 @@ function renderStrategyTree(graph, escape3) {
     <span>\u6B64\u524D\u989D\u5916\u91CD\u7F6E\u6982\u7387</span><div>${graph.forecastCalendar.map((point) => `<span><small>${escape3(forecastDate(point.at))}</small><strong>${round6(point.probability * 100)}%</strong></span>`).join("")}</div></div>` : "";
   const forecastLegend = !graph.compactForecast && graph.forecastLayout?.length ? `<div class="forecast-legend">${t2("\u84DD\u7EBF\uFF1A\u6B64\u524D\u81F3\u5C11\u53D1\u751F\u4E00\u6B21\u989D\u5916 reset \u7684\u6982\u7387")}</div>` : "";
   const inventory = Number.isInteger(graph.bankedCount) ? `<div class="retained-resets" data-banked-count="${graph.bankedCount}">${escape3(t2("\u5907\u7528 reset \xB7 {count} \u4E2A", { count: graph.bankedCount }))}</div>` : "";
-  return `${forecast}${forecastLegend}<div class="tree-scroll" data-timeline-orientation="horizontal" tabindex="0" role="region" aria-label="${t2("\u4ECE\u5DE6\u5411\u53F3\u7684\u989D\u5EA6\u6F0F\u6597\u4E0E\u7B56\u7565\u9009\u62E9\uFF0C\u53EF\u6A2A\u5411\u6EDA\u52A8")}"><div class="strategy-graph" style="width:${graph.width}px;height:${graph.height}px" ${graph.dayAxis ? `data-timeline-from="${graph.dayAxis.days[0].startAt}" data-timeline-to="${graph.dayAxis.days.at(-1).endAt}"` : ""}>${svg}${days}${alignedForecast}${resetElements.map((element) => element.html).join("")}${headings}${phaseControls}${nodes}${controls}</div></div>${inventory}`;
+  return `${forecast}${forecastLegend}<div class="tree-scroll" data-timeline-orientation="horizontal" tabindex="0" role="region" aria-label="${t2("\u4ECE\u5DE6\u5411\u53F3\u7684\u989D\u5EA6\u6F0F\u6597\u4E0E\u7B56\u7565\u9009\u62E9\uFF0C\u53EF\u6A2A\u5411\u6EDA\u52A8")}"><div class="strategy-graph"${graph.compact ? " data-compact" : ""} style="width:${graph.width}px;height:${graph.height}px" ${graph.dayAxis ? `data-timeline-from="${graph.dayAxis.days[0].startAt}" data-timeline-to="${graph.dayAxis.days.at(-1).endAt}"` : ""}>${svg}${days}${alignedForecast}${resetElements.map((element) => element.html).join("")}${headings}${phaseControls}${nodes}${controls}</div></div>${inventory}`;
 }
 
 // src/workspace-layout.js
@@ -4915,9 +4932,9 @@ function renderResult(availableWidth = $("#result").clientWidth) {
   const graph = layoutStrategyTree(result, {
     expandedLevel: null,
     prediction: planningPrediction,
-    // Phones get a wider canvas that scrolls sideways (lane labels stay pinned);
-    // squeezing every day into ~300px makes phase labels collide.
-    viewportWidth: Math.max(workspace.timelineWidth, availableWidth < 680 ? MOBILE_TIMELINE_WIDTH : 0),
+    // Phones fit the whole horizon to the screen (lane names move above their
+    // rows); mid widths keep a wider canvas that scrolls sideways.
+    viewportWidth: availableWidth < COMPACT_TIMELINE_WIDTH ? workspace.timelineWidth : Math.max(workspace.timelineWidth, availableWidth < 680 ? MOBILE_TIMELINE_WIDTH : 0),
     displayEndHours: planner.displayEndHours,
     locale: language
   });
@@ -4925,13 +4942,24 @@ function renderResult(availableWidth = $("#result").clientWidth) {
   const sourceDescription = forecastSource.available ? forecastSource.coverage?.history.status === "live" ? t("\u5B9E\u65F6\u8BB0\u5F55 \xB7 \u4E0A\u6B21\u516C\u5F00\u91CD\u7F6E {days} \u5929\u524D", { days: round7(forecastSource.daysSinceReset) }) : t("\u7F13\u5B58 \xB7 \u6570\u636E\u622A\u81F3 {date}", { date: forecastSource.dataAsOf }) : diagnosticText(language, forecastSource.reason);
   const socialDescription = forecastSource.coverage?.social.status === "unavailable" ? t(" \xB7 X \u56DE\u590D\u6682\u7F3A") : forecastSource.classification === "llm" ? t(" \xB7 LLM \u5206\u6790\u5E16\u5B50") : "";
   const policyData = result.recommendation ? ` data-policy-search="${result.recommendation.method}"${result.recommendation.primary ? ' data-plan-basis="predicted-extra-resets-first"' : ""}` : "";
-  $("#result").innerHTML = `<section class="strategy-panel" aria-label="${t("\u7528\u91CF\u8BA1\u5212")}"${policyData} style="--panel-padding:${workspace.panelPadding}px"><div class="pace-controls"><div data-current-consumption data-daily="${consumption.dailyPercent}"><span>${t("\u5F53\u524D\u65E5\u5747\u6D88\u8017 {daily}% / \u5929", { daily: round7(consumption.dailyPercent) })}</span><small>${escape2(t("\u672C\u5468\u5269 {remaining}% \xB7 \u5237\u65B0\u5269 {time}", { remaining: round7(consumption.remainingPercent), time: consumption.refreshLabel }))}</small></div>
+  $("#result").innerHTML = `<section class="strategy-panel" aria-label="${t("\u7528\u91CF\u8BA1\u5212")}"${policyData} style="--panel-padding:${workspace.panelPadding}px">${graph.compact ? phoneSummary(graph, planningPrediction) : ""}<div class="pace-controls"><div data-current-consumption data-daily="${consumption.dailyPercent}"><span>${t("\u5F53\u524D\u65E5\u5747\u6D88\u8017 {daily}% / \u5929", { daily: round7(consumption.dailyPercent) })}</span><small>${escape2(t("\u672C\u5468\u5269 {remaining}% \xB7 \u5237\u65B0\u5269 {time}", { remaining: round7(consumption.remainingPercent), time: consumption.refreshLabel }))}</small></div>
     </div>
     <div class="timeline-toolbar"><span>${t(result.recommendation && !result.recommendation.primary ? "\u82E5\u59CB\u7EC8\u6CA1\u6709\u989D\u5916\u91CD\u7F6E" : "\u7528\u91CF\u4E0E\u91CD\u7F6E \xB7 \u6BCF\u5929\u4E00\u683C")}</span></div>
     ${renderStrategyTree(graph, escape2)}
     </section>
     ${renderForecastMethod({ source: forecastSource, prediction: planningPrediction, result, timeZone, locale: language }, escape2)}
     <p class="forecast-data-status">${escape2(sourceDescription + socialDescription)}</p>`;
+}
+function phoneSummary(graph, prediction) {
+  const percent = (value) => `${round7(value * 100)}%`;
+  const focus = prediction && graph.forecastFocus;
+  const today2 = graph.phaseControls?.[0];
+  const cells = [
+    focus ? `<div data-summary="next-reset"><small>${escape2(t("\u4E0B\u6B21\u989D\u5916 reset"))}</small><strong>${escape2(focus.label)}</strong>${Number.isFinite(focus.cumulativeProbability) ? `<span>${escape2(t("\u5230\u90A3\u65F6\u5DF2\u53D1\u751F\u7684\u6982\u7387 {percent}", { percent: percent(focus.cumulativeProbability) }))}</span>` : ""}</div>` : "",
+    Number.isFinite(prediction?.next48Probability) ? `<div data-summary="next-48h"><small>${escape2(t("\u672A\u6765 48 \u5C0F\u65F6"))}</small><strong>${percent(prediction.next48Probability)}</strong></div>` : "",
+    today2 ? `<div data-summary="today"><small>${escape2(t("\u73B0\u5728\u6BCF\u5929"))}</small><strong>${round7(today2.dailyPercent)}%</strong></div>` : ""
+  ].filter(Boolean).join("");
+  return `<div class="phone-summary" data-phone-summary>${cells}<button type="button" data-edit-quota>${escape2(t("\u4FEE\u6539\u989D\u5EA6"))}</button></div>`;
 }
 function dispatchPlanning(action) {
   planner = updateUsagePlanner(planner, action);
@@ -5072,6 +5100,10 @@ $("#inputs").addEventListener("click", (event) => {
 });
 $("#calculate").addEventListener("click", calculate2);
 function handlePlanClick(event) {
+  if (event.target.closest("[data-edit-quota]")) {
+    document.querySelector(".input-state")?.scrollIntoView?.({ block: "start" });
+    return;
+  }
   if (!planner.result) return;
   const availability = event.target.closest("button[data-availability-mode]");
   if (availability) {
