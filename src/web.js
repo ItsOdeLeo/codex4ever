@@ -141,6 +141,8 @@ function saveInput() {
 
 const round = value => Number(value.toFixed(1));
 const MOBILE_TIMELINE_WIDTH=640;
+// Cards people screenshot carry the name, so a cropped image still says where it came from.
+const BRAND_STAMP='<div class="brand-stamp" aria-hidden="true"><span>∞</span> Codex4ever</div>';
 
 function renderResult(availableWidth=$('#result').clientWidth) {
   const result=planner.result;
@@ -151,7 +153,7 @@ function renderResult(availableWidth=$('#result').clientWidth) {
   renderedWidth=workspace.width;
   const forecastSummary = renderResetForecastSummary({ source: forecastSource, prediction: planningPrediction,
     timeZone, now: planningNow,locale:language });
-  $('#forecast').innerHTML = `<div class="forecast-control" ${planningPrediction ? `data-forecast-48-probability="${planningPrediction.next48Probability}"` : ''}><span>${t('额外重置预测')}</span><button type="button" data-toggle-forecast aria-pressed="${!!planningPrediction}" ${!forecastSource.available ? 'disabled' : ''}>${t(planningPrediction ? '已开启' : '已关闭')}</button></div>${forecastSummary}`;
+  $('#forecast').innerHTML = `<div class="forecast-control" ${planningPrediction ? `data-forecast-48-probability="${planningPrediction.next48Probability}"` : ''}><span>${t('额外重置预测')}</span><button type="button" data-toggle-forecast aria-pressed="${!!planningPrediction}" ${!forecastSource.available ? 'disabled' : ''}>${t(planningPrediction ? '已开启' : '已关闭')}</button></div>${forecastSummary}${BRAND_STAMP}`;
   renderStrategyControls();
   if (!result.available) {
     $('#result').innerHTML = `<p class="empty-result">${escape(diagnosticText(language,result.reason,'input'))}</p>`;
@@ -189,7 +191,7 @@ function phoneSummary(graph,prediction) {
     Number.isFinite(prediction?.next48Probability) ? `<div data-summary="next-48h"><small>${escape(t('未来 48 小时'))}</small><strong>${percent(prediction.next48Probability)}</strong></div>` : '',
     today ? `<div data-summary="today"><small>${escape(t('现在每天'))}</small><strong>${round(today.dailyPercent)}%</strong></div>` : ''
   ].filter(Boolean).join('');
-  return `<div class="phone-summary" data-phone-summary>${cells}<button type="button" data-edit-quota>${escape(t('修改额度'))}</button></div>`;
+  return `<div class="phone-summary" data-phone-summary>${cells}<button type="button" data-edit-quota>${escape(t('修改额度'))}</button>${BRAND_STAMP}</div>`;
 }
 
 function dispatchPlanning(action) {

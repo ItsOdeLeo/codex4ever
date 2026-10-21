@@ -2320,10 +2320,47 @@ footer {
   color: var(--muted);
 }
 .phone-summary [data-edit-quota] {
-  grid-column: 1/-1;
+  grid-column: 1;
   justify-self: start;
   font-size: 12px;
   padding: 6px 10px;
+}
+.forecast-panel {
+  position: relative;
+}
+.brand-stamp {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 5px;
+  margin-top: 10px;
+  font-family: var(--font-brand);
+  font-size: 17px;
+  line-height: 1;
+  color: var(--muted);
+  opacity: .85;
+  pointer-events: none;
+  user-select: none;
+}
+.brand-stamp span {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: var(--accent);
+  color: var(--ink);
+  font-family: var(--font-reading);
+  font-size: 13px;
+}
+.phone-summary > .brand-stamp {
+  grid-column: 2/-1;
+  flex-direction: row;
+  align-self: center;
+  margin-top: 0;
+  white-space: nowrap;
 }
 
 /* src/styles/theme.css */

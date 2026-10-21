@@ -4909,6 +4909,7 @@ function saveInput() {
 }
 var round7 = (value) => Number(value.toFixed(1));
 var MOBILE_TIMELINE_WIDTH = 640;
+var BRAND_STAMP = '<div class="brand-stamp" aria-hidden="true"><span>\u221E</span> Codex4ever</div>';
 function renderResult(availableWidth = $("#result").clientWidth) {
   const result = planner.result;
   if (!result) return;
@@ -4923,7 +4924,7 @@ function renderResult(availableWidth = $("#result").clientWidth) {
     now: planningNow,
     locale: language
   });
-  $("#forecast").innerHTML = `<div class="forecast-control" ${planningPrediction ? `data-forecast-48-probability="${planningPrediction.next48Probability}"` : ""}><span>${t("\u989D\u5916\u91CD\u7F6E\u9884\u6D4B")}</span><button type="button" data-toggle-forecast aria-pressed="${!!planningPrediction}" ${!forecastSource.available ? "disabled" : ""}>${t(planningPrediction ? "\u5DF2\u5F00\u542F" : "\u5DF2\u5173\u95ED")}</button></div>${forecastSummary}`;
+  $("#forecast").innerHTML = `<div class="forecast-control" ${planningPrediction ? `data-forecast-48-probability="${planningPrediction.next48Probability}"` : ""}><span>${t("\u989D\u5916\u91CD\u7F6E\u9884\u6D4B")}</span><button type="button" data-toggle-forecast aria-pressed="${!!planningPrediction}" ${!forecastSource.available ? "disabled" : ""}>${t(planningPrediction ? "\u5DF2\u5F00\u542F" : "\u5DF2\u5173\u95ED")}</button></div>${forecastSummary}${BRAND_STAMP}`;
   renderStrategyControls();
   if (!result.available) {
     $("#result").innerHTML = `<p class="empty-result">${escape2(diagnosticText(language, result.reason, "input"))}</p>`;
@@ -4959,7 +4960,7 @@ function phoneSummary(graph, prediction) {
     Number.isFinite(prediction?.next48Probability) ? `<div data-summary="next-48h"><small>${escape2(t("\u672A\u6765 48 \u5C0F\u65F6"))}</small><strong>${percent(prediction.next48Probability)}</strong></div>` : "",
     today2 ? `<div data-summary="today"><small>${escape2(t("\u73B0\u5728\u6BCF\u5929"))}</small><strong>${round7(today2.dailyPercent)}%</strong></div>` : ""
   ].filter(Boolean).join("");
-  return `<div class="phone-summary" data-phone-summary>${cells}<button type="button" data-edit-quota>${escape2(t("\u4FEE\u6539\u989D\u5EA6"))}</button></div>`;
+  return `<div class="phone-summary" data-phone-summary>${cells}<button type="button" data-edit-quota>${escape2(t("\u4FEE\u6539\u989D\u5EA6"))}</button>${BRAND_STAMP}</div>`;
 }
 function dispatchPlanning(action) {
   planner = updateUsagePlanner(planner, action);
