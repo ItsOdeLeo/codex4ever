@@ -19,6 +19,16 @@ Codex4ever is a planner for your OpenAI Codex weekly quota. It shows when your q
 
 Unofficial; not affiliated with OpenAI. MIT licensed.
 
+## See it in Codex
+
+Ask once; Codex reads your quota and opens the planner beside the chat.
+
+<p align="center"><img src="docs/images/ask.gif" alt="Typing “open quota planning” in Codex opens the Codex4ever planner in the side browser" width="1280" /></p>
+
+Pick a strategy and the plan changes: daily usage, refills and run-out points.
+
+<p align="center"><img src="docs/images/strategies.gif" alt="Switching between Keep pace, Keep available, Use it all, Weekdays only and Weekend focus updates the timeline" width="1280" /></p>
+
 ## What it does
 
 - **Timeline of your next two weeks** — daily usage, remaining quota, run-out points, outages, normal refreshes and banked-reset uses, one column per day.
