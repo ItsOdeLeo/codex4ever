@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "labelPolicy": "Synthetic event-time stress cases, separate from the unchanged 22-case baseline. Tests publication time versus occurrence time, not forecast accuracy.",
+  "cases": [
+    {
+      "id": "time-explicit-completion",
+      "provenance": "synthetic-counterexample",
+      "post": {"createdAt":"2026-10-19T12:00:00.000Z","text":"We reset Codex usage limits at 2026-10-19T10:00:00Z. The reset is complete.","activityType":"post"},
+      "expected": {"kinds":["reset_completed"],"automaticClaimAllowed":true,"resetTiming":"current","resetOccurredAt":"2026-10-19T10:00:00.000Z"}
+    },
+    {
+      "id": "time-current-without-exact-time",
+      "provenance": "synthetic-counterexample",
+      "post": {"createdAt":"2026-10-19T12:00:00.000Z","text":"We have just reset everyone's Codex usage limits. The reset is complete.","activityType":"post"},
+      "expected": {"kinds":["reset_completed"],"automaticClaimAllowed":true,"resetTiming":"current","resetOccurredAt":null}
+    },
+    {
+      "id": "time-historical-date",
+      "provenance": "synthetic-counterexample",
+      "post": {"createdAt":"2026-10-19T12:00:00.000Z","text":"Last week, on 2026-10-12T10:00:00Z, we reset Codex usage limits. This is a recap, not a new reset announcement.","activityType":"post"},
+      "expected": {"kinds":["unknown","irrelevant"],"automaticClaimAllowed":false,"resetTiming":"historical"}
+    },
+    {
+      "id": "time-future-is-planned",
+      "provenance": "synthetic-counterexample",
+      "post": {"createdAt":"2026-10-19T12:00:00.000Z","text":"We will reset Codex usage limits at 2026-10-19T14:00:00Z. It has not happened yet.","activityType":"post"},
+      "expected": {"kinds":["reset_planned"],"automaticClaimAllowed":true,"validUntil":"2026-10-19T14:00:00.000Z","resetOccurredAt":null}
+    },
+    {
+      "id": "time-new-event-alongside-old-recap",
+      "provenance": "synthetic-counterexample",
+      "post": {"createdAt":"2026-10-19T12:00:00.000Z","text":"We reset Codex usage limits last week, and we have just reset them again today. This new reset is complete.","activityType":"post"},
+      "expected": {"kinds":["reset_completed"],"automaticClaimAllowed":true,"resetTiming":"current","resetOccurredAt":null}
+    }
+  ]
+}

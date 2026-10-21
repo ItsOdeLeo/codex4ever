@@ -1,0 +1,15 @@
+{
+  "reference": "User supplied My collections interface, 2026-10-18",
+  "sha256": "18144098c0cd7efe7da4f38e9f9274bae60fa1a3f4e7228ee9bff18756cf94af",
+  "imageSize": { "width": 778, "height": 1572 },
+  "colors": {
+    "canvas": { "hex": "#F4F5FA", "pixel": { "x": 15, "y": 31 } },
+    "white": { "hex": "#FFFFFF", "pixel": { "x": 77, "y": 298 } },
+    "grey": { "hex": "#F1F2F4", "pixel": { "x": 256, "y": 349 } },
+    "ink": { "hex": "#2A2B2D", "pixel": { "x": 295, "y": 1336 } },
+    "lavender": { "hex": "#DAB8F4", "pixel": { "x": 326, "y": 471 } },
+    "lime": { "hex": "#E0F37D", "pixel": { "x": 350, "y": 660 } },
+    "cobalt": { "hex": "#4458C8", "pixel": { "x": 437, "y": 849 } },
+    "orange": { "hex": "#EE5F37", "pixel": { "x": 350, "y": 1044 } }
+  }
+}

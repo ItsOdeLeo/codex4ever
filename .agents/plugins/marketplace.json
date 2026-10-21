@@ -1,0 +1,20 @@
+{
+  "name": "codex4ever",
+  "interface": {
+    "displayName": "Codex4ever"
+  },
+  "plugins": [
+    {
+      "name": "codex4ever",
+      "source": {
+        "source": "local",
+        "path": "./plugins/codex4ever"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

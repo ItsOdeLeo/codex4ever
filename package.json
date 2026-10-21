@@ -1,0 +1,31 @@
+{
+  "name": "codex4ever",
+  "version": "0.1.2",
+  "private": true,
+  "type": "module",
+  "description": "A local Codex quota and reset planner with extra reset forecasts, banked reset planning, a web UI, CLI, and MCP server.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node src/cli.js",
+    "mcp": "node src/mcp-server.js",
+    "plugin:build": "node scripts/build-plugin.mjs",
+    "site:build": "node scripts/build-site.mjs",
+    "web": "node scripts/serve.mjs",
+    "backtest:public": "node scripts/backtest-public.mjs",
+    "archive:refresh": "node scripts/refresh-archive.mjs",
+    "predict:reset": "node scripts/predict-reset.mjs",
+    "alert:demo": "node scripts/alert-demo.mjs",
+    "test": "node --test test/*.test.mjs",
+    "test:pace": "node --test test/selected-pace-regression.test.mjs test/web-intensity.test.mjs test/mcp.test.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server": "^2.3.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
+  }
+}

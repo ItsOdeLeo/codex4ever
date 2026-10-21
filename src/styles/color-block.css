@@ -1,0 +1,86 @@
+/* Flat color cards. Layout and chart coordinates remain in the base layer. */
+:root {color-scheme:light;--chart-label:var(--surface)}
+body {min-height:100vh;background:var(--canvas);-webkit-font-smoothing:antialiased}
+#inputs,.strategy-panel,.forecast-panel,.calendar-panel {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:18px;
+  box-shadow:none;
+}
+#inputs {position:relative;z-index:1;border-color:var(--border)}
+.forecast-panel {padding:16px;border-radius:18px}
+.calendar-panel {border-color:var(--border);border-radius:22px;box-shadow:0 12px 32px color-mix(in srgb,var(--shadow) 10%,transparent)}
+.brand-mark {background:var(--accent);color:var(--on-accent);border-radius:14px;box-shadow:none}
+h1 {font-weight:600;letter-spacing:-1px}
+#output>h2 {font-weight:600;letter-spacing:0}
+.local-badge {background:var(--surface);border-color:transparent;box-shadow:none}
+.calendar-field {border-bottom-color:var(--border)}
+.forecast-summary dl>div {border-bottom-color:transparent}
+.forecast-summary dl>div:first-child {padding-top:4px}
+.forecast-summary dl>div:last-child {padding-bottom:2px;border-bottom:0}
+.forecast-summary dt {font-weight:500}
+.forecast-summary a {color:var(--ink);text-decoration-color:var(--link-stroke)}
+
+button {border-color:transparent;border-radius:999px;background:var(--surface-soft);box-shadow:none}
+button:hover:not(:disabled) {background:var(--accent-soft);border-color:transparent}
+button.primary {background:var(--accent);color:var(--on-accent);border-color:transparent;border-radius:999px}
+button.primary:hover {background:var(--base-primary-hover);border-color:transparent}
+input[type=number],.delay-control {border-color:var(--border);background:var(--surface-soft);border-radius:12px;box-shadow:none}
+.delay-control button,.delay-control input[type=number] {background:transparent;box-shadow:none}
+.delay-control button:hover:not(:disabled) {background:var(--accent-soft)}
+.reset-actions>[data-toggle-calendar] {border:1px solid var(--border);background:var(--surface);padding:8px 12px}
+.reset-actions>[data-toggle-calendar]:hover {background:var(--accent-soft);border-color:var(--base-hover-border)}
+.calendar-summary button {background:var(--bank-surface);border-color:var(--bank-border);border-radius:999px;box-shadow:none}
+.month-grid button {background:transparent;border-radius:10px}
+.month-grid button[aria-pressed=true] {background:var(--accent-soft);border-color:var(--base-selected-border);color:var(--accent-text)}
+.forecast-control {color:var(--ink)}
+.forecast-control button {border:1px solid var(--border);background:var(--surface)}
+.forecast-control button[aria-pressed=true] {background:var(--forecast-first-surface);border-color:var(--forecast-first-border);color:var(--forecast-first-text)}
+
+.intent-picker {padding:4px;gap:3px;background:var(--surface-soft);border:1px solid transparent;border-radius:999px;box-shadow:none}
+.intent-picker button {padding:7px 6px;border-color:transparent;background:transparent}
+.intent-picker button[aria-pressed=true] {background:var(--accent-soft);color:var(--accent-text);border-color:transparent;box-shadow:none}
+.timeline-toolbar {border-top-color:transparent}
+.tree-scroll {scrollbar-color:var(--border) transparent}
+.time-day {font-size:13px;font-weight:600}
+.tree-edges :is(.time-grid-line,.time-forecast-line,.reset-density-baseline,.reset-peak-leader),
+.tree-edges .quota-baseline:not(.quota-paused-line) {display:none}
+.quota-fill-start {stop-color:var(--quota-fill-start)}
+.quota-fill-end {stop-color:var(--quota-fill-end)}
+.tree-edges .quota-band,.tree-edges .quota-assumed-refresh {fill:url(#quota-fill);stroke:var(--quota-stroke);stroke-width:1.2;stroke-linejoin:round}
+.tree-edges .quota-label,.tree-edges .quota-phase-assumed .quota-label {fill:var(--quota-text)}
+.tree-edges .quota-pause {fill:transparent;stroke:none}
+.tree-edges .quota-paused-line {stroke:var(--border);stroke-width:1;stroke-dasharray:3 6}
+.tree-edges .quota-refill-normal {stroke:var(--quota-stroke)}
+.tree-edges .edge-backup {stroke:var(--warning);stroke-width:1.2;stroke-linecap:round}
+.tree-edges .quota-refill-backup {stroke:var(--warning)}
+.graph-day,.phase-controls,.graph-node {background:var(--chart-label);border-radius:12px}
+.graph-node {box-shadow:none}
+.graph-node.graph-selected,.graph-node.graph-normal {background:transparent}
+.graph-node[aria-pressed]:hover {box-shadow:none}
+.graph-backup {border:1px solid var(--bank-border);border-radius:14px;background:var(--bank-surface)}
+.graph-backup[aria-pressed=false] {border-style:dashed}
+.graph-backup[aria-pressed]:hover {background:var(--bank-surface);border-color:var(--ink)}
+.graph-node .deadline-warning {color:var(--danger-text);font-weight:650}
+.graph-depletion {border-bottom-color:transparent}
+.phase-controls button {background:var(--surface-soft);border-color:transparent;border-radius:8px;box-shadow:none}
+.phase-controls button[aria-pressed=true] {background:var(--accent-soft);border-color:transparent;color:var(--accent-text)}
+.graph-control {background:transparent;box-shadow:none}
+.reset-element {--reset-surface:var(--chart-label);--reset-line-width:1.2;--reset-refill-width:2}
+.reset-element [data-reset-marker],.reset-element .reset-peak-cdf {border-radius:6px}
+.reset-element [data-reset-marker] {background:var(--chart-label);padding:0 4px}
+.reset-element .graph-forecast-assumption {border:1px solid var(--reset-border);border-radius:14px;box-shadow:none}
+.reset-element .graph-forecast-assumption[aria-pressed=true] {background:var(--forecast-first-surface);border-color:var(--info)}
+.reset-element[data-reset-element="2"] .graph-forecast-assumption[aria-pressed=true] {background:var(--accent-soft);border-color:var(--accent)}
+.tree-edges .reset-element .reset-density-area {fill:none}
+.tree-edges .reset-element[data-reset-element="2"] .reset-density-line {stroke-dasharray:4 3}
+.tree-edges .reset-element :is(.forecast-mode-guide,.forecast-following-guide) {stroke:var(--reset-accent);stroke-width:1;stroke-opacity:.7}
+.tree-edges .reset-element .forecast-mode-point {fill:var(--info)}
+.reset-element .reset-density-caption>span:first-child::before {content:"";display:inline-block;width:8px;height:8px;margin-right:6px;background:var(--reset-curve);border-radius:50%;vertical-align:1px}
+.calculation-notes {border-top-color:transparent}
+.forecast-calendar>div>span {border-bottom-color:transparent}
+#error {background:var(--danger-surface);border:1px solid var(--danger);border-radius:14px}
+button:focus-visible,input:focus-visible,summary:focus-visible,.tree-scroll:focus-visible {outline-color:var(--focus)}
+@media(prefers-reduced-motion:reduce) {button {transition:none}}
+@media(max-width:960px) {.forecast-panel {padding:16px}}
+@media(max-width:680px) {#inputs,.strategy-panel,.forecast-panel {border-radius:16px}.forecast-panel {padding:16px}}

@@ -1,0 +1,80 @@
+/* Sampled from the user's My collections reference. Coordinates and image
+ * hash are recorded in collections.samples.json. No additional base pigments. */
+:root {
+  --sample-canvas:#F4F5FA;
+  --sample-white:#FFFFFF;
+  --sample-grey:#F1F2F4;
+  --sample-ink:#2A2B2D;
+  --sample-lavender:#DAB8F4;
+  --sample-lime:#E0F37D;
+  --sample-cobalt:#4458C8;
+  --sample-orange:#EE5F37;
+
+  --canvas:var(--sample-canvas);
+  --surface:var(--sample-white);
+  --surface-soft:var(--sample-grey);
+  --surface-raised:var(--sample-white);
+  --ink:var(--sample-ink);
+  --muted:var(--sample-ink);
+  --border:color-mix(in srgb,var(--sample-ink) 16%,var(--surface));
+  --highlight:var(--sample-white);
+  --shadow:var(--sample-ink);
+
+  --accent:var(--sample-ink);
+  --accent-soft:var(--sample-lime);
+  --accent-text:var(--sample-ink);
+  --on-accent:var(--sample-white);
+
+  --info:var(--sample-lavender);
+  --forecast-first-text:var(--sample-ink);
+  --forecast-first-curve:var(--sample-lavender);
+  --forecast-first-fill:var(--sample-lavender);
+  --forecast-first-border:var(--sample-lavender);
+  --forecast-first-surface:var(--sample-lavender);
+  --violet:var(--sample-cobalt);
+  --forecast-second-text:var(--sample-cobalt);
+  --forecast-second-curve:var(--sample-cobalt);
+  --forecast-second-fill:var(--sample-cobalt);
+  --forecast-second-border:var(--sample-cobalt);
+  --forecast-second-surface:color-mix(in srgb,var(--sample-cobalt) 10%,var(--surface));
+  --quota:var(--sample-lime);
+  --quota-text:var(--sample-ink);
+  --quota-stroke:var(--sample-ink);
+  --quota-fill-start:var(--sample-lime);
+  --quota-fill-end:var(--sample-lime);
+
+  --warning:var(--sample-orange);
+  --warning-text:var(--sample-ink);
+  --danger:var(--sample-orange);
+  --danger-text:var(--sample-ink);
+  --danger-deep:var(--sample-orange);
+  --bank-surface:color-mix(in srgb,var(--sample-orange) 14%,var(--surface));
+  --bank-border:var(--sample-orange);
+  --danger-surface:color-mix(in srgb,var(--sample-orange) 12%,var(--surface));
+  --focus:var(--sample-cobalt);
+  --link-stroke:var(--sample-cobalt);
+
+  /* Shared component contract, including retained legacy view fallbacks. */
+  --glass-top:var(--surface);
+  --glass-bottom:var(--surface-soft);
+  --chart-label-color:var(--surface);
+  --base-hover-border:var(--accent);
+  --base-primary-hover:var(--sample-cobalt);
+  --base-bank-surface:var(--bank-surface);
+  --base-bank-border:var(--bank-border);
+  --base-calendar-shadow:color-mix(in srgb,var(--shadow) 12%,transparent);
+  --base-forecast-surface:var(--forecast-first-surface);
+  --base-forecast-border:var(--forecast-first-border);
+  --base-link-underline:var(--link-stroke);
+  --base-selected-border:var(--accent);
+  --base-segment-shadow:color-mix(in srgb,var(--shadow) 6%,transparent);
+  --base-scrollbar:var(--border);
+  --base-quota-fill-start:var(--quota-fill-start);
+  --base-quota-fill-end:var(--quota-fill-end);
+  --base-quota-stroke:var(--quota-stroke);
+  --base-pause-line:var(--border);
+  --base-bank-line:var(--bank-border);
+  --base-depletion-line:var(--danger);
+  --base-credits-line:var(--violet);
+  --base-error-surface:var(--danger-surface);
+}

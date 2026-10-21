@@ -1,0 +1,102 @@
+{
+  "kind": "design-system",
+  "reference": "Radix Colors official light sRGB scales",
+  "source": "https://github.com/radix-ui/colors/blob/main/src/light.ts",
+  "usage": "https://www.radix-ui.com/colors/docs/palette-composition/understanding-the-scale",
+  "retrievedOn": "2026-10-18",
+  "license": "MIT",
+  "colors": {
+    "white": {
+      "hex": "#FFFFFF",
+      "role": "white light-mode surface"
+    },
+    "slate2": {
+      "hex": "#F9F9FB"
+    },
+    "slate3": {
+      "hex": "#F0F0F3"
+    },
+    "slate5": {
+      "hex": "#E0E1E6"
+    },
+    "slate7": {
+      "hex": "#CDCED6"
+    },
+    "slate11": {
+      "hex": "#60646C"
+    },
+    "slate12": {
+      "hex": "#1C2024"
+    },
+    "indigo3": {
+      "hex": "#EDF2FE"
+    },
+    "indigo7": {
+      "hex": "#ABBDF9"
+    },
+    "indigo9": {
+      "hex": "#3E63DD"
+    },
+    "indigo10": {
+      "hex": "#3358D4"
+    },
+    "indigo11": {
+      "hex": "#3A5BC7"
+    },
+    "tomato3": {
+      "hex": "#FEEBE7"
+    },
+    "tomato7": {
+      "hex": "#F5A898"
+    },
+    "tomato11": {
+      "hex": "#D13415"
+    },
+    "tomato12": {
+      "hex": "#5C271F"
+    },
+    "teal3": {
+      "hex": "#E0F8F3",
+      "role": "light green quota fill"
+    },
+    "teal9": {
+      "hex": "#12A594",
+      "role": "quota outline and bank events"
+    },
+    "teal12": {
+      "hex": "#0D3D38",
+      "role": "readable green quota and bank text"
+    }
+  },
+  "principles": [
+    "Two everyday hue families: blue forecasts/actions and green quota/banks; reduce hue count without desaturating the chart.",
+    "Both forecast tracks use readable Indigo tones; the second also uses a dashed curve.",
+    "Quota retains a pale green fill and green outline; bank events share the same green family.",
+    "Tomato is reserved for expiry/overwrite/depletion risks and errors.",
+    "Light surfaces and limited colored fill keep the focus on chart data; ordinary bank cards stay white."
+  ],
+  "revision": {
+    "reason": "Correct the gray interpretation: consolidate color roles into blue and green, with risk-only red.",
+    "preservedAnchors": [
+      "#FFFFFF",
+      "#3E63DD"
+    ],
+    "changes": [
+      {
+        "role": "second forecast curve",
+        "before": "#60646C",
+        "after": "#3A5BC7"
+      },
+      {
+        "role": "quota outline and bank events",
+        "before": "#8B8D98",
+        "after": "#12A594"
+      },
+      {
+        "role": "quota fill",
+        "before": "#F0F0F3",
+        "after": "#E0F8F3"
+      }
+    ]
+  }
+}

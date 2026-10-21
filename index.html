@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- site-meta:start -->
+  <title>Codex4ever | Codex Quota &amp; Reset Planner</title>
+  <meta name="description" content="Plan OpenAI Codex usage with quota depletion estimates, banked reset deadlines and extra reset forecasts. Compare daily usage strategies locally or through MCP.">
+  <meta name="robots" content="noindex, follow">
+  <meta property="og:site_name" content="Codex4ever">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Codex4ever | Codex Quota &amp; Reset Planner">
+  <meta property="og:description" content="Plan OpenAI Codex usage with quota depletion estimates, banked reset deadlines and extra reset forecasts. Compare daily usage strategies locally or through MCP.">
+  <meta property="og:locale" content="en_GB">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Codex4ever | Codex Quota &amp; Reset Planner">
+  <meta name="twitter:description" content="Plan OpenAI Codex usage with quota depletion estimates, banked reset deadlines and extra reset forecasts. Compare daily usage strategies locally or through MCP.">
+
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Codex4ever","description":"Plan OpenAI Codex usage with quota depletion estimates, banked reset deadlines and extra reset forecasts. Compare daily usage strategies locally or through MCP.","applicationCategory":"DeveloperApplication","operatingSystem":"Web","inLanguage":["en","zh-CN"]}</script>
+  <!-- site-meta:end -->
+  <meta name="theme-color" content="#F7D5D5">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='1' y='1' width='30' height='30' rx='3' fill='%23AFE5DD' stroke='%23000000'/%3E%3Ctext x='8' y='24' font-size='24' fill='%23000000'%3EC%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/src/styles/theme.css">
+  <script type="module" src="/src/web.js"></script>
+</head>
+<body>
+  <svg class="material-effects" width="0" height="0" aria-hidden="true" focusable="false">
+    <defs>
+      <filter id="paper-pencil" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB">
+        <feTurbulence type="fractalNoise" baseFrequency=".025 .075" numOctaves="2" seed="8" result="wobble"/>
+        <feDisplacementMap in="SourceGraphic" in2="wobble" scale="2.8" xChannelSelector="R" yChannelSelector="G" result="drawn"/>
+        <feTurbulence type="fractalNoise" baseFrequency=".55" numOctaves="2" seed="19" result="tooth"/>
+        <feDisplacementMap in="drawn" in2="tooth" scale=".9" xChannelSelector="R" yChannelSelector="G" result="pencil"/>
+        <feGaussianBlur in="pencil" stdDeviation=".32" result="soft-edge"/>
+        <feComposite in="pencil" in2="soft-edge" operator="arithmetic" k2=".7" k3=".3"/>
+      </filter>
+    </defs>
+  </svg>
+  <main>
+    <header class="site-header">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">∞</span><div><h1>Codex4ever</h1>
+      <p>Plan Codex quota, banked resets and extra reset forecasts.</p></div></div>
+      <div class="header-actions"><span class="local-badge">Local planning · Your data stays here</span><div id="language-switch" class="language-switch" role="group" aria-label="Language"><button type="button" data-language="en" lang="en" aria-pressed="true">English</button><button type="button" data-language="zh-CN" lang="zh-CN" aria-pressed="false">中文</button></div></div>
+    </header>
+    <noscript><p>Codex4ever compares daily Codex usage, quota depletion, banked reset deadlines and possible extra resets. Enable JavaScript to calculate a plan, or <a href="/guide/">read how the planner works</a>.</p></noscript>
+    <div class="layout">
+      <aside class="controls-panel" aria-label="State and forecast">
+        <div class="input-state">
+          <section id="inputs" aria-label="Usage inputs"></section>
+          <div class="input-update">
+            <button id="calculate" type="button" title="Apply input changes and refresh reset evidence">Update data</button>
+            <span id="status" role="status"></span>
+          </div>
+        </div>
+        <div class="toolbar">
+          <section id="strategy-controls" aria-labelledby="strategy-controls-title"></section>
+        </div>
+        <section id="forecast" class="forecast-panel" aria-label="Forecast evidence"></section>
+      </aside>
+      <section id="output" aria-label="Usage plan">
+        <h2>Your next few days</h2>
+        <div id="error" role="alert" hidden></div>
+        <div id="result">Calculate a plan to see your timeline.</div>
+      </section>
+    </div>
+    <footer><span class="affiliation-notice">Unofficial visual usage planner for OpenAI Codex. Not affiliated with OpenAI.</span> · <a id="planner-guide" href="/guide/">How it works</a> · <span data-credit-label>Reset data</span>: <a href="https://codex-resets.com" target="_blank" rel="noopener">Codex Resets</a> · <a id="creator-contact" href="https://x.com/ItsOdeLeo" target="_blank" rel="noopener noreferrer">If you like this work, follow me on X</a></footer>
+  </main>
+</body>
+</html>

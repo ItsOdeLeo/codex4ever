@@ -1,0 +1,138 @@
+/* Clean paper cards and pencil marks. Pigments live in the selected palette. */
+:root {
+  color-scheme:light;
+  --chart-label:var(--surface);
+  --paper-grain-opacity:.045;
+  --paper-font:"Chalkboard SE","Comic Sans MS","Hannotate SC","Yuanti SC","PingFang SC","Microsoft YaHei",sans-serif;
+  /* Fine, faint card-local tooth, not a full-screen dark noise layer. */
+  --paper-grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='grain' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='2' seed='12' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 .3333 .3333 .3333 0 -.32'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)'/%3E%3C/svg%3E");
+  --paper-shadow:0 2px 3px color-mix(in srgb,var(--shadow) 5%,transparent),0 8px 20px color-mix(in srgb,var(--shadow) 5%,transparent);
+}
+
+body {min-height:100vh;background:var(--canvas);font-family:var(--paper-font);-webkit-font-smoothing:antialiased}
+.material-effects {position:absolute;pointer-events:none;overflow:hidden}
+
+/* Keep the calendar above the other cards. Local grain stays behind the content. */
+#inputs,.strategy-panel,.forecast-panel,.calendar-panel {
+  isolation:isolate;
+  background:var(--surface);
+  border:1px solid transparent;
+  border-radius:26px;
+  box-shadow:var(--paper-shadow);
+}
+#inputs {position:relative;z-index:1;border-color:color-mix(in srgb,var(--accent) 35%,var(--surface))}
+.strategy-panel,.forecast-panel {position:relative;z-index:0}
+#inputs::before,.strategy-panel::before,.forecast-panel::before,.calendar-panel::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  border-radius:inherit;
+  pointer-events:none;
+  user-select:none;
+  background:var(--paper-fiber);
+  opacity:var(--paper-grain-opacity);
+  -webkit-mask-image:var(--paper-grain);
+  mask-image:var(--paper-grain);
+  -webkit-mask-size:180px 180px;
+  mask-size:180px 180px;
+  -webkit-mask-repeat:repeat;
+  mask-repeat:repeat;
+}
+.forecast-panel {padding:16px;border-radius:24px}
+.calendar-panel {border-color:var(--border);border-radius:22px;box-shadow:var(--paper-shadow),0 14px 28px color-mix(in srgb,var(--shadow) 10%,transparent)}
+.local-badge {border-radius:999px;background:var(--surface);border-color:transparent;box-shadow:none}
+.brand-mark {background:var(--surface);color:var(--accent);border:1px solid transparent;border-radius:16px;box-shadow:none}
+h1 {font-weight:700;letter-spacing:-.5px}
+#output>h2 {letter-spacing:0}
+.calendar-field {border-bottom-color:color-mix(in srgb,var(--accent) 25%,var(--surface))}
+.forecast-control {color:var(--ink)}
+.forecast-summary dl>div {border-bottom-color:transparent}
+.forecast-summary dl>div:first-child {padding-top:4px}
+.forecast-summary dl>div:last-child {padding-bottom:2px;border-bottom:0}
+.forecast-summary dt {font-weight:500}
+.forecast-summary a {color:var(--forecast-first-text);text-decoration-color:var(--link-stroke);text-decoration-thickness:1.5px}
+
+button {
+  border-radius:13px;
+  border-color:transparent;
+  background:var(--surface-soft);
+  box-shadow:none;
+  transition:background .14s ease,box-shadow .14s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+button:hover:not(:disabled) {background:var(--accent-soft);border-color:transparent}
+button:active:not(:disabled) {box-shadow:inset 0 1px 2px color-mix(in srgb,var(--shadow) 7%,transparent)}
+button.primary {background:var(--surface);color:var(--on-accent);border-color:transparent;border-radius:999px;box-shadow:var(--paper-shadow)}
+button.primary:hover {background:var(--surface-soft);border-color:transparent}
+button:disabled {box-shadow:none}
+input[type=number],.delay-control {border-radius:12px;background:var(--surface-soft);border-color:color-mix(in srgb,var(--accent) 55%,var(--surface));box-shadow:none}
+.delay-control button,.delay-control input[type=number] {background:transparent;box-shadow:none}
+.delay-control button:hover:not(:disabled) {background:var(--accent-soft)}
+.reset-actions>[data-toggle-calendar] {background:var(--accent-soft);border:1px dashed var(--accent);padding:8px 12px}
+.reset-actions>[data-toggle-calendar]:hover {background:var(--surface-soft);border-color:var(--accent)}
+.calendar-summary button {background:var(--bank-surface);border-color:var(--bank-border);border-radius:10px;box-shadow:none}
+.month-grid button {background:transparent;box-shadow:none;border-radius:10px}
+.month-grid button[aria-pressed=true] {background:var(--accent-soft);border-color:var(--accent);color:var(--accent-text)}
+.forecast-control button {border-radius:999px}
+.forecast-control button[aria-pressed=true] {background:var(--accent-soft);border-color:transparent;color:var(--accent-text)}
+
+.intent-picker,.timeline-toolbar>div {padding:4px;gap:3px;background:var(--surface-soft);border:1px solid transparent;border-radius:16px;box-shadow:none}
+.intent-picker button {padding:7px 6px;border-radius:12px;background:transparent;border-color:transparent;box-shadow:none}
+.intent-picker button[aria-pressed=true],.timeline-toolbar button[aria-pressed=true] {background:var(--accent-soft);border-color:transparent;box-shadow:none}
+.intent-picker button[aria-pressed=true] {color:var(--accent-text)}
+.timeline-toolbar {border-top-color:transparent}
+.timeline-toolbar>div {padding:3px;border-radius:999px}
+.timeline-toolbar button {border-radius:999px;box-shadow:none}
+
+.tree-scroll {scrollbar-color:var(--border) transparent}
+.time-day {font-size:14px;font-weight:700}
+.pace-controls [data-current-consumption]>span {font-size:20px}
+.tree-edges :is(.time-grid-line,.time-forecast-line,.reset-density-baseline,.reset-peak-leader),
+.tree-edges .quota-baseline:not(.quota-paused-line) {display:none}
+.quota-fill-start {stop-color:var(--quota-fill-start)}
+.quota-fill-end {stop-color:var(--quota-fill-end)}
+.tree-edges .quota-band,.tree-edges .quota-assumed-refresh {fill:url(#quota-fill);stroke:var(--quota-stroke);stroke-width:2;stroke-linejoin:round}
+.tree-edges .quota-label,.tree-edges .quota-phase-assumed .quota-label {fill:var(--quota-text)}
+/* Empty time is a quiet green gap; it is not another black outline. */
+.tree-edges .quota-pause {fill:transparent;stroke:none}
+.tree-edges .quota-paused-line {stroke:color-mix(in srgb,var(--quota-stroke) 35%,var(--surface));stroke-width:1.5;stroke-linecap:round;stroke-dasharray:3 6}
+/* Only artwork is filtered; text and time/layout coordinates are not displaced.
+ * Do not filter zero-height strokes: object-bounding-box filters would hide them. */
+.tree-edges :is(.reset-density-series,.quota-usage,.quota-refresh,.quota-assumed-refresh,.edge-backup) {filter:url(#paper-pencil)}
+.tree-edges .edge-backup {stroke:var(--warning);stroke-width:2.4;stroke-linecap:round}
+.tree-edges .quota-refill-backup {stroke:var(--warning)}
+.graph-day,.phase-controls,.graph-node {background:var(--chart-label);border-radius:10px}
+.graph-node {box-shadow:none}
+.graph-node.graph-selected,.graph-node.graph-normal {background:transparent}
+.graph-node[aria-pressed]:hover {box-shadow:none}
+.graph-backup {border-bottom-color:var(--bank-border);border-bottom-width:2px}
+.graph-backup[aria-pressed]:hover {background:var(--bank-surface)}
+.graph-depletion {border-bottom-color:transparent}
+.graph-warning {border-bottom-color:var(--danger)}
+.phase-controls button {background:var(--surface-soft);border-color:transparent;border-radius:9px;box-shadow:none}
+.phase-controls button[aria-pressed=true] {background:var(--accent-soft);border-color:transparent}
+.graph-control {background:transparent;box-shadow:none}
+.reset-element {--reset-surface:var(--chart-label);--reset-line-width:2.5}
+.reset-element [data-reset-marker],.reset-element .reset-peak-cdf {border-radius:6px}
+.reset-element .graph-forecast-assumption {border-radius:10px;box-shadow:none}
+.reset-element .graph-forecast-assumption[aria-pressed=true] {background:var(--forecast-first-surface)}
+.reset-element[data-reset-element="2"] .graph-forecast-assumption[aria-pressed=true] {background:var(--forecast-second-surface)}
+.tree-edges .reset-element .reset-density-area {fill-opacity:.3}
+.reset-element .reset-density-caption>span:first-child::before {content:"";display:inline-block;width:8px;height:8px;margin-right:6px;background:var(--reset-curve);border-radius:50%;vertical-align:1px}
+.calculation-notes {border-top-color:transparent}
+.forecast-calendar>div>span {border-bottom-color:transparent}
+#error {background:var(--danger-surface);border:1px solid transparent;border-radius:14px}
+.tree-edges text {font-family:var(--paper-font)}
+.pace-controls [data-current-consumption]>span,.graph-node strong,.phase-controls>strong {font-weight:700}
+.forecast-summary dt,.forecast-summary dd small {opacity:.8}
+.graph-node .deadline-warning {color:var(--danger-text);text-decoration:underline;text-decoration-color:var(--danger);text-underline-offset:3px;text-decoration-thickness:1.5px}
+button:focus-visible,input:focus-visible,summary:focus-visible,.tree-scroll:focus-visible {outline-color:var(--focus)}
+
+@supports not ((mask-image:linear-gradient(transparent,transparent)) or (-webkit-mask-image:linear-gradient(transparent,transparent))) {
+  #inputs::before,.strategy-panel::before,.forecast-panel::before,.calendar-panel::before {display:none}
+}
+@media(prefers-reduced-transparency:reduce) {#inputs::before,.strategy-panel::before,.forecast-panel::before,.calendar-panel::before {display:none}}
+@media(prefers-reduced-motion:reduce) {button {transition:none}}
+@media(max-width:960px) {.forecast-panel {padding:16px}}
+@media(max-width:680px) {#inputs,.strategy-panel,.forecast-panel {border-radius:22px}.forecast-panel {padding:16px}.pace-controls [data-current-consumption]>span {font-size:18px}}

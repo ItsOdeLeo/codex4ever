@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <rect width="256" height="256" rx="42" fill="#F7D5D5"/>
+  <rect x="26" y="26" width="204" height="204" rx="16" fill="#FAF1E8"/>
+  <path d="M48 152L120 186L120 132L208 172V186H48Z" fill="#AFE5DD"/>
+  <text x="48" y="132" font-family="monospace" font-size="83" fill="#000000">C4</text>
+</svg>

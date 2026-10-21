@@ -1,0 +1,151 @@
+/* Founder OS Liquid material and original semantic palette.
+ * Layout, event coordinates and policy live in their own modules. */
+:root {
+  color-scheme:dark;
+  --glass-panel:linear-gradient(145deg,color-mix(in srgb,var(--glass-top) 85.098039%,transparent),color-mix(in srgb,var(--glass-bottom) 92.156863%,transparent));
+  --glass-control:linear-gradient(160deg,color-mix(in srgb,var(--highlight) 12.156863%,transparent),color-mix(in srgb,var(--highlight) 7.058824%,transparent));
+  --glass-line:color-mix(in srgb,var(--highlight) 16.078431%,transparent);
+  --glass-shadow:0 22px 52px color-mix(in srgb,var(--shadow) 38.039216%,transparent),inset 0 1px 0 color-mix(in srgb,var(--highlight) 5.490196%,transparent);
+  --glass-blur:blur(38px) brightness(.96) saturate(1);
+  --chart-label:color-mix(in srgb,var(--chart-label-color) 90.980392%,transparent);
+}
+
+body {
+  min-height:100vh;
+  background:
+    radial-gradient(ellipse 58vw 58vh at 0% 0%,color-mix(in srgb,var(--accent) 4.313725%,transparent),transparent 74%),
+    radial-gradient(ellipse 50vw 56vh at 94% 8%,color-mix(in srgb,var(--forecast-second-curve) 4.313725%,transparent),transparent 74%),
+    radial-gradient(ellipse 50vw 60vh at 24% 92%,color-mix(in srgb,var(--accent) 2.352941%,transparent),transparent 76%),
+    var(--canvas);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* Large surfaces carry the blur; small chart labels stay inexpensive and crisp. */
+#inputs,.strategy-panel,.forecast-panel,.calendar-panel,.local-badge {
+  background:var(--glass-panel);
+  border:1px solid var(--glass-line);
+  box-shadow:var(--glass-shadow);
+  -webkit-backdrop-filter:var(--glass-blur);
+  backdrop-filter:var(--glass-blur);
+}
+#inputs,.strategy-panel {border-radius:24px}
+.forecast-panel {padding:16px;border-radius:22px}
+.calendar-panel {background:color-mix(in srgb,var(--surface-soft) 96.078431%,transparent);border-radius:20px;box-shadow:var(--glass-shadow),0 20px 56px color-mix(in srgb,var(--shadow) 40%,transparent)}
+.local-badge {border-radius:999px;padding:8px 13px;box-shadow:inset 0 1px 0 color-mix(in srgb,var(--highlight) 5.490196%,transparent),0 3px 12px color-mix(in srgb,var(--shadow) 14.901961%,transparent)}
+.brand-mark {
+  background:var(--surface-soft);
+  color:var(--accent);
+  border:1px solid color-mix(in srgb,var(--highlight) 16.078431%,transparent);
+  border-radius:15px;
+  box-shadow:inset 0 1px 1px color-mix(in srgb,var(--highlight) 10.196078%,transparent),inset 0 -1px 1px color-mix(in srgb,var(--canvas) 25.098039%,transparent),0 5px 18px color-mix(in srgb,var(--shadow) 20%,transparent);
+  text-shadow:none;
+}
+h1 {font-weight:700;letter-spacing:-1px}
+#output>h2 {letter-spacing:-.35px}
+.calendar-field {border-bottom-color:color-mix(in srgb,var(--highlight) 10.196078%,transparent)}
+.forecast-summary dl>div {border-bottom-color:color-mix(in srgb,var(--highlight) 7.843137%,transparent)}
+.forecast-summary dl>div:first-child {padding-top:4px}
+.forecast-summary dl>div:last-child {border-bottom:0;padding-bottom:2px}
+.forecast-summary dt {font-weight:500}
+.forecast-summary a {text-decoration-color:color-mix(in srgb,var(--info) 30.196078%,transparent)}
+.forecast-control {margin-bottom:12px}
+
+/* Rounded system controls, with a distinct pressed surface. */
+button {
+  border-color:color-mix(in srgb,var(--highlight) 14.117647%,transparent);
+  border-radius:11px;
+  background:var(--glass-control);
+  box-shadow:inset 0 1px 0 color-mix(in srgb,var(--highlight) 5.098039%,transparent),0 1px 3px color-mix(in srgb,var(--shadow) 14.901961%,transparent);
+  transition:background .16s ease,border-color .16s ease,box-shadow .16s ease,transform .16s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+button:hover:not(:disabled) {background:color-mix(in srgb,var(--highlight) 14.117647%,transparent);border-color:color-mix(in srgb,var(--highlight) 23.921569%,transparent);box-shadow:inset 0 1px 0 color-mix(in srgb,var(--highlight) 7.843137%,transparent),0 3px 9px color-mix(in srgb,var(--shadow) 14.901961%,transparent)}
+button:active:not(:disabled) {transform:translateY(.5px);box-shadow:inset 0 1px 3px color-mix(in srgb,var(--shadow) 25.098039%,transparent)}
+button.primary {
+  border:1px solid var(--accent);
+  color:var(--on-accent);
+  border-radius:999px;
+  background:var(--accent);
+  box-shadow:inset 0 1px 0 color-mix(in srgb,var(--highlight) 25.098039%,transparent),0 5px 18px color-mix(in srgb,var(--shadow) 25.098039%,transparent);
+}
+button.primary:hover {background:var(--info);border-color:var(--info);box-shadow:inset 0 1px 0 color-mix(in srgb,var(--highlight) 25.098039%,transparent),0 6px 18px color-mix(in srgb,var(--shadow) 25.098039%,transparent)}
+button:disabled {box-shadow:none}
+input[type=number] {background:color-mix(in srgb,var(--highlight) 5.882353%,transparent);border-color:color-mix(in srgb,var(--highlight) 14.901961%,transparent);border-radius:11px;box-shadow:inset 0 1px 3px color-mix(in srgb,var(--shadow) 20%,transparent)}
+.delay-control {background:color-mix(in srgb,var(--highlight) 5.882353%,transparent);border-color:color-mix(in srgb,var(--highlight) 14.901961%,transparent);border-radius:11px;box-shadow:inset 0 1px 3px color-mix(in srgb,var(--shadow) 20%,transparent)}
+.delay-control button,.delay-control input[type=number] {background:transparent;box-shadow:none}
+.delay-control button:hover:not(:disabled) {background:color-mix(in srgb,var(--highlight) 7.843137%,transparent);box-shadow:none}
+.delay-control button:first-child {border-radius:10px 0 0 10px}
+.delay-control button:last-child {border-radius:0 10px 10px 0}
+.calendar-summary button {background:color-mix(in srgb,var(--warning) 7.843137%,transparent);border-color:color-mix(in srgb,var(--warning) 20%,transparent);border-radius:8px;box-shadow:inset 0 1px 0 color-mix(in srgb,var(--highlight) 5.098039%,transparent)}
+.month-grid button {box-shadow:none;background:transparent;border-radius:9px}
+.month-grid button[aria-pressed=true] {background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 50.196078%,transparent);color:var(--info)}
+.forecast-control button {border-radius:999px}
+.forecast-control button[aria-pressed=true] {background:var(--accent-soft);border-color:color-mix(in srgb,var(--info) 30.196078%,transparent);color:var(--info)}
+
+.intent-picker,.timeline-toolbar>div {
+  padding:4px;
+  gap:3px;
+  border:1px solid color-mix(in srgb,var(--highlight) 7.843137%,transparent);
+  border-radius:16px;
+  background:color-mix(in srgb,var(--shadow) 20%,transparent);
+  box-shadow:inset 0 1px 3px color-mix(in srgb,var(--shadow) 20%,transparent),0 1px 0 color-mix(in srgb,var(--highlight) 5.098039%,transparent);
+}
+.intent-picker button {padding:7px 6px;border-color:transparent;border-radius:12px;background:transparent;box-shadow:none}
+.intent-picker button[aria-pressed=true],.timeline-toolbar button[aria-pressed=true] {
+  background:var(--glass-control);
+  border-color:color-mix(in srgb,var(--highlight) 14.901961%,transparent);
+  box-shadow:inset 0 1px 0 color-mix(in srgb,var(--highlight) 10.196078%,transparent),0 2px 7px color-mix(in srgb,var(--shadow) 20%,transparent);
+}
+.intent-picker button[aria-pressed=true] {color:var(--accent)}
+.timeline-toolbar {border-top-color:color-mix(in srgb,var(--highlight) 10.196078%,transparent)}
+.timeline-toolbar>div {padding:3px;border-radius:999px}
+.timeline-toolbar button {border-radius:999px;box-shadow:none}
+.usage-choice .usage-choice-value {font-variant-numeric:tabular-nums}
+
+/* Founder OS success-green quota, info-cyan first reset, secondary-violet second. */
+.tree-scroll {scrollbar-color:color-mix(in srgb,var(--muted) 30.196078%,transparent) transparent}
+.tree-edges .time-grid-line {stroke:var(--highlight);stroke-opacity:.1}
+.tree-edges .time-forecast-line {stroke:color-mix(in srgb,var(--info) 30.196078%,transparent)}
+.quota-fill-start {stop-color:var(--quota-fill-start)}
+.quota-fill-end {stop-color:var(--quota-fill-end)}
+.tree-edges .quota-band,.tree-edges .quota-assumed-refresh {fill:url(#quota-fill);stroke:color-mix(in srgb,var(--quota-stroke) 60%,transparent)}
+.tree-edges .quota-baseline {stroke:color-mix(in srgb,var(--quota-stroke) 50.196078%,transparent)}
+.tree-edges .quota-label {fill:var(--quota)}
+.tree-edges .quota-phase-assumed .quota-label {fill:var(--quota)}
+.tree-edges .quota-pause {fill:var(--surface-soft)}
+.tree-edges .quota-pause,.tree-edges .quota-paused-line {stroke:color-mix(in srgb,var(--muted) 45.098039%,transparent)}
+.graph-day,.phase-controls {background:var(--chart-label);border-radius:9px}
+.graph-node {background:var(--chart-label);border-radius:8px;box-shadow:none}
+.graph-node.graph-selected,.graph-node.graph-normal {background:transparent}
+.graph-node[aria-pressed]:hover {box-shadow:none}
+.graph-backup {border-bottom-color:color-mix(in srgb,var(--warning) 40%,transparent)}
+.graph-backup[aria-pressed]:hover {background:color-mix(in srgb,var(--warning) 7.843137%,transparent)}
+.graph-depletion {border-bottom-color:color-mix(in srgb,var(--danger) 40%,transparent)}
+.graph-warning {border-bottom-color:var(--danger)}
+.phase-controls button {background:color-mix(in srgb,var(--highlight) 5.882353%,transparent);border-color:color-mix(in srgb,var(--highlight) 14.117647%,transparent);border-radius:7px;box-shadow:inset 0 1px 0 color-mix(in srgb,var(--highlight) 5.098039%,transparent)}
+.phase-controls button[aria-pressed=true] {background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 40%,transparent);box-shadow:inset 0 1px 0 color-mix(in srgb,var(--highlight) 7.843137%,transparent)}
+.graph-control {background:transparent;box-shadow:none}
+.reset-element {--reset-surface:var(--chart-label)}
+.reset-element [data-reset-marker],.reset-element .reset-peak-cdf {border-radius:6px}
+.reset-element .graph-forecast-assumption {border-radius:8px;box-shadow:none}
+.reset-element .graph-forecast-assumption[aria-pressed=true] {background:color-mix(in srgb,var(--forecast-first-surface) 80%,transparent)}
+.reset-element[data-reset-element="2"] .graph-forecast-assumption[aria-pressed=true] {background:color-mix(in srgb,var(--forecast-second-surface) 80%,transparent)}
+.calculation-notes {border-top-color:color-mix(in srgb,var(--highlight) 14.117647%,transparent)}
+.forecast-calendar>div>span {border-bottom-color:color-mix(in srgb,var(--info) 30.196078%,transparent)}
+#error {background:color-mix(in srgb,var(--danger-deep) 40%,transparent);border:1px solid color-mix(in srgb,var(--danger) 30.196078%,transparent);border-radius:14px}
+
+/* Solid fallbacks retain the dark palette. */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
+  :root {--glass-panel:var(--surface-soft);--glass-control:var(--surface-raised);--glass-line:var(--border);--chart-label:var(--surface-soft)}
+}
+@media(prefers-reduced-transparency:reduce) {
+  :root {--glass-panel:var(--surface-soft);--glass-control:var(--surface-raised);--glass-line:var(--border);--chart-label:var(--surface-soft)}
+  #inputs,.strategy-panel,.forecast-panel,.calendar-panel,.local-badge {-webkit-backdrop-filter:none;backdrop-filter:none}
+}
+@media(prefers-reduced-motion:reduce) {
+  button {transition:none}
+  button:active:not(:disabled) {transform:none}
+}
+@media(max-width:960px) {.forecast-panel {padding:16px}}
+@media(max-width:680px) {#inputs,.strategy-panel,.forecast-panel {border-radius:20px}.forecast-panel {padding:16px}}

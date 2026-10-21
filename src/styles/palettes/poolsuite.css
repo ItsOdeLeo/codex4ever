@@ -1,0 +1,85 @@
+/* Poolsuite-inspired light desktop. Public CSS colors, retrieved 2026-10-18.
+ * Provenance and role mapping: poolsuite.source.json. */
+:root {
+  --pool-pink:#F7D5D5;
+  --pool-cream:#FAF1E8;
+  --pool-light:#FDF8F4;
+  --pool-mint:#AFE5DD;
+  --pool-yellow:#FAF5C6;
+  --pool-black:#000000;
+  --pool-charcoal:#383838;
+  --pool-white:#FFFFFF;
+  --pool-edge:#C8C1BA;
+  --pool-rose-ink:#7B6B6B;
+  --pool-mint-ink:#58736F;
+  --pool-red:#FB5858;
+  /* Derived deeper tones for lines and labels (≥4.5:1 on cream); not from the source CSS. */
+  --pool-rose-deep:#A8434F;
+  --pool-teal-deep:#2A7368;
+  --pool-red-ink:#B3261E;
+
+  --canvas:var(--pool-pink);
+  --surface:var(--pool-cream);
+  --surface-soft:var(--pool-light);
+  --surface-raised:var(--pool-light);
+  --ink:var(--pool-black);
+  --muted:var(--pool-charcoal);
+  --border:var(--pool-black);
+  --highlight:var(--pool-white);
+  --shadow:var(--pool-black);
+  --accent:var(--pool-mint);
+  --accent-soft:var(--pool-mint);
+  --accent-text:var(--pool-black);
+  --on-accent:var(--pool-black);
+
+  --info:var(--pool-rose-ink);
+  --forecast-first-text:var(--pool-black);
+  --forecast-first-curve:var(--pool-rose-deep);
+  --forecast-first-fill:var(--pool-pink);
+  --forecast-first-border:var(--pool-rose-ink);
+  --forecast-first-surface:var(--pool-pink);
+  --violet:var(--pool-mint-ink);
+  --forecast-second-text:var(--pool-black);
+  --forecast-second-curve:var(--pool-teal-deep);
+  --forecast-second-fill:var(--pool-mint);
+  --forecast-second-border:var(--pool-mint-ink);
+  --forecast-second-surface:var(--pool-mint);
+  --quota:var(--pool-mint);
+  --quota-text:var(--pool-black);
+  --quota-stroke:var(--pool-black);
+  --quota-fill-start:var(--pool-mint);
+  --quota-fill-end:var(--pool-mint);
+  --warning:var(--pool-black);
+  --warning-text:var(--pool-black);
+  --bank-surface:var(--pool-yellow);
+  --bank-border:var(--pool-black);
+  --danger:var(--pool-red);
+  --danger-deep:var(--pool-black);
+  --danger-text:var(--pool-black);
+  --danger-surface:var(--pool-pink);
+  --focus:var(--pool-black);
+  --link-stroke:var(--pool-mint-ink);
+
+  --glass-top:var(--surface);
+  --glass-bottom:var(--surface-soft);
+  --chart-label-color:var(--surface);
+  --base-hover-border:var(--pool-black);
+  --base-primary-hover:var(--pool-mint);
+  --base-bank-surface:var(--bank-surface);
+  --base-bank-border:var(--bank-border);
+  --base-calendar-shadow:color-mix(in srgb,var(--shadow) 18%,transparent);
+  --base-forecast-surface:var(--forecast-first-surface);
+  --base-forecast-border:var(--forecast-first-border);
+  --base-link-underline:var(--link-stroke);
+  --base-selected-border:var(--pool-black);
+  --base-segment-shadow:var(--pool-edge);
+  --base-scrollbar:var(--pool-edge);
+  --base-quota-fill-start:var(--quota-fill-start);
+  --base-quota-fill-end:var(--quota-fill-end);
+  --base-quota-stroke:var(--quota-stroke);
+  --base-pause-line:var(--pool-edge);
+  --base-bank-line:var(--bank-border);
+  --base-depletion-line:var(--danger);
+  --base-credits-line:var(--violet);
+  --base-error-surface:var(--danger-surface);
+}

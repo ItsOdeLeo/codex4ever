@@ -1,0 +1,64 @@
+/* One reset style contract. Series only override semantic color tokens. */
+.reset-element {
+  --reset-surface:var(--surface);
+  --reset-text:var(--forecast-first-text);
+  --reset-curve:var(--forecast-first-curve);
+  --reset-accent:var(--info);
+  --reset-fill:var(--forecast-first-fill);
+  --reset-border:var(--forecast-first-border);
+  --reset-title-size:12px;
+  --reset-detail-size:11px;
+  --reset-line-width:1.8;
+  --reset-refill-width:3;
+}
+.reset-element[data-reset-element="2"] {
+  --reset-text:var(--forecast-second-text);
+  --reset-curve:var(--forecast-second-curve);
+  --reset-accent:var(--violet);
+  --reset-fill:var(--forecast-second-fill);
+  --reset-border:var(--forecast-second-border);
+}
+.reset-element [data-reset-position]{position:absolute;left:var(--reset-left);top:var(--reset-top);width:var(--reset-width);min-height:var(--reset-height)}
+.reset-element [data-reset-marker]{display:block;text-align:center;background:var(--reset-surface);color:var(--reset-text);line-height:18px}
+.reset-element [data-reset-marker] strong{display:block;color:inherit;font-size:var(--reset-title-size);font-weight:650}
+.reset-element [data-reset-marker] small{display:block;font-size:var(--reset-detail-size);font-weight:500}
+.reset-element .reset-density-caption{display:flex;justify-content:space-between;gap:20px;color:var(--reset-text);background:var(--reset-surface);font-size:var(--reset-detail-size);font-weight:550;line-height:18px;pointer-events:none}
+.reset-element .reset-peak-cdf{text-align:center;background:var(--reset-surface);font-size:var(--reset-detail-size);line-height:16px;color:var(--reset-text);font-variant-numeric:tabular-nums}
+.tree-edges .reset-element .reset-density-area{fill:var(--reset-fill);fill-opacity:.22;stroke:none}
+.tree-edges .reset-element .reset-density-line{fill:none;stroke:var(--reset-curve);stroke-width:var(--reset-line-width);stroke-linejoin:round;stroke-linecap:round}
+.tree-edges .reset-element .reset-density-baseline{stroke:var(--reset-border);stroke-width:1}
+.tree-edges .reset-element .reset-density-hit{fill:transparent;stroke:none;pointer-events:all;cursor:default}
+.tree-edges .reset-element :is(.forecast-mode-guide,.forecast-following-guide){stroke:var(--reset-accent);stroke-width:var(--reset-line-width);stroke-dasharray:4 3}
+.tree-edges .reset-element :is(.forecast-mode-point,.forecast-following-point){fill:var(--reset-accent);stroke:var(--reset-surface);stroke-width:1.5}
+.tree-edges .reset-element .forecast-mode-range{stroke:var(--reset-border);stroke-width:3;stroke-linecap:round}
+.tree-edges .reset-element .reset-peak-leader{stroke:var(--reset-border);stroke-width:1}
+.tree-edges .reset-element .reset-peak-point{fill:var(--reset-curve);stroke:var(--reset-surface);stroke-width:1}
+.tree-edges .reset-element .reset-action-connection{stroke:var(--reset-accent);stroke-width:1.2}
+.tree-edges .reset-element .quota-refill-assumed-extra{stroke:var(--reset-accent);stroke-width:var(--reset-refill-width);stroke-dasharray:3 2}
+.reset-element .graph-forecast-assumption{background:transparent;border-bottom:1px solid var(--reset-border);padding:5px 6px}
+.reset-element .graph-forecast-assumption strong{color:var(--reset-text);font-size:var(--reset-title-size)}
+.reset-element .graph-forecast-assumption span{color:var(--reset-text);font-size:var(--reset-detail-size)}
+.reset-element .graph-forecast-assumption>span{line-height:16px}
+.reset-element .graph-forecast-assumption .reset-action-heading{display:block;line-height:20px}
+.reset-element .graph-forecast-assumption .reset-action-heading strong{white-space:nowrap}
+.reset-element .graph-forecast-assumption .reset-action-cancel{display:block;font-size:10px;line-height:16px;font-weight:400;white-space:nowrap;text-decoration:underline;text-underline-offset:3px}
+.reset-element .graph-forecast-assumption[aria-pressed=true]{border-color:var(--reset-accent)}
+.reset-element .graph-forecast-assumption:hover{background:var(--reset-surface);border-color:var(--reset-accent)}
+.reset-element .graph-forecast-assumption:focus-visible{outline:2px solid var(--reset-accent);outline-offset:3px}
+.reset-element.phase-reset-opportunity{display:block;color:var(--reset-text);font-size:11px;line-height:16px;font-weight:500}
+.reset-element[data-reset-orientation=vertical]{--reset-title-size:13px;--reset-detail-size:12px}
+.reset-element[data-reset-orientation=vertical] [data-reset-marker]{text-align:left;padding-left:6px;line-height:20px}
+.reset-element[data-reset-orientation=vertical] .reset-density-caption{display:block;text-align:center;font-size:12px;line-height:20px}
+.reset-element[data-reset-orientation=vertical] .reset-density-caption span{display:block;white-space:nowrap}
+.reset-element[data-reset-orientation=vertical] .reset-peak-cdf{font-size:10px;line-height:14px}
+.reset-element[data-reset-orientation=vertical] .reset-peak-cdf small{display:block;font-size:10px}
+.reset-element[data-reset-orientation=vertical] .graph-forecast-assumption{padding:5px 6px;min-height:30px;border-left:2px solid var(--reset-border);border-bottom:0}
+.reset-element[data-reset-orientation=vertical] .graph-forecast-assumption[aria-pressed=true]{border-left-color:var(--reset-accent);background:var(--reset-surface)}
+@media(max-width:760px){.reset-element[data-reset-orientation=vertical] .reset-density-caption{font-size:11px}}
+/* Compatibility for callers that render an estimate without a density plot. */
+.reset-element .forecast-mode:not([data-reset-marker]){display:grid;grid-template-columns:1fr 1.6fr 1fr;align-items:center;text-align:center;color:var(--reset-text);background:var(--reset-surface);font-size:var(--reset-detail-size);line-height:19px}
+.reset-element .forecast-mode:not([data-reset-marker]) strong{color:inherit;font-size:var(--reset-title-size);font-weight:650}
+.reset-element .forecast-mode:not([data-reset-marker]) small{display:block;font-size:var(--reset-detail-size);font-weight:500}
+.tree-edges .edge-reset{stroke:var(--reset-accent,var(--info));stroke-width:1.2}
+.tree-edges .quota-assumed-refresh{fill:var(--reset-fill,var(--forecast-first-fill));stroke:var(--reset-accent,var(--info));stroke-dasharray:3 2}
+.tree-edges .quota-phase-assumed .quota-label{fill:var(--reset-text,var(--info))}

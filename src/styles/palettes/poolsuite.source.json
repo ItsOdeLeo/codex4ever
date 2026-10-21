@@ -1,0 +1,93 @@
+{
+  "kind": "website-reference",
+  "reference": "Poolsuite light desktop",
+  "source": "https://poolsuite.net/",
+  "stylesheet": "https://poolsuite.net/css/index.17a39892.css",
+  "preview": "https://poolsuite.net/og.png",
+  "retrievedOn": "2026-10-18",
+  "implementation": "Original local CSS inspired by the public theme colors and desktop controls. No Poolsuite scripts, images or fonts are redistributed.",
+  "colors": {
+    "pink": {
+      "hex": "#F7D5D5",
+      "sourceToken": "--primary",
+      "role": "desktop and first assumed reset"
+    },
+    "cream": {
+      "hex": "#FAF1E8",
+      "sourceToken": "--secondary",
+      "role": "window and chart surface"
+    },
+    "light": {
+      "hex": "#FDF8F4",
+      "sourceToken": "--secondary-lighter",
+      "role": "input surface"
+    },
+    "mint": {
+      "hex": "#AFE5DD",
+      "sourceToken": "--secondary-button",
+      "role": "primary action, quota and second assumed reset"
+    },
+    "yellow": {
+      "hex": "#FAF5C6",
+      "sourceToken": "--tertiary",
+      "role": "banked reset and hover"
+    },
+    "black": {
+      "hex": "#000000",
+      "sourceToken": "black borders and text",
+      "role": "text, borders and quota outline"
+    },
+    "charcoal": {
+      "hex": "#383838",
+      "sourceToken": "public CSS literal",
+      "role": "secondary text"
+    },
+    "white": {
+      "hex": "#FFFFFF",
+      "sourceToken": "button inset highlight",
+      "role": "raised highlight"
+    },
+    "edge": {
+      "hex": "#C8C1BA",
+      "sourceToken": "--secondary-darker",
+      "role": "control edge and inactive line"
+    },
+    "roseInk": {
+      "hex": "#7B6B6B",
+      "sourceToken": "--button-shadow",
+      "role": "first forecast"
+    },
+    "mintInk": {
+      "hex": "#58736F",
+      "sourceToken": "--secondary-button-shadow",
+      "role": "second forecast"
+    },
+    "red": {
+      "hex": "#FB5858",
+      "sourceToken": "--vs-dropdown-option--deselect-bg",
+      "role": "risk border and underline"
+    },
+    "rose-deep": {
+      "hex": "#A8434F",
+      "sourceToken": "derived from pink/rose-ink",
+      "role": "first reset curve and lane label (5.25:1 on cream)"
+    },
+    "teal-deep": {
+      "hex": "#2A7368",
+      "sourceToken": "derived from mint/mint-ink",
+      "role": "second reset curve and lane label (5.02:1 on cream)"
+    },
+    "red-ink": {
+      "hex": "#B3261E",
+      "sourceToken": "derived from red",
+      "role": "0% (outage) daily usage figure (5.86:1 on cream)"
+    }
+  },
+  "principles": [
+    "Pink desktop, cream windows, mint main actions and quota; yellow banked resets.",
+    "Small window corners, thin dark outlines, one-pixel inset control highlights; no paper noise or decorative animation.",
+    "Forecasts keep 1.2px curves; the second also uses dashes. All probability and time geometry stays unchanged.",
+    "Dark readable text on pastel surfaces; red is a risk border or underline, not small text.",
+    "UI labels, controls, dates, numeric inputs and chart annotations share locally hosted VT323 ASCII under SIL OFL. Chinese uses consistent system fallbacks; long explanations and source quotes use the reading-text role. Typography roles are managed in retro-desktop.css."
+  ]
+}

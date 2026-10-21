@@ -1,0 +1,45 @@
+{
+  "name": "codex4ever",
+  "version": "0.1.2",
+  "description": "Plan Codex usage from your current quota, banked resets and public reset evidence.",
+  "author": {
+    "name": "ItsOdeLeo",
+    "url": "https://x.com/ItsOdeLeo"
+  },
+  "homepage": "https://codex4ever.com",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "quota",
+    "usage",
+    "reset",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "hooks": "./hooks/hooks.json",
+  "requires_local_executor": true,
+  "interface": {
+    "displayName": "Codex4ever",
+    "shortDescription": "Codex quota & reset planner",
+    "longDescription": "Read your local Codex quota and banked reset deadlines, analyze public Tibo evidence, and open the bundled interactive visual planner with the same result. Requires Node.js 20+ and a locally installed, signed-in Codex CLI. Runs locally; no reset redemption or credit spending. Unofficial; not affiliated with OpenAI.",
+    "developerName": "ItsOdeLeo",
+    "category": "Productivity",
+    "websiteURL": "https://codex4ever.com",
+    "supportURL": "https://x.com/ItsOdeLeo",
+    "capabilities": [
+      "Read Codex quota",
+      "Read banked reset deadlines",
+      "Forecast extra resets",
+      "Plan daily usage",
+      "Open local visual planner"
+    ],
+    "defaultPrompt": [
+      "Plan my Codex usage from my current quota.",
+      "Can I use more before the next reset?",
+      "Plan Codex usage for weekdays only."
+    ],
+    "composerIcon": "./assets/icon.png",
+    "logo": "./assets/icon.png"
+  }
+}

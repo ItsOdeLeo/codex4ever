@@ -1,0 +1,218 @@
+/* Original implementation inspired by Poolsuite's light desktop UI.
+ * Theme only: no time coordinates, minimum chart width or planning behavior. */
+@font-face {
+  font-family:'Codex Desktop';font-style:normal;font-weight:400;font-display:swap;
+  src:url('/public/fonts/vt323/VT323-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family:'Desktop Controls';font-style:normal;font-weight:400;font-display:swap;
+  src:url('/public/fonts/vt323/VT323-Regular.ttf') format('truetype');
+  unicode-range:U+0020-007E;size-adjust:125%;
+}
+:root {
+  color-scheme:light;--chart-label:var(--surface);
+  --font-ui:'Desktop Controls',Tahoma,'PingFang SC','Microsoft YaHei',sans-serif;
+  --font-reading:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue','PingFang SC','Microsoft YaHei',sans-serif;
+  --font-brand:'Codex Desktop',ui-monospace,monospace;
+  /* Pixel face only for what is read at a glance; everything small reads in the system face. */
+  font-family:var(--font-reading);
+}
+body {min-height:100vh;background:var(--canvas);-webkit-font-smoothing:antialiased}
+.site-header {border-bottom:1px solid var(--border);padding-bottom:16px}
+h1 {font-family:var(--font-brand);font-size:36px;font-weight:400;letter-spacing:-1px;line-height:1}
+.brand-mark {background:var(--accent);color:var(--ink);border:1px solid var(--border);border-radius:4px;box-shadow:2px 2px 0 var(--shadow)}
+.brand p {margin-top:7px}
+.brand {min-width:0}
+.brand>div {min-width:0}
+.brand .affiliation-notice {max-width:64ch;margin-top:6px;font-size:11px;line-height:1.5;color:var(--muted)}
+.local-badge {border:1px solid var(--border);border-radius:3px;background:var(--surface);color:var(--ink);box-shadow:2px 2px 0 color-mix(in srgb,var(--shadow) 18%,transparent)}
+.header-actions {display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-wrap:wrap}
+.language-switch {display:flex;gap:2px;padding:2px;border:1px solid var(--border);border-radius:3px;background:var(--surface)}
+.language-switch button {padding:4px 8px;border-color:transparent;box-shadow:none;font-size:12px;white-space:nowrap}
+.language-switch button[aria-pressed=true] {border-color:var(--border);background:var(--accent);box-shadow:inset 1px 1px 0 var(--highlight)}
+#inputs,.strategy-panel,.forecast-panel,.calendar-panel {
+  background:var(--surface);border:1px solid var(--border);border-radius:7px;
+  box-shadow:3px 3px 0 color-mix(in srgb,var(--shadow) 18%,transparent);
+}
+#inputs {position:relative;z-index:1}
+#strategy-controls h3 {margin:0 0 10px;font-size:12px;font-weight:650}
+#strategy-controls h3 {margin-bottom:6px}
+#strategy-controls .control-heading h3 {margin:0}
+.forecast-panel {padding:16px}
+.calendar-panel {box-shadow:4px 4px 0 color-mix(in srgb,var(--shadow) 18%,transparent)}
+#output>h2 {display:flex;align-items:center;gap:12px;font-size:14px;letter-spacing:0}
+#output>h2::after {content:'';flex:1;height:7px;background:repeating-linear-gradient(to bottom,var(--ink) 0 1px,transparent 1px 3px)}
+.forecast-control {color:var(--ink);border-bottom:1px solid var(--border);padding-bottom:10px}
+.forecast-summary dl>div {border-bottom:0;padding:11px 0}
+.forecast-summary dl>div:first-child {padding-top:2px}
+.forecast-summary dt {font-weight:400}
+.forecast-summary a {color:var(--ink);text-decoration-color:var(--link-stroke)}
+
+button {background:var(--surface-soft);border:1px solid var(--border);border-radius:3px;box-shadow:inset 1px 1px 0 var(--highlight),inset -1px -1px 0 var(--pool-edge);transition:background .1s}
+button:hover:not(:disabled) {background:var(--bank-surface);border-color:var(--border)}
+button:active:not(:disabled) {box-shadow:inset 1px 1px 0 var(--pool-edge),inset -1px -1px 0 var(--highlight)}
+button.primary {background:var(--accent);color:var(--on-accent);border:1px solid var(--border);border-radius:3px;box-shadow:inset 1px 1px 0 var(--highlight),inset -1px -1px 0 var(--pool-mint-ink),2px 2px 0 var(--shadow)}
+button.primary:hover {background:var(--accent);border-color:var(--border)}
+button.primary:active {box-shadow:inset 1px 1px 0 var(--pool-mint-ink),inset -1px -1px 0 var(--highlight)}
+input[type=number],.delay-control {border:1px solid var(--border);background:var(--surface-soft);border-radius:2px;box-shadow:inset 1px 1px 0 var(--pool-edge)}
+.delay-control button,.delay-control input[type=number] {background:transparent;box-shadow:none}
+.delay-control button:hover:not(:disabled) {background:var(--accent-soft)}
+.calendar-field {border-bottom-color:var(--pool-edge)}
+.calendar-summary button {background:var(--bank-surface);border-color:var(--bank-border);color:var(--warning-text);border-radius:3px}
+.month-grid button {background:transparent;border-color:transparent;box-shadow:none}
+.month-grid button[aria-pressed=true] {background:var(--accent-soft);border-color:var(--border);color:var(--accent-text)}
+.forecast-control button {background:var(--surface-soft);color:var(--ink)}
+.forecast-control button[aria-pressed=true] {background:var(--forecast-first-surface);border-color:var(--border);color:var(--ink)}
+.intent-picker {padding:3px;gap:3px;background:var(--surface-soft);border:1px solid var(--border);border-radius:4px;box-shadow:none}
+.intent-picker button {padding:7px 6px;background:transparent;border-color:transparent;box-shadow:none}
+.intent-picker button[aria-pressed=true] {background:var(--accent-soft);border-color:var(--border);color:var(--accent-text);box-shadow:inset 1px 1px 0 var(--highlight)}
+.timeline-toolbar {border-top-color:var(--pool-edge)}
+.tree-scroll {scrollbar-color:var(--pool-edge) transparent}
+.time-day {font-size:12px;font-weight:600}
+/* Only the brand title keeps the pixel face; every other text uses one
+   system face, so the page reads as a single type family. */
+h2,h3,button,input[type=number],legend {font-family:var(--font-reading)}
+.tree-edges text {font-family:var(--font-reading)}
+input[type=number] {font-size:18px}
+.delay-control input[type=number] {font-size:16px}
+.brand p,.hint,.forecast-summary q,.forecast-method p,footer {font-family:var(--font-reading)}
+footer a {color:var(--ink);text-decoration-color:var(--link-stroke);text-underline-offset:3px}
+#creator-contact {white-space:nowrap}
+.tree-edges :is(.time-forecast-line,.reset-density-baseline,.reset-peak-leader),
+.tree-edges .quota-baseline:not(.quota-paused-line):not(.quota-rest-line) {display:none}
+.tree-edges .quota-rest-line {stroke:var(--quota-stroke);stroke-width:1;stroke-dasharray:3 6}
+.quota-fill-start {stop-color:var(--quota-fill-start)}
+.quota-fill-end {stop-color:var(--quota-fill-end)}
+.tree-edges .quota-band,.tree-edges .quota-assumed-refresh {fill:url(#quota-fill);stroke:none}
+.tree-edges .quota-label,.tree-edges .quota-phase-assumed .quota-label {fill:var(--quota-text)}
+.tree-edges .quota-pause {fill:transparent;stroke:none}
+.tree-edges .quota-paused-line {stroke:var(--pool-edge);stroke-width:1;stroke-dasharray:3 6}
+.tree-edges .quota-refill-normal {stroke:var(--pool-mint-ink)}
+.tree-edges .edge-backup {stroke:var(--warning);stroke-width:1.2;stroke-linecap:round}
+.tree-edges .quota-refill-backup {stroke:var(--warning)}
+.graph-day,.phase-controls,.graph-node {background:var(--chart-label);border-radius:3px}
+.timeline-lane-label {position:absolute;display:flex;flex-direction:column;justify-content:center;gap:1px;padding:0 8px 0 0;background:var(--surface);color:var(--ink);line-height:16px}
+.timeline-lane-label>strong {font-size:13px;line-height:18px;font-weight:650}
+.timeline-lane-label>span,.timeline-lane-label>small {font-size:10px;line-height:14px;color:var(--muted)}
+.timeline-lane-label[data-lane-inline] {justify-content:flex-start}
+.timeline-lane-label[data-lane-inline]>.timeline-lane-text {font-size:12px;font-weight:500;line-height:20px;white-space:nowrap;color:inherit}
+.reset-element .timeline-lane-label[data-lane-inline] {color:var(--reset-curve)}
+.reset-element .timeline-lane-label>strong,.reset-element .timeline-lane-note {color:var(--reset-curve)}
+.timeline-lane-label[data-lane-label="usage"] {justify-content:flex-start}
+.timeline-lane-label[data-lane-label="usage"]>strong {line-height:20px}
+.timeline-lane-label[data-lane-label="opportunity"] {justify-content:flex-start}
+.timeline-lane-label[data-lane-label="opportunity"]>strong,.timeline-lane-label[data-lane-label="opportunity"]>span {line-height:16px}
+.phase-controls[data-quota-label] {height:var(--phase-label-height,68px);display:grid;grid-template-rows:20px auto;row-gap:16px;align-content:start;background:transparent}
+.phase-controls[data-quota-label]>strong {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:20px}
+.phase-controls[data-quota-label] .phase-reset-opportunity {background:transparent;line-height:16px}
+.phase-reset-opportunity>span {display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.phase-reset-opportunity .phase-probability-until {color:var(--muted);font-size:10px}
+.phase-reset-opportunity[data-compact-probability]>span {overflow:visible;text-overflow:clip;line-height:16px}
+.phase-reset-opportunity[data-compact-probability] .phase-probability-value {font-size:12px;font-weight:650}
+.phase-reset-opportunity[data-compact-probability] .phase-probability-until {font-size:11px}
+.phase-reset-opportunity[data-compact-probability] time {display:flex;gap:6px;line-height:16px}
+.phase-reset-opportunity[data-cutoff-layout="stacked"] time {flex-direction:column;gap:0}
+.graph-node,.graph-node[aria-pressed]:hover {box-shadow:none}
+.graph-node.graph-selected,.graph-node.graph-normal {background:transparent}
+.graph-backup {background:var(--bank-surface);border:1px solid var(--bank-border);border-radius:3px}
+.graph-backup[aria-pressed=false] {border-style:dashed}
+.graph-backup[aria-pressed]:hover {background:var(--bank-surface);border-color:var(--ink)}
+.graph-node .deadline-warning {color:var(--danger-text);font-weight:650;text-decoration:underline;text-decoration-color:var(--danger);text-decoration-thickness:2px;text-underline-offset:3px}
+.graph-depletion {border-bottom-color:var(--danger)}
+.phase-controls button {background:var(--surface-soft);border-color:var(--pool-edge);border-radius:2px;box-shadow:none}
+.phase-controls button[aria-pressed=true] {background:var(--accent-soft);border-color:var(--border);color:var(--accent-text)}
+.graph-control {background:transparent;box-shadow:none}
+.reset-element {--reset-surface:var(--chart-label);--reset-line-width:1.2;--reset-refill-width:2}
+.reset-element [data-reset-marker],.reset-element .reset-peak-cdf {border-radius:0}
+.reset-element [data-reset-marker] {background:var(--chart-label);padding:0 4px}
+.reset-element [data-reset-marker]>strong {color:var(--reset-curve)}
+.reset-element [data-reset-marker] small {color:var(--reset-text)}
+.reset-element .reset-density-caption .reset-caption-condition {color:var(--forecast-second-curve);font-weight:650}
+.reset-element .graph-forecast-assumption {background:var(--surface-soft);border:1px solid var(--border);border-radius:3px;box-shadow:inset 1px 1px 0 var(--highlight),inset -1px -1px 0 var(--pool-edge)}
+.reset-element .graph-forecast-assumption[aria-pressed=true] {background:var(--forecast-first-surface);border-color:var(--border);box-shadow:inset 1px 1px 0 var(--pool-edge)}
+.reset-element[data-reset-element="2"] .graph-forecast-assumption[aria-pressed=true] {background:var(--forecast-second-surface)}
+.tree-edges .reset-element .reset-density-area {fill:none}
+.tree-edges .reset-element[data-reset-element="2"] .reset-density-line {stroke-dasharray:4 3}
+.tree-edges .reset-element :is(.forecast-mode-guide,.forecast-following-guide) {stroke:var(--reset-accent);stroke-width:1;stroke-opacity:.85}
+.reset-element .reset-density-caption>span:first-child::before {content:'';display:inline-block;width:7px;height:7px;margin-right:6px;background:var(--reset-curve);vertical-align:1px}
+.calculation-notes {border-top-color:var(--pool-edge)}
+.forecast-method {margin-top:20px;padding:18px 20px;background:var(--surface);border:1px solid var(--border);border-radius:7px;box-shadow:3px 3px 0 color-mix(in srgb,var(--shadow) 18%,transparent)}
+.forecast-method h3 {margin:0 0 14px;font-size:13px;font-weight:650}
+.forecast-method dl {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:0 0 14px}
+.forecast-method dl>div {min-width:0}
+.forecast-method dt {font-size:11px;color:var(--muted);margin-bottom:4px}
+.forecast-method dd {margin:0;font-size:12px;font-weight:600;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.forecast-method small {display:block;font-size:11px;color:var(--muted);font-weight:400}
+.forecast-method p {font-size:12px;line-height:1.65;margin:9px 0}
+.forecast-method .forecast-conditional-note {color:var(--forecast-second-curve)}
+.forecast-formula {padding:10px 12px;margin:12px 0;border:1px solid var(--pool-edge);background:var(--surface-soft)}
+.forecast-formula p {margin:0 0 6px;font-weight:600}
+.forecast-formula code {display:block;font:11px/1.8 ui-monospace,monospace;overflow-wrap:anywhere;white-space:normal}
+.forecast-data-status {font-size:11px;color:var(--muted);margin:12px 0 0}
+.usage-strategies {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;margin:0}
+.usage-strategies button {padding:5px 8px;font-size:12px;background:var(--surface);border:1px solid var(--border);border-radius:3px}
+.usage-strategies button[aria-pressed=true] {background:var(--accent-soft);color:var(--accent-text)}
+.forecast-calendar>div>span {border-bottom-color:transparent}
+#error {background:var(--danger-surface);border:1px solid var(--danger);border-radius:3px}
+button:focus-visible,input:focus-visible,summary:focus-visible,.tree-scroll:focus-visible {outline-color:var(--focus)}
+/* Polish: the update row reads as the input window's status bar. */
+#inputs {border-bottom-left-radius:0;border-bottom-right-radius:0}
+.input-update {padding:6px 10px;background:var(--surface-soft);border:1px solid var(--border);border-top:0;border-radius:0 0 7px 7px;
+  box-shadow:3px 3px 0 color-mix(in srgb,var(--shadow) 18%,transparent)}
+.input-update #status {font-size:12px}
+/* Five strategies, all the same size, each with a one-line description. */
+.usage-strategies {grid-template-columns:minmax(0,1fr)}
+.usage-strategies button {display:grid;gap:2px;text-align:left;padding:6px 10px}
+.usage-strategies button strong {font-family:var(--font-reading);font-size:13px;font-weight:600}
+.usage-strategies button small {font-family:var(--font-reading);font-size:11px;line-height:1.35;color:var(--muted)}
+/* Suggested usage per day is the headline number of each phase. */
+.phase-controls[data-quota-label]>strong {font-size:16px;font-weight:700;overflow:visible;text-overflow:clip;letter-spacing:-.2px}
+/* The only coloured number: a phase with no quota (an outage). */
+.phase-controls[data-quota-label][data-phase-daily="0"]>strong {color:var(--pool-red-ink)}
+/* Brand mark lines up with the title, not the middle of three lines. */
+.brand {align-items:flex-start}
+.brand h1 {line-height:46px}
+/* Reading text one step larger; labels keep the pixel face. */
+.forecast-summary dt,.forecast-summary dd small,.forecast-method dt,.forecast-method small {font-size:12px}
+.forecast-method p {font-size:13px}
+.forecast-data-status {font-size:12px}
+footer {font-size:12px;line-height:1.8;margin-top:32px;padding-top:14px;border-top:1px solid var(--pool-edge)}
+/* Less text: secondary forecast facts fold away, labels the UI already implies go. */
+.instant-label {display:none}
+.forecast-summary q {-webkit-line-clamp:2}
+.forecast-more {margin-top:4px;border-top:1px solid var(--pool-edge);padding-top:10px}
+.forecast-more>summary {cursor:pointer;font-size:12px;color:var(--muted);list-style-position:inside}
+.forecast-more[open]>summary {margin-bottom:4px}
+.forecast-more>p {font-size:11px;color:var(--muted);margin:8px 0 0}
+/* Lane labels cover the plot when a phone timeline scrolls under them. */
+.timeline-lane-label {z-index:4}
+.lane-cover {position:absolute;top:0;bottom:0;left:0;z-index:3;background:var(--surface);border-right:1px dashed var(--pool-edge);pointer-events:none}
+@media(prefers-reduced-motion:reduce) {button {transition:none}}
+@media(max-width:680px) {h1 {font-size:32px}.brand h1 {line-height:40px}.forecast-panel {padding:16px}.site-header {flex-wrap:wrap;align-items:flex-start;gap:12px}.header-actions {margin-left:auto}.forecast-method {padding:16px}.forecast-method dl {grid-template-columns:minmax(0,1fr);gap:12px}}
+.forecast-method>details>summary {cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px}
+.forecast-method>details>summary::-webkit-details-marker {display:none}
+.forecast-method>details>summary::before {content:'▸';font-size:12px}
+.forecast-method>details[open]>summary::before {content:'▾'}
+.forecast-method>details>summary h3 {margin:0}
+.forecast-method>details[open]>summary {margin-bottom:14px}
+.forecast-more>summary {list-style:none}
+.forecast-more>summary::-webkit-details-marker {display:none}
+.forecast-more>summary::before {content:'▸ '}
+.forecast-more[open]>summary::before {content:'▾ '}
+/* Glance list: label left, value right, one line each. */
+.forecast-glance>div {display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:7px 0!important;border-bottom:1px dotted var(--pool-edge)!important}
+.forecast-glance>div:last-child {border-bottom:0!important}
+.forecast-glance dt {margin:0;font-size:12px;color:var(--muted);white-space:nowrap}
+.forecast-glance dd {margin:0;font-size:13px;text-align:right}
+.forecast-glance [data-forecast-glance="next-48h"] dd {font-size:18px;font-weight:650}
+.forecast-more>dl>div {padding:9px 0}
+/* Day columns: alternate days lightly shaded, faint solid dividers, from the
+   date row down through the quota row. Neutral, so it never reads as a reset. */
+.tree-edges .time-day-band {fill:color-mix(in srgb,var(--ink) 3%,transparent);stroke:none}
+.tree-edges .time-grid-line {stroke:var(--pool-edge);stroke-width:1;stroke-opacity:.55;stroke-dasharray:none}
+/* Labels sit on day bands: a translucent backing dims lines behind the text
+   without drawing a visible box on the shaded columns. */
+.reset-element [data-reset-marker],.reset-element .reset-density-caption {background:transparent}
+.reset-element .reset-peak-cdf {background:color-mix(in srgb,var(--surface) 82%,transparent);border-radius:3px}
+.time-day {background:transparent}
+.tree-edges .quota-label {stroke:transparent}

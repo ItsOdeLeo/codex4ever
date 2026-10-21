@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "codex4ever": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "${PLUGIN_ROOT}/server/codex4ever.mjs"
+      ],
+      "cwd": "${PLUGIN_ROOT}"
+    }
+  }
+}

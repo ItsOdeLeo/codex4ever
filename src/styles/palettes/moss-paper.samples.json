@@ -1,0 +1,80 @@
+{
+  "reference": "User supplied Cat On Chair detail, 2026-10-18",
+  "sha256": "a7aed78a7983fae4086a4b26fa49102ab21569fe4d458b31c732b91172ae1228",
+  "imageSize": {
+    "width": 1466,
+    "height": 2206
+  },
+  "colors": {
+    "paper": {
+      "hex": "#E9E4DF",
+      "pixel": {
+        "x": 634,
+        "y": 17
+      }
+    },
+    "paper_light": {
+      "hex": "#ECE7E2",
+      "pixel": {
+        "x": 895,
+        "y": 20
+      }
+    },
+    "paper_highlight": {
+      "hex": "#EEE9E5",
+      "pixel": {
+        "x": 564,
+        "y": 17
+      }
+    },
+    "ink": {
+      "hex": "#171715",
+      "pixel": {
+        "x": 765,
+        "y": 731
+      }
+    },
+    "moss": {
+      "hex": "#789444",
+      "pixel": {
+        "x": 12,
+        "y": 0
+      }
+    },
+    "coral": {
+      "hex": "#CE5247",
+      "pixel": {
+        "x": 580,
+        "y": 1074
+      }
+    },
+    "terracotta": {
+      "hex": "#CA9662",
+      "pixel": {
+        "x": 607,
+        "y": 1410
+      }
+    },
+    "lavender": {
+      "hex": "#A58CA6",
+      "pixel": {
+        "x": 957,
+        "y": 1565
+      }
+    },
+    "teal": {
+      "hex": "#2E9281",
+      "pixel": {
+        "x": 493,
+        "y": 1158
+      }
+    },
+    "blue": {
+      "hex": "#4B8CBC",
+      "pixel": {
+        "x": 482,
+        "y": 1748
+      }
+    }
+  }
+}

@@ -1,0 +1,81 @@
+/* Current palette only; this extraction does not select new colors.
+ * Source: founderOS/apps/desktop/src/renderer/styles/globals.css, Liquid theme.
+ * First reset, second reset and quota have independent roles. */
+:root {
+  /* Canvas, surfaces and text */
+  --canvas:#040405;
+  --surface:#121214;
+  --surface-soft:#1C1C1F;
+  --surface-raised:#2D2D31;
+  --ink:#EDF7F9;
+  --muted:#96AEB4;
+  --border:#39393D;
+  --highlight:#FFFFFF;
+  --shadow:#000000;
+
+  /* Actions */
+  --accent:#70B0C1;
+  --accent-soft:#174049;
+  --on-accent:#12181C;
+  --accent-text:var(--accent);
+
+  /* First reset: info cyan */
+  --info:#9BDAE6;
+  --forecast-first-text:var(--info);
+  --forecast-first-curve:#66BBCD;
+  --forecast-first-fill:var(--forecast-first-curve);
+  --forecast-first-border:color-mix(in srgb,var(--forecast-first-curve) 30.196078%,transparent);
+  --forecast-first-surface:var(--accent-soft);
+
+  /* Second reset: secondary violet */
+  --violet:#BBAEDC;
+  --forecast-second-text:var(--violet);
+  --forecast-second-curve:#907BBE;
+  --forecast-second-fill:var(--forecast-second-curve);
+  --forecast-second-border:color-mix(in srgb,var(--forecast-second-curve) 30.196078%,transparent);
+  --forecast-second-surface:#302548;
+
+  /* Available quota: success green */
+  --quota:#6EE7B7;
+  --quota-text:var(--quota);
+  --quota-stroke:#34D399;
+  --quota-fill-start:#064E3B;
+  --quota-fill-end:#047857;
+
+  /* Bank deadlines and depletion risks */
+  --warning:#FCD34D;
+  --warning-text:var(--warning);
+  --danger:#FB7185;
+  --danger-text:var(--danger);
+  --danger-deep:#4C0519;
+  --bank-surface:color-mix(in srgb,var(--warning) 7.843137%,transparent);
+  --bank-border:color-mix(in srgb,var(--warning) 20%,transparent);
+  --danger-surface:color-mix(in srgb,var(--danger-deep) 40%,transparent);
+
+  /* Glass substrate hues; opacity, blur and shadows belong to the material. */
+  --glass-top:#202023;
+  --glass-bottom:#151517;
+  --chart-label-color:#18181A;
+
+  /* Existing base-layer paints, retained so extraction does not change the cascade.
+   * The selected glass material overrides these where it did before. */
+  --base-hover-border:#AABBC7;
+  --base-primary-hover:#0C594F;
+  --base-bank-surface:#FFF7E8;
+  --base-bank-border:#E6CFAB;
+  --base-calendar-shadow:#1B2D3C18;
+  --base-forecast-surface:#EAF0FA;
+  --base-forecast-border:#C1D1EB;
+  --base-link-underline:#B8C9E5;
+  --base-selected-border:#75AB9D;
+  --base-segment-shadow:#1B2D3C12;
+  --base-scrollbar:#B5C5D0;
+  --base-quota-fill-start:#D5EBE3;
+  --base-quota-fill-end:#9ECDBB;
+  --base-quota-stroke:#559D86;
+  --base-pause-line:#A9B7C1;
+  --base-bank-line:#D4BA91;
+  --base-depletion-line:#CBB6B8;
+  --base-credits-line:#CABDDC;
+  --base-error-surface:#FFF0F0;
+}

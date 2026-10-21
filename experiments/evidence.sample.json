@@ -1,0 +1,18 @@
+{
+  "synthetic": true,
+  "now": "2026-10-13T12:00:00Z",
+  "timeZone": "Europe/Berlin",
+  "resetTimes": [
+    "2026-09-01T12:00:00Z",
+    "2026-09-13T12:00:00Z",
+    "2026-09-25T12:00:00Z",
+    "2026-10-07T12:00:00Z"
+  ],
+  "posts": [
+    {
+      "createdAt": "2026-10-13T12:00:00Z",
+      "text": "Synthetic example: a new feature was released today.",
+      "signal": { "kind": "new_feature", "confidence": 0.8 }
+    }
+  ]
+}

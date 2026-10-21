@@ -1,0 +1,911 @@
+{
+  "now": "2026-10-14T12:00:00.000Z",
+  "timeZone": "Europe/Berlin",
+  "assumptions": {
+    "creditsConsumption": "user-estimated; no cost or duration calculation",
+    "forecast": "synthetic-for-demonstration",
+    "priority": "continuity-then-utilization",
+    "presentation": "event milestones; cumulative reset probability from plan start"
+  },
+  "cases": [
+    {
+      "name": "剩10%六天后刷新",
+      "input": {
+        "weeklyRemaining": 10,
+        "weeklyResetDays": 6,
+        "weeklyResetHours": 0,
+        "credits": 0,
+        "allowCredits": false,
+        "resetDates": [],
+        "usageIntent": "steady"
+      },
+      "forecast": null,
+      "averagePercentPerDay": 90,
+      "expectedPauseHours": 0,
+      "credits": {
+        "balance": 0,
+        "unit": "credits",
+        "allowed": false,
+        "included": false,
+        "quantified": false,
+        "consumption": "user-estimated",
+        "bridge": null
+      },
+      "ifNoExtraReset": [
+        {
+          "from": "2026-10-14T12:00:00.000Z",
+          "to": "2026-10-15T12:00:00.000Z",
+          "dailyPercent": 1.6666666666666665,
+          "remainingAfter": 8.3333333,
+          "resetsUsed": 0,
+          "pauseHours": 0,
+          "events": []
+        },
+        {
+          "from": "2026-10-15T12:00:00.000Z",
+          "to": "2026-10-16T12:00:00.000Z",
+          "dailyPercent": 1.66666666,
+          "remainingAfter": 6.6666666,
+          "resetsUsed": 0,
+          "pauseHours": 0,
+          "events": []
+        },
+        {
+          "from": "2026-10-16T12:00:00.000Z",
+          "to": "2026-10-17T12:00:00.000Z",
+          "dailyPercent": 1.66666665,
+          "remainingAfter": 5,
+          "resetsUsed": 0,
+          "pauseHours": 0,
+          "events": []
+        },
+        {
+          "from": "2026-10-17T12:00:00.000Z",
+          "to": "2026-10-18T12:00:00.000Z",
+          "dailyPercent": 1.6666666666666665,
+          "remainingAfter": 3.3333333,
+          "resetsUsed": 0,
+          "pauseHours": 0,
+          "events": []
+        },
+        {
+          "from": "2026-10-18T12:00:00.000Z",
+          "to": "2026-10-19T12:00:00.000Z",
+          "dailyPercent": 1.66666665,
+          "remainingAfter": 1.6666667,
+          "resetsUsed": 0,
+          "pauseHours": 0,
+          "events": []
+        },
+        {
+          "from": "2026-10-19T12:00:00.000Z",
+          "to": "2026-10-20T12:00:00.000Z",
+          "dailyPercent": 1.6666667,
+          "remainingAfter": 0,
+          "resetsUsed": 0,
+          "pauseHours": 0,
+          "events": []
+        }
+      ],
+      "milestones": {
+        "segments": [
+          {
+            "index": 0,
+            "sourceLevelIndex": 0,
+            "canChoose": true,
+            "startHours": 0,
+            "endHours": 144,
+            "startAt": "2026-10-14T12:00:00.000Z",
+            "endAt": "2026-10-20T12:00:00.000Z",
+            "multiplier": 0.018518518518518517,
+            "dailyPercent": 1.6666666666666665,
+            "usedPercent": 9.999999993333335,
+            "state": {
+              "quota": 10,
+              "resets": 0,
+              "credits": 0
+            },
+            "endState": {
+              "quota": 0,
+              "resets": 0,
+              "credits": 0
+            },
+            "startReasons": [
+              "current"
+            ],
+            "endReasons": [
+              "normal-refresh"
+            ],
+            "events": [],
+            "cumulativeResetProbability": null,
+            "conditionalResetProbability": 0
+          }
+        ],
+        "points": [
+          {
+            "hours": 0,
+            "at": "2026-10-14T12:00:00.000Z",
+            "reasons": [
+              "current"
+            ],
+            "events": [],
+            "stateBefore": {
+              "quota": 10,
+              "resets": 0,
+              "credits": 0
+            },
+            "stateAfter": {
+              "quota": 10,
+              "resets": 0,
+              "credits": 0
+            },
+            "cumulativeResetProbability": null
+          },
+          {
+            "hours": 144,
+            "at": "2026-10-20T12:00:00.000Z",
+            "reasons": [
+              "normal-refresh"
+            ],
+            "events": [],
+            "stateBefore": {
+              "quota": 0,
+              "resets": 0,
+              "credits": 0
+            },
+            "stateAfter": {
+              "quota": 100,
+              "resets": 0,
+              "credits": 0
+            },
+            "cumulativeResetProbability": null
+          }
+        ],
+        "endKind": "normal-refresh",
+        "probabilityBasis": "cumulative-from-plan-start",
+        "rawDecisionPeriods": 6
+      }
+    },
+    {
+      "name": "明天可能重置但保留落空预案",
+      "input": {
+        "weeklyRemaining": 40,
+        "weeklyResetDays": 4,
+        "weeklyResetHours": 0,
+        "credits": 0,
+        "allowCredits": false,
+        "resetDates": [],
+        "usageIntent": "steady"
+      },
+      "forecast": {
+        "probability": 0.95,
+        "inHours": 24
+      },
+      "averagePercentPerDay": 20,
+      "expectedPauseHours": 0,
+      "credits": {
+        "balance": 0,
+        "unit": "credits",
+        "allowed": false,
+        "included": false,
+        "quantified": false,
+        "consumption": "user-estimated",
+        "bridge": null
+      },
+      "ifNoExtraReset": [
+        {
+          "from": "2026-10-14T12:00:00.000Z",
+          "to": "2026-10-15T12:00:00.000Z",
+          "dailyPercent": 30,
+          "remainingAfter": 10,
+          "resetsUsed": 0,
+          "pauseHours": 0,
+          "events": []
+        },
+        {
+          "from": "2026-10-15T12:00:00.000Z",
+          "to": "2026-10-16T12:00:00.000Z",
+          "dailyPercent": 3.333333333333333,
+          "remainingAfter": 6.6666667,
+          "resetsUsed": 0,
+          "pauseHours": 0,
+          "events": []
+        },
+        {
+          "from": "2026-10-16T12:00:00.000Z",
+          "to": "2026-10-17T12:00:00.000Z",
+          "dailyPercent": 3.33333335,
+          "remainingAfter": 3.3333334,
+          "resetsUsed": 0,
+          "pauseHours": 0,
+          "events": []
+        },
+        {
+          "from": "2026-10-17T12:00:00.000Z",
+          "to": "2026-10-18T12:00:00.000Z",
+          "dailyPercent": 3.3333334,
+          "remainingAfter": 0,
+          "resetsUsed": 0,
+          "pauseHours": 0,
+          "events": []
+        }
+      ],
+      "milestones": {
+        "segments": [
+          {
+            "index": 0,
+            "sourceLevelIndex": 0,
+            "canChoose": true,
+            "startHours": 0,
+            "endHours": 24,
+            "startAt": "2026-10-14T12:00:00.000Z",
+            "endAt": "2026-10-15T12:00:00.000Z",
+            "multiplier": 1.5,
+            "dailyPercent": 30,
+            "usedPercent": 30,
+            "state": {
+              "quota": 40,
+              "resets": 0,
+              "credits": 0
+            },
+            "endState": {
+              "quota": 10,
+              "resets": 0,
+              "credits": 0
+            },
+            "startReasons": [
+              "current"
+            ],
+            "endReasons": [
+              "pace-change"
+            ],
+            "events": [],
+            "cumulativeResetProbability": 0.95,
+            "conditionalResetProbability": 0.95
+          },
+          {
+            "index": 1,
+            "sourceLevelIndex": 1,
+            "canChoose": true,
+            "startHours": 24,
+            "endHours": 96,
+            "startAt": "2026-10-15T12:00:00.000Z",
+            "endAt": "2026-10-18T12:00:00.000Z",
+            "multiplier": 0.16666666666666666,
+            "dailyPercent": 3.333333333333333,
+            "usedPercent": 10.000000083333333,
+            "state": {
+              "quota": 10,
+              "resets": 0,
+              "credits": 0
+            },
+            "endState": {
+              "quota": 0,
+              "resets": 0,
+              "credits": 0
+            },
+            "startReasons": [
+              "pace-change"
+            ],
+            "endReasons": [
+              "normal-refresh"
+            ],
+            "events": [],
+            "cumulativeResetProbability": 0.95,
+            "conditionalResetProbability": 0
+          }
+        ],
+        "points": [
+          {
+            "hours": 0,
+            "at": "2026-10-14T12:00:00.000Z",
+            "reasons": [
+              "current"
+            ],
+            "events": [],
+            "stateBefore": {
+              "quota": 40,
+              "resets": 0,
+              "credits": 0
+            },
+            "stateAfter": {
+              "quota": 40,
+              "resets": 0,
+              "credits": 0
+            },
+            "cumulativeResetProbability": 0
+          },
+          {
+            "hours": 24,
+            "at": "2026-10-15T12:00:00.000Z",
+            "reasons": [
+              "pace-change"
+            ],
+            "events": [],
+            "stateBefore": {
+              "quota": 10,
+              "resets": 0,
+              "credits": 0
+            },
+            "stateAfter": {
+              "quota": 10,
+              "resets": 0,
+              "credits": 0
+            },
+            "cumulativeResetProbability": 0.95
+          },
+          {
+            "hours": 96,
+            "at": "2026-10-18T12:00:00.000Z",
+            "reasons": [
+              "normal-refresh"
+            ],
+            "events": [],
+            "stateBefore": {
+              "quota": 0,
+              "resets": 0,
+              "credits": 0
+            },
+            "stateAfter": {
+              "quota": 100,
+              "resets": 0,
+              "credits": 0
+            },
+            "cumulativeResetProbability": 0.95
+          }
+        ],
+        "endKind": "normal-refresh",
+        "probabilityBasis": "cumulative-from-plan-start",
+        "rawDecisionPeriods": 4
+      }
+    },
+    {
+      "name": "今晚临期备用先用完再兑换",
+      "input": {
+        "weeklyRemaining": 40,
+        "weeklyResetDays": 4,
+        "weeklyResetHours": 0,
+        "credits": 0,
+        "allowCredits": false,
+        "resetDates": [
+          "2026-10-14"
+        ],
+        "usageIntent": "more"
+      },
+      "forecast": null,
+      "averagePercentPerDay": 20,
+      "expectedPauseHours": 0,
+      "credits": {
+        "balance": 0,
+        "unit": "credits",
+        "allowed": false,
+        "included": false,
+        "quantified": false,
+        "consumption": "user-estimated",
+        "bridge": null
+      },
+      "ifNoExtraReset": [
+        {
+          "from": "2026-10-14T12:00:00.000Z",
+          "to": "2026-10-14T21:00:00.000Z",
+          "dailyPercent": 106.66666666666666,
+          "remainingAfter": 0,
+          "resetsUsed": 0,
+          "pauseHours": 0,
+          "events": []
+        },
+        {
+          "from": "2026-10-14T21:00:00.000Z",
+          "to": "2026-10-15T12:00:00.000Z",
+          "dailyPercent": 30,
+          "remainingAfter": 81.25,
+          "resetsUsed": 1,
+          "pauseHours": 0,
+          "events": [
+            {
+              "kind": "backup",
+              "atHours": 9,
+              "resetIndex": 0,
+              "expiresOn": "2026-10-14",
+              "overwrittenPercent": 0,
+              "at": "2026-10-14T21:00:00.000Z"
+            }
+          ]
+        },
+        {
+          "from": "2026-10-15T12:00:00.000Z",
+          "to": "2026-10-16T12:00:00.000Z",
+          "dailyPercent": 27.083333333333336,
+          "remainingAfter": 54.1666667,
+          "resetsUsed": 0,
+          "pauseHours": 0,
+          "events": []
+        },
+        {
+          "from": "2026-10-16T12:00:00.000Z",
+          "to": "2026-10-17T12:00:00.000Z",
+          "dailyPercent": 27.083333349999997,
+          "remainingAfter": 27.0833334,
+          "resetsUsed": 0,
+          "pauseHours": 0,
+          "events": []
+        },
+        {
+          "from": "2026-10-17T12:00:00.000Z",
+          "to": "2026-10-18T12:00:00.000Z",
+          "dailyPercent": 27.0833334,
+          "remainingAfter": 0,
+          "resetsUsed": 0,
+          "pauseHours": 0,
+          "events": []
+        }
+      ],
+      "milestones": {
+        "segments": [
+          {
+            "index": 0,
+            "sourceLevelIndex": 0,
+            "canChoose": true,
+            "startHours": 0,
+            "endHours": 9,
+            "startAt": "2026-10-14T12:00:00.000Z",
+            "endAt": "2026-10-14T21:00:00.000Z",
+            "multiplier": 5.333333333333333,
+            "dailyPercent": 106.66666666666666,
+            "usedPercent": 40,
+            "state": {
+              "quota": 40,
+              "resets": 1,
+              "credits": 0
+            },
+            "endState": {
+              "quota": 0,
+              "resets": 1,
+              "credits": 0
+            },
+            "startReasons": [
+              "current"
+            ],
+            "endReasons": [
+              "depletion",
+              "pace-change",
+              "backup"
+            ],
+            "events": [],
+            "cumulativeResetProbability": null,
+            "conditionalResetProbability": 0
+          },
+          {
+            "index": 1,
+            "sourceLevelIndex": 1,
+            "canChoose": true,
+            "startHours": 9,
+            "endHours": 24,
+            "startAt": "2026-10-14T21:00:00.000Z",
+            "endAt": "2026-10-15T12:00:00.000Z",
+            "multiplier": 1.5,
+            "dailyPercent": 30,
+            "usedPercent": 18.75,
+            "state": {
+              "quota": 0,
+              "resets": 1,
+              "credits": 0
+            },
+            "endState": {
+              "quota": 81.25,
+              "resets": 0,
+              "credits": 0
+            },
+            "startReasons": [
+              "depletion",
+              "pace-change",
+              "backup"
+            ],
+            "endReasons": [
+              "pace-change"
+            ],
+            "events": [
+              {
+                "kind": "backup",
+                "atHours": 9,
+                "resetIndex": 0,
+                "expiresOn": "2026-10-14",
+                "overwrittenPercent": 0,
+                "at": "2026-10-14T21:00:00.000Z"
+              }
+            ],
+            "cumulativeResetProbability": null,
+            "conditionalResetProbability": 0
+          },
+          {
+            "index": 2,
+            "sourceLevelIndex": 2,
+            "canChoose": true,
+            "startHours": 24,
+            "endHours": 96,
+            "startAt": "2026-10-15T12:00:00.000Z",
+            "endAt": "2026-10-18T12:00:00.000Z",
+            "multiplier": 1.3541666666666667,
+            "dailyPercent": 27.083333333333336,
+            "usedPercent": 81.25000008333333,
+            "state": {
+              "quota": 81.25,
+              "resets": 0,
+              "credits": 0
+            },
+            "endState": {
+              "quota": 0,
+              "resets": 0,
+              "credits": 0
+            },
+            "startReasons": [
+              "pace-change"
+            ],
+            "endReasons": [
+              "normal-refresh"
+            ],
+            "events": [],
+            "cumulativeResetProbability": null,
+            "conditionalResetProbability": 0
+          }
+        ],
+        "points": [
+          {
+            "hours": 0,
+            "at": "2026-10-14T12:00:00.000Z",
+            "reasons": [
+              "current"
+            ],
+            "events": [],
+            "stateBefore": {
+              "quota": 40,
+              "resets": 1,
+              "credits": 0
+            },
+            "stateAfter": {
+              "quota": 40,
+              "resets": 1,
+              "credits": 0
+            },
+            "cumulativeResetProbability": null
+          },
+          {
+            "hours": 9,
+            "at": "2026-10-14T21:00:00.000Z",
+            "reasons": [
+              "depletion",
+              "pace-change",
+              "backup"
+            ],
+            "events": [
+              {
+                "kind": "backup",
+                "atHours": 9,
+                "resetIndex": 0,
+                "expiresOn": "2026-10-14",
+                "overwrittenPercent": 0,
+                "at": "2026-10-14T21:00:00.000Z"
+              }
+            ],
+            "stateBefore": {
+              "quota": 0,
+              "resets": 1,
+              "credits": 0
+            },
+            "stateAfter": {
+              "quota": 100,
+              "resets": 0,
+              "credits": 0
+            },
+            "cumulativeResetProbability": null
+          },
+          {
+            "hours": 24,
+            "at": "2026-10-15T12:00:00.000Z",
+            "reasons": [
+              "pace-change"
+            ],
+            "events": [],
+            "stateBefore": {
+              "quota": 81.25,
+              "resets": 0,
+              "credits": 0
+            },
+            "stateAfter": {
+              "quota": 81.25,
+              "resets": 0,
+              "credits": 0
+            },
+            "cumulativeResetProbability": null
+          },
+          {
+            "hours": 96,
+            "at": "2026-10-18T12:00:00.000Z",
+            "reasons": [
+              "normal-refresh"
+            ],
+            "events": [],
+            "stateBefore": {
+              "quota": 0,
+              "resets": 0,
+              "credits": 0
+            },
+            "stateAfter": {
+              "quota": 100,
+              "resets": 0,
+              "credits": 0
+            },
+            "cumulativeResetProbability": null
+          }
+        ],
+        "endKind": "normal-refresh",
+        "probabilityBasis": "cumulative-from-plan-start",
+        "rawDecisionPeriods": 5
+      }
+    },
+    {
+      "name": "Credits仅作自行预估的可选衔接",
+      "input": {
+        "weeklyRemaining": 0,
+        "weeklyResetDays": 5,
+        "weeklyResetHours": 0,
+        "credits": 50,
+        "allowCredits": true,
+        "resetDates": [
+          "2026-11-10"
+        ],
+        "usageIntent": "steady"
+      },
+      "forecast": {
+        "probability": 0.9,
+        "inHours": 2
+      },
+      "averagePercentPerDay": 50,
+      "expectedPauseHours": 0,
+      "credits": {
+        "balance": 50,
+        "unit": "credits",
+        "allowed": true,
+        "included": false,
+        "quantified": false,
+        "consumption": "user-estimated",
+        "bridge": {
+          "level": 0,
+          "at": "2026-10-14T12:00:00.000Z",
+          "atHours": 0,
+          "reason": "optional-alternative-to-backup",
+          "conditional": true,
+          "cost": null,
+          "durationHours": null,
+          "message": "可使用 Credits 衔接；消耗需自己预估"
+        }
+      },
+      "ifNoExtraReset": [
+        {
+          "from": "2026-10-14T12:00:00.000Z",
+          "to": "2026-10-15T12:00:00.000Z",
+          "dailyPercent": 75,
+          "remainingAfter": 25,
+          "resetsUsed": 1,
+          "pauseHours": 0,
+          "events": [
+            {
+              "kind": "backup",
+              "atHours": 0,
+              "resetIndex": 0,
+              "expiresOn": "2026-11-10",
+              "overwrittenPercent": 0,
+              "at": "2026-10-14T12:00:00.000Z"
+            }
+          ]
+        },
+        {
+          "from": "2026-10-15T12:00:00.000Z",
+          "to": "2026-10-16T12:00:00.000Z",
+          "dailyPercent": 6.25,
+          "remainingAfter": 18.75,
+          "resetsUsed": 0,
+          "pauseHours": 0,
+          "events": []
+        },
+        {
+          "from": "2026-10-16T12:00:00.000Z",
+          "to": "2026-10-17T12:00:00.000Z",
+          "dailyPercent": 6.25,
+          "remainingAfter": 12.5,
+          "resetsUsed": 0,
+          "pauseHours": 0,
+          "events": []
+        },
+        {
+          "from": "2026-10-17T12:00:00.000Z",
+          "to": "2026-10-18T12:00:00.000Z",
+          "dailyPercent": 6.25,
+          "remainingAfter": 6.25,
+          "resetsUsed": 0,
+          "pauseHours": 0,
+          "events": []
+        },
+        {
+          "from": "2026-10-18T12:00:00.000Z",
+          "to": "2026-10-19T12:00:00.000Z",
+          "dailyPercent": 6.25,
+          "remainingAfter": 0,
+          "resetsUsed": 0,
+          "pauseHours": 0,
+          "events": []
+        }
+      ],
+      "milestones": {
+        "segments": [
+          {
+            "index": 0,
+            "sourceLevelIndex": 0,
+            "canChoose": true,
+            "startHours": 0,
+            "endHours": 24,
+            "startAt": "2026-10-14T12:00:00.000Z",
+            "endAt": "2026-10-15T12:00:00.000Z",
+            "multiplier": 1.5,
+            "dailyPercent": 75,
+            "usedPercent": 75,
+            "state": {
+              "quota": 0,
+              "resets": 1,
+              "credits": 50
+            },
+            "endState": {
+              "quota": 25,
+              "resets": 0,
+              "credits": 50
+            },
+            "startReasons": [
+              "current",
+              "backup"
+            ],
+            "endReasons": [
+              "pace-change"
+            ],
+            "events": [
+              {
+                "kind": "backup",
+                "atHours": 0,
+                "resetIndex": 0,
+                "expiresOn": "2026-11-10",
+                "overwrittenPercent": 0,
+                "at": "2026-10-14T12:00:00.000Z"
+              },
+              {
+                "level": 0,
+                "at": "2026-10-14T12:00:00.000Z",
+                "atHours": 0,
+                "reason": "optional-alternative-to-backup",
+                "conditional": true,
+                "cost": null,
+                "durationHours": null,
+                "message": "可使用 Credits 衔接；消耗需自己预估",
+                "kind": "credits-advisory"
+              }
+            ],
+            "cumulativeResetProbability": 0.9,
+            "conditionalResetProbability": 0.9
+          },
+          {
+            "index": 1,
+            "sourceLevelIndex": 1,
+            "canChoose": true,
+            "startHours": 24,
+            "endHours": 120,
+            "startAt": "2026-10-15T12:00:00.000Z",
+            "endAt": "2026-10-19T12:00:00.000Z",
+            "multiplier": 0.125,
+            "dailyPercent": 6.25,
+            "usedPercent": 25,
+            "state": {
+              "quota": 25,
+              "resets": 0,
+              "credits": 50
+            },
+            "endState": {
+              "quota": 0,
+              "resets": 0,
+              "credits": 50
+            },
+            "startReasons": [
+              "pace-change"
+            ],
+            "endReasons": [
+              "normal-refresh"
+            ],
+            "events": [],
+            "cumulativeResetProbability": 0.9,
+            "conditionalResetProbability": 0
+          }
+        ],
+        "points": [
+          {
+            "hours": 0,
+            "at": "2026-10-14T12:00:00.000Z",
+            "reasons": [
+              "current",
+              "backup"
+            ],
+            "events": [
+              {
+                "kind": "backup",
+                "atHours": 0,
+                "resetIndex": 0,
+                "expiresOn": "2026-11-10",
+                "overwrittenPercent": 0,
+                "at": "2026-10-14T12:00:00.000Z"
+              },
+              {
+                "level": 0,
+                "at": "2026-10-14T12:00:00.000Z",
+                "atHours": 0,
+                "reason": "optional-alternative-to-backup",
+                "conditional": true,
+                "cost": null,
+                "durationHours": null,
+                "message": "可使用 Credits 衔接；消耗需自己预估",
+                "kind": "credits-advisory"
+              }
+            ],
+            "stateBefore": {
+              "quota": 0,
+              "resets": 1,
+              "credits": 50
+            },
+            "stateAfter": {
+              "quota": 100,
+              "resets": 0,
+              "credits": 50
+            },
+            "cumulativeResetProbability": 0
+          },
+          {
+            "hours": 24,
+            "at": "2026-10-15T12:00:00.000Z",
+            "reasons": [
+              "pace-change"
+            ],
+            "events": [],
+            "stateBefore": {
+              "quota": 25,
+              "resets": 0,
+              "credits": 50
+            },
+            "stateAfter": {
+              "quota": 25,
+              "resets": 0,
+              "credits": 50
+            },
+            "cumulativeResetProbability": 0.9
+          },
+          {
+            "hours": 120,
+            "at": "2026-10-19T12:00:00.000Z",
+            "reasons": [
+              "normal-refresh"
+            ],
+            "events": [],
+            "stateBefore": {
+              "quota": 0,
+              "resets": 0,
+              "credits": 50
+            },
+            "stateAfter": {
+              "quota": 100,
+              "resets": 0,
+              "credits": 50
+            },
+            "cumulativeResetProbability": 0.9
+          }
+        ],
+        "endKind": "normal-refresh",
+        "probabilityBasis": "cumulative-from-plan-start",
+        "rawDecisionPeriods": 5
+      }
+    }
+  ]
+}

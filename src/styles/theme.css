@@ -1,0 +1,5 @@
+/* Single page style entry. Change the palette import here when selecting colors. */
+@import './palettes/poolsuite.css';
+@import './base.css';
+@import '../components/reset-element.css';
+@import './retro-desktop.css';

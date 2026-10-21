@@ -1,0 +1,88 @@
+/* Radix Colors light palette: blue forecasts/actions, green quota/banks, risk-only red.
+ * Provenance: radix.source.json. MIT; notice in third-party-licenses/radix-colors.txt. */
+:root {
+  --white:#FFFFFF;
+  --slate-2:#F9F9FB;
+  --slate-3:#F0F0F3;
+  --slate-5:#E0E1E6;
+  --slate-7:#CDCED6;
+  --slate-11:#60646C;
+  --slate-12:#1C2024;
+  --indigo-3:#EDF2FE;
+  --indigo-7:#ABBDF9;
+  --indigo-9:#3E63DD;
+  --indigo-10:#3358D4;
+  --indigo-11:#3A5BC7;
+  --teal-3:#E0F8F3;
+  --teal-9:#12A594;
+  --teal-12:#0D3D38;
+  --tomato-3:#FEEBE7;
+  --tomato-7:#F5A898;
+  --tomato-11:#D13415;
+  --tomato-12:#5C271F;
+
+  --canvas:var(--slate-2);
+  --surface:var(--white);
+  --surface-soft:var(--slate-3);
+  --surface-raised:var(--white);
+  --ink:var(--slate-12);
+  --muted:var(--slate-11);
+  --border:var(--slate-7);
+  --highlight:var(--white);
+  --shadow:var(--slate-12);
+  --accent:var(--indigo-9);
+  --accent-soft:var(--indigo-3);
+  --accent-text:var(--indigo-11);
+  --on-accent:var(--white);
+
+  --info:var(--indigo-9);
+  --forecast-first-text:var(--indigo-11);
+  --forecast-first-curve:var(--indigo-9);
+  --forecast-first-fill:var(--indigo-9);
+  --forecast-first-border:var(--indigo-7);
+  --forecast-first-surface:var(--indigo-3);
+  --violet:var(--indigo-11);
+  --forecast-second-text:var(--indigo-11);
+  --forecast-second-curve:var(--indigo-11);
+  --forecast-second-fill:var(--indigo-11);
+  --forecast-second-border:var(--indigo-7);
+  --forecast-second-surface:var(--accent-soft);
+  --quota:var(--teal-9);
+  --quota-text:var(--teal-12);
+  --quota-stroke:var(--teal-9);
+  --quota-fill-start:var(--teal-3);
+  --quota-fill-end:var(--teal-3);
+  --warning:var(--teal-9);
+  --warning-text:var(--teal-12);
+  --bank-surface:var(--surface);
+  --bank-border:var(--teal-9);
+  --danger:var(--tomato-11);
+  --danger-deep:var(--tomato-12);
+  --danger-text:var(--tomato-12);
+  --danger-surface:var(--tomato-3);
+  --focus:var(--indigo-9);
+  --link-stroke:var(--indigo-7);
+
+  --glass-top:var(--surface);
+  --glass-bottom:var(--surface-soft);
+  --chart-label-color:var(--surface);
+  --base-hover-border:var(--border);
+  --base-primary-hover:var(--indigo-10);
+  --base-bank-surface:var(--bank-surface);
+  --base-bank-border:var(--bank-border);
+  --base-calendar-shadow:color-mix(in srgb,var(--shadow) 10%,transparent);
+  --base-forecast-surface:var(--forecast-first-surface);
+  --base-forecast-border:var(--forecast-first-border);
+  --base-link-underline:var(--link-stroke);
+  --base-selected-border:var(--indigo-7);
+  --base-segment-shadow:color-mix(in srgb,var(--shadow) 6%,transparent);
+  --base-scrollbar:var(--border);
+  --base-quota-fill-start:var(--quota-fill-start);
+  --base-quota-fill-end:var(--quota-fill-end);
+  --base-quota-stroke:var(--quota-stroke);
+  --base-pause-line:var(--border);
+  --base-bank-line:var(--bank-border);
+  --base-depletion-line:var(--danger);
+  --base-credits-line:var(--violet);
+  --base-error-surface:var(--danger-surface);
+}
