@@ -5,6 +5,15 @@
   "type": "module",
   "description": "A local Codex quota and reset planner with extra reset forecasts, banked reset planning, a web UI, CLI, and MCP server.",
   "license": "MIT",
+  "author": "ItsOdeLeo (https://x.com/ItsOdeLeo)",
+  "homepage": "https://codex4ever.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ItsOdeLeo/codex4ever.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ItsOdeLeo/codex4ever/issues"
+  },
   "engines": {
     "node": ">=20"
   },
