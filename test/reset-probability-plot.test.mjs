@@ -83,7 +83,7 @@ test('曲线、累计概率、预计钟点和额度共用当地日期轴，单�
   assert.match(html, /data-reset-density-plot/);
   assert.match(html, /概率分布/);
   assert.match(html, /累计 [\d.]+%/);
-  assert.match(html,/<strong>首次 reset · 规划时刻 \d{2}:\d{2}<small>/);
+  assert.match(html,/<strong>\d+月\d+日 \d{2}:\d{2}<small>累计 [\d.]+%<\/small>/);
   assert.match(html,/<small>累计 [\d.]+%<\/small>/);
   assert.doesNotMatch(html,/每小时|\d+小时 [\d.]+%|此段 [\d.]+%/);
   assert.doesNotMatch(html,/class="forecast-calendar forecast-aligned"/);

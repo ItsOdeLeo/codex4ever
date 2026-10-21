@@ -194,19 +194,19 @@ var english = {
   "\uFF0C\u4ECE\u6700\u8FD1\u9009\u62E9\u7684\u989D\u5916reset\u91CD\u65B0\u8BA1\u65F6": "; the clock restarts at the latest assumed reset",
   "\u9996\u6B21": "First",
   "\u7B2C\u4E8C\u6B21": "Second",
-  "\u5047\u8BBE\u9996\u6B21\u53D1\u5E03": "Assume first reset",
-  "\u5047\u8BBE\u7B2C\u4E8C\u6B21\u53D1\u5E03": "Assume second reset",
-  "\u5047\u8BBE\u4E24\u6B21\u53D1\u5E03": "Assume both resets",
+  "\u8BA1\u5165\u9996\u6B21 reset": "Count first reset",
+  "\u8BA1\u5165\u7B2C\u4E8C\u6B21 reset": "Count second reset",
+  "\u8BA1\u5165\u4E24\u6B21 reset": "Count both resets",
   "\u82E5\u8017\u5C3D\uFF0C\u7528\u5907\u7528": "Banked reset if depleted",
   "\u672A\u518D reset\uFF1A{percent}%": "No further reset: {percent}%",
-  "\u5DF2\u5047\u8BBE\u9996\u6B21\u53D1\u5E03": "First assumed",
-  "\u5DF2\u5047\u8BBE\u7B2C\u4E8C\u6B21\u53D1\u5E03": "Second assumed",
+  "\u5DF2\u8BA1\u5165\u9996\u6B21 reset": "First reset counted",
+  "\u5DF2\u8BA1\u5165\u7B2C\u4E8C\u6B21 reset": "Second reset counted",
   "\u540C\u65F6\u5047\u8BBE\u9996\u6B21\u53D1\u751F": "Also assumes the first reset",
-  "\u53D6\u6D88\u5047\u8BBE": "Cancel assumption",
+  "\u4E0D\u8BA1\u5165": "Don't count",
   "\u53D6\u6D88\u7B2C\u4E8C\u6B21\u5047\u8BBE\uFF0C\u4FDD\u7559\u9996\u6B21": "Cancel the second assumption; keep the first",
   "\u53D6\u6D88\u9996\u6B21\u53CA\u540E\u7EE7\u5047\u8BBE": "Cancel the first and subsequent assumptions",
-  "\u5047\u8BBE\u4E24\u6B21\u5747\u53D1\u5E03\uFF0C\u8BA1\u7B97\u5404\u6BB5\u7528\u91CF": "Assume both resets and calculate each phase",
-  "\u5047\u8BBE\u9996\u6B21\u53D1\u5E03\uFF0C\u8BA1\u7B97\u5404\u6BB5\u7528\u91CF": "Assume the first reset and calculate each phase",
+  "\u5047\u8BBE\u4E24\u6B21\u5747\u53D1\u5E03\uFF0C\u8BA1\u7B97\u5404\u6BB5\u7528\u91CF": "Count both resets and calculate each phase",
+  "\u8BA1\u5165\u9996\u6B21 reset\uFF0C\u8BA1\u7B97\u5404\u6BB5\u7528\u91CF": "Count the first reset and calculate each phase",
   "\u6700\u53EF\u80FD": "likely",
   "\u7D2F\u8BA1": "Cumulative",
   "\u8303\u56F4\u5916 {percent}%": "Beyond view {percent}%",
@@ -3785,8 +3785,8 @@ function renderResetOpportunity(opportunity, { timeZone: timeZone2, escape: esca
   return `<small class="reset-element phase-reset-opportunity" data-reset-element="${sequence >= 2 ? 2 : 1}" data-reset-opportunity data-next-extra-sequence="${sequence}" data-probability="${opportunity.probability}" ${compact ? `data-compact-probability data-cutoff-layout="${layout.stacked ? "stacked" : "inline"}"` : ""} title="${escape3(fullLabel + " \xB7 " + t2("\u622A\u81F3 {time}\uFF1B\u4EE5\u672C\u6BB5\u5F00\u59CB\u524D\u672A\u518D\u53D1\u751F\u989D\u5916reset\u4E3A\u6761\u4EF6{renewal}", { time: until, renewal: opportunity.previousExtraResetAt ? t2("\uFF0C\u4ECE\u6700\u8FD1\u9009\u62E9\u7684\u989D\u5916reset\u91CD\u65B0\u8BA1\u65F6") : "" }))}">${content}</small>`;
 }
 var resetActionCopy = {
-  1: { idle: "\u5047\u8BBE\u9996\u6B21\u53D1\u5E03", selected: "\u5DF2\u5047\u8BBE\u9996\u6B21\u53D1\u5E03", cancelHint: "\u53D6\u6D88\u9996\u6B21\u53CA\u540E\u7EE7\u5047\u8BBE" },
-  2: { idle: "\u5047\u8BBE\u4E24\u6B21\u53D1\u5E03", selected: "\u5DF2\u5047\u8BBE\u7B2C\u4E8C\u6B21\u53D1\u5E03", cancelHint: "\u53D6\u6D88\u7B2C\u4E8C\u6B21\u5047\u8BBE\uFF0C\u4FDD\u7559\u9996\u6B21" }
+  1: { idle: "\u8BA1\u5165\u9996\u6B21 reset", selected: "\u5DF2\u8BA1\u5165\u9996\u6B21 reset", cancelHint: "\u53D6\u6D88\u9996\u6B21\u53CA\u540E\u7EE7\u5047\u8BBE" },
+  2: { idle: "\u8BA1\u5165\u4E24\u6B21 reset", selected: "\u5DF2\u8BA1\u5165\u7B2C\u4E8C\u6B21 reset", cancelHint: "\u53D6\u6D88\u7B2C\u4E8C\u6B21\u5047\u8BBE\uFF0C\u4FDD\u7559\u9996\u6B21" }
 };
 function resetAssumptionState({ sequence, selected, locale = "zh-CN" }) {
   const t2 = translator(locale);
@@ -3795,7 +3795,7 @@ function resetAssumptionState({ sequence, selected, locale = "zh-CN" }) {
     title: t2(selected ? copy.selected : copy.idle),
     lines: [],
     hint: t2(selected ? copy.cancelHint : copy.idle),
-    cancel: selected ? t2("\u53D6\u6D88\u5047\u8BBE") : ""
+    cancel: selected ? t2("\u4E0D\u8BA1\u5165") : ""
   };
 }
 function resetAssumptionContent(props) {
@@ -3811,7 +3811,7 @@ function renderMode({ sequence, focus, plot, vertical = false, escape: escape3, 
     return `<div class="forecast-mode" ${data} ${position(focus)} title="${t2(mode ? "\u6807\u7EBF\u5BF9\u5E94\u6982\u7387\u5206\u5E03\u7684\u6700\u9AD8\u5CF0\u3002" : "\u4E0A\u6B21reset\u52A0\u8FD1\u671F\u5E73\u5747\u95F4\u9694\uFF0C\u518D\u6821\u51C6\u5230\u5E38\u89C1\u53D1\u5E03\u949F\u70B9\u7684\u53C2\u8003\u65F6\u95F4\u3002")}${t2("\u5DE6\u53F3\u4E3A\u4F30\u8BA1\u8303\u56F4\u4E4B\u5916\u7684\u6982\u7387\u3002")}"><span data-estimate-earlier="${focus.earlierProbability}">${t2("\u2190 \u66F4\u65E9 {percent}%", { percent: round3(focus.earlierProbability * 100) })}</span><strong>${t2(mode ? "\u6700\u53EF\u80FD\u989D\u5916 reset" : "\u9884\u8BA1\u989D\u5916 reset")}<small>${escape3(focus.label)}</small></strong><span data-estimate-later="${focus.laterProbability}">${t2("\u66F4\u665A {percent}% \u2192", { percent: round3(focus.laterProbability * 100) })}</span></div>`;
   }
   const className = sequence === 1 ? "forecast-mode forecast-mode-on-plot" : "forecast-following";
-  return `<div class="${className}" ${data} data-reset-marker ${position(focus)} aria-label="${name(sequence, locale)} ${t2(focus.planned ? "\u89C4\u5212\u65F6\u523B" : "\u6700\u53EF\u80FD")} reset \xB7 ${escape3(focus.label)}" title="${t2(focus.planned ? "\u6807\u7EBF\u662F\u89C4\u5212\u8BA1\u5165\u8FD9\u6B21 reset \u7684\u4FDD\u5B88\u65F6\u523B\uFF1A\u6B63\u5E38\u5237\u65B0\u524D\u53EF\u80FD\u53D1\u751F\u7684\u90E8\u5206\uFF0C\u6709 75% \u5728\u6B64\u4E4B\u524D\u3002" : "\u6807\u7EBF\u5BF9\u5E94\u672C\u6761\u5206\u5E03\u6700\u9AD8\u5CF0\u3002")}${sequence === 2 ? t2("\u7B2C\u4E8C\u6B21\u4EE5\u9996\u6B21\u5728\u9884\u6D4B\u70B9\u53D1\u751F\u4E3A\u524D\u63D0\u3002") : ""}"><strong>${name(sequence, locale)} reset \xB7 ${t2(focus.planned ? "\u89C4\u5212\u65F6\u523B" : "\u6700\u53EF\u80FD")} ${escape3(focus.clockLabel ?? focus.label)}<small>${t2("\u7D2F\u8BA1")} ${probability(focus.cumulativeProbability)}%</small></strong></div>`;
+  return `<div class="${className}" ${data} data-reset-marker ${position(focus)} aria-label="${name(sequence, locale)} ${t2(focus.planned ? "\u89C4\u5212\u65F6\u523B" : "\u6700\u53EF\u80FD")} reset \xB7 ${escape3(focus.label)}" title="${t2(focus.planned ? "\u6807\u7EBF\u662F\u89C4\u5212\u8BA1\u5165\u8FD9\u6B21 reset \u7684\u4FDD\u5B88\u65F6\u523B\uFF1A\u6B63\u5E38\u5237\u65B0\u524D\u53EF\u80FD\u53D1\u751F\u7684\u90E8\u5206\uFF0C\u6709 75% \u5728\u6B64\u4E4B\u524D\u3002" : "\u6807\u7EBF\u5BF9\u5E94\u672C\u6761\u5206\u5E03\u6700\u9AD8\u5CF0\u3002")}${sequence === 2 ? t2("\u7B2C\u4E8C\u6B21\u4EE5\u9996\u6B21\u5728\u9884\u6D4B\u70B9\u53D1\u751F\u4E3A\u524D\u63D0\u3002") : ""}"><strong>${escape3(focus.planned ? focus.label : `${t2("\u6700\u53EF\u80FD")} ${focus.clockLabel ?? focus.label}`)}<small>${t2("\u7D2F\u8BA1")} ${probability(focus.cumulativeProbability)}%</small></strong></div>`;
 }
 function renderAction(action, escape3, locale) {
   if (!action) return "";

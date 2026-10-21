@@ -34,11 +34,13 @@ test('竖线、动作和补满点都对齐规划计入的保守时刻，不早�
     }
   }
   const html=renderStrategyTree(graph,String);
-  assert.match(html,/首次 reset · 规划时刻/);
-  assert.match(html,/第二次 reset · 规划时刻/);
-  assert.match(html,/已假设首次发布/);
-  assert.match(html,/已假设第二次发布/);
-  assert.equal([...html.matchAll(/class="reset-action-cancel">取消假设<\/small>/g)].length,2);
+  // The marker shows only when and how likely; the full name stays in its accessible label.
+  assert.match(html,/aria-label="首次 规划时刻 reset · /);
+  assert.match(html,/aria-label="第二次 规划时刻 reset · /);
+  assert.doesNotMatch(html,/<strong>[^<]*reset · 规划时刻/);
+  assert.match(html,/已计入首次 reset/);
+  assert.match(html,/已计入第二次 reset/);
+  assert.equal([...html.matchAll(/class="reset-action-cancel">不计入<\/small>/g)].length,2);
   assert.equal([...html.matchAll(/data-density-sequence=/g)].length,2);
   assert.equal([...html.matchAll(/data-assume-reset /g)].length,2);
 });

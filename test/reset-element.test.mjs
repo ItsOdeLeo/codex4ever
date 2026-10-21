@@ -18,10 +18,10 @@ const props=(sequence,selected)=>({sequence,plot,focus,peaks:[],guideEndY:300,ti
 
 test('第二次未选按钮直接说明两次均假设，不再附加重复的首次提示',()=>{
   assert.deepEqual(resetAssumptionContent({sequence:2,selected:false,locale:'en'}),
-    {title:'Assume both resets',lines:[]});
+    {title:'Count both resets',lines:[]});
   assert.deepEqual(resetAssumptionContent({sequence:2,selected:false}),
-    {title:'假设两次发布',lines:[]});
-  assert.equal(resetAssumptionContent({sequence:2,selected:true,locale:'en'}).title,'Second assumed');
+    {title:'计入两次 reset',lines:[]});
+  assert.equal(resetAssumptionContent({sequence:2,selected:true,locale:'en'}).title,'Second reset counted');
 });
 
 test('中英文的首次和第二次、未选和已选均由同一状态模板生成',()=>{
@@ -60,7 +60,7 @@ test('同一reset组件管理两次曲线、标记、操作和选中状态，样
     assert.ok(element.svg.includes(`data-reset-element="${sequence}"`));
     assert.ok(element.html.includes(`data-reset-state="${selected ? 'assumed' : 'forecast'}"`));
     assert.ok(element.html.includes(`aria-pressed="${selected}" data-assumption-sequence="${sequence}"`));
-    if(selected)assert.match(element.html,/<strong>已假设(?:首次|第二次)发布<\/strong><small class="reset-action-cancel">取消假设<\/small>/);
+    if(selected)assert.match(element.html,/<strong>已计入(?:首次|第二次) reset<\/strong><small class="reset-action-cancel">不计入<\/small>/);
     assert.match(element.html,/data-reset-marker/);
     assert.match(element.html,/<small>累计 50%<\/small>/);
     assert.doesNotMatch(element.html+element.svg,/每小时|\d+小时 [\d.]+%|此段 [\d.]+%/);
