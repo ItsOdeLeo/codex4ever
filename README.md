@@ -45,10 +45,6 @@ The forecast is an uncalibrated model estimate, not a promise. Codex4ever never 
 
 ## Use it
 
-**Website:** [codex4ever.com](https://codex4ever.com). Everything is calculated in your browser; your inputs are not sent anywhere.
-
-<p align="center"><a href="https://codex4ever.com"><img src="docs/images/planner.png" alt="The Codex4ever website: inputs, usage strategies and a day-by-day timeline of usage, predicted resets and remaining quota" width="1280" /></a></p>
-
 **Codex plugin** (Node.js 20+ and a signed-in Codex app or CLI):
 
 ```sh
@@ -56,13 +52,17 @@ codex plugin marketplace add ItsOdeLeo/codex4ever
 codex plugin add codex4ever@codex4ever
 ```
 
-Start a new Codex chat and ask: *"Use Codex4ever to plan my usage from my current quota."* Reading your quota is local and read-only; no separate API key is needed.
+Start a new Codex chat and ask: *"Open quota planning."* Reading your quota is local and read-only; no separate API key is needed.
 
 **Other MCP clients** (Claude Code, Claude Desktop, Cursor and others): the same server is on npm as [`codex4ever`](https://www.npmjs.com/package/codex4ever) and in the [MCP Registry](https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.ItsOdeLeo/codex4ever) as `io.github.ItsOdeLeo/codex4ever`. Reading your quota still needs a signed-in Codex CLI on the same machine.
 
 ```json
 { "mcpServers": { "codex4ever": { "command": "npx", "args": ["-y", "codex4ever"] } } }
 ```
+
+**Website:** [codex4ever.com](https://codex4ever.com), no install. Enter your quota by hand; everything is calculated in your browser and your inputs are not sent anywhere.
+
+<p align="center"><a href="https://codex4ever.com"><img src="docs/images/planner.png" alt="The Codex4ever timeline: daily usage, predicted resets and remaining quota" width="720" /></a></p>
 
 **Run locally:**
 
