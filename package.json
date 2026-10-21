@@ -29,6 +29,7 @@
     "indexnow": "node scripts/indexnow.mjs",
     "predict:reset": "node scripts/predict-reset.mjs",
     "alert:demo": "node scripts/alert-demo.mjs",
+    "alert:stage": "node scripts/alert-stage.mjs",
     "test": "node --test test/*.test.mjs",
     "test:pace": "node --test test/selected-pace-regression.test.mjs test/web-intensity.test.mjs test/mcp.test.mjs"
   },
