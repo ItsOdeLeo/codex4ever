@@ -186,7 +186,9 @@ async function bundledPrediction(now) {
   // Local server → snapshot precomputed by the static site build → bundled archive.
   // A static host may answer a missing path with the HTML page and status 200,
   // so only a parsed JSON archive counts; anything else falls through.
-  for(const path of ['/api/reset-evidence','/data/reset-evidence.json','/experiments/public-reset-events.json']) {
+  const local=!globalThis.location||/^(localhost|127\.0\.0\.1|\[::1\])$/.test(globalThis.location.hostname);
+  const paths=['/api/reset-evidence','/data/reset-evidence.json','/experiments/public-reset-events.json'].slice(local ? 0 : 1);
+  for(const path of paths) {
     let archive=null;
     try {
       const response=await fetch(path);

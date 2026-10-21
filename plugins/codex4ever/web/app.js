@@ -4920,7 +4920,9 @@ function dispatchPlanning(action) {
   renderResult();
 }
 async function bundledPrediction(now) {
-  for (const path of ["/api/reset-evidence", "/data/reset-evidence.json", "/experiments/public-reset-events.json"]) {
+  const local = !globalThis.location || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(globalThis.location.hostname);
+  const paths = ["/api/reset-evidence", "/data/reset-evidence.json", "/experiments/public-reset-events.json"].slice(local ? 0 : 1);
+  for (const path of paths) {
     let archive = null;
     try {
       const response = await fetch(path);
