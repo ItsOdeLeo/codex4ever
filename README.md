@@ -1,12 +1,23 @@
-# Codex4ever
+# Codex4ever — Codex quota & reset planner
 
-**Know how much Codex to use today.** Codex4ever is a local planner for your OpenAI Codex weekly quota. It shows when your quota runs out at your current pace, whether a predicted extra reset is likely to arrive first, and when a banked reset is worth redeeming.
+<p align="center">
+  <a href="https://codex4ever.com"><img src="docs/images/planner.png" alt="Codex4ever planner: forecast panel, usage strategies and a day-by-day timeline of usage, resets and remaining quota" width="1280" /></a>
+</p>
+
+<p align="center"><strong>Know how much Codex to use today.</strong><br />
+<a href="https://codex4ever.com">Try it at codex4ever.com</a> · runs in your browser · no sign-in</p>
+
+<p align="center">
+  <a href="LICENSE"><img src="docs/assets/badges/license.svg" alt="MIT License" /></a>
+  <a href="https://x.com/ItsOdeLeo"><img src="docs/assets/badges/follow-x.svg" alt="Follow 欧的Leo (@ItsOdeLeo) on X" /></a>
+  <a href="https://xhslink.com/m/18bjTTf180W"><img src="docs/assets/badges/follow-xiaohongshu.svg" alt="Follow 欧的Leo on Xiaohongshu, ID: ItsOdeLeo" /></a>
+</p>
+
+<p align="center"><strong>English</strong> · <a href="#中文简介">中文简介</a></p>
+
+Codex4ever is a planner for your OpenAI Codex weekly quota. It shows when your quota runs out at your current pace, whether a predicted extra reset is likely to arrive first, and when a banked reset is worth redeeming. If it helps, a ⭐ star is appreciated.
 
 Unofficial; not affiliated with OpenAI. MIT licensed.
-
-**[Try it at codex4ever.com](https://codex4ever.com)** · If it helps, please ⭐ star this repo and follow [@ItsOdeLeo on X](https://x.com/ItsOdeLeo) for updates.
-
-![Codex4ever planner: forecast panel, usage strategies and a day-by-day timeline of usage, resets and remaining quota](docs/images/planner.png)
 
 ## What it does
 
@@ -69,4 +80,4 @@ Codex4ever 是 OpenAI Codex 每周额度的本地规划器：按你当前的速�
 
 ## Author
 
-Built by [@ItsOdeLeo](https://x.com/ItsOdeLeo). Feedback and ideas are welcome on X or in [GitHub issues](https://github.com/ItsOdeLeo/codex4ever/issues).
+Built by 欧的Leo — [@ItsOdeLeo on X](https://x.com/ItsOdeLeo) · [小红书 ItsOdeLeo](https://xhslink.com/m/18bjTTf180W). Feedback and ideas are welcome there or in [GitHub issues](https://github.com/ItsOdeLeo/codex4ever/issues).
