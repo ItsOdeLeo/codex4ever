@@ -21,6 +21,7 @@
     "start": "node src/cli.js",
     "mcp": "node src/mcp-server.js",
     "plugin:build": "node scripts/build-plugin.mjs",
+    "npm:build": "npm run plugin:build && node scripts/build-npm.mjs",
     "site:build": "node scripts/build-site.mjs",
     "web": "node scripts/serve.mjs",
     "backtest:public": "node scripts/backtest-public.mjs",
