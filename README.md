@@ -1,11 +1,13 @@
 # Codex4ever — Codex quota & reset planner
 
 <p align="center">
-  <a href="https://codex4ever.com"><img src="docs/images/planner.png" alt="Codex4ever planner: forecast panel, usage strategies and a day-by-day timeline of usage, resets and remaining quota" width="1280" /></a>
+  <img src="docs/images/ask.gif" alt="Typing “open quota planning” in Codex opens the Codex4ever planner in the side browser" width="1280" />
 </p>
 
-<p align="center"><strong>Know how much Codex to use today.</strong><br />
-<a href="https://codex4ever.com">Try it at codex4ever.com</a> · runs in your browser · no sign-in</p>
+<p align="center"><strong>Know how much Codex to use today.</strong></p>
+
+<p align="center"><a href="https://codex4ever.com"><img src="docs/assets/badges/try-it.svg" alt="Try it at codex4ever.com" /></a><br />
+<sub>Runs in your browser · no sign-in · or ask Codex with the plugin</sub></p>
 
 <p align="center">
   <a href="LICENSE"><img src="docs/assets/badges/license.svg" alt="MIT License" /></a>
@@ -19,13 +21,9 @@ Codex4ever is a planner for your OpenAI Codex weekly quota. It shows when your q
 
 Unofficial; not affiliated with OpenAI. MIT licensed.
 
-## See it in Codex
+## Pick a strategy
 
-Ask once; Codex reads your quota and opens the planner beside the chat.
-
-<p align="center"><img src="docs/images/ask.gif" alt="Typing “open quota planning” in Codex opens the Codex4ever planner in the side browser" width="1280" /></p>
-
-Pick a strategy and the plan changes: daily usage, refills and run-out points.
+Ask once in Codex and the planner opens beside the chat. Pick a strategy and the plan changes: daily usage, refills and run-out points.
 
 <p align="center"><img src="docs/images/strategies.gif" alt="Switching between Keep pace, Keep available, Use it all, Weekdays only and Weekend focus updates the timeline" width="1280" /></p>
 
@@ -48,6 +46,8 @@ The forecast is an uncalibrated model estimate, not a promise. Codex4ever never 
 ## Use it
 
 **Website:** [codex4ever.com](https://codex4ever.com). Everything is calculated in your browser; your inputs are not sent anywhere.
+
+<p align="center"><a href="https://codex4ever.com"><img src="docs/images/planner.png" alt="The Codex4ever website: inputs, usage strategies and a day-by-day timeline of usage, predicted resets and remaining quota" width="1280" /></a></p>
 
 **Codex plugin** (Node.js 20+ and a signed-in Codex app or CLI):
 

@@ -125,7 +125,7 @@ ${guide.sections.map(([heading,text])=>`<section><h2>${escape(heading)}</h2><p>$
 <section><h2>${escape(guide.faqHeading)}</h2>
 ${guide.faq.map(([question,answer])=>`<h3>${escape(question)}</h3><p>${escape(answer)}</p>`).join('\n')}</section>
 <p><a href="/">${escape(guide.back)} →</a></p></article>
-<footer>${escape(guide.notice)} · <a href="${SOURCE_URL}" rel="noopener">${escape(guide.source)}</a> · ${escape(guide.credit)}: ${DATA_SOURCES.map(([name,url])=>`<a href="${url}" rel="noopener">${escape(name)}</a>`).join(', ')}</footer></main></body></html>`;
+<footer>© 2026 ItsOdeLeo · ${escape(guide.notice)} · <a href="${SOURCE_URL}" rel="noopener">${escape(guide.source)}</a> · ${escape(guide.credit)}: ${DATA_SOURCES.map(([name,url])=>`<a href="${url}" rel="noopener">${escape(name)}</a>`).join(', ')}</footer></main></body></html>`;
 }
 
 /** A plain-text site summary for AI assistants and answer engines (llmstxt.org). */
