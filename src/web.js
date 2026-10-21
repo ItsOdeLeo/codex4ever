@@ -29,7 +29,7 @@ function renderStaticLanguage() {
   document.documentElement?.setAttribute('lang',language);
   $('.brand p').textContent=metadata.intro;
   for(const [selector,label] of [['.affiliation-notice','OpenAI Codex 的非官方可视化用量规划工具。与 OpenAI 无隶属关系。'],['#github-star','★ 在 GitHub 点个 Star'],['#follow-x','在 X 关注我'],
-    ['#calculate','更新数据'],['#source-code','GitHub 开源'],['#creator-contact','如果你喜欢这个作品，欢迎在 X 上关注我'],['#output>h2','接下来怎么用'],['[data-credit-label]','重置数据来源']])
+    ['#calculate','更新数据'],['#source-code','GitHub 开源'],['#creator-contact','如果你喜欢这个作品，欢迎在 X 上关注我'],['[data-credit-label]','重置数据来源']])
     {const element=$(selector);if(element)element.textContent=t(label);}
   $('#calculate').setAttribute?.('title',t('采用输入修改并刷新重置证据'));
   $('#planner-guide').textContent=language==='zh-CN' ? '使用说明' : 'How it works';
@@ -167,7 +167,7 @@ function renderResult(availableWidth=$('#result').clientWidth) {
     displayEndHours:planner.displayEndHours,locale:language });
   const consumption=usageConsumptionSummary(result,{locale:language});
   const policyData=result.recommendation ? ` data-policy-search="${result.recommendation.method}"${result.recommendation.primary ? ' data-plan-basis="predicted-extra-resets-first"' : ''}` : '';
-  $('#result').innerHTML = `<section class="strategy-panel" aria-label="${t('用量计划')}"${policyData} style="--panel-padding:${workspace.panelPadding}px">${graph.compact ? phoneSummary(graph,planningPrediction) : ''}<div class="pace-controls"><div data-current-consumption data-daily="${consumption.dailyPercent}"><span>${t('当前日均消耗 {daily}% / 天',{daily:round(consumption.dailyPercent)})}</span><small>${escape(t('本周剩 {remaining}% · 刷新剩 {time}',{remaining:round(consumption.remainingPercent),time:consumption.refreshLabel}))}</small></div>
+  $('#result').innerHTML = `<section class="strategy-panel" aria-label="${t('用量计划')}"${policyData} style="--panel-padding:${workspace.panelPadding}px">${graph.compact ? phoneSummary(graph,planningPrediction) : ''}<div class="pace-controls"><div data-current-consumption data-daily="${consumption.dailyPercent}"><span>${t('当前日均消耗 {daily}% / 天',{daily:round(consumption.dailyPercent)})}</span></div>
     </div>
     ${result.recommendation&&!result.recommendation.primary ? `<div class="timeline-toolbar"><span>${t('若始终没有额外重置')}</span></div>` : ''}
     ${renderStrategyTree(graph, escape)}

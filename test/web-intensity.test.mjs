@@ -248,7 +248,7 @@ test('实时证据、条件用量、备用切换和精简累计概率；保持�
     assert.doesNotMatch(output.innerHTML,/data-pace-multiplier|data-phase-pace|usage-choice/);
     assert.doesNotMatch(output.innerHTML,/用量 \+10%|用量 \+20%|用量增加|用量减少/);
     assert.match(output.innerHTML,/当前日均消耗 20%/);
-    assert.match(output.innerHTML,/本周剩 40% · 刷新剩 4天 0小时/);
+    assert.doesNotMatch(output.innerHTML,/本周剩 40% · 刷新剩/,'左侧输入已显示剩余额度与刷新时间');
     assert.doesNotMatch(output.innerHTML.match(/<section class="strategy-panel"[\s\S]*?<\/section>/)[0],/÷/,
       '图表顶部不再展示计算公式');
     assert.doesNotMatch(output.innerHTML,/data-usage-calculation|60% ÷ 72小时 × 24/,

@@ -135,7 +135,9 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
     const x=startX+inset;
     // A label belongs to its own quota span. Short spans clip text with a
     // full-text tooltip instead of moving another phase to a distant row.
-    phaseControls.push({...phase,x,y:phaseY,width:Math.max(1,Math.min(phaseWidth,endX-x-inset)),
+    // The reset markers above already give cumulative chances, so the row
+    // shows only daily use (the opportunity stays in the plan for text advice).
+    phaseControls.push({...phase,nextResetOpportunity:null,x,y:phaseY,width:Math.max(1,Math.min(phaseWidth,endX-x-inset)),
       quotaLabel:true,compact,
       options:result.paceChoices});
   }

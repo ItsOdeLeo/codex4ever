@@ -30,11 +30,10 @@ test('第二次假设后的阶段计算第三次机会，不借用首次累计�
   assert.notEqual(opportunity.probability,resetProbabilityByHours(prediction,second+168));
   assert.equal(phase.dailyPercent,60);
   assert.equal(result.milestones.points.filter(point=>point.reasons.includes('depletion')).at(-1).hours,second+40);
+  // The chart no longer repeats these chances under each phase; the markers
+  // above carry cumulative chances. The plan keeps them for text advice.
   const html=renderStrategyTree(layoutStrategyTree(result,{prediction}),String);
-  assert.match(html,/data-next-extra-sequence="3"/);
-  assert.match(html,/至少一次额外重置：/);
-  assert.doesNotMatch(html,/第3次重置概率：/);
-  assert.match(html,/class="phase-probability-until"/);
+  assert.doesNotMatch(html,/data-reset-opportunity|phase-probability-until|至少一次额外重置：/);
   assert.doesNotMatch(html,/建议增加用量|建议减少用量/);
   const off=plan({prediction:null});
   assert.ok(off.phasePlans.every(phase=>!phase.nextResetOpportunity));

@@ -4047,6 +4047,7 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
     const x = startX + inset;
     phaseControls.push({
       ...phase,
+      nextResetOpportunity: null,
       x,
       y: phaseY,
       width: Math.max(1, Math.min(phaseWidth, endX - x - inset)),
@@ -4794,7 +4795,6 @@ function renderStaticLanguage() {
     ["#calculate", "\u66F4\u65B0\u6570\u636E"],
     ["#source-code", "GitHub \u5F00\u6E90"],
     ["#creator-contact", "\u5982\u679C\u4F60\u559C\u6B22\u8FD9\u4E2A\u4F5C\u54C1\uFF0C\u6B22\u8FCE\u5728 X \u4E0A\u5173\u6CE8\u6211"],
-    ["#output>h2", "\u63A5\u4E0B\u6765\u600E\u4E48\u7528"],
     ["[data-credit-label]", "\u91CD\u7F6E\u6570\u636E\u6765\u6E90"]
   ]) {
     const element = $(selector);
@@ -4958,7 +4958,7 @@ function renderResult(availableWidth = $("#result").clientWidth) {
   });
   const consumption = usageConsumptionSummary(result, { locale: language });
   const policyData = result.recommendation ? ` data-policy-search="${result.recommendation.method}"${result.recommendation.primary ? ' data-plan-basis="predicted-extra-resets-first"' : ""}` : "";
-  $("#result").innerHTML = `<section class="strategy-panel" aria-label="${t("\u7528\u91CF\u8BA1\u5212")}"${policyData} style="--panel-padding:${workspace.panelPadding}px">${graph.compact ? phoneSummary(graph, planningPrediction) : ""}<div class="pace-controls"><div data-current-consumption data-daily="${consumption.dailyPercent}"><span>${t("\u5F53\u524D\u65E5\u5747\u6D88\u8017 {daily}% / \u5929", { daily: round7(consumption.dailyPercent) })}</span><small>${escape2(t("\u672C\u5468\u5269 {remaining}% \xB7 \u5237\u65B0\u5269 {time}", { remaining: round7(consumption.remainingPercent), time: consumption.refreshLabel }))}</small></div>
+  $("#result").innerHTML = `<section class="strategy-panel" aria-label="${t("\u7528\u91CF\u8BA1\u5212")}"${policyData} style="--panel-padding:${workspace.panelPadding}px">${graph.compact ? phoneSummary(graph, planningPrediction) : ""}<div class="pace-controls"><div data-current-consumption data-daily="${consumption.dailyPercent}"><span>${t("\u5F53\u524D\u65E5\u5747\u6D88\u8017 {daily}% / \u5929", { daily: round7(consumption.dailyPercent) })}</span></div>
     </div>
     ${result.recommendation && !result.recommendation.primary ? `<div class="timeline-toolbar"><span>${t("\u82E5\u59CB\u7EC8\u6CA1\u6709\u989D\u5916\u91CD\u7F6E")}</span></div>` : ""}
     ${renderStrategyTree(graph, escape2)}

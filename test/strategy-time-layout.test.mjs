@@ -122,11 +122,7 @@ test('每段用量统一紧贴绿色额度上沿；假设、备用、窄屏均�
         assert.equal(usage.x,0,'用量名称位于时间轴外的左侧公共栏');
         assert.ok(usage.width<=graph.dayAxis.leftPadding);
         assert.equal(usage.y,graph.phaseControls[0].y,'公共名称与各段数字对齐同一行');
-        const chance=graph.headings.find(heading=>heading.kind==='opportunity');
-        assert.equal(chance.x,0);
-        assert.equal(chance.y,usage.y+36,'概率与用量之间留出独立间距');
-        assert.ok(usage.y+usage.height<=chance.y);
-        assert.ok(chance.y+chance.height<=graph.phaseControls[0].y+graph.phaseControls[0].labelHeight);
+        assert.equal(graph.headings.some(heading=>heading.kind==='opportunity'),false,'不再单列重置概率行');
         assert.equal(new Set(graph.phaseControls.map(phase=>phase.y)).size,1,'用量说明共用一条水平线');
         for(const [index,phase] of graph.phaseControls.entries()) {
           near(phase.y+phase.labelHeight+10,graph.dayAxis.quotaTopY);
@@ -140,7 +136,7 @@ test('每段用量统一紧贴绿色额度上沿；假设、备用、窄屏均�
         const html=renderStrategyTree(graph,String);
         assert.match(html,/data-quota-label/);
         assert.equal([...html.matchAll(/data-lane-label="usage"/g)].length,1);
-        assert.equal([...html.matchAll(/data-lane-label="opportunity"/g)].length,1);
+        assert.equal([...html.matchAll(/data-lane-label="opportunity"/g)].length,0);
         // Phases too narrow for a figure (< 36px) show none instead of overlapping.
         const values=[...html.matchAll(/<strong class="phase-(?:advice|budget)">([^<]+)<\/strong>/g)].map(match=>match[1]);
         assert.deepEqual(values,graph.phaseControls.filter(phase=>phase.width>=36)
@@ -151,9 +147,10 @@ test('每段用量统一紧贴绿色额度上沿；假设、备用、窄屏均�
           assert.equal(heading.state,'');
         }
         const captions=[...html.matchAll(/<div class="timeline-lane-label"[^>]*data-lane-inline[^>]*>([\s\S]*?)<\/div>/g)];
-        assert.ok(captions.length>=3);
+        // Usage and quota names are one line; the reset lanes add their explanation below.
+        assert.ok(captions.length>=2);
         for(const [,content] of captions)assert.doesNotMatch(content,/<strong|<small|<br/,
-          '左侧轨道名称是同字号的一行文字');
+          '用量与额度名称是同字号的一行文字');
         assert.equal(graph.funnel.shape,'area');
         for(const band of graph.funnel.bands) {
           const expectedBottom=`L ${band.x2} ${Number(graph.dayAxis.centerY.toFixed(6))} L ${band.x1} ${Number(graph.dayAxis.centerY.toFixed(6))} Z`;
