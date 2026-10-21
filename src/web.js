@@ -183,16 +183,18 @@ function dispatchPlanning(action) {
 }
 
 async function bundledPrediction(now) {
-  let response;
   // Local server → snapshot precomputed by the static site build → bundled archive.
+  // A static host may answer a missing path with the HTML page and status 200,
+  // so only a parsed JSON archive counts; anything else falls through.
   for(const path of ['/api/reset-evidence','/data/reset-evidence.json','/experiments/public-reset-events.json']) {
-    try {response=await fetch(path);} catch { response=null; }
-    if(response?.ok)break;
+    let archive=null;
+    try {
+      const response=await fetch(path);
+      if(response.ok)archive=await response.json();
+    } catch { archive=null; }
+    if(Array.isArray(archive?.events))return predictionFromArchive({ archive, now, timeZone });
   }
-  if(!response) return { available: false, reason: '历史数据加载失败，暂不预测' };
-  if (!response.ok) return { available: false, reason: '历史数据加载失败，暂不预测' };
-  const archive = await response.json();
-  return predictionFromArchive({ archive, now, timeZone });
+  return { available: false, reason: '历史数据加载失败，暂不预测' };
 }
 
 async function calculate() {

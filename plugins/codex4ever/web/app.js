@@ -4904,19 +4904,17 @@ function dispatchPlanning(action) {
   renderResult();
 }
 async function bundledPrediction(now) {
-  let response;
   for (const path of ["/api/reset-evidence", "/data/reset-evidence.json", "/experiments/public-reset-events.json"]) {
+    let archive = null;
     try {
-      response = await fetch(path);
+      const response = await fetch(path);
+      if (response.ok) archive = await response.json();
     } catch {
-      response = null;
+      archive = null;
     }
-    if (response?.ok) break;
+    if (Array.isArray(archive?.events)) return predictionFromArchive({ archive, now, timeZone });
   }
-  if (!response) return { available: false, reason: "\u5386\u53F2\u6570\u636E\u52A0\u8F7D\u5931\u8D25\uFF0C\u6682\u4E0D\u9884\u6D4B" };
-  if (!response.ok) return { available: false, reason: "\u5386\u53F2\u6570\u636E\u52A0\u8F7D\u5931\u8D25\uFF0C\u6682\u4E0D\u9884\u6D4B" };
-  const archive = await response.json();
-  return predictionFromArchive({ archive, now, timeZone });
+  return { available: false, reason: "\u5386\u53F2\u6570\u636E\u52A0\u8F7D\u5931\u8D25\uFF0C\u6682\u4E0D\u9884\u6D4B" };
 }
 async function calculate2() {
   const run = ++calculationRun;

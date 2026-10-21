@@ -174,7 +174,9 @@ test('实时证据、条件用量、备用切换和精简累计概率；保持�
     coverage:{history:{status:'live'},social:{status:'unavailable'}},classification:'explicit-text',
     latestResetMention,posts:[...(archive.posts??[]),latestResetMention]};
   const requests=[];
-  globalThis.fetch=async url=>{requests.push(url);return {ok:true,json:async()=>snapshot};};
+  // Like Cloudflare Pages: a missing /api path returns the HTML page with 200.
+  globalThis.fetch=async url=>{requests.push(url);return url==='/api/reset-evidence'
+    ? {ok:true,json:async()=>{throw new SyntaxError('Unexpected token <');}} : {ok:true,json:async()=>snapshot};};
   let resized;
   globalThis.ResizeObserver=class {
     constructor(callback){resized=callback;}
@@ -210,7 +212,7 @@ test('实时证据、条件用量、备用切换和精简累计概率；保持�
     const probability=()=>evidence.innerHTML.match(/data-forecast-48-probability="([^"]+)"/)?.[1];
     const depletion=()=>output.innerHTML.match(/class="graph-node graph-depletion"[\s\S]*?<\/div>/)?.[0];
     const normal=()=>output.innerHTML.match(/data-node-id="normal-reset"[\s\S]*?<\/div>/)?.[0];
-    assert.deepEqual(requests,['/api/reset-evidence']);
+    assert.deepEqual(requests,['/api/reset-evidence','/data/reset-evidence.json'],'静态站把缺失路径答成 HTML 时继续读预计算快照');
     assert.match(output.innerHTML,/实时记录/);
     assert.match(output.innerHTML,/X 回复暂缺/);
     const summary = () => evidence.innerHTML.match(/<section class="forecast-summary"[\s\S]*?<\/section>/)?.[0];
@@ -298,7 +300,7 @@ test('实时证据、条件用量、备用切换和精简累计概率；保持�
     assert.match(second(),new RegExp(`data-conditional-on="${assumedAt}"`),'第二条曲线以计划假设的首次时间为前提');
     const assumedSecond=second();
     assert.equal(summary(),originalForecastSummary);
-    assert.equal(requests.length,1,'选择假设复用同一份证据，不重新抓取');
+    assert.equal(requests.length,2,'选择假设复用同一份证据，不重新抓取');
     const refillCount=()=>[...output.innerHTML.matchAll(/data-refill-sequence="[12]"/g)].length;
     const secondAction=()=>click('[data-assume-reset]',{assumptionSequence:'2'});
     assert.equal(refillCount(),1);
@@ -323,7 +325,7 @@ test('实时证据、条件用量、备用切换和精简累计概率；保持�
     assert.match(output.innerHTML,/class="strategy-graph" style="width:2510px/,'右侧直接使用全部可用宽度，不再扣除第二份预测侧栏');
     assert.equal(refillCount(),2);
     assert.equal(probability(),fixed);
-    assert.equal(requests.length,1,'尺寸变化不重新获取证据');
+    assert.equal(requests.length,2,'尺寸变化不重新获取证据');
     assert.deepEqual([...output.innerHTML.matchAll(/data-phase-daily="([^"]+)"/g)].map(match=>match[1]),chosenRates);
     secondAction();
     assert.equal(refillCount(),1,'缩放后第二次操作仍可取消');
@@ -376,11 +378,11 @@ test('实时证据、条件用量、备用切换和精简累计概率；保持�
     assert.equal(mode(), originalMode);
     assert.equal(second(),originalSecond);
     const originalSummary = summary();
-    assert.equal(requests.length,1,'调整分支只用同一份已更新证据');
+    assert.equal(requests.length,2,'调整分支只用同一份已更新证据');
     element('#inputs').listeners.click({target:{closest:selector=>selector==='button'
       ? {dataset:{calendarDate:'2026-10-17'}} : null}});
     await element('#calculate').listeners.click();
-    assert.equal(requests.length,2,'每次重新计算都会刷新公开数据');
+    assert.equal(requests.length,4,'每次重新计算都会刷新公开数据');
     countNoReset();
     assert.match(normal(),/10月23日 14:00/);
     click('[data-backup-choice]',{backupChoice:'0'});

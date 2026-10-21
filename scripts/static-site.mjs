@@ -29,6 +29,14 @@ export async function buildStaticSite({outDir,siteUrl=null,extraPublic=[]}) {
   if(siteUrl)for(const pathname of ['/robots.txt','/sitemap.xml','/llms.txt'])
     await writeFile(resolve(outDir,'.'+pathname),seoResponse({pathname,siteUrl}).body);
   if(siteUrl)await writeFile(resolve(outDir,`${INDEXNOW_KEY}.txt`),INDEXNOW_KEY);
+  // Cloudflare Pages serves this with status 404; without it, every missing
+  // path returns the planner page with 200 (a soft 404 for crawlers and fetch).
+  await writeFile(resolve(outDir,'404.html'),`<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page not found | Codex4ever</title><meta name="robots" content="noindex">
+<link rel="stylesheet" href="/guide.css"></head>
+<body><main><h1>Page not found</h1><p><a href="/">Open the Codex4ever planner</a> · <a href="/guide/">How it works</a></p></main></body></html>
+`);
   const font=resolve(outDir,'public/fonts/vt323');
   await mkdir(font,{recursive:true});
   for(const name of ['VT323-Regular.ttf','OFL.txt'])await copyFile(resolve(root,'public/fonts/vt323',name),resolve(font,name));
