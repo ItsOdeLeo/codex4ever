@@ -2370,6 +2370,9 @@ footer {
   .site-header .brand {
     padding-right: 118px;
   }
+  .site-header .brand p {
+    display: none;
+  }
   .site-header .header-actions {
     margin: 12px 0 0;
     justify-content: flex-start;

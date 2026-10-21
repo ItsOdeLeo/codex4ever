@@ -237,6 +237,7 @@ footer {font-size:12px;line-height:1.8;margin-top:32px;padding-top:14px;border-t
 @media(max-width:680px) {
   .site-header {position:relative;display:block}
   .site-header .brand {padding-right:118px}
+  .site-header .brand p {display:none}
   .site-header .header-actions {margin:12px 0 0;justify-content:flex-start;gap:8px}
   #language-switch {position:absolute;top:4px;right:0}
   .header-link {padding:5px 9px;font-size:11px}
