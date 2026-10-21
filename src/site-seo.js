@@ -3,6 +3,8 @@ import { PLANNER_METADATA } from './page-metadata.js';
 const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const json=value=>JSON.stringify(value).replace(/</g,'\\u003c');
 // codex-resets.com asks for a linked credit wherever its data is shown.
+// Public by design: IndexNow verifies site ownership by fetching /<key>.txt.
+export const INDEXNOW_KEY='98f3b4121e21dd55fee643d8af3a1002';
 export const SOURCE_URL='https://github.com/ItsOdeLeo/codex4ever';
 export const CREATOR_URL='https://x.com/ItsOdeLeo';
 export const DATA_SOURCES=[['Codex Resets','https://codex-resets.com']];

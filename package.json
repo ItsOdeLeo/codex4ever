@@ -16,6 +16,7 @@
     "web": "node scripts/serve.mjs",
     "backtest:public": "node scripts/backtest-public.mjs",
     "archive:refresh": "node scripts/refresh-archive.mjs",
+    "indexnow": "node scripts/indexnow.mjs",
     "predict:reset": "node scripts/predict-reset.mjs",
     "alert:demo": "node scripts/alert-demo.mjs",
     "test": "node --test test/*.test.mjs",

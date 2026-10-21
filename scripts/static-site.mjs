@@ -2,7 +2,7 @@ import { build } from 'esbuild';
 import { readFile,writeFile,mkdir,copyFile,rm } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { seoResponse } from '../src/site-seo.js';
+import { seoResponse,INDEXNOW_KEY } from '../src/site-seo.js';
 
 export const root=resolve(fileURLToPath(new URL('../',import.meta.url)));
 
@@ -28,6 +28,7 @@ export async function buildStaticSite({outDir,siteUrl=null,extraPublic=[]}) {
   }
   if(siteUrl)for(const pathname of ['/robots.txt','/sitemap.xml','/llms.txt'])
     await writeFile(resolve(outDir,'.'+pathname),seoResponse({pathname,siteUrl}).body);
+  if(siteUrl)await writeFile(resolve(outDir,`${INDEXNOW_KEY}.txt`),INDEXNOW_KEY);
   const font=resolve(outDir,'public/fonts/vt323');
   await mkdir(font,{recursive:true});
   for(const name of ['VT323-Regular.ttf','OFL.txt'])await copyFile(resolve(root,'public/fonts/vt323',name),resolve(font,name));
