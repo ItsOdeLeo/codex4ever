@@ -4,6 +4,8 @@
 
 Unofficial; not affiliated with OpenAI. MIT licensed.
 
+**[Try it at codex4ever.com](https://codex4ever.com)** · If it helps, please ⭐ star this repo and follow [@ItsOdeLeo on X](https://x.com/ItsOdeLeo) for updates.
+
 ![Codex4ever planner: forecast panel, usage strategies and a day-by-day timeline of usage, resets and remaining quota](docs/images/planner.png)
 
 ## What it does
@@ -64,3 +66,7 @@ Design and algorithm details: [docs/technical-notes.zh.md](docs/technical-notes.
 ## 中文简介
 
 Codex4ever 是 OpenAI Codex 每周额度的本地规划器：按你当前的速度显示额度什么时候用完、额外 reset 是否可能先到，以及备用 reset 什么时候值得用。预测的 reset 只在“正常刷新前发生的概率 ≥ 60%”时计入，并放在保守时刻；任何一次补满都会重新开始 7 天周期；备用默认至少保留一个。网页、插件页面和插件的 MCP 工具始终使用同一套规则。非官方工具，与 OpenAI 无隶属关系。详细设计见 [技术说明](docs/technical-notes.zh.md)。
+
+## Author
+
+Built by [@ItsOdeLeo](https://x.com/ItsOdeLeo). Feedback and ideas are welcome on X or in [GitHub issues](https://github.com/ItsOdeLeo/codex4ever/issues).

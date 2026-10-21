@@ -22,7 +22,7 @@ body {
 }
 
 /* Large surfaces carry the blur; small chart labels stay inexpensive and crisp. */
-#inputs,.strategy-panel,.forecast-panel,.calendar-panel,.local-badge {
+#inputs,.strategy-panel,.forecast-panel,.calendar-panel,.header-link {
   background:var(--glass-panel);
   border:1px solid var(--glass-line);
   box-shadow:var(--glass-shadow);
@@ -32,7 +32,7 @@ body {
 #inputs,.strategy-panel {border-radius:24px}
 .forecast-panel {padding:16px;border-radius:22px}
 .calendar-panel {background:color-mix(in srgb,var(--surface-soft) 96.078431%,transparent);border-radius:20px;box-shadow:var(--glass-shadow),0 20px 56px color-mix(in srgb,var(--shadow) 40%,transparent)}
-.local-badge {border-radius:999px;padding:8px 13px;box-shadow:inset 0 1px 0 color-mix(in srgb,var(--highlight) 5.490196%,transparent),0 3px 12px color-mix(in srgb,var(--shadow) 14.901961%,transparent)}
+.header-link {border-radius:999px;padding:8px 13px;box-shadow:inset 0 1px 0 color-mix(in srgb,var(--highlight) 5.490196%,transparent),0 3px 12px color-mix(in srgb,var(--shadow) 14.901961%,transparent)}
 .brand-mark {
   background:var(--surface-soft);
   color:var(--accent);
@@ -141,7 +141,7 @@ input[type=number] {background:color-mix(in srgb,var(--highlight) 5.882353%,tran
 }
 @media(prefers-reduced-transparency:reduce) {
   :root {--glass-panel:var(--surface-soft);--glass-control:var(--surface-raised);--glass-line:var(--border);--chart-label:var(--surface-soft)}
-  #inputs,.strategy-panel,.forecast-panel,.calendar-panel,.local-badge {-webkit-backdrop-filter:none;backdrop-filter:none}
+  #inputs,.strategy-panel,.forecast-panel,.calendar-panel,.header-link {-webkit-backdrop-filter:none;backdrop-filter:none}
 }
 @media(prefers-reduced-motion:reduce) {
   button {transition:none}

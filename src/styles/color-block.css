@@ -13,7 +13,7 @@ body {min-height:100vh;background:var(--canvas);-webkit-font-smoothing:antialias
 .brand-mark {background:var(--accent);color:var(--on-accent);border-radius:14px;box-shadow:none}
 h1 {font-weight:600;letter-spacing:-1px}
 #output>h2 {font-weight:600;letter-spacing:0}
-.local-badge {background:var(--surface);border-color:transparent;box-shadow:none}
+.header-link {background:var(--surface);border-color:transparent;box-shadow:none}
 .calendar-field {border-bottom-color:var(--border)}
 .forecast-summary dl>div {border-bottom-color:transparent}
 .forecast-summary dl>div:first-child {padding-top:4px}

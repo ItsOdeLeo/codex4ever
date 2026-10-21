@@ -25,7 +25,7 @@ h1 {font-family:var(--font-brand);font-size:36px;font-weight:400;letter-spacing:
 .brand {min-width:0}
 .brand>div {min-width:0}
 .brand .affiliation-notice {max-width:64ch;margin-top:6px;font-size:11px;line-height:1.5;color:var(--muted)}
-.local-badge {border:1px solid var(--border);border-radius:3px;background:var(--surface);color:var(--ink);box-shadow:2px 2px 0 color-mix(in srgb,var(--shadow) 18%,transparent)}
+.header-link {border:1px solid var(--border);border-radius:3px;background:var(--surface);color:var(--ink);box-shadow:2px 2px 0 color-mix(in srgb,var(--shadow) 18%,transparent)}
 .header-actions {display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-wrap:wrap}
 .language-switch {display:flex;gap:2px;padding:2px;border:1px solid var(--border);border-radius:3px;background:var(--surface)}
 .language-switch button {padding:4px 8px;border-color:transparent;box-shadow:none;font-size:12px;white-space:nowrap}

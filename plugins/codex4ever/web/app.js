@@ -32,7 +32,7 @@ var english = {
   "Codex4ever \xB7 \u7528\u91CF\u7B56\u7565\u5EFA\u8BAE": "Codex4ever \xB7 Usage planner",
   "\u89C4\u5212\u63A5\u4E0B\u6765\u600E\u4E48\u7528\uFF0C\u4EC0\u4E48\u65F6\u5019\u8865\u7ED9\u3002": "Plan your usage and your next reset.",
   "OpenAI Codex \u7684\u975E\u5B98\u65B9\u53EF\u89C6\u5316\u7528\u91CF\u89C4\u5212\u5DE5\u5177\u3002\u4E0E OpenAI \u65E0\u96B6\u5C5E\u5173\u7CFB\u3002": "Unofficial visual usage planner for OpenAI Codex. Not affiliated with OpenAI.",
-  "\u672C\u5730\u89C4\u5212 \xB7 \u6570\u636E\u7559\u5728\u672C\u673A": "Local planning \xB7 Your data stays here",
+  "\u2605 \u5728 GitHub \u70B9\u4E2A Star": "\u2605 Star on GitHub",
   "\u72B6\u6001\u4E0E\u9884\u6D4B": "State and forecast",
   "\u7B97\u6CD5\u8F93\u5165": "Usage inputs",
   "\u9884\u6D4B\u4F9D\u636E": "Forecast evidence",
@@ -4650,13 +4650,13 @@ var PLANNER_METADATA = {
   en: {
     title: "Codex4ever | Codex Quota & Reset Planner",
     description: "Plan OpenAI Codex usage with quota depletion estimates, banked reset deadlines and extra reset forecasts. Compare daily usage strategies locally or through MCP.",
-    intro: "Plan Codex quota, banked resets and extra reset forecasts.",
+    intro: "Plan Codex quota, banked resets and extra reset forecasts, right in your browser.",
     locale: "en_GB"
   },
   "zh-CN": {
     title: "Codex4ever | Codex \u989D\u5EA6\u4E0E Reset \u7528\u91CF\u89C4\u5212",
     description: "\u6839\u636E Codex \u5269\u4F59\u989D\u5EA6\u3001\u6D88\u8017\u901F\u5EA6\u3001\u5907\u7528 reset \u5230\u671F\u65F6\u95F4\u548C\u989D\u5916\u91CD\u7F6E\u9884\u6D4B\uFF0C\u6BD4\u8F83\u65E5\u5747\u7528\u91CF\u7B56\u7565\u4E0E\u9884\u8BA1\u8017\u5C3D\u65F6\u95F4\u3002\u652F\u6301\u672C\u5730\u8FD0\u884C\u548C MCP \u63A5\u5165\u3002",
-    intro: "\u89C4\u5212 Codex \u7528\u91CF\u3001\u5907\u7528 reset \u4E0E\u989D\u5916\u91CD\u7F6E\u3002",
+    intro: "\u89C4\u5212 Codex \u7528\u91CF\u3001\u5907\u7528 reset \u4E0E\u989D\u5916\u91CD\u7F6E\uFF0C\u5168\u90E8\u5728\u6D4F\u89C8\u5668\u91CC\u8BA1\u7B97\u3002",
     locale: "zh_CN"
   }
 };
@@ -4724,7 +4724,7 @@ function renderStaticLanguage() {
   $(".brand p").textContent = metadata.intro;
   for (const [selector, label] of [
     [".affiliation-notice", "OpenAI Codex \u7684\u975E\u5B98\u65B9\u53EF\u89C6\u5316\u7528\u91CF\u89C4\u5212\u5DE5\u5177\u3002\u4E0E OpenAI \u65E0\u96B6\u5C5E\u5173\u7CFB\u3002"],
-    [".local-badge", "\u672C\u5730\u89C4\u5212 \xB7 \u6570\u636E\u7559\u5728\u672C\u673A"],
+    ["#github-star", "\u2605 \u5728 GitHub \u70B9\u4E2A Star"],
     ["#calculate", "\u66F4\u65B0\u6570\u636E"],
     ["#source-code", "GitHub \u5F00\u6E90"],
     ["#creator-contact", "\u5982\u679C\u4F60\u559C\u6B22\u8FD9\u4E2A\u4F5C\u54C1\uFF0C\u6B22\u8FCE\u5728 X \u4E0A\u5173\u6CE8\u6211"],

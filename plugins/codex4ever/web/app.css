@@ -150,7 +150,7 @@ h2 {
   color: var(--muted);
   margin: 4px 0 0;
 }
-.local-badge {
+.header-link {
   border: 1px solid var(--border);
   background: var(--surface);
   border-radius: 20px;
@@ -158,6 +158,12 @@ h2 {
   font-size: 11px;
   color: var(--muted);
   white-space: nowrap;
+  text-decoration: none;
+}
+.header-link:hover,
+.header-link:focus-visible {
+  color: var(--ink);
+  border-color: var(--ink);
 }
 .layout {
   display: grid;
@@ -1077,7 +1083,7 @@ footer {
   .site-header {
     margin-bottom: 22px;
   }
-  .local-badge {
+  .header-link {
     display: none;
   }
   h1 {
@@ -1447,7 +1453,7 @@ h1 {
   line-height: 1.5;
   color: var(--muted);
 }
-.local-badge {
+.header-link {
   border: 1px solid var(--border);
   border-radius: 3px;
   background: var(--surface);

@@ -33,7 +33,7 @@ const english={
   'Codex4ever · 用量策略建议':'Codex4ever · Usage planner',
   '规划接下来怎么用，什么时候补给。':'Plan your usage and your next reset.',
   'OpenAI Codex 的非官方可视化用量规划工具。与 OpenAI 无隶属关系。':'Unofficial visual usage planner for OpenAI Codex. Not affiliated with OpenAI.',
-  '本地规划 · 数据留在本机':'Local planning · Your data stays here',
+  '★ 在 GitHub 点个 Star':'★ Star on GitHub',
   '状态与预测':'State and forecast','算法输入':'Usage inputs','预测依据':'Forecast evidence','算法输出':'Usage plan',
   '计算策略建议':'Calculate plan','接下来怎么用':'Your next few days',
   '更新数据':'Update data','采用输入修改并刷新重置证据':'Apply input changes and refresh reset evidence',

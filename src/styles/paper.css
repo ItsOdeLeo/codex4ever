@@ -41,7 +41,7 @@ body {min-height:100vh;background:var(--canvas);font-family:var(--paper-font);-w
 }
 .forecast-panel {padding:16px;border-radius:24px}
 .calendar-panel {border-color:var(--border);border-radius:22px;box-shadow:var(--paper-shadow),0 14px 28px color-mix(in srgb,var(--shadow) 10%,transparent)}
-.local-badge {border-radius:999px;background:var(--surface);border-color:transparent;box-shadow:none}
+.header-link {border-radius:999px;background:var(--surface);border-color:transparent;box-shadow:none}
 .brand-mark {background:var(--surface);color:var(--accent);border:1px solid transparent;border-radius:16px;box-shadow:none}
 h1 {font-weight:700;letter-spacing:-.5px}
 #output>h2 {letter-spacing:0}
