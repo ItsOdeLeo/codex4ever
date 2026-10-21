@@ -41,6 +41,7 @@ const english={
   '即时更新':'Updates instantly','自定义用量':'Customize usage',
   '如果你喜欢这个作品，欢迎在 X 上关注我':'If you like this work, follow me on X',
   'GitHub 开源':'Open source on GitHub',
+  '首次额外 reset · 时间概率分布':'First extra reset · probability over time','第二次额外 reset · 时间概率分布':'Second extra reset · probability over time','首次额外 reset':'First extra reset','第二次额外 reset':'Second extra reset','时间概率分布':'probability over time',
   '下次额外 reset':'Next extra reset','未来 48 小时':'Next 48h','修改额度':'Edit quota',
   '点击「计算策略」查看结果。':'Calculate a plan to see your timeline.',
   '重置数据来源':'Reset data',

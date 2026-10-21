@@ -98,8 +98,14 @@ test('三个轨道名称统一放在独立最左栏，分别与两条分布及�
         assert.ok(label.x+label.width<plot.startX);
         assert.equal(label.y+label.height/2,plot.topY+plot.height/2);
       }
-      assert.equal(label.inline,true);
-      assert.equal(label.detail,'');
+      // The curves are probability over time, and the label says so.
+      if(graph.compact) {
+        assert.equal(label.inline,true);
+        assert.match(label.title,/probability over time/);
+      } else {
+        assert.equal(label.inline,false);
+        assert.equal(label.detail,'probability over time');
+      }
       assert.match(label.tooltip,/Probability density/);
     }
     const consumption=graph.headings.find(item=>item.kind==='consumption');

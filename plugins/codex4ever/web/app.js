@@ -47,6 +47,11 @@ var english = {
   "\u81EA\u5B9A\u4E49\u7528\u91CF": "Customize usage",
   "\u5982\u679C\u4F60\u559C\u6B22\u8FD9\u4E2A\u4F5C\u54C1\uFF0C\u6B22\u8FCE\u5728 X \u4E0A\u5173\u6CE8\u6211": "If you like this work, follow me on X",
   "GitHub \u5F00\u6E90": "Open source on GitHub",
+  "\u9996\u6B21\u989D\u5916 reset \xB7 \u65F6\u95F4\u6982\u7387\u5206\u5E03": "First extra reset \xB7 probability over time",
+  "\u7B2C\u4E8C\u6B21\u989D\u5916 reset \xB7 \u65F6\u95F4\u6982\u7387\u5206\u5E03": "Second extra reset \xB7 probability over time",
+  "\u9996\u6B21\u989D\u5916 reset": "First extra reset",
+  "\u7B2C\u4E8C\u6B21\u989D\u5916 reset": "Second extra reset",
+  "\u65F6\u95F4\u6982\u7387\u5206\u5E03": "probability over time",
   "\u4E0B\u6B21\u989D\u5916 reset": "Next extra reset",
   "\u672A\u6765 48 \u5C0F\u65F6": "Next 48h",
   "\u4FEE\u6539\u989D\u5EA6": "Edit quota",
@@ -2344,7 +2349,7 @@ function renderResetForecastSummary({
 // src/components/usage-strategies.js
 function renderUsageStrategies({ selected = "balanced", locale = "en", disabled = false } = {}, escape3 = String) {
   const t2 = translator(locale);
-  return `<div class="usage-strategies" role="group" aria-label="${t2("\u7528\u91CF\u7B56\u7565")}">${usageStrategies.map((strategy) => `<button type="button" data-usage-strategy="${strategy.id}" aria-pressed="${selected === strategy.id}"${disabled ? " disabled" : ""}><strong>${escape3(t2(strategy.label))}</strong><small>${escape3(t2(strategy.description))}</small></button>`).join("")}</div>`;
+  return `<div class="usage-strategies" role="group" aria-label="${t2("\u7528\u91CF\u7B56\u7565")}">${usageStrategies.map((strategy) => `<button type="button" data-usage-strategy="${strategy.id}" aria-pressed="${selected === strategy.id}" title="${escape3(t2(strategy.description))}"${disabled ? " disabled" : ""}><strong>${escape3(t2(strategy.label))}</strong></button>`).join("")}</div>`;
 }
 
 // src/components/availability-controls.js
@@ -4228,10 +4233,23 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
   const gutterWidth = Math.max(0, axis.leftPadding - 16);
   const resetLaneLabels = [probabilityPlot, followingPlot].map((plot, index) => plot ? {
     id: `reset-${index + 1}`,
-    ...compact ? { x: axis.leftPadding, y: plot.topY - 62, width: plotLabelWidth, height: 18 } : { x: 0, y: plot.topY + plot.height / 2 - 10, width: gutterWidth, height: 20 },
-    inline: true,
-    title: t2(index === 0 ? "\u9996\u6B21\u989D\u5916\u91CD\u7F6E" : "\u7B2C\u4E8C\u6B21\u989D\u5916\u91CD\u7F6E"),
-    detail: "",
+    ...compact ? {
+      x: axis.leftPadding,
+      y: plot.topY - 62,
+      width: plotLabelWidth,
+      height: 18,
+      inline: true,
+      title: t2(index === 0 ? "\u9996\u6B21\u989D\u5916 reset \xB7 \u65F6\u95F4\u6982\u7387\u5206\u5E03" : "\u7B2C\u4E8C\u6B21\u989D\u5916 reset \xB7 \u65F6\u95F4\u6982\u7387\u5206\u5E03"),
+      detail: ""
+    } : {
+      x: 0,
+      y: plot.topY + plot.height / 2 - 18,
+      width: gutterWidth,
+      height: 36,
+      inline: false,
+      title: t2(index === 0 ? "\u9996\u6B21\u989D\u5916 reset" : "\u7B2C\u4E8C\u6B21\u989D\u5916 reset"),
+      detail: t2("\u65F6\u95F4\u6982\u7387\u5206\u5E03")
+    },
     tooltip: [
       t2(index === 0 ? "\u9996\u6B21\u989D\u5916\u91CD\u7F6E\u9884\u6D4B" : "\u7B2C\u4E8C\u6B21\u989D\u5916\u91CD\u7F6E\u9884\u6D4B"),
       t2("\u6982\u7387\u5BC6\u5EA6"),
@@ -4681,7 +4699,7 @@ function renderStrategyTree(graph, escape3) {
   const forecast = !graph.dayAxis && graph.forecastCalendar?.length ? `<div class="forecast-calendar" aria-label="${t2("\u56FA\u5B9A\u65E5\u671F\u4E4B\u524D\u81F3\u5C11\u53D1\u751F\u4E00\u6B21\u989D\u5916\u91CD\u7F6E\u7684\u7D2F\u8BA1\u6982\u7387")}">
     <span>\u6B64\u524D\u989D\u5916\u91CD\u7F6E\u6982\u7387</span><div>${graph.forecastCalendar.map((point) => `<span><small>${escape3(forecastDate(point.at))}</small><strong>${round6(point.probability * 100)}%</strong></span>`).join("")}</div></div>` : "";
   const forecastLegend = !graph.compactForecast && graph.forecastLayout?.length ? `<div class="forecast-legend">${t2("\u84DD\u7EBF\uFF1A\u6B64\u524D\u81F3\u5C11\u53D1\u751F\u4E00\u6B21\u989D\u5916 reset \u7684\u6982\u7387")}</div>` : "";
-  const inventory = Number.isInteger(graph.bankedCount) ? `<div class="retained-resets" data-banked-count="${graph.bankedCount}">${escape3(t2("\u5907\u7528 reset \xB7 {count} \u4E2A", { count: graph.bankedCount }))}</div>` : "";
+  const inventory = graph.bankedCount > 0 ? `<div class="retained-resets" data-banked-count="${graph.bankedCount}">${escape3(t2("\u5907\u7528 reset \xB7 {count} \u4E2A", { count: graph.bankedCount }))}</div>` : "";
   return `${forecast}${forecastLegend}<div class="tree-scroll" data-timeline-orientation="horizontal" tabindex="0" role="region" aria-label="${t2("\u4ECE\u5DE6\u5411\u53F3\u7684\u989D\u5EA6\u6F0F\u6597\u4E0E\u7B56\u7565\u9009\u62E9\uFF0C\u53EF\u6A2A\u5411\u6EDA\u52A8")}"><div class="strategy-graph"${graph.compact ? " data-compact" : ""} style="width:${graph.width}px;height:${graph.height}px" ${graph.dayAxis ? `data-timeline-from="${graph.dayAxis.days[0].startAt}" data-timeline-to="${graph.dayAxis.days.at(-1).endAt}"` : ""}>${svg}${days}${alignedForecast}${resetElements.map((element) => element.html).join("")}${headings}${phaseControls}${nodes}${controls}</div></div>${inventory}`;
 }
 
@@ -4939,16 +4957,13 @@ function renderResult(availableWidth = $("#result").clientWidth) {
     locale: language
   });
   const consumption = usageConsumptionSummary(result, { locale: language });
-  const sourceDescription = forecastSource.available ? forecastSource.coverage?.history.status === "live" ? t("\u5B9E\u65F6\u8BB0\u5F55 \xB7 \u4E0A\u6B21\u516C\u5F00\u91CD\u7F6E {days} \u5929\u524D", { days: round7(forecastSource.daysSinceReset) }) : t("\u7F13\u5B58 \xB7 \u6570\u636E\u622A\u81F3 {date}", { date: forecastSource.dataAsOf }) : diagnosticText(language, forecastSource.reason);
-  const socialDescription = forecastSource.coverage?.social.status === "unavailable" ? t(" \xB7 X \u56DE\u590D\u6682\u7F3A") : forecastSource.classification === "llm" ? t(" \xB7 LLM \u5206\u6790\u5E16\u5B50") : "";
   const policyData = result.recommendation ? ` data-policy-search="${result.recommendation.method}"${result.recommendation.primary ? ' data-plan-basis="predicted-extra-resets-first"' : ""}` : "";
   $("#result").innerHTML = `<section class="strategy-panel" aria-label="${t("\u7528\u91CF\u8BA1\u5212")}"${policyData} style="--panel-padding:${workspace.panelPadding}px">${graph.compact ? phoneSummary(graph, planningPrediction) : ""}<div class="pace-controls"><div data-current-consumption data-daily="${consumption.dailyPercent}"><span>${t("\u5F53\u524D\u65E5\u5747\u6D88\u8017 {daily}% / \u5929", { daily: round7(consumption.dailyPercent) })}</span><small>${escape2(t("\u672C\u5468\u5269 {remaining}% \xB7 \u5237\u65B0\u5269 {time}", { remaining: round7(consumption.remainingPercent), time: consumption.refreshLabel }))}</small></div>
     </div>
-    <div class="timeline-toolbar"><span>${t(result.recommendation && !result.recommendation.primary ? "\u82E5\u59CB\u7EC8\u6CA1\u6709\u989D\u5916\u91CD\u7F6E" : "\u7528\u91CF\u4E0E\u91CD\u7F6E \xB7 \u6BCF\u5929\u4E00\u683C")}</span></div>
+    ${result.recommendation && !result.recommendation.primary ? `<div class="timeline-toolbar"><span>${t("\u82E5\u59CB\u7EC8\u6CA1\u6709\u989D\u5916\u91CD\u7F6E")}</span></div>` : ""}
     ${renderStrategyTree(graph, escape2)}
     </section>
-    ${renderForecastMethod({ source: forecastSource, prediction: planningPrediction, result, timeZone, locale: language }, escape2)}
-    <p class="forecast-data-status">${escape2(sourceDescription + socialDescription)}</p>`;
+    ${renderForecastMethod({ source: forecastSource, prediction: planningPrediction, result, timeZone, locale: language }, escape2)}`;
 }
 function phoneSummary(graph, prediction) {
   const focus = prediction && graph.forecastFocus;

@@ -166,19 +166,13 @@ function renderResult(availableWidth=$('#result').clientWidth) {
       : Math.max(workspace.timelineWidth,availableWidth<680 ? MOBILE_TIMELINE_WIDTH : 0),
     displayEndHours:planner.displayEndHours,locale:language });
   const consumption=usageConsumptionSummary(result,{locale:language});
-  const sourceDescription = forecastSource.available ? forecastSource.coverage?.history.status==='live'
-    ? t('实时记录 · 上次公开重置 {days} 天前',{days:round(forecastSource.daysSinceReset)})
-    : t('缓存 · 数据截至 {date}',{date:forecastSource.dataAsOf}) : diagnosticText(language,forecastSource.reason);
-  const socialDescription = forecastSource.coverage?.social.status==='unavailable' ? t(' · X 回复暂缺')
-    : forecastSource.classification==='llm' ? t(' · LLM 分析帖子') : '';
   const policyData=result.recommendation ? ` data-policy-search="${result.recommendation.method}"${result.recommendation.primary ? ' data-plan-basis="predicted-extra-resets-first"' : ''}` : '';
   $('#result').innerHTML = `<section class="strategy-panel" aria-label="${t('用量计划')}"${policyData} style="--panel-padding:${workspace.panelPadding}px">${graph.compact ? phoneSummary(graph,planningPrediction) : ''}<div class="pace-controls"><div data-current-consumption data-daily="${consumption.dailyPercent}"><span>${t('当前日均消耗 {daily}% / 天',{daily:round(consumption.dailyPercent)})}</span><small>${escape(t('本周剩 {remaining}% · 刷新剩 {time}',{remaining:round(consumption.remainingPercent),time:consumption.refreshLabel}))}</small></div>
     </div>
-    <div class="timeline-toolbar"><span>${t(result.recommendation&&!result.recommendation.primary ? '若始终没有额外重置' : '用量与重置 · 每天一格')}</span></div>
+    ${result.recommendation&&!result.recommendation.primary ? `<div class="timeline-toolbar"><span>${t('若始终没有额外重置')}</span></div>` : ''}
     ${renderStrategyTree(graph, escape)}
     </section>
-    ${renderForecastMethod({source:forecastSource,prediction:planningPrediction,result,timeZone,locale:language},escape)}
-    <p class="forecast-data-status">${escape(sourceDescription+socialDescription)}</p>`;
+    ${renderForecastMethod({source:forecastSource,prediction:planningPrediction,result,timeZone,locale:language},escape)}`;
 }
 
 // Phones: only what the timeline below does not already say, plus a jump to the inputs.
