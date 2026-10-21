@@ -2286,7 +2286,7 @@ footer {
 }
 .phone-summary {
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: 1fr auto;
   gap: 10px 14px;
   align-items: end;
   padding: 14px;
@@ -2314,10 +2314,6 @@ footer {
 }
 .phone-summary [data-summary=next-reset] strong {
   color: var(--pool-rose-deep);
-}
-.phone-summary span {
-  font-size: 11px;
-  color: var(--muted);
 }
 .phone-summary [data-edit-quota] {
   grid-column: 1;

@@ -41,7 +41,7 @@ const english={
   '即时更新':'Updates instantly','自定义用量':'Customize usage',
   '如果你喜欢这个作品，欢迎在 X 上关注我':'If you like this work, follow me on X',
   'GitHub 开源':'Open source on GitHub',
-  '下次额外 reset':'Next extra reset','到那时已发生的概率 {percent}':'{percent} likely by then','未来 48 小时':'Next 48h','现在每天':'Use now','修改额度':'Edit quota',
+  '下次额外 reset':'Next extra reset','未来 48 小时':'Next 48h','修改额度':'Edit quota',
   '点击「计算策略」查看结果。':'Calculate a plan to see your timeline.',
   '重置数据来源':'Reset data',
   '本地估算 · 不执行兑换 · 用量或重置变化后重新计算':'Local estimate · No resets redeemed · Recalculate after usage or resets change',

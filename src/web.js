@@ -181,15 +181,12 @@ function renderResult(availableWidth=$('#result').clientWidth) {
     <p class="forecast-data-status">${escape(sourceDescription+socialDescription)}</p>`;
 }
 
-// Phones: the numbers people come for, above the timeline, plus a jump to the inputs.
+// Phones: only what the timeline below does not already say, plus a jump to the inputs.
 function phoneSummary(graph,prediction) {
-  const percent=value=>`${round(value*100)}%`;
   const focus=prediction&&graph.forecastFocus;
-  const today=graph.phaseControls?.[0];
   const cells=[
-    focus ? `<div data-summary="next-reset"><small>${escape(t('下次额外 reset'))}</small><strong>${escape(focus.label)}</strong>${Number.isFinite(focus.cumulativeProbability) ? `<span>${escape(t('到那时已发生的概率 {percent}',{percent:percent(focus.cumulativeProbability)}))}</span>` : ''}</div>` : '',
-    Number.isFinite(prediction?.next48Probability) ? `<div data-summary="next-48h"><small>${escape(t('未来 48 小时'))}</small><strong>${percent(prediction.next48Probability)}</strong></div>` : '',
-    today ? `<div data-summary="today"><small>${escape(t('现在每天'))}</small><strong>${round(today.dailyPercent)}%</strong></div>` : ''
+    focus ? `<div data-summary="next-reset"><small>${escape(t('下次额外 reset'))}</small><strong>${escape(focus.label)}</strong></div>` : '',
+    Number.isFinite(prediction?.next48Probability) ? `<div data-summary="next-48h"><small>${escape(t('未来 48 小时'))}</small><strong>${round(prediction.next48Probability*100)}%</strong></div>` : ''
   ].filter(Boolean).join('');
   return `<div class="phone-summary" data-phone-summary>${cells}<button type="button" data-edit-quota>${escape(t('修改额度'))}</button>${BRAND_STAMP}</div>`;
 }

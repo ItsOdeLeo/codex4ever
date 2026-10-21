@@ -48,9 +48,7 @@ var english = {
   "\u5982\u679C\u4F60\u559C\u6B22\u8FD9\u4E2A\u4F5C\u54C1\uFF0C\u6B22\u8FCE\u5728 X \u4E0A\u5173\u6CE8\u6211": "If you like this work, follow me on X",
   "GitHub \u5F00\u6E90": "Open source on GitHub",
   "\u4E0B\u6B21\u989D\u5916 reset": "Next extra reset",
-  "\u5230\u90A3\u65F6\u5DF2\u53D1\u751F\u7684\u6982\u7387 {percent}": "{percent} likely by then",
   "\u672A\u6765 48 \u5C0F\u65F6": "Next 48h",
-  "\u73B0\u5728\u6BCF\u5929": "Use now",
   "\u4FEE\u6539\u989D\u5EA6": "Edit quota",
   "\u70B9\u51FB\u300C\u8BA1\u7B97\u7B56\u7565\u300D\u67E5\u770B\u7ED3\u679C\u3002": "Calculate a plan to see your timeline.",
   "\u91CD\u7F6E\u6570\u636E\u6765\u6E90": "Reset data",
@@ -4953,13 +4951,10 @@ function renderResult(availableWidth = $("#result").clientWidth) {
     <p class="forecast-data-status">${escape2(sourceDescription + socialDescription)}</p>`;
 }
 function phoneSummary(graph, prediction) {
-  const percent = (value) => `${round7(value * 100)}%`;
   const focus = prediction && graph.forecastFocus;
-  const today2 = graph.phaseControls?.[0];
   const cells = [
-    focus ? `<div data-summary="next-reset"><small>${escape2(t("\u4E0B\u6B21\u989D\u5916 reset"))}</small><strong>${escape2(focus.label)}</strong>${Number.isFinite(focus.cumulativeProbability) ? `<span>${escape2(t("\u5230\u90A3\u65F6\u5DF2\u53D1\u751F\u7684\u6982\u7387 {percent}", { percent: percent(focus.cumulativeProbability) }))}</span>` : ""}</div>` : "",
-    Number.isFinite(prediction?.next48Probability) ? `<div data-summary="next-48h"><small>${escape2(t("\u672A\u6765 48 \u5C0F\u65F6"))}</small><strong>${percent(prediction.next48Probability)}</strong></div>` : "",
-    today2 ? `<div data-summary="today"><small>${escape2(t("\u73B0\u5728\u6BCF\u5929"))}</small><strong>${round7(today2.dailyPercent)}%</strong></div>` : ""
+    focus ? `<div data-summary="next-reset"><small>${escape2(t("\u4E0B\u6B21\u989D\u5916 reset"))}</small><strong>${escape2(focus.label)}</strong></div>` : "",
+    Number.isFinite(prediction?.next48Probability) ? `<div data-summary="next-48h"><small>${escape2(t("\u672A\u6765 48 \u5C0F\u65F6"))}</small><strong>${round7(prediction.next48Probability * 100)}%</strong></div>` : ""
   ].filter(Boolean).join("");
   return `<div class="phone-summary" data-phone-summary>${cells}<button type="button" data-edit-quota>${escape2(t("\u4FEE\u6539\u989D\u5EA6"))}</button>${BRAND_STAMP}</div>`;
 }
