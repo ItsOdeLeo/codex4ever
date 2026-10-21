@@ -107,9 +107,11 @@ test('干净安装副本可直接读取账户并用精确快照规划，无 sess
     const headers={Authorization:`Bearer ${token}`};
     const html=await fetch(url);
     assert.equal(html.status,200);
-    assert.match(await html.text(),/src="\/app.js"/);
-    assert.equal((await fetch(new URL('/app.js',url))).status,200);
-    assert.equal((await fetch(new URL('/app.css',url))).status,200);
+    const page=await html.text();
+    const script=page.match(/src="(\/app\.js\?v=[0-9a-f]{12})"/)?.[1],style=page.match(/href="(\/app\.css\?v=[0-9a-f]{12})"/)?.[1];
+    assert.ok(script&&style,'资源地址带内容指纹，浏览器不会混用旧脚本');
+    assert.equal((await fetch(new URL(script,url))).status,200);
+    assert.equal((await fetch(new URL(style,url))).status,200);
     assert.equal((await fetch(new URL('/public/fonts/vt323/VT323-Regular.ttf',url))).status,200);
     const state=await (await fetch(new URL('/api/session',url),{headers})).json();
     assert.equal(state.session.usageSnapshot.readAt,usageSnapshot.readAt);
