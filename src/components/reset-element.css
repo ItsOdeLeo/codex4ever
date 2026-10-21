@@ -23,7 +23,7 @@
 .reset-element [data-reset-marker] strong{display:block;color:inherit;font-size:var(--reset-title-size);font-weight:650}
 .reset-element [data-reset-marker] small{display:block;font-size:var(--reset-detail-size);font-weight:500}
 .reset-element .reset-density-caption{display:flex;justify-content:space-between;gap:20px;color:var(--reset-text);background:var(--reset-surface);font-size:var(--reset-detail-size);font-weight:550;line-height:18px;pointer-events:none}
-.reset-element .reset-peak-cdf{text-align:center;background:var(--reset-surface);font-size:var(--reset-detail-size);line-height:16px;color:var(--reset-text);font-variant-numeric:tabular-nums}
+.reset-element .reset-peak-cdf{text-align:center;background:none;text-shadow:0 0 2px var(--reset-surface),0 0 2px var(--reset-surface),0 0 3px var(--reset-surface);font-size:var(--reset-detail-size);line-height:16px;color:var(--reset-text);font-variant-numeric:tabular-nums}
 .tree-edges .reset-element .reset-density-area{fill:var(--reset-fill);fill-opacity:.22;stroke:none}
 .tree-edges .reset-element .reset-density-line{fill:none;stroke:var(--reset-curve);stroke-width:var(--reset-line-width);stroke-linejoin:round;stroke-linecap:round}
 .tree-edges .reset-element .reset-density-baseline{stroke:var(--reset-border);stroke-width:1}

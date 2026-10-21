@@ -53,6 +53,8 @@ export function layoutResetProbabilityPeaks({plot,timeZone,focus=null,otherLabel
   const peaks=[];
   for(const bin of [...byDay.values()].sort((a,b)=>b.densityPerHour-a.densityPerHour)) {
     if(focus&&Math.abs(bin.x-focus.x)<1e-6)continue; // Mode already includes CDF.
+    // Earlier peaks carry only a few percent and crowd the curve's start.
+    if(focus&&bin.x<focus.x)continue;
     const pointHours=(bin.startHours+bin.endHours)/2;
     const cumulativeProbability=cumulativeAtHours(pointHours);
     if(cumulativeProbability<.01||cumulativeProbability>.99)continue;

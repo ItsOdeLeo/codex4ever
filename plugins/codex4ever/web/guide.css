@@ -1200,7 +1200,11 @@ footer {
 }
 .reset-element .reset-peak-cdf {
   text-align: center;
-  background: var(--reset-surface);
+  background: none;
+  text-shadow:
+    0 0 2px var(--reset-surface),
+    0 0 2px var(--reset-surface),
+    0 0 3px var(--reset-surface);
   font-size: var(--reset-detail-size);
   line-height: 16px;
   color: var(--reset-text);
@@ -2260,7 +2264,7 @@ footer {
   background: transparent;
 }
 .reset-element .reset-peak-cdf {
-  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  background: none;
   border-radius: 3px;
 }
 .time-day {

@@ -213,6 +213,6 @@ footer {font-size:12px;line-height:1.8;margin-top:32px;padding-top:14px;border-t
 /* Labels sit on day bands: a translucent backing dims lines behind the text
    without drawing a visible box on the shaded columns. */
 .reset-element [data-reset-marker],.reset-element .reset-density-caption {background:transparent}
-.reset-element .reset-peak-cdf {background:color-mix(in srgb,var(--surface) 82%,transparent);border-radius:3px}
+.reset-element .reset-peak-cdf {background:none;border-radius:3px}
 .time-day {background:transparent}
 .tree-edges .quota-label {stroke:transparent}

@@ -173,6 +173,17 @@ export function layoutStrategyTree(result, { expandedLevel = 0, showAll = false,
 export function renderStrategyTree(graph, escape) {
   const locale=graph.locale??'zh-CN',t=translator(locale);
   const resetActionIds=new Set(graph.nodes.filter(node=>node.type==='forecast-assumption').map(node=>node.id));
+  // Quota figures never overlap: a short span keeps only what fits, left to
+  // right, so a refill right after a pace change does not print two numbers.
+  const shownQuotaLabels=new Set();
+  let lastRight=-Infinity;
+  for(const label of graph.funnel.bands.flatMap(band=>band.labels.filter((label,index)=>
+    !graph.dayAxis||index===0||band.x2-band.x1>=70).map(label=>({label,width:`${round(label.quota)}%`.length*7+4})))
+    .sort((a,b)=>(a.label.anchor==='end' ? a.label.x-a.width : a.label.x)-(b.label.anchor==='end' ? b.label.x-b.width : b.label.x))) {
+    const left=label.label.anchor==='end' ? label.label.x-label.width : label.label.x;
+    if(left<lastRight+4)continue;
+    shownQuotaLabels.add(label.label);lastRight=left+label.width;
+  }
   const resetElements=[
     {sequence:1,plot:graph.probabilityPlot,focus:graph.forecastFocus,peaks:graph.forecastPeaks??[]},
     {sequence:2,plot:graph.followingPlot,focus:graph.forecastFollowing,peaks:graph.followingPeaks??[]}
@@ -192,7 +203,7 @@ export function renderStrategyTree(graph, escape) {
     ${graph.funnel.bands.map(band => `<g class="quota-phase${band.kind==='assumed-refresh' ? ' quota-phase-assumed' : ''}"${band.kind==='rest' ? ' data-quota-rest' : ''} data-start-quota="${band.startQuota}" data-end-quota="${band.endQuota}">
       <path class="quota-baseline${band.kind === 'pause' ? ' quota-paused-line' : band.kind==='rest' ? ' quota-rest-line' : ''}" d="${band.baseline}"/>
       ${band.kind==='rest' ? '' : `<path class="quota-band quota-${band.kind}" d="${band.path}"/>`}
-      ${band.labels.filter((label, index) => !graph.dayAxis || index === 0 || band.x2 - band.x1 >= 70).map(label => `<text class="quota-label" x="${label.x}" y="${label.y}" text-anchor="${label.anchor}">${round(label.quota)}%</text>`).join('')}
+      ${band.labels.filter(label => shownQuotaLabels.has(label)).map(label => `<text class="quota-label" x="${label.x}" y="${label.y}" text-anchor="${label.anchor}">${round(label.quota)}%</text>`).join('')}
     </g>`).join('')}
     ${graph.edges.filter(edge => !['selected', 'continue'].includes(edge.kind)&&!resetActionIds.has(edge.to)).map(edge => `<path class="edge-${edge.kind}" d="${edge.path}"/>`).join('')}
     ${graph.funnel.refills.filter(refill=>refill.kind!=='assumed-extra').map(refill => `<path class="quota-refill quota-refill-${refill.kind}" data-refill-sequence="${refill.sequence??0}" d="${refill.path}"/>`).join('')}

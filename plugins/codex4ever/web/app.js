@@ -3721,6 +3721,7 @@ function layoutResetProbabilityPeaks({ plot, timeZone: timeZone2, focus = null, 
   const peaks = [];
   for (const bin of [...byDay.values()].sort((a, b) => b.densityPerHour - a.densityPerHour)) {
     if (focus && Math.abs(bin.x - focus.x) < 1e-6) continue;
+    if (focus && bin.x < focus.x) continue;
     const pointHours = (bin.startHours + bin.endHours) / 2;
     const cumulativeProbability = cumulativeAtHours(pointHours);
     if (cumulativeProbability < 0.01 || cumulativeProbability > 0.99) continue;
@@ -4334,7 +4335,7 @@ function renderPhaseControl(phase, { timeZone: timeZone2, escape: escape3, local
   const review = phase.stageReason === "if-no-extra-reset-after-48h" ? t2("\u82E5\u4E24\u5929\u540E\u4ECD\u672A\u989D\u5916 reset") : phase.stageReason === "if-no-extra-reset-at-review" ? t2("\u82E5\u4ECD\u672A\u989D\u5916 reset") : "";
   const detail = phase.reason === "no-resource" ? t2("\u6682\u505C") : usageRateDetail(phase.baselineDailyPercent, phase.dailyPercent, locale);
   const labelHeight = phase.labelHeight ?? (phase.nextResetOpportunity ? 36 + resetOpportunityLayout(phase.width).height : 34);
-  return `<div class="phase-controls" data-phase-start-at="${escape3(phase.startAt)}" data-phase-daily="${phase.dailyPercent}" data-phase-baseline="${phase.baselineDailyPercent}" ${quotaLabel ? "data-quota-label" : ""} title="${escape3([review, detail].filter(Boolean).join(" \xB7 "))}" style="${position2(phase)}${quotaLabel ? `;--phase-label-height:${labelHeight}px` : ""}">${review && !quotaLabel ? `<small class="review-condition">${review}</small>` : ""}${label}${renderResetOpportunity(phase.nextResetOpportunity, { timeZone: timeZone2, escape: escape3, locale, compact: quotaLabel, width: phase.width })}</div>`;
+  return `<div class="phase-controls" data-phase-start-at="${escape3(phase.startAt)}" data-phase-daily="${phase.dailyPercent}" data-phase-baseline="${phase.baselineDailyPercent}" ${quotaLabel ? "data-quota-label" : ""} title="${escape3([review, detail].filter(Boolean).join(" \xB7 "))}" style="${position2(phase)}${quotaLabel ? `;--phase-label-height:${labelHeight}px` : ""}">${review && !quotaLabel ? `<small class="review-condition">${review}</small>` : ""}${label}${tooNarrow ? "" : renderResetOpportunity(phase.nextResetOpportunity, { timeZone: timeZone2, escape: escape3, locale, compact: quotaLabel, width: phase.width })}</div>`;
 }
 function renderStrategyNode(node, escape3, locale = "zh-CN") {
   const t2 = translator(locale);
@@ -4588,6 +4589,14 @@ function layoutStrategyTree(result, { expandedLevel = 0, showAll = false, predic
 function renderStrategyTree(graph, escape3) {
   const locale = graph.locale ?? "zh-CN", t2 = translator(locale);
   const resetActionIds = new Set(graph.nodes.filter((node) => node.type === "forecast-assumption").map((node) => node.id));
+  const shownQuotaLabels = /* @__PURE__ */ new Set();
+  let lastRight = -Infinity;
+  for (const label of graph.funnel.bands.flatMap((band) => band.labels.filter((label2, index) => !graph.dayAxis || index === 0 || band.x2 - band.x1 >= 70).map((label2) => ({ label: label2, width: `${round6(label2.quota)}%`.length * 7 + 4 }))).sort((a, b) => (a.label.anchor === "end" ? a.label.x - a.width : a.label.x) - (b.label.anchor === "end" ? b.label.x - b.width : b.label.x))) {
+    const left = label.label.anchor === "end" ? label.label.x - label.width : label.label.x;
+    if (left < lastRight + 4) continue;
+    shownQuotaLabels.add(label.label);
+    lastRight = left + label.width;
+  }
   const resetElements = [
     { sequence: 1, plot: graph.probabilityPlot, focus: graph.forecastFocus, peaks: graph.forecastPeaks ?? [] },
     { sequence: 2, plot: graph.followingPlot, focus: graph.forecastFollowing, peaks: graph.followingPeaks ?? [] }
@@ -4612,7 +4621,7 @@ function renderStrategyTree(graph, escape3) {
     ${graph.funnel.bands.map((band) => `<g class="quota-phase${band.kind === "assumed-refresh" ? " quota-phase-assumed" : ""}"${band.kind === "rest" ? " data-quota-rest" : ""} data-start-quota="${band.startQuota}" data-end-quota="${band.endQuota}">
       <path class="quota-baseline${band.kind === "pause" ? " quota-paused-line" : band.kind === "rest" ? " quota-rest-line" : ""}" d="${band.baseline}"/>
       ${band.kind === "rest" ? "" : `<path class="quota-band quota-${band.kind}" d="${band.path}"/>`}
-      ${band.labels.filter((label, index) => !graph.dayAxis || index === 0 || band.x2 - band.x1 >= 70).map((label) => `<text class="quota-label" x="${label.x}" y="${label.y}" text-anchor="${label.anchor}">${round6(label.quota)}%</text>`).join("")}
+      ${band.labels.filter((label) => shownQuotaLabels.has(label)).map((label) => `<text class="quota-label" x="${label.x}" y="${label.y}" text-anchor="${label.anchor}">${round6(label.quota)}%</text>`).join("")}
     </g>`).join("")}
     ${graph.edges.filter((edge) => !["selected", "continue"].includes(edge.kind) && !resetActionIds.has(edge.to)).map((edge) => `<path class="edge-${edge.kind}" d="${edge.path}"/>`).join("")}
     ${graph.funnel.refills.filter((refill) => refill.kind !== "assumed-extra").map((refill) => `<path class="quota-refill quota-refill-${refill.kind}" data-refill-sequence="${refill.sequence ?? 0}" d="${refill.path}"/>`).join("")}

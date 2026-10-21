@@ -66,7 +66,8 @@ test('曲线、累计概率、预计钟点和额度共用当地日期轴，单�
   const depletionBand = graph.funnel.bands.find(band => band.endAt === '2026-10-18T08:00:00.000Z');
   near(sameTime.x1, depletionBand.x2);
   assert.equal(graph.forecastLayout.length,0,'不再单独排列日累计值');
-  assert.ok(graph.forecastPeaks.length>=2,'几个主要波峰直接显示累计值');
+  assert.ok(graph.forecastPeaks.length>=1,'规划时刻之后的主要波峰直接显示累计值');
+  assert.ok(graph.forecastPeaks.every(point=>point.x>focus.x),'竖线之前的小累计值不再标注');
   for (const point of graph.forecastPeaks) {
     near(point.cumulativeProbability, resetProbabilityByHours(prediction, point.pointHours));
     const bin=plot.bins.find(bin=>Math.abs(bin.x-point.x)<1e-8);
