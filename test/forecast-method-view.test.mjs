@@ -33,5 +33,8 @@ test('页面所示加权风险公式与v5实际CDF一致，钟点全历史和间
       assert.doesNotMatch(html,/\p{Script=Han}/u);
     }
   }
+  const viewer=renderForecastMethod({source,prediction,timeZone:'Europe/Berlin',locale:'en'},String);
+  assert.match(viewer,/Typically \d{2}:\d{2} your time/);
+  assert.doesNotMatch(viewer,/Europe\/Berlin/,'访问者时区不以 ID 形式出现');
   assert.deepEqual(prediction,before,'解释只读取模型，不改概率或重新拟合');
 });

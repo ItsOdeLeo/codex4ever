@@ -26,7 +26,7 @@ test('预测关键数据映射到固定行：实际reset、近期均值及95%区
   assert.match(html,/下次 80% 预测窗口<\/dt><dd>10\/17 10:30 – 10\/22 23:27/);
   assert.match(html,/Tibo 最近相关回复/);
   assert.match(html,/>10\/16 06:30<\/a> · 暂未识别<q>Let us try\.<\/q>/);
-  assert.match(html,/实时记录 · 更新 10\/16 08:46 · Europe\/Berlin · 模型未校准/);
+  assert.match(html,/实时记录 · 更新 10\/16 08:46 · 你的时间（Europe\/Berlin） · 模型未校准/);
 });
 
 test('关闭预测保留历史统计，数据不足或超出预测范围不编造置信区间和日期', () => {
@@ -81,7 +81,8 @@ test('活动范围、当前间隔样本及全历史钟点分别显示，全部�
   assert.match(html,/28 天改进或 reset<\/a> · 进行中/);
   assert.match(html,/10\/05 09:00 起 · 11\/02 09:00 结束（按 Day 1 和活动天数推算）/);
   assert.match(html,/2.68 天<small>本次 campaign · 5 次 reset · 4 个完整间隔/);
-  assert.match(html,/常见发布钟点<\/dt><dd>03:00<small>全部历史 · 56 个 reset 日 · Europe\/Berlin/);
+  assert.match(html,/常见发布钟点<\/dt><dd>03:00<small>全部历史 · 56 个 reset 日 · 你的时间；Tibo 当地 18:00 (PDT|GMT-7)/);
+  assert.match(html,/你的时间（Europe\/Berlin）/,'时区只作为访问者自己的时间出现');
   assert.doesNotMatch(html,/近 30 天/);
   const shanghai=render({source:campaignSource,prediction:p,timeZone:'Asia/Shanghai'});
   assert.match(shanghai,/常见发布钟点<\/dt><dd>09:00/);

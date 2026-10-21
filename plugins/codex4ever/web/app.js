@@ -293,7 +293,9 @@ var english = {
   "28 \u5929\u6539\u8FDB\u6216 reset": "28 days of improvements or resets",
   "{start} \u8D77 \xB7 {end} \u7ED3\u675F\uFF08\u6309 Day 1 \u548C\u6D3B\u52A8\u5929\u6570\u63A8\u7B97\uFF09": "{start} to {end} (derived from Day 1 and campaign duration)",
   "\u5E38\u89C1\u53D1\u5E03\u949F\u70B9": "Typical posting time",
-  "\u5168\u90E8\u5386\u53F2 \xB7 {count} \u4E2A reset \u65E5 \xB7 {zone}": "All history \xB7 {count} reset days \xB7 {zone}",
+  "\u4F60\u7684\u65F6\u95F4\uFF08{zone}\uFF09": "your time ({zone})",
+  "\u5168\u90E8\u5386\u53F2 \xB7 {count} \u4E2A reset \u65E5 \xB7 \u4F60\u7684\u65F6\u95F4\uFF1BTibo \u5F53\u5730 {local}": "All history \xB7 {count} reset days \xB7 your time; {local} Tibo\u2019s time",
+  "\u5168\u90E8\u5386\u53F2 \xB7 {count} \u4E2A reset \u65E5 \xB7 \u4F60\u7684\u65F6\u95F4": "All history \xB7 {count} reset days \xB7 your time",
   "\u6700\u53EF\u80FD reset \u65F6\u95F4": "Most likely reset time",
   "\u5E73\u5747\u95F4\u9694\u53C2\u8003\u65F6\u95F4": "Mean-interval reference time",
   "\u5168\u90E8\u5386\u53F2": "All history",
@@ -335,7 +337,8 @@ var english = {
   "\u5168\u90E8\u5386\u53F2 \xB7 {count} \u4E2A\u91CD\u7F6E\u65E5": "All history \xB7 {count} reset days",
   "\u5F53\u524D\u6D3B\u52A8 \xB7 {count} \u4E2A\u5B8C\u6574\u95F4\u9694": "Current campaign \xB7 {count} complete intervals",
   "\u8FD130\u5929\uFF0F\u5386\u53F2\u56DE\u9000 \xB7 {count} \u4E2A\u95F4\u9694": "Recent 30 days / history fallback \xB7 {count} intervals",
-  "\u5E38\u89C1 {time} \xB7 {zone}": "Typical {time} \xB7 {zone}",
+  "\u5E38\u89C1 \u4F60\u7684\u65F6\u95F4 {time} \xB7 Tibo \u5F53\u5730 {local}": "Typically {time} your time \xB7 {local} Tibo\u2019s time",
+  "\u5E38\u89C1 \u4F60\u7684\u65F6\u95F4 {time}": "Typically {time} your time",
   "\u5E73\u5747 {days} \u5929": "Mean {days} days",
   "\u81EA {time} \u8D77\uFF0C\u5DF2\u8FC7 {days} \u5929": "{days} days since {time}",
   "\u53D1\u5E03\u949F\u70B9\u4F7F\u7528\u5168\u90E8\u5386\u53F2\u81EA\u52A8\u91CD\u7F6E\u65E5\uFF1B\u91CD\u7F6E\u95F4\u9694\u4F18\u5148\u4F7F\u7528\u5F53\u524D\u6D3B\u52A8\u5185\u7684\u5B8C\u6574\u95F4\u9694\uFF0C\u6837\u672C\u4E0D\u8DB3\u65F6\u56DE\u9000\u5230\u8FD1\u671F\u6216\u5386\u53F2\u3002": "Posting time uses all recorded automatic-reset days. Reset intervals use complete intervals within the active campaign, falling back to recent or historical data when needed.",
@@ -381,19 +384,22 @@ function renderForecastMethod({ source, prediction, result, timeZone: timeZone2,
     minute: "2-digit",
     hourCycle: "h23"
   }).format(new Date(value)) : t2("\u6682\u65E0\u8BB0\u5F55");
-  const posting = clock?.typicalTimeAt ? new Intl.DateTimeFormat(uiLocale(locale), {
-    timeZone: timeZone2,
+  const clockIn = (zone) => new Intl.DateTimeFormat(uiLocale(locale), {
+    timeZone: zone,
     hour: "2-digit",
     minute: "2-digit",
-    hourCycle: "h23"
-  }).format(new Date(clock.typicalTimeAt)) : clock?.typicalTime;
+    hourCycle: "h23",
+    ...zone === timeZone2 ? {} : { timeZoneName: "short" }
+  }).format(new Date(clock.typicalTimeAt));
+  const posting = clock?.typicalTimeAt ? clockIn(timeZone2) : clock?.typicalTime;
+  const publisher = clock?.typicalTimeAt && clock.timeZone && clock.timeZone !== timeZone2 ? clockIn(clock.timeZone) : null;
   const count = interval?.sampleCount ?? interval?.recentIntervalCount ?? 0;
   const scope = interval?.source === "campaign-intervals" ? t2("\u5F53\u524D\u6D3B\u52A8 \xB7 {count} \u4E2A\u5B8C\u6574\u95F4\u9694", { count }) : interval?.source === "recent-30-day-intervals" ? `${t2("\u8FD1 {days} \u5929", { days: interval.windowDays ?? 30 })} \xB7 ${count}` : t2("\u8FD130\u5929\uFF0F\u5386\u53F2\u56DE\u9000 \xB7 {count} \u4E2A\u95F4\u9694", { count });
   const row = (label, value, note) => `<div><dt>${escape3(t2(label))}</dt><dd>${escape3(value)}<small>${escape3(note)}</small></dd></div>`;
   const rows = [
     row(
       "\u53D1\u5E03\u949F\u70B9",
-      posting ? t2("\u5E38\u89C1 {time} \xB7 {zone}", { time: posting, zone: timeZone2 }) : t2("\u6570\u636E\u4E0D\u8DB3"),
+      posting ? publisher ? t2("\u5E38\u89C1 \u4F60\u7684\u65F6\u95F4 {time} \xB7 Tibo \u5F53\u5730 {local}", { time: posting, local: publisher }) : t2("\u5E38\u89C1 \u4F60\u7684\u65F6\u95F4 {time}", { time: posting }) : t2("\u6570\u636E\u4E0D\u8DB3"),
       t2("\u5168\u90E8\u5386\u53F2 \xB7 {count} \u4E2A\u91CD\u7F6E\u65E5", { count: clock?.sampleCount ?? 0 })
     ),
     row("\u91CD\u7F6E\u95F4\u9694", Number.isFinite(interval?.meanIntervalDays) ? t2("\u5E73\u5747 {days} \u5929", { days: round(interval.meanIntervalDays) }) : t2("\u6570\u636E\u4E0D\u8DB3"), scope),
@@ -401,7 +407,7 @@ function renderForecastMethod({ source, prediction, result, timeZone: timeZone2,
   ];
   const scenario = result?.forecastScenario;
   const first = scenario?.selected ? date(scenario.at ?? scenario.pointAt ?? new Date(Date.parse(result.now) + scenario.hours * 36e5).toISOString()) : null;
-  const second = scenario?.following?.selected ? date(scenario.following.at ?? scenario.following.pointAt ?? new Date(Date.parse(result.now) + scenario.following.hours * 36e5).toISOString()) : null;
+  const second = scenario?.following?.selected ? date(Number.isFinite(scenario.following.hours) ? new Date(Date.parse(result.now) + scenario.following.hours * 36e5).toISOString() : scenario.following.at ?? scenario.following.pointAt) : null;
   const assumptions = first ? second ? t2("\u9996\u6B21 {first} \xB7 \u7B2C\u4E8C\u6B21 {second}", { first, second }) : t2("\u9996\u6B21 {first}", { first }) : t2("\u672A\u5047\u8BBE\u989D\u5916\u91CD\u7F6E");
   const formula = prediction?.model === "local-recent-intervals-v5" ? `<div class="forecast-formula" data-forecast-formula><p>${escape3(t2("\u65F6\u6BB5\u98CE\u9669 = \u57FA\u7840\u98CE\u9669 \xD7 \u5386\u53F2\u949F\u70B9\u6743\u91CD \xF7 \u5F53\u65E5\u5E73\u5747\u6743\u91CD"))}</p><code>\u0394H\u1D62 = log[(1 \u2212 F\u2080(t\u1D62\u208B\u2081)) / (1 \u2212 F\u2080(t\u1D62))] \xD7 w\u1D62 / w\u0304(day\u1D62)</code><code>F(t) = 1 \u2212 exp(\u2212\u03A3 \u0394H\u1D62) \xB7 t* = argmax(\u0394F\u1D62 / \u0394t\u1D62)</code><small>${t2("F\u2080\uFF1A\u57FA\u7840\u7D2F\u8BA1\u6982\u7387\uFF1Bw\uFF1A\u5168\u5386\u53F2\u949F\u70B9\u6743\u91CD\uFF1Bt*\uFF1A\u6700\u53EF\u80FD\u7684\u5C0F\u65F6\u7A97\u53E3\u3002")}</small></div>` : "";
   return `<section class="forecast-method" data-forecast-method aria-label="${t2("\u9884\u6D4B\u600E\u4E48\u7B97")}"><details><summary><h3>${t2("\u9884\u6D4B\u600E\u4E48\u7B97")}</h3></summary><dl>${rows.join("")}</dl><p>${t2("\u53D1\u5E03\u949F\u70B9\u4F7F\u7528\u5168\u90E8\u5386\u53F2\u81EA\u52A8\u91CD\u7F6E\u65E5\uFF1B\u91CD\u7F6E\u95F4\u9694\u4F18\u5148\u4F7F\u7528\u5F53\u524D\u6D3B\u52A8\u5185\u7684\u5B8C\u6574\u95F4\u9694\uFF0C\u6837\u672C\u4E0D\u8DB3\u65F6\u56DE\u9000\u5230\u8FD1\u671F\u6216\u5386\u53F2\u3002")}</p>${prediction ? `<p>${t2("\u57FA\u7840\u98CE\u9669\u7ED3\u5408\u8DDD\u4E0A\u6B21\u91CD\u7F6E\u7684\u65F6\u95F4\u3001\u6240\u9009\u95F4\u9694\u5206\u5E03\u3001\u5E16\u5B50\u4FE1\u53F7\u548C\u51B7\u5374\u89C4\u5219\uFF0C\u518D\u7528\u5386\u53F2\u53D1\u5E03\u949F\u70B9\u52A0\u6743\u3002")}</p>${formula}<p>${t2("\u7D2F\u8BA1\u6982\u7387\u7531\u52A0\u6743\u98CE\u9669\u7D2F\u79EF\u5F97\u5230\uFF1B\u6700\u53EF\u80FD\u65F6\u95F4\u53D6\u5B9E\u9645\u5206\u5E03\u4E2D\u6982\u7387\u5BC6\u5EA6\u6700\u9AD8\u7684\u5C0F\u65F6\u7A97\u53E3\uFF0C\u4E0D\u662F\u7B80\u5355\u628A\u5E73\u5747\u5929\u6570\u52A0\u5230\u4E0A\u6B21\u65F6\u95F4\u3002")}</p><p class="forecast-conditional-note">${t2("\u7B2C\u4E8C\u6761\u66F2\u7EBF\u4EE5\u9996\u6B21\u5728\u6807\u8BB0\u65F6\u95F4\u53D1\u751F\u4E3A\u524D\u63D0\uFF0C\u4ECE\u8BE5\u70B9\u91CD\u65B0\u8BA1\u65F6\uFF1B\u5176\u7D2F\u8BA1\u503C\u4E5F\u4EE5\u8FD9\u4E2A\u524D\u63D0\u4E3A\u6761\u4EF6\u3002")}</p>` : `<p>${t2("\u9884\u6D4B\u5DF2\u5173\u95ED\uFF0C\u5386\u53F2\u7EDF\u8BA1\u4ECD\u4FDD\u7559\u3002")}</p>`}<p class="forecast-assumptions"><strong>${t2("\u5F53\u524D\u5047\u8BBE")}:</strong> ${escape3(assumptions)}</p><p>${t2("\u8BA1\u5212\u4E2D\u7684\u5907\u7528\u3001\u6B63\u5E38\u548C\u5047\u8BBE\u91CD\u7F6E\u90FD\u4ECE\u8BE5\u65F6\u523B\u91CD\u65B0\u5F00\u59CB7\u5929\u5468\u671F\uFF1B\u53EA\u6709\u9009\u4E2D\u7684\u5047\u8BBE\u624D\u4F1A\u8865\u6EE1\u9884\u6D4B\u989D\u5EA6\u3002")}</p><small>${t2("\u672C\u5730\u4F30\u8BA1\uFF0C\u6A21\u578B\u5C1A\u672A\u6821\u51C6\u3002")}</small></details></section>`;
@@ -2262,7 +2268,10 @@ function renderResetForecastSummary({
       "release-clock",
       "\u5E38\u89C1\u53D1\u5E03\u949F\u70B9",
       escape(localClock ? `${localClock.hour}:${localClock.minute}` : clock.typicalTime),
-      t2("\u5168\u90E8\u5386\u53F2 \xB7 {count} \u4E2A reset \u65E5 \xB7 {zone}", { count: clock.sampleCount, zone: localClock ? timeZone2 : clock.timeZone })
+      localClock && clock.timeZone && clock.timeZone !== timeZone2 ? t2("\u5168\u90E8\u5386\u53F2 \xB7 {count} \u4E2A reset \u65E5 \xB7 \u4F60\u7684\u65F6\u95F4\uFF1BTibo \u5F53\u5730 {local}", {
+        count: clock.sampleCount,
+        local: new Intl.DateTimeFormat("en-GB", { timeZone: clock.timeZone, hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZoneName: "short" }).format(new Date(clock.typicalTimeAt))
+      }) : t2("\u5168\u90E8\u5386\u53F2 \xB7 {count} \u4E2A reset \u65E5 \xB7 \u4F60\u7684\u65F6\u95F4", { count: clock.sampleCount })
     ));
   }
   if (prediction) {
@@ -2325,7 +2334,7 @@ function renderResetForecastSummary({
   }
   if (mention && format(mention.createdAt) && postUrl(mention.sourceUrl))
     glanceRow("tibo", "Tibo", `<a href="${escape(mention.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escape(t2(postLabels[mention.signal?.kind] ?? "\u6682\u672A\u8BC6\u522B"))} \xB7 ${escape(dayFormat(mention.createdAt))}</a>`);
-  const statusLine = `<p>${escape(`${status}${updated ? t2(" \xB7 \u66F4\u65B0 {time}", { time: updated }) : ""} \xB7 ${timeZone2}`)}${prediction ? ` \xB7 ${t2(prediction.calibrated === true ? "\u6A21\u578B\u9884\u6D4B" : "\u6A21\u578B\u672A\u6821\u51C6")}` : ""}</p>`;
+  const statusLine = `<p>${escape(`${status}${updated ? t2(" \xB7 \u66F4\u65B0 {time}", { time: updated }) : ""} \xB7 ${t2("\u4F60\u7684\u65F6\u95F4\uFF08{zone}\uFF09", { zone: timeZone2 })}`)}${prediction ? ` \xB7 ${t2(prediction.calibrated === true ? "\u6A21\u578B\u9884\u6D4B" : "\u6A21\u578B\u672A\u6821\u51C6")}` : ""}</p>`;
   return `<section class="forecast-summary" data-forecast-summary aria-label="${t2("\u989D\u5916 reset \u9884\u6D4B\u5173\u952E\u6570\u636E")}">${glance.length ? `<dl class="forecast-glance">${glance.join("")}</dl>` : ""}<details class="forecast-more"><summary>${t2("\u66F4\u591A\u6570\u636E")}</summary><dl>${rows.join("")}</dl>${statusLine}</details></section>`;
 }
 

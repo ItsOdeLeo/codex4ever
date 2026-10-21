@@ -11,8 +11,12 @@ export function renderForecastMethod({source,prediction,result,timeZone,locale='
   const date=value=>value&&Number.isFinite(Date.parse(value))
     ? new Intl.DateTimeFormat(uiLocale(locale),{timeZone,month:uiLocale(locale)==='zh-CN' ? 'numeric' : 'short',
       day:'numeric',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(new Date(value)) : t('暂无记录');
-  const posting=clock?.typicalTimeAt ? new Intl.DateTimeFormat(uiLocale(locale),{timeZone,
-    hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(new Date(clock.typicalTimeAt)) : clock?.typicalTime;
+  // The viewer's own clock, plus the publisher's local time; never a zone ID
+  // that reads as if every visitor lived there.
+  const clockIn=zone=>new Intl.DateTimeFormat(uiLocale(locale),{timeZone:zone,hour:'2-digit',minute:'2-digit',
+    hourCycle:'h23',...(zone===timeZone ? {} : {timeZoneName:'short'})}).format(new Date(clock.typicalTimeAt));
+  const posting=clock?.typicalTimeAt ? clockIn(timeZone) : clock?.typicalTime;
+  const publisher=clock?.typicalTimeAt&&clock.timeZone&&clock.timeZone!==timeZone ? clockIn(clock.timeZone) : null;
   const count=interval?.sampleCount??interval?.recentIntervalCount??0;
   const scope=interval?.source==='campaign-intervals'
     ? t('当前活动 · {count} 个完整间隔',{count})
@@ -21,15 +25,17 @@ export function renderForecastMethod({source,prediction,result,timeZone,locale='
     : t('近30天／历史回退 · {count} 个间隔',{count});
   const row=(label,value,note)=>`<div><dt>${escape(t(label))}</dt><dd>${escape(value)}<small>${escape(note)}</small></dd></div>`;
   const rows=[
-    row('发布钟点',posting ? t('常见 {time} · {zone}',{time:posting,zone:timeZone}) : t('数据不足'),
+    row('发布钟点',posting ? publisher ? t('常见 你的时间 {time} · Tibo 当地 {local}',{time:posting,local:publisher})
+      : t('常见 你的时间 {time}',{time:posting}) : t('数据不足'),
       t('全部历史 · {count} 个重置日',{count:clock?.sampleCount??0})),
     row('重置间隔',Number.isFinite(interval?.meanIntervalDays) ? t('平均 {days} 天',{days:round(interval.meanIntervalDays)}) : t('数据不足'),scope),
     row('距上次重置',Number.isFinite(source?.daysSinceReset) ? t('{days} 天前',{days:round(source.daysSinceReset)}) : t('数据不足'),date(source?.lastResetAt))
   ];
   const scenario=result?.forecastScenario;
   const first=scenario?.selected ? date(scenario.at??scenario.pointAt??new Date(Date.parse(result.now)+scenario.hours*3600000).toISOString()) : null;
-  const second=scenario?.following?.selected ? date(scenario.following.at??scenario.following.pointAt
-    ??new Date(Date.parse(result.now)+scenario.following.hours*3600000).toISOString()) : null;
+  const second=scenario?.following?.selected ? date(Number.isFinite(scenario.following.hours)
+    ? new Date(Date.parse(result.now)+scenario.following.hours*3600000).toISOString()
+    : scenario.following.at??scenario.following.pointAt) : null;
   const assumptions=first ? second ? t('首次 {first} · 第二次 {second}',{first,second})
     : t('首次 {first}',{first}) : t('未假设额外重置');
   const formula=prediction?.model==='local-recent-intervals-v5' ? `<div class="forecast-formula" data-forecast-formula><p>${escape(t('时段风险 = 基础风险 × 历史钟点权重 ÷ 当日平均权重'))}</p><code>ΔHᵢ = log[(1 − F₀(tᵢ₋₁)) / (1 − F₀(tᵢ))] × wᵢ / w̄(dayᵢ)</code><code>F(t) = 1 − exp(−Σ ΔHᵢ) · t* = argmax(ΔFᵢ / Δtᵢ)</code><small>${t('F₀：基础累计概率；w：全历史钟点权重；t*：最可能的小时窗口。')}</small></div>` : '';

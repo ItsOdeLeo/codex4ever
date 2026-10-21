@@ -58,7 +58,10 @@ export function renderResetForecastSummary({ source, prediction = null,
   if (clock?.sampleScope === 'all-history') {
     const localClock = clock.typicalTimeAt ? parts(clock.typicalTimeAt) : null;
     rows.push(row('release-clock','常见发布钟点',escape(localClock ? `${localClock.hour}:${localClock.minute}` : clock.typicalTime),
-      t('全部历史 · {count} 个 reset 日 · {zone}',{count:clock.sampleCount,zone:localClock ? timeZone : clock.timeZone})));
+      localClock&&clock.timeZone&&clock.timeZone!==timeZone
+        ? t('全部历史 · {count} 个 reset 日 · 你的时间；Tibo 当地 {local}',{count:clock.sampleCount,
+          local:new Intl.DateTimeFormat('en-GB',{timeZone:clock.timeZone,hour:'2-digit',minute:'2-digit',hourCycle:'h23',timeZoneName:'short'}).format(new Date(clock.typicalTimeAt))})
+        : t('全部历史 · {count} 个 reset 日 · 你的时间',{count:clock.sampleCount})));
   }
   if (prediction) {
     const estimate = prediction.resetTimeEstimate,mode = prediction.resetTimeMode;
@@ -112,6 +115,6 @@ export function renderResetForecastSummary({ source, prediction = null,
   }
   if(mention && format(mention.createdAt) && postUrl(mention.sourceUrl))
     glanceRow('tibo','Tibo',`<a href="${escape(mention.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escape(t(postLabels[mention.signal?.kind]??'暂未识别'))} · ${escape(dayFormat(mention.createdAt))}</a>`);
-  const statusLine=`<p>${escape(`${status}${updated ? t(' · 更新 {time}',{time:updated}) : ''} · ${timeZone}`)}${prediction ? ` · ${t(prediction.calibrated===true ? '模型预测' : '模型未校准')}` : ''}</p>`;
+  const statusLine=`<p>${escape(`${status}${updated ? t(' · 更新 {time}',{time:updated}) : ''} · ${t('你的时间（{zone}）',{zone:timeZone})}`)}${prediction ? ` · ${t(prediction.calibrated===true ? '模型预测' : '模型未校准')}` : ''}</p>`;
   return `<section class="forecast-summary" data-forecast-summary aria-label="${t('额外 reset 预测关键数据')}">${glance.length ? `<dl class="forecast-glance">${glance.join('')}</dl>` : ''}<details class="forecast-more"><summary>${t('更多数据')}</summary><dl>${rows.join('')}</dl>${statusLine}</details></section>`;
 }
