@@ -48,6 +48,12 @@ codex plugin add codex4ever@codex4ever
 
 Start a new Codex chat and ask: *"Use Codex4ever to plan my usage from my current quota."* Reading your quota is local and read-only; no separate API key is needed.
 
+**Other MCP clients** (Claude Code, Claude Desktop, Cursor and others): the same server is on npm as [`codex4ever`](https://www.npmjs.com/package/codex4ever) and in the [MCP Registry](https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.ItsOdeLeo/codex4ever) as `io.github.ItsOdeLeo/codex4ever`. Reading your quota still needs a signed-in Codex CLI on the same machine.
+
+```json
+{ "mcpServers": { "codex4ever": { "command": "npx", "args": ["-y", "codex4ever"] } } }
+```
+
 **Run locally:**
 
 ```sh
