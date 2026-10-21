@@ -60,7 +60,7 @@ export function renderResetForecastSummary({ source, prediction = null,
     rows.push(row('release-clock','常见发布钟点',escape(localClock ? `${localClock.hour}:${localClock.minute}` : clock.typicalTime),
       localClock&&clock.timeZone&&clock.timeZone!==timeZone
         ? t('全部历史 · {count} 个 reset 日 · 你的时间；Tibo 当地 {local}',{count:clock.sampleCount,
-          local:new Intl.DateTimeFormat('en-GB',{timeZone:clock.timeZone,hour:'2-digit',minute:'2-digit',hourCycle:'h23',timeZoneName:'short'}).format(new Date(clock.typicalTimeAt))})
+          local:new Intl.DateTimeFormat('en-US',{timeZone:clock.timeZone,hour:'2-digit',minute:'2-digit',hourCycle:'h23',timeZoneName:'short'}).format(new Date(clock.typicalTimeAt))})
         : t('全部历史 · {count} 个 reset 日 · 你的时间',{count:clock.sampleCount})));
   }
   if (prediction) {

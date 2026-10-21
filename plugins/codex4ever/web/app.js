@@ -384,7 +384,7 @@ function renderForecastMethod({ source, prediction, result, timeZone: timeZone2,
     minute: "2-digit",
     hourCycle: "h23"
   }).format(new Date(value)) : t2("\u6682\u65E0\u8BB0\u5F55");
-  const clockIn = (zone) => new Intl.DateTimeFormat(uiLocale(locale), {
+  const clockIn = (zone) => new Intl.DateTimeFormat(zone === timeZone2 ? uiLocale(locale) : "en-US", {
     timeZone: zone,
     hour: "2-digit",
     minute: "2-digit",
@@ -2270,7 +2270,7 @@ function renderResetForecastSummary({
       escape(localClock ? `${localClock.hour}:${localClock.minute}` : clock.typicalTime),
       localClock && clock.timeZone && clock.timeZone !== timeZone2 ? t2("\u5168\u90E8\u5386\u53F2 \xB7 {count} \u4E2A reset \u65E5 \xB7 \u4F60\u7684\u65F6\u95F4\uFF1BTibo \u5F53\u5730 {local}", {
         count: clock.sampleCount,
-        local: new Intl.DateTimeFormat("en-GB", { timeZone: clock.timeZone, hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZoneName: "short" }).format(new Date(clock.typicalTimeAt))
+        local: new Intl.DateTimeFormat("en-US", { timeZone: clock.timeZone, hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZoneName: "short" }).format(new Date(clock.typicalTimeAt))
       }) : t2("\u5168\u90E8\u5386\u53F2 \xB7 {count} \u4E2A reset \u65E5 \xB7 \u4F60\u7684\u65F6\u95F4", { count: clock.sampleCount })
     ));
   }

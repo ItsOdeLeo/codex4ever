@@ -13,7 +13,7 @@ export function renderForecastMethod({source,prediction,result,timeZone,locale='
       day:'numeric',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(new Date(value)) : t('暂无记录');
   // The viewer's own clock, plus the publisher's local time; never a zone ID
   // that reads as if every visitor lived there.
-  const clockIn=zone=>new Intl.DateTimeFormat(uiLocale(locale),{timeZone:zone,hour:'2-digit',minute:'2-digit',
+  const clockIn=zone=>new Intl.DateTimeFormat(zone===timeZone ? uiLocale(locale) : 'en-US',{timeZone:zone,hour:'2-digit',minute:'2-digit',
     hourCycle:'h23',...(zone===timeZone ? {} : {timeZoneName:'short'})}).format(new Date(clock.typicalTimeAt));
   const posting=clock?.typicalTimeAt ? clockIn(timeZone) : clock?.typicalTime;
   const publisher=clock?.typicalTimeAt&&clock.timeZone&&clock.timeZone!==timeZone ? clockIn(clock.timeZone) : null;
