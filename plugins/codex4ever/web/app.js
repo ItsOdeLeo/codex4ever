@@ -45,6 +45,7 @@ var english = {
   "\u5373\u65F6\u66F4\u65B0": "Updates instantly",
   "\u81EA\u5B9A\u4E49\u7528\u91CF": "Customize usage",
   "\u5982\u679C\u4F60\u559C\u6B22\u8FD9\u4E2A\u4F5C\u54C1\uFF0C\u6B22\u8FCE\u5728 X \u4E0A\u5173\u6CE8\u6211": "If you like this work, follow me on X",
+  "GitHub \u5F00\u6E90": "Open source on GitHub",
   "\u70B9\u51FB\u300C\u8BA1\u7B97\u7B56\u7565\u300D\u67E5\u770B\u7ED3\u679C\u3002": "Calculate a plan to see your timeline.",
   "\u91CD\u7F6E\u6570\u636E\u6765\u6E90": "Reset data",
   "\u672C\u5730\u4F30\u7B97 \xB7 \u4E0D\u6267\u884C\u5151\u6362 \xB7 \u7528\u91CF\u6216\u91CD\u7F6E\u53D8\u5316\u540E\u91CD\u65B0\u8BA1\u7B97": "Local estimate \xB7 No resets redeemed \xB7 Recalculate after usage or resets change",
@@ -4725,6 +4726,7 @@ function renderStaticLanguage() {
     [".affiliation-notice", "OpenAI Codex \u7684\u975E\u5B98\u65B9\u53EF\u89C6\u5316\u7528\u91CF\u89C4\u5212\u5DE5\u5177\u3002\u4E0E OpenAI \u65E0\u96B6\u5C5E\u5173\u7CFB\u3002"],
     [".local-badge", "\u672C\u5730\u89C4\u5212 \xB7 \u6570\u636E\u7559\u5728\u672C\u673A"],
     ["#calculate", "\u66F4\u65B0\u6570\u636E"],
+    ["#source-code", "GitHub \u5F00\u6E90"],
     ["#creator-contact", "\u5982\u679C\u4F60\u559C\u6B22\u8FD9\u4E2A\u4F5C\u54C1\uFF0C\u6B22\u8FCE\u5728 X \u4E0A\u5173\u6CE8\u6211"],
     ["#output>h2", "\u63A5\u4E0B\u6765\u600E\u4E48\u7528"],
     ["[data-credit-label]", "\u91CD\u7F6E\u6570\u636E\u6765\u6E90"]

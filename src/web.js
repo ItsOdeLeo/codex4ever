@@ -28,7 +28,7 @@ function renderStaticLanguage() {
   document.documentElement?.setAttribute('lang',language);
   $('.brand p').textContent=metadata.intro;
   for(const [selector,label] of [['.affiliation-notice','OpenAI Codex 的非官方可视化用量规划工具。与 OpenAI 无隶属关系。'],['.local-badge','本地规划 · 数据留在本机'],
-    ['#calculate','更新数据'],['#creator-contact','如果你喜欢这个作品，欢迎在 X 上关注我'],['#output>h2','接下来怎么用'],['[data-credit-label]','重置数据来源']])
+    ['#calculate','更新数据'],['#source-code','GitHub 开源'],['#creator-contact','如果你喜欢这个作品，欢迎在 X 上关注我'],['#output>h2','接下来怎么用'],['[data-credit-label]','重置数据来源']])
     $(selector).textContent=t(label);
   $('#calculate').setAttribute?.('title',t('采用输入修改并刷新重置证据'));
   $('#planner-guide').textContent=language==='zh-CN' ? '使用说明' : 'How it works';

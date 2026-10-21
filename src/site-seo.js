@@ -3,6 +3,8 @@ import { PLANNER_METADATA } from './page-metadata.js';
 const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const json=value=>JSON.stringify(value).replace(/</g,'\\u003c');
 // codex-resets.com asks for a linked credit wherever its data is shown.
+export const SOURCE_URL='https://github.com/ItsOdeLeo/codex4ever';
+export const CREATOR_URL='https://x.com/ItsOdeLeo';
 export const DATA_SOURCES=[['Codex Resets','https://codex-resets.com']];
 const guides={
   en:{path:'/guide/',title:'Codex Usage, Quota & Reset Planning Guide | Codex4ever',
@@ -17,6 +19,7 @@ const guides={
       ['Use the same planner through MCP','The local MCP server exposes public reset evidence and usage planning tools to Codex or another MCP host. The host can analyze posts and pass structured evidence to the planner. Standalone use can instead connect a standard LLM API. The core calculation works without either option.'],
       ['Keep control of your account','The website calculates your plan in your browser. It fetches public evidence without sending your quota inputs. The local MCP can read usage from a locally signed-in Codex account when requested. Neither interface redeems a reset or spends credits for you.']
     ],
+    source:'Open source on GitHub',
     credit:'Reset data',
     faqHeading:'Frequently asked questions',
     faq:[
@@ -39,6 +42,7 @@ const guides={
       ['通过 MCP 使用同一套规划器','本地 MCP 服务向 Codex 等宿主提供公开 reset 证据和策略工具。宿主可以分析帖子，将结构化证据交给规划器；独立运行时也可以连接标准 LLM API。不连接模型也能使用核心计算。'],
       ['账户由你控制','网页在浏览器内计算计划，获取公开证据时不会发送你填写的额度。本地 MCP 可在请求时读取本机已登录 Codex 的用量。两个入口都不会自动兑换 reset 或消耗 credits。']
     ],
+    source:'GitHub 开源',
     credit:'重置数据来源',
     faqHeading:'常见问题',
     faq:[
@@ -76,7 +80,9 @@ export function renderSeoHead({siteUrl=null,page='planner',language='en'}={}) {
   } : {
     '@context':'https://schema.org','@type':'WebApplication',name:'Codex4ever',
     description:meta.description,applicationCategory:'DeveloperApplication',operatingSystem:'Web',
-    inLanguage:['en','zh-CN'],...(url ? {url} : {})
+    inLanguage:['en','zh-CN'],isAccessibleForFree:true,license:'https://opensource.org/licenses/MIT',
+    author:{'@type':'Person',name:'ItsOdeLeo',url:CREATOR_URL},
+    sameAs:[SOURCE_URL],...(url ? {url} : {})
   };
   return `<title>${escape(meta.title)}</title>
   <meta name="description" content="${escape(meta.description)}">
@@ -117,7 +123,7 @@ ${guide.sections.map(([heading,text])=>`<section><h2>${escape(heading)}</h2><p>$
 <section><h2>${escape(guide.faqHeading)}</h2>
 ${guide.faq.map(([question,answer])=>`<h3>${escape(question)}</h3><p>${escape(answer)}</p>`).join('\n')}</section>
 <p><a href="/">${escape(guide.back)} →</a></p></article>
-<footer>${escape(guide.notice)} · ${escape(guide.credit)}: ${DATA_SOURCES.map(([name,url])=>`<a href="${url}" rel="noopener">${escape(name)}</a>`).join(', ')}</footer></main></body></html>`;
+<footer>${escape(guide.notice)} · <a href="${SOURCE_URL}" rel="noopener">${escape(guide.source)}</a> · ${escape(guide.credit)}: ${DATA_SOURCES.map(([name,url])=>`<a href="${url}" rel="noopener">${escape(name)}</a>`).join(', ')}</footer></main></body></html>`;
 }
 
 /** A plain-text site summary for AI assistants and answer engines (llmstxt.org). */
@@ -138,7 +144,7 @@ Codex4ever estimates when your remaining OpenAI Codex quota runs out, when a ban
 ## Codex plugin
 
 - Install: \`codex plugin marketplace add ItsOdeLeo/codex4ever\` then \`codex plugin add codex4ever@codex4ever\`
-- [Source code](https://github.com/ItsOdeLeo/codex4ever)
+- [Source code](${SOURCE_URL}) (MIT)
 
 ## Data sources
 

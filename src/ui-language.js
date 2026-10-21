@@ -40,6 +40,7 @@ const english={
   '已修改，请更新数据':'Inputs changed. Update data to apply.',
   '即时更新':'Updates instantly','自定义用量':'Customize usage',
   '如果你喜欢这个作品，欢迎在 X 上关注我':'If you like this work, follow me on X',
+  'GitHub 开源':'Open source on GitHub',
   '点击「计算策略」查看结果。':'Calculate a plan to see your timeline.',
   '重置数据来源':'Reset data',
   '本地估算 · 不执行兑换 · 用量或重置变化后重新计算':'Local estimate · No resets redeemed · Recalculate after usage or resets change',
