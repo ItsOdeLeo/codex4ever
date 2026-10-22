@@ -29,7 +29,7 @@ function renderStaticLanguage() {
   const metadata=syncPlannerMetadata(document,language);
   document.documentElement?.setAttribute('lang',language);
   $('.brand p').textContent=metadata.intro;
-  for(const [selector,label] of [['.affiliation-notice','OpenAI Codex 的非官方可视化用量规划工具。与 OpenAI 无隶属关系。'],['#github-star','★ 在 GitHub 点个 Star'],['#follow-x','在 X 关注我'],
+  for(const [selector,label] of [['.affiliation-notice','OpenAI Codex 的非官方可视化用量规划工具。与 OpenAI 无隶属关系。'],['#github-star','GitHub'],['#follow-x','在 X 关注我'],
     ['#calculate','更新数据'],['#source-code','GitHub 开源'],['#creator-contact','如果你喜欢这个作品，欢迎在 X 上关注我'],['[data-credit-label]','重置数据来源']])
     {const element=$(selector);if(element)element.textContent=t(label);}
   $('#calculate').setAttribute?.('title',t('采用输入修改并刷新重置证据'));

@@ -6,6 +6,8 @@
 
 <p align="center"><strong>Know how much Codex to use today.</strong></p>
 
+<p align="center">If you find it useful, a ⭐ star helps more people find it.</p>
+
 <p align="center"><a href="https://codex4ever.com"><img src="docs/assets/badges/try-it.svg" alt="Try it at codex4ever.com" /></a><br />
 <sub>Runs in your browser · no sign-in · or ask Codex with the plugin</sub></p>
 
@@ -17,7 +19,7 @@
 
 <p align="center"><strong>English</strong> · <a href="#中文简介">中文简介</a></p>
 
-Codex4ever is a planner for your OpenAI Codex weekly quota. It shows when your quota runs out at your current pace, whether a predicted extra reset is likely to arrive first, and when a banked reset is worth redeeming. If it helps, a ⭐ star is appreciated.
+Codex4ever is a planner for your OpenAI Codex weekly quota. It shows when your quota runs out at your current pace, whether a predicted extra reset is likely to arrive first, and when a banked reset is worth redeeming.
 
 Unofficial; not affiliated with OpenAI. MIT licensed.
 
