@@ -16,6 +16,13 @@ export function predictionFromArchive({ archive, now = new Date(), timeZone = In
     .map(event => event.at).filter(at => Number.isFinite(Date.parse(at)) && Date.parse(at) <= now.getTime()))]
     .sort((a, b) => Date.parse(a) - Date.parse(b));
   if (resetTimes.length < 4) return { available: false, reason: '历史记录不足，暂不预测' };
+  // An announced reset whose time has passed has landed even before a public
+  // record catches up; the forecast then looks for the reset after it.
+  const landed=(archive.posts??[]).filter(post=>post.signal?.kind==='reset_planned'&&post.signal.scheduledFor)
+    .map(post=>({at:Date.parse(post.signal.scheduledFor),source:post.sourceUrl}))
+    .filter(item=>item.at<=now.getTime()&&item.at>Date.parse(resetTimes.at(-1))+3_600_000&&item.at>now.getTime()-3*DAY)
+    .sort((a,b)=>b.at-a.at)[0];
+  if(landed)resetTimes.push(new Date(landed.at).toISOString());
   const prediction = predictReset({ now: now.toISOString(), timeZone, resetTimes,
     posts: archive.posts ?? [],campaignTimeZone:archive.campaignTimeZone??'America/Los_Angeles',
     campaign:selectResetCampaign({campaigns:archive.campaigns,now:now.getTime()}) });
@@ -33,8 +40,8 @@ export function predictionFromArchive({ archive, now = new Date(), timeZone = In
     classificationError:archive.classificationError??null,
     llmConfigured:archive.llmConfigured??false,
     latestResetMention,
-    lastResetSource:archive.lastResetSource??null,
-    lastResetAt:archive.lastResetAt??resetTimes.at(-1),
+    lastResetSource:landed ? landed.source : archive.lastResetSource??null,
+    lastResetAt:landed ? resetTimes.at(-1) : archive.lastResetAt??resetTimes.at(-1),
     daysSinceReset:(now.getTime()-Date.parse(resetTimes.at(-1)))/DAY };
 }
 

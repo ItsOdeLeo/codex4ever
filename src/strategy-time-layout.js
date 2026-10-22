@@ -113,6 +113,14 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
     forecastFocus.y = probabilityPlot.topY - 38;
     forecastFocus.cumulativeProbability = resetProbabilityByHours(prediction, firstMarker.pointHours);
   }
+  // An announced reset is a known time: show the marker, not a curve.
+  const announcedAt=Date.parse(prediction?.evidence?.scheduledResetAt);
+  const announced=Number.isFinite(announcedAt)&&announcedAt>Date.parse(result.now);
+  if(announced&&probabilityPlot) {
+    probabilityPlot.announced=true;
+    if(forecastFocus)Object.assign(forecastFocus,{announced:true,label:time(announcedAt),
+      clockLabel:clock(announcedAt),pointAt:new Date(announcedAt).toISOString()});
+  }
   const forecastFollowing=secondMarker ? {...secondMarker,x:axis.xAtHours(secondMarker.pointHours),
     left:clamp(axis.xAtHours(secondMarker.pointHours)-focusWidth/2,focusWidth),width:focusWidth,
     y:followingPlot ? followingPlot.topY-38 : forecastFocus?.y??forecastEndY+8,
@@ -120,7 +128,7 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
   if(forecastFollowing?.planned)forecastFollowing.cumulativeProbability=
     followingResetProbabilityByHours(prediction,result.now,secondMarker.pointHours,secondCondition)??forecastFollowing.cumulativeProbability;
   // Phones keep only the marker's cumulative value; peak labels would crowd the curve.
-  const forecastPeaks=compact ? [] : layoutResetProbabilityPeaks({plot:probabilityPlot,timeZone:result.timeZone,
+  const forecastPeaks=compact||announced ? [] : layoutResetProbabilityPeaks({plot:probabilityPlot,timeZone:result.timeZone,
     focus:forecastFocus,otherLabels:forecastFollowing ? [{...forecastFollowing,height:34}] : [],
     cumulativeAtHours:hours=>resetProbabilityByHours(prediction,hours)});
   const followingPeaks=compact ? [] : layoutResetProbabilityPeaks({plot:followingPlot,timeZone:result.timeZone,
@@ -278,8 +286,8 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
   const resetLaneLabels=[probabilityPlot,followingPlot].map((plot,index)=>plot ? {
     id:`reset-${index+1}`,...(compact ? {x:axis.leftPadding,y:plot.topY-62,width:plotLabelWidth,height:18}
       : {x:0,y:plot.topY+plot.height/2-10,width:gutterWidth,height:20}),inline:true,
-    title:t(index===0 ? 'Reset 概率' : '第二次 reset 概率'),detail:'',
-    tooltip:[t(index===0 ? '首次额外重置预测' : '第二次额外重置预测'),t('概率密度'),
+    title:t(index===0 ? plot.announced ? '已宣布的 reset' : 'Reset 概率' : '第二次 reset 概率'),detail:'',
+    tooltip:plot.announced ? t('Tibo 已宣布这次 reset 的时间') : [t(index===0 ? '首次额外重置预测' : '第二次额外重置预测'),t('概率密度'),
       index===1 ? t('以首次发生为前提') : ''].filter(Boolean).join(' · ')} : null);
   const suggested=shownPhases.some(phase=>!phase.fixed&&!phase.constrained&&phase.reason!=='no-resource'
     &&Math.abs(phase.dailyPercent-phase.baselineDailyPercent)>1e-5);

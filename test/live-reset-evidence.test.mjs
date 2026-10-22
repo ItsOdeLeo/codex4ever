@@ -200,7 +200,7 @@ test('采集链路使用真实事件时间入库，JSON代码块可进入预测�
     '2026-10-15T18:00:00.000Z');
 });
 
-test('Codex Resets 已安排的 reset：安排时间前累计约 95%，短回复也能识别',async()=>{
+test('Codex Resets 已宣布的 reset：按确定事件处理，过了时间就当已发生',async()=>{
   const at=new Date('2026-10-22T08:44:00Z');
   const history={data:[record('4','2026-10-20T06:33:48Z'),record('3','2026-10-14T06:00:00Z'),
     record('2','2026-10-08T06:00:00Z'),record('1','2026-10-02T06:00:00Z')]};
@@ -216,9 +216,13 @@ test('Codex Resets 已安排的 reset：安排时间前累计约 95%，短回复
   const result=predictionFromArchive({archive,now:at,timeZone:'UTC'});
   const hours=(Date.parse(scheduled.scheduled_for)-at.getTime())/3_600_000;
   assert.equal(result.prediction.evidence.scheduledResetAt,'2026-10-22T17:00:00.000Z');
-  assert.ok(Math.abs(resetProbabilityByHours(result.prediction,hours)-.95)<.005);
-  assert.ok(result.prediction.next12Probability>=.95);
-  // After the announced time passes without a reset, the model falls back.
-  const later=predictionFromArchive({archive,now:new Date('2026-10-23T08:00:00Z'),timeZone:'UTC'});
+  // Nearly all mass in the last quarter hour before the announced time.
+  assert.ok(resetProbabilityByHours(result.prediction,hours-.25)<.05);
+  assert.ok(Math.abs(resetProbabilityByHours(result.prediction,hours)-.99)<.002);
+  // Once the time passes without a public record, it counts as the last reset.
+  const later=predictionFromArchive({archive,now:new Date('2026-10-22T21:00:00Z'),timeZone:'UTC'});
   assert.equal(later.prediction.evidence.scheduledResetAt,null);
+  assert.equal(later.lastResetAt,'2026-10-22T17:00:00.000Z');
+  assert.equal(later.lastResetSource,'https://x.com/thsottiaux/status/9');
+  veryUnlikely(later.prediction.next12Probability,'刚 reset 后进入冷却期');
 });
