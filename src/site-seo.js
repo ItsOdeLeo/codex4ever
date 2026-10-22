@@ -99,11 +99,11 @@ export function renderSeoHead({siteUrl=null,page='planner',language='en'}={}) {
   <meta name="twitter:description" content="${escape(meta.description)}">
   ${url ? `<link rel="canonical" href="${escape(url)}">
   <meta property="og:url" content="${escape(url)}">
-  <meta property="og:image" content="${escape(origin)}/public/social-card.png">
+  <meta property="og:image" content="${escape(origin)}/public/social-card.png?v=2">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Codex4ever — Codex quota and reset planner">
-  <meta name="twitter:image" content="${escape(origin)}/public/social-card.png">
+  <meta name="twitter:image" content="${escape(origin)}/public/social-card.png?v=2">
   <meta name="twitter:image:alt" content="Codex4ever — Codex quota and reset planner">
   ${page==='guide' ? Object.entries(guides).map(([lang,entry])=>`<link rel="alternate" hreflang="${lang}" href="${escape(origin+entry.path)}">`).join('\n  ')+`\n  <link rel="alternate" hreflang="x-default" href="${escape(origin+guides.en.path)}">` : ''}` : ''}
   <script type="application/ld+json">${json(schema)}</script>${page==='guide' ? `

@@ -24,7 +24,7 @@ test('未运行 JavaScript 的首页也有介绍、独立元信息和可抓取�
   assert.match(page.body,/<a id="planner-guide" href="\/guide\/">How it works<\/a>/);
   assert.match(page.body,/<link rel="canonical" href="https:\/\/codex4ever.example\/">/);
   assert.match(page.body,/name="robots" content="index, follow, max-image-preview:large"/);
-  assert.match(page.body,/property="og:image" content="https:\/\/codex4ever.example\/public\/social-card.png"/);
+  assert.match(page.body,/property="og:image" content="https:\/\/codex4ever.example\/public\/social-card.png\?v=\d+"/);
   const [schema]=structured(page.body);
   assert.equal(schema['@type'],'WebApplication');
   assert.equal(schema.applicationCategory,'DeveloperApplication');
