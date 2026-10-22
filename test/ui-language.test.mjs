@@ -59,8 +59,8 @@ test('整页切换中英不重新抓取或改变分支，记住语言，英文�
     assert.match(output.innerHTML,/Current daily usage/);
     assert.match(output.innerHTML,/data-lane-label="consumption"/);
     assert.match(output.innerHTML,/<span class="timeline-lane-text">Quota remaining<\/span>/);
-    assert.match(output.innerHTML,/<strong>First extra reset<\/strong><span>probability over time<\/span>/);
-    assert.match(output.innerHTML,/<strong>Second extra reset<\/strong><span>probability over time<\/span>/);
+    assert.match(output.innerHTML,/<span class="timeline-lane-text">Reset probability<\/span>/);
+    assert.match(output.innerHTML,/<span class="timeline-lane-text">Second reset probability<\/span>/);
     assert.doesNotMatch(output.innerHTML,/At least one extra reset:/);
     assert.doesNotMatch(output.innerHTML,/\d+(?:st|nd|rd|th) reset chance:/);
     assert.match(element('#strategy-controls').innerHTML,/Use it all/);

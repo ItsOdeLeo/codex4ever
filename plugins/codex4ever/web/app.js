@@ -47,11 +47,8 @@ var english = {
   "\u81EA\u5B9A\u4E49\u7528\u91CF": "Customize usage",
   "\u5982\u679C\u4F60\u559C\u6B22\u8FD9\u4E2A\u4F5C\u54C1\uFF0C\u6B22\u8FCE\u5728 X \u4E0A\u5173\u6CE8\u6211": "If you like this work, follow me on X",
   "GitHub \u5F00\u6E90": "Open source on GitHub",
-  "\u9996\u6B21\u989D\u5916 reset \xB7 \u65F6\u95F4\u6982\u7387\u5206\u5E03": "First extra reset \xB7 probability over time",
-  "\u7B2C\u4E8C\u6B21\u989D\u5916 reset \xB7 \u65F6\u95F4\u6982\u7387\u5206\u5E03": "Second extra reset \xB7 probability over time",
-  "\u9996\u6B21\u989D\u5916 reset": "First extra reset",
-  "\u7B2C\u4E8C\u6B21\u989D\u5916 reset": "Second extra reset",
-  "\u65F6\u95F4\u6982\u7387\u5206\u5E03": "probability over time",
+  "Reset \u6982\u7387": "Reset probability",
+  "\u7B2C\u4E8C\u6B21 reset \u6982\u7387": "Second reset probability",
   "\u4E0B\u6B21\u989D\u5916 reset": "Next extra reset",
   "\u672A\u6765 48 \u5C0F\u65F6": "Next 48h",
   "\u4FEE\u6539\u989D\u5EA6": "Edit quota",
@@ -88,7 +85,7 @@ var english = {
   "\u5DF2\u5F00\u542F": "On",
   "\u5DF2\u5173\u95ED": "Off",
   "\u7528\u91CF\u8BA1\u5212": "Usage plan",
-  "\u5F53\u524D\u65E5\u5747\u6D88\u8017 {daily}% / \u5929": "Current daily usage {daily}% / day",
+  "\u5F53\u524D\u65E5\u5747\u6D88\u8017 {daily}%": "Current daily usage {daily}%",
   "\u672C\u5468\u5269 {remaining}% \xB7 \u5237\u65B0\u5269 {time}": "{remaining}% left \xB7 Refresh in {time}",
   "{days}\u5929 {hours}\u5C0F\u65F6": "{days}d {hours}h",
   "{used}% \xF7 {elapsed}\u5C0F\u65F6 \xD7 24": "{used}% \xF7 {elapsed}h \xD7 24",
@@ -4237,23 +4234,10 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
   const gutterWidth = Math.max(0, axis.leftPadding - 16);
   const resetLaneLabels = [probabilityPlot, followingPlot].map((plot, index) => plot ? {
     id: `reset-${index + 1}`,
-    ...compact ? {
-      x: axis.leftPadding,
-      y: plot.topY - 62,
-      width: plotLabelWidth,
-      height: 18,
-      inline: true,
-      title: t2(index === 0 ? "\u9996\u6B21\u989D\u5916 reset \xB7 \u65F6\u95F4\u6982\u7387\u5206\u5E03" : "\u7B2C\u4E8C\u6B21\u989D\u5916 reset \xB7 \u65F6\u95F4\u6982\u7387\u5206\u5E03"),
-      detail: ""
-    } : {
-      x: 0,
-      y: plot.topY + plot.height / 2 - 18,
-      width: gutterWidth,
-      height: 36,
-      inline: false,
-      title: t2(index === 0 ? "\u9996\u6B21\u989D\u5916 reset" : "\u7B2C\u4E8C\u6B21\u989D\u5916 reset"),
-      detail: t2("\u65F6\u95F4\u6982\u7387\u5206\u5E03")
-    },
+    ...compact ? { x: axis.leftPadding, y: plot.topY - 62, width: plotLabelWidth, height: 18 } : { x: 0, y: plot.topY + plot.height / 2 - 10, width: gutterWidth, height: 20 },
+    inline: true,
+    title: t2(index === 0 ? "Reset \u6982\u7387" : "\u7B2C\u4E8C\u6B21 reset \u6982\u7387"),
+    detail: "",
     tooltip: [
       t2(index === 0 ? "\u9996\u6B21\u989D\u5916\u91CD\u7F6E\u9884\u6D4B" : "\u7B2C\u4E8C\u6B21\u989D\u5916\u91CD\u7F6E\u9884\u6D4B"),
       t2("\u6982\u7387\u5BC6\u5EA6"),
@@ -4963,7 +4947,7 @@ function renderResult(availableWidth = $("#result").clientWidth) {
   });
   const consumption = usageConsumptionSummary(result, { locale: language });
   const policyData = result.recommendation ? ` data-policy-search="${result.recommendation.method}"${result.recommendation.primary ? ' data-plan-basis="predicted-extra-resets-first"' : ""}` : "";
-  $("#result").innerHTML = `<section class="strategy-panel" aria-label="${t("\u7528\u91CF\u8BA1\u5212")}"${policyData} style="--panel-padding:${workspace.panelPadding}px">${graph.compact ? phoneSummary(graph, planningPrediction) : ""}<div class="pace-controls"><div data-current-consumption data-daily="${consumption.dailyPercent}"><span>${t("\u5F53\u524D\u65E5\u5747\u6D88\u8017 {daily}% / \u5929", { daily: round7(consumption.dailyPercent) })}</span></div>
+  $("#result").innerHTML = `<section class="strategy-panel" aria-label="${t("\u7528\u91CF\u8BA1\u5212")}"${policyData} style="--panel-padding:${workspace.panelPadding}px">${graph.compact ? phoneSummary(graph, planningPrediction) : ""}<div class="pace-controls"><div data-current-consumption data-daily="${consumption.dailyPercent}"><span>${t("\u5F53\u524D\u65E5\u5747\u6D88\u8017 {daily}%", { daily: round7(consumption.dailyPercent) })}</span></div>
     </div>
     ${result.recommendation && !result.recommendation.primary ? `<div class="timeline-toolbar"><span>${t("\u82E5\u59CB\u7EC8\u6CA1\u6709\u989D\u5916\u91CD\u7F6E")}</span></div>` : ""}
     ${renderStrategyTree(graph, escape2)}

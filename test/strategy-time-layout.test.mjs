@@ -147,10 +147,9 @@ test('每段用量统一紧贴绿色额度上沿；假设、备用、窄屏均�
           assert.equal(heading.state,'');
         }
         const captions=[...html.matchAll(/<div class="timeline-lane-label"[^>]*data-lane-inline[^>]*>([\s\S]*?)<\/div>/g)];
-        // Usage and quota names are one line; the reset lanes add their explanation below.
         assert.ok(captions.length>=2);
         for(const [,content] of captions)assert.doesNotMatch(content,/<strong|<small|<br/,
-          '用量与额度名称是同字号的一行文字');
+          '轨道名称是同字号的一行文字');
         assert.equal(graph.funnel.shape,'area');
         for(const band of graph.funnel.bands) {
           const expectedBottom=`L ${band.x2} ${Number(graph.dayAxis.centerY.toFixed(6))} L ${band.x1} ${Number(graph.dayAxis.centerY.toFixed(6))} Z`;

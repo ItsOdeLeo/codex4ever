@@ -74,7 +74,7 @@ test('第二次预测与用量／备用独立，共用时间轴，不产生未�
     const html=renderStrategyTree(graph,String);
     assert.match(html,/data-reset-sequence="2"/);
     assert.match(html,/第二次额外重置预测/);
-    assert.match(html,/<strong>第二次额外 reset<\/strong><span>时间概率分布<\/span>/);
+    assert.match(html,/<span class="timeline-lane-text">第二次 reset 概率<\/span>/);
     assert.match(graph.resetLaneLabels[1].tooltip,/概率密度 · 以首次发生为前提/);
     assert.match(html,/data-density-sequence="2"/);
     assert.ok(graph.followingPlot.topY>graph.probabilityPlot.bottomY,'两次事件分开成行，共用日期坐标');

@@ -264,13 +264,12 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
     placeAnnotation(annotation,x,row);
   }
   const gutterWidth=Math.max(0,axis.leftPadding-16);
-  // The curves are probability over time: say so. Phones: one caption above
-  // the curve; wider screens: name and explanation on two lines in the gutter.
+  // Each curve is named for what it plots. Phones: a caption above the curve;
+  // wider screens: the name in the gutter.
   const resetLaneLabels=[probabilityPlot,followingPlot].map((plot,index)=>plot ? {
-    id:`reset-${index+1}`,...(compact ? {x:axis.leftPadding,y:plot.topY-62,width:plotLabelWidth,height:18,inline:true,
-        title:t(index===0 ? '首次额外 reset · 时间概率分布' : '第二次额外 reset · 时间概率分布'),detail:''}
-      : {x:0,y:plot.topY+plot.height/2-18,width:gutterWidth,height:36,inline:false,
-        title:t(index===0 ? '首次额外 reset' : '第二次额外 reset'),detail:t('时间概率分布')}),
+    id:`reset-${index+1}`,...(compact ? {x:axis.leftPadding,y:plot.topY-62,width:plotLabelWidth,height:18}
+      : {x:0,y:plot.topY+plot.height/2-10,width:gutterWidth,height:20}),inline:true,
+    title:t(index===0 ? 'Reset 概率' : '第二次 reset 概率'),detail:'',
     tooltip:[t(index===0 ? '首次额外重置预测' : '第二次额外重置预测'),t('概率密度'),
       index===1 ? t('以首次发生为前提') : ''].filter(Boolean).join(' · ')} : null);
   const suggested=shownPhases.some(phase=>!phase.fixed&&!phase.constrained&&phase.reason!=='no-resource'

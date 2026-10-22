@@ -255,7 +255,7 @@ test('实时证据、条件用量、备用切换和精简累计概率；保持�
       '页面任何位置都不展示日均用量计算公式');
     const second=()=>withoutPosition(output.innerHTML.match(/<div class="forecast-following"[\s\S]*?<\/div>/)?.[0]);
     assert.match(second(),/aria-label="第二次 规划时刻 reset · /);
-    assert.match(output.innerHTML,/<strong>第二次额外 reset<\/strong><span>时间概率分布<\/span>/);
+    assert.match(output.innerHTML,/<span class="timeline-lane-text">第二次 reset 概率<\/span>/);
     const originalSecond=second();
     assert.match(depletion(),/10月16日 14:00/,'初次打开默认按当前用量，2天耗尽');
     assert.match(output.innerHTML,/quota-paused-line/);
