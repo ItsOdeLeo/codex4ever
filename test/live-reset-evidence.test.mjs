@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { collectLiveResetEvidence,normalizeResetFeed,readTiboTimeline,classifyExplicitResetPost,
   RESET_HISTORY_URL,RESET_STATUS_URL } from '../src/live-reset-evidence.js';
 import { predictionFromArchive } from '../src/reset-forecast.js';
+import { resetProbabilityByHours } from '../src/local-predictor.js';
 
 // Suppressed windows keep about 5% of the usual rate: very unlikely, not impossible.
 const veryUnlikely=(value,message)=>assert.ok(value>=0&&value<.05,message??`${value} 应很低`);
@@ -197,4 +198,27 @@ test('采集链路使用真实事件时间入库，JSON代码块可进入预测�
   assert.equal(prediction.available,true);
   assert.equal(prediction.prediction.evidence.hardRules.find(r=>r.kind==='reset-next-day-cooldown').lastResetAt,
     '2026-10-15T18:00:00.000Z');
+});
+
+test('Codex Resets 已安排的 reset：安排时间前累计约 95%，短回复也能识别',async()=>{
+  const at=new Date('2026-10-22T08:44:00Z');
+  const history={data:[record('4','2026-10-20T06:33:48Z'),record('3','2026-10-14T06:00:00Z'),
+    record('2','2026-10-08T06:00:00Z'),record('1','2026-10-02T06:00:00Z')]};
+  const scheduled={id:'9',status:'scheduled',reset_type:'regular',announced_at:'2026-10-22T06:55:54Z',
+    scheduled_for:'2026-10-22T17:00:00Z',text:'Lands tomorrow before 10am PST.',
+    source:{type:'x_post',author:'thsottiaux',url:'https://x.com/thsottiaux/status/9'}};
+  const fetchImpl=async url=>response(String(url)===RESET_HISTORY_URL ? history
+    : {data:{latest_reset:history.data[0],scheduled_reset:scheduled,active_watch:null}});
+  const archive=await collectLiveResetEvidence({now:at,fetchImpl,classifyWithLLM:false,xBearerToken:null});
+  const post=archive.posts.find(post=>post.sourceUrl.endsWith('/9'));
+  assert.equal(post.signal.kind,'reset_planned');
+  assert.equal(post.signal.scheduledFor,'2026-10-22T17:00:00.000Z');
+  const result=predictionFromArchive({archive,now:at,timeZone:'UTC'});
+  const hours=(Date.parse(scheduled.scheduled_for)-at.getTime())/3_600_000;
+  assert.equal(result.prediction.evidence.scheduledResetAt,'2026-10-22T17:00:00.000Z');
+  assert.ok(Math.abs(resetProbabilityByHours(result.prediction,hours)-.95)<.005);
+  assert.ok(result.prediction.next12Probability>=.95);
+  // After the announced time passes without a reset, the model falls back.
+  const later=predictionFromArchive({archive,now:new Date('2026-10-23T08:00:00Z'),timeZone:'UTC'});
+  assert.equal(later.prediction.evidence.scheduledResetAt,null);
 });

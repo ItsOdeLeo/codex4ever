@@ -10,6 +10,9 @@ import { followingResetEstimate } from './reset-sequence-forecast.js';
 import { describeResetCampaign } from './reset-campaign.js';
 import { completedResetEvent } from './reset-event-time.js';
 const DAY_MS = 86_400_000;
+// A reset with an announced time is near certain by then, not certain: Tibo
+// has postponed announced resets before.
+export const SCHEDULED_RESET_PROBABILITY = .95;
 const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
 const oddsUpdate = (p, ratio) => {
   if(p<=0 || p>=1)return clamp(p,0,1);
@@ -153,10 +156,14 @@ export function predictReset({ now, timeZone = Intl.DateTimeFormat().resolvedOpt
     postEffects(posts, nowMs, firstDays, times.at(-1))];
   // Explicit windows cover 48h and any longer suppressed period, so a
   // cooldown reaching past 48h is scaled down rather than cut off.
+  const scheduledAt=posts.filter(post=>post.signal?.kind==='reset_planned' && post.signal.scheduledFor
+    && dateMs(post.createdAt,'帖子时间')<=nowMs && dateMs(post.createdAt,'帖子时间')>(times.at(-1)??-Infinity))
+    .map(post=>dateMs(post.signal.scheduledFor,'安排的 reset 时间')).sort((a,b)=>a-b)[0];
+  const scheduledHours=scheduledAt>nowMs && scheduledAt<nowMs+48*3_600_000 ? (scheduledAt-nowMs)/3_600_000 : null;
   const windowsEnd=Math.max(48,cooldown?.untilHours??0);
   const boundaries=[0,todayEndHours,48,windowsEnd,...(cooldown ? [cooldown.untilHours] : []),...posts.filter(post=>post.signal?.kind==='reset_planned')
     .map(post=>(dateMs(post.signal.validUntil??new Date(dateMs(post.createdAt,'帖子时间')+DAY_MS).toISOString(),'预告截止时间')-nowMs)/3_600_000)
-    .filter(hour=>hour>0 && hour<48)].sort((a,b)=>a-b).filter((hour,index,array)=>!index || Math.abs(hour-array[index-1])>1e-7);
+    .filter(hour=>hour>0 && hour<48),...(scheduledHours!==null ? [scheduledHours] : [])].sort((a,b)=>a-b).filter((hour,index,array)=>!index || Math.abs(hour-array[index-1])>1e-7);
   const forecastWindows=boundaries.slice(1).map((endHours,index)=>{
     const startHours=boundaries[index],base=chanceFromAge(hazards,daily,currentAge+startHours/24,(endHours-startHours)/24,distribution);
     const effect=postEffects(posts,nowMs,startHours/24,times.at(-1));
@@ -164,10 +171,23 @@ export function predictReset({ now, timeZone = Intl.DateTimeFormat().resolvedOpt
     // Post signals cannot lift a suppressed window: it keeps the scaled base rate.
     return {startHours,endHours,baselineProbability:base,probability:blocked ? suppress(base) : oddsUpdate(base,effect.ratio),...(blocked ? {suppressed:true} : {})};
   });
+  // An announced reset time overrides the model (and its cooldowns) up to that
+  // time: the cumulative chance reaches SCHEDULED_RESET_PROBABILITY there,
+  // spread over the windows in proportion to their baseline hazard.
+  if(scheduledHours!==null) {
+    const before=forecastWindows.filter(window=>window.endHours<=scheduledHours+1e-8);
+    const hazard=window=>Math.max(-Math.log1p(-window.baselineProbability),1e-9*(window.endHours-window.startHours));
+    const total=before.reduce((sum,window)=>sum+hazard(window),0);
+    for(const window of before) {
+      window.probability=1-(1-SCHEDULED_RESET_PROBABILITY)**(hazard(window)/total);
+      delete window.suppressed;window.scheduled=true;
+    }
+  }
   const prediction={model:'local-recent-intervals-v5',calibrated:false,todayEndHours,enforceResetCooldown,suppressedHazardFactor,
     timeZone:forecastTimeZone,displayTimeZone:timeZone,forecastWindows,
     releaseClock: fitResetReleaseClock({ times, now: nowMs, timeZone: forecastTimeZone }),
-    evidence:{daysSinceReset:ageDays,dailyFrequency:daily,ageHazards:hazards,intervalDistribution:distribution,hardRules}};
+    evidence:{daysSinceReset:ageDays,dailyFrequency:daily,ageHazards:hazards,intervalDistribution:distribution,hardRules,
+      scheduledResetAt:scheduledHours===null ? null : new Date(scheduledAt).toISOString()}};
   const todayProbability = resetProbabilityByHours(prediction,todayEndHours);
   const next48 = resetProbabilityByHours(prediction,48);
   const laterGivenNoReset = (next48-todayProbability)/Math.max(Number.EPSILON,1-todayProbability);
@@ -189,7 +209,8 @@ export function predictReset({ now, timeZone = Intl.DateTimeFormat().resolvedOpt
       dailyFrequency: daily,
       ageHazards: hazards,
       intervalDistribution: distribution,
-      source:frequency.source,intervalModel:intervalSummary,hardRules,campaignActive,campaign }
+      source:frequency.source,intervalModel:intervalSummary,hardRules,campaignActive,campaign,
+      scheduledResetAt:prediction.evidence.scheduledResetAt }
   });
   const quantile=probability=>{
     let lo=0,hi=24;

@@ -185,7 +185,7 @@ const english={
   '全部历史':'All history','{scope} {count} 次 · 常见 {time}（{zone}）':'{scope} · {count} resets · Typical {time} ({zone})',
   '下次预计（中位）':'Next reset estimate (median)','暂无法估计':'Not enough data to estimate',
   '下次 {coverage}% 预测窗口':'Next reset · {coverage}% prediction window',
-  'Day {day} 功能帖':'Day {day} feature post','reset 次日冷却期':'Day-after-reset cooldown','活动日内已 reset':'Reset already occurred on this campaign day',
+  'Day {day} 功能帖':'Day {day} feature post','reset 次日冷却期':'Day-after-reset cooldown','已安排 · {time} 前':'Scheduled · by {time}','活动日内已 reset':'Reset already occurred on this campaign day',
   '当前预测约束':'Active forecast constraint','截至 {time}{rule}':'Until {time}{rule}',' · 用户设定规则':' · User-defined rule',
   '下次 reset 预测':'Next reset forecast','Tibo 最近回复':'Tibo’s latest reply','Tibo 最近帖子':'Tibo’s latest post',
   'Tibo 最近相关回复':'Tibo’s latest related reply',

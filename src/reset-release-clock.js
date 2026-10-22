@@ -138,10 +138,15 @@ function continuousClockProbability(prediction,hours,baseProbability) {
       const before=baseProbability(a),after=baseProbability(b);
       if(before>=1)return 0;
       if(after>=1)return Infinity;
+      const step=Math.max(0,Math.log1p(-before)-Math.log1p(-after));
+      // An announced reset time already says when: no release-clock reshaping.
+      if(prediction.forecastWindows.some(window=>window.scheduled&&window.startHours<=a&&b<=window.endHours+1e-8)) {
+        hazard+=step;continue;
+      }
       const stamp=origin+(a+b)/2*HOUR,day=clockDay(stamp,clock),local=parts(stamp,clock);
       const weight=clock.quarterHourWeights[Math.floor((local.hour*60+local.minute)/15)];
       const mean=day.prefix.at(-1)/(day.end-day.start);
-      hazard+=Math.max(0,Math.log1p(-before)-Math.log1p(-after))*weight/mean;
+      hazard+=step*weight/mean;
     }
     return hazard;
   };

@@ -117,7 +117,9 @@ export function renderResetForecastSummary({ source, prediction = null,
     glanceRow('campaign','活动',escape(t('第 {day} / {total} 天 · {end} 结束',{day,total,end:dayFormat(campaign.endsAt)})));
   }
   if(mention && format(mention.createdAt) && postUrl(mention.sourceUrl))
-    glanceRow('tibo','Tibo',`<a href="${escape(mention.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escape(t(postLabels[mention.signal?.kind]??'暂未识别'))} · ${escape(dayFormat(mention.createdAt))}</a>`);
+    glanceRow('tibo','Tibo',`<a href="${escape(mention.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escape(mention.signal?.scheduledFor && format(mention.signal.scheduledFor)
+      ? t('已安排 · {time} 前',{time:format(mention.signal.scheduledFor)})
+      : `${t(postLabels[mention.signal?.kind]??'暂未识别')} · ${dayFormat(mention.createdAt)}`)}</a>`);
   const statusLine=`<p>${escape(`${status}${updated ? t(' · 更新 {time}',{time:updated}) : ''} · ${t('你的时间（{zone}）',{zone:timeZone})}`)}${prediction ? ` · ${t(prediction.calibrated===true ? '模型预测' : '模型未校准')}` : ''}</p>`;
   return `<section class="forecast-summary" data-forecast-summary aria-label="${t('额外 reset 预测关键数据')}">${glance.length ? `<dl class="forecast-glance">${glance.join('')}</dl>` : ''}<details class="forecast-more"><summary>${t('更多数据')}</summary><dl>${rows.join('')}</dl>${statusLine}</details></section>`;
 }

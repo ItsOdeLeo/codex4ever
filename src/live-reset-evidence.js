@@ -6,7 +6,9 @@ import { completedResetEvent, normalizeResetSignalTime, RESET_CLASSIFIER_VERSION
 export const RESET_HISTORY_URL = 'https://codex-resets.com/api/v1/resets?limit=100';
 export const RESET_STATUS_URL = 'https://codex-resets.com/api/v1/status';
 const HOUR = 3_600_000;
-const resetRelated = post => /\breset(?:s|ting)?\b|重置/i.test(post.text+' '+post.context);
+// A scheduled reset that has not landed still counts as an announcement for a few hours.
+const SCHEDULE_GRACE_HOURS = 6;
+const resetRelated = post => !!post.signal?.scheduledFor || /\breset(?:s|ting)?\b|重置/i.test(post.text+' '+post.context);
 const tiboUrl = value => typeof value === 'string'
   && /^https:\/\/(?:x|twitter)\.com\/thsottiaux\/status\/\d+(?:[?#].*)?$/.test(value);
 
@@ -106,7 +108,12 @@ export async function collectLiveResetEvidence({ now=new Date(), fallbackArchive
   const latest=normalizeResetFeed({data:status?.data?.latest_reset ? [status.data.latest_reset] : []},now);
   const events=[...new Map([...records,...latest].map(event=>[event.sourceUrl??event.at,event])).values()]
     .sort((a,b)=>Date.parse(a.at)-Date.parse(b.at));
-  const statusPosts=[status?.data?.scheduled_reset,status?.data?.active_watch].filter(Boolean);
+  // A reset Codex Resets lists as scheduled carries its own time; text
+  // classification alone misses short replies like "Lands tomorrow before 10am".
+  const scheduled=status?.data?.scheduled_reset;
+  const scheduledFor=Date.parse(scheduled?.scheduled_for);
+  const statusPosts=[scheduled?.status==='scheduled' && Number.isFinite(scheduledFor)
+    ? {...scheduled,scheduledFor:new Date(scheduledFor).toISOString()} : scheduled,status?.data?.active_watch].filter(Boolean);
   const candidates=[...(directPosts??[]),...statusPosts,...live.map(event=>({
     text:event.text,createdAt:event.at,source:{url:event.sourceUrl},feedKind:event.kind}))];
   const merged=new Map();
@@ -115,6 +122,9 @@ export async function collectLiveResetEvidence({ now=new Date(), fallbackArchive
     if(post && record.feedKind)post.signal={kind:record.feedKind==='banked' ? 'banked_credit' : 'reset_completed',
       confidence:1,reason:'公开 reset 记录的类型；不代表个人账户已恢复',
       ...(record.feedKind==='banked' ? {} : {resetTiming:'current',resetOccurredAt:post.createdAt})};
+    if(post && record.scheduledFor)post.signal={kind:'reset_planned',confidence:1,
+      reason:'Codex Resets 已安排的 reset 时间',scheduledFor:record.scheduledFor,
+      validUntil:new Date(Date.parse(record.scheduledFor)+SCHEDULE_GRACE_HOURS*HOUR).toISOString()};
     if(!post)continue;
     const previous=merged.get(post.sourceUrl);
     if(previous?.context && !post.context)post.context=previous.context;
