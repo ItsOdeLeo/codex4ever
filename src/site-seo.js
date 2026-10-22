@@ -1,4 +1,5 @@
 import { PLANNER_METADATA } from './page-metadata.js';
+import { BRAND_MARK_SVG } from './brand-mark.js';
 
 const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const json=value=>JSON.stringify(value).replace(/</g,'\\u003c');
@@ -99,11 +100,11 @@ export function renderSeoHead({siteUrl=null,page='planner',language='en'}={}) {
   <meta name="twitter:description" content="${escape(meta.description)}">
   ${url ? `<link rel="canonical" href="${escape(url)}">
   <meta property="og:url" content="${escape(url)}">
-  <meta property="og:image" content="${escape(origin)}/public/social-card.png?v=2">
+  <meta property="og:image" content="${escape(origin)}/public/social-card.png?v=3">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Codex4ever — Codex quota and reset planner">
-  <meta name="twitter:image" content="${escape(origin)}/public/social-card.png?v=2">
+  <meta name="twitter:image" content="${escape(origin)}/public/social-card.png?v=3">
   <meta name="twitter:image:alt" content="Codex4ever — Codex quota and reset planner">
   ${page==='guide' ? Object.entries(guides).map(([lang,entry])=>`<link rel="alternate" hreflang="${lang}" href="${escape(origin+entry.path)}">`).join('\n  ')+`\n  <link rel="alternate" hreflang="x-default" href="${escape(origin+guides.en.path)}">` : ''}` : ''}
   <script type="application/ld+json">${json(schema)}</script>${page==='guide' ? `
@@ -118,7 +119,7 @@ function renderGuide({language,siteUrl}) {
 ${renderSeoHead({siteUrl,page:'guide',language})}
 <meta name="theme-color" content="#F7D5D5"><link rel="stylesheet" href="/src/styles/guide.css"></head>
 <body class="guide-page"><main>
-<header class="site-header"><div class="brand"><span class="brand-mark" aria-hidden="true">∞</span><div><a href="/">Codex4ever</a></div></div>
+<header class="site-header"><div class="brand"><span class="brand-mark" aria-hidden="true">${BRAND_MARK_SVG}</span><div><a href="/">Codex4ever</a></div></div>
 <nav aria-label="${language==='en' ? 'Language' : '语言'}"><a href="/guide/" lang="en" hreflang="en"${language==='en' ? ' aria-current="page"' : ''}>English</a> · <a href="/zh/guide/" lang="zh-CN" hreflang="zh-CN"${language==='zh-CN' ? ' aria-current="page"' : ''}>中文</a></nav></header>
 <article><h1>${escape(guide.heading)}</h1><p>${escape(guide.intro)}</p>
 ${guide.sections.map(([heading,text])=>`<section><h2>${escape(heading)}</h2><p>${escape(text)}</p></section>`).join('\n')}

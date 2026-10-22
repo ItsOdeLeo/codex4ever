@@ -11,6 +11,7 @@ import { COMPACT_TIMELINE_WIDTH } from './strategy-time-layout.js';
 import { workspaceLayout } from './workspace-layout.js';
 import { syncPlannerMetadata } from './page-metadata.js';
 import { pluginPageClient } from './plugin-page-client.js';
+import { BRAND_MARK_SVG } from './brand-mark.js';
 
 const $ = selector => document.querySelector(selector);
 const escape = value => String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
@@ -144,7 +145,7 @@ function saveInput() {
 const round = value => Number(value.toFixed(1));
 const MOBILE_TIMELINE_WIDTH=640;
 // Cards people screenshot carry the name, so a cropped image still says where it came from.
-const BRAND_STAMP='<div class="brand-stamp" aria-hidden="true"><span>∞</span> Codex4ever</div>';
+const BRAND_STAMP=`<div class="brand-stamp" aria-hidden="true"><span>${BRAND_MARK_SVG}</span> Codex4ever</div>`;
 
 function renderResult(availableWidth=$('#result').clientWidth) {
   const result=planner.result;
