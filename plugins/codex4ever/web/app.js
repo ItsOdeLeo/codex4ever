@@ -3886,6 +3886,7 @@ function timelineUsagePhases(phases, xAtHours) {
 var round4 = (value) => Number(value.toFixed(1));
 var COMPACT_TIMELINE_WIDTH = 480;
 var COMPACT_CARD_WIDTH = 112;
+var titleWidth = (text, size) => Math.ceil([...String(text)].reduce((sum, char) => sum + (/[\u2E80-\u9FFF\uFF00-\uFFEF]/.test(char) ? size : size * 0.62), 0)) + 22;
 function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayEndHours: fixedEndHours = null, locale = "zh-CN" } = {}) {
   const t2 = translator(locale);
   if (!result.predictionEnabled) prediction = null;
@@ -4095,7 +4096,7 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
     anchorX: axis.xAtHours(hours),
     atHours: hours,
     edgeKind: kind,
-    width: Math.min(compact ? COMPACT_CARD_WIDTH : node.width ?? 190, plotLabelWidth),
+    width: Math.min(compact ? Math.max(COMPACT_CARD_WIDTH, node.minWidth ?? 0) : node.width ?? 190, plotLabelWidth),
     height: 64,
     from: `decision:${Math.max(0, pointIndex(hours))}`
   });
@@ -4117,14 +4118,19 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
       ...scenario?.following
     }
   ];
-  for (const action of resetActions.filter((action2) => action2.available)) card(action.hours, {
-    id: action.sequence === 1 ? "forecast-assumption" : `forecast-assumption:${action.sequence}`,
-    type: "forecast-assumption",
-    sequence: action.sequence,
-    selected: action.selected,
-    width: 132,
-    ...resetAssumptionContent({ ...action, locale })
-  }, action.sequence === 1 ? "reset" : "reset-second");
+  for (const action of resetActions.filter((action2) => action2.available)) {
+    const content = resetAssumptionContent({ ...action, locale });
+    const fit = titleWidth(content.title, compact ? 12 : 13);
+    card(action.hours, {
+      id: action.sequence === 1 ? "forecast-assumption" : `forecast-assumption:${action.sequence}`,
+      type: "forecast-assumption",
+      sequence: action.sequence,
+      selected: action.selected,
+      width: Math.max(132, fit),
+      minWidth: fit,
+      ...content
+    }, action.sequence === 1 ? "reset" : "reset-second");
+  }
   for (const point of points) {
     const forecast = forecastMilestones.find((item) => Math.abs(item.hours - point.hours) < 1e-6);
     const afterAssumedReset = scenario?.selected && point.hours > scenario.hours + 1e-6;

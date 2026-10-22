@@ -1,6 +1,6 @@
 {
   "name": "codex4ever",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": true,
   "type": "module",
   "description": "A local Codex quota and reset planner with extra reset forecasts, banked reset planning, a web UI, CLI, and MCP server.",

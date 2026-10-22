@@ -14,6 +14,10 @@ const round = value => Number(value.toFixed(1));
 export const COMPACT_TIMELINE_WIDTH=480;
 // Phone event cards: narrow enough that two share a row.
 const COMPACT_CARD_WIDTH=112;
+// Approximate rendered width of a bold card title plus the card's padding:
+// CJK glyphs are about a font size wide, Latin about 0.62 of it.
+const titleWidth=(text,size)=>Math.ceil([...String(text)].reduce((sum,char)=>
+  sum+(/[\u2E80-\u9FFF\uFF00-\uFFEF]/.test(char) ? size : size*.62),0))+22;
 
 /** Place the solved policy on a shared date axis, without changing decisions. */
 export function layoutTimeStrategy(result, { prediction = null, viewportWidth,displayEndHours:fixedEndHours=null,locale='zh-CN' } = {}) {
@@ -160,7 +164,7 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
   const annotations = [];
   const pointIndex = hours => points.findIndex(point => Math.abs(point.hours - hours) < 1e-6);
   const card = (hours, node, kind) => annotations.push({ ...node, anchorX: axis.xAtHours(hours),
-    atHours: hours, edgeKind: kind, width: Math.min(compact ? COMPACT_CARD_WIDTH : node.width??190,plotLabelWidth), height: 64,
+    atHours: hours, edgeKind: kind, width: Math.min(compact ? Math.max(COMPACT_CARD_WIDTH,node.minWidth??0) : node.width??190,plotLabelWidth), height: 64,
     from: `decision:${Math.max(0, pointIndex(hours))}` });
   const expires = reset => t('{date} 24:00到期（估算）',{date:reset.expiresOn.slice(5).replace('-', '/')});
   const scenario=result.forecastScenario;
@@ -172,11 +176,16 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
     hours:scenario?.hours,selected:scenario?.selected,onNoReset:scenario?.onNoReset},
     {sequence:2,available:!!forecastFollowing&&scenario?.following?.available,
       ...scenario?.following}];
-  for(const action of resetActions.filter(action=>action.available))card(action.hours,{
-    id:action.sequence===1 ? 'forecast-assumption' : `forecast-assumption:${action.sequence}`,
-    type:'forecast-assumption',sequence:action.sequence,selected:action.selected,width:132,
-    ...resetAssumptionContent({...action,locale})
-  },action.sequence===1 ? 'reset' : 'reset-second');
+  for(const action of resetActions.filter(action=>action.available)) {
+    const content=resetAssumptionContent({...action,locale});
+    // Wide enough for its own title in either language.
+    const fit=titleWidth(content.title,compact ? 12 : 13);
+    card(action.hours,{
+      id:action.sequence===1 ? 'forecast-assumption' : `forecast-assumption:${action.sequence}`,
+      type:'forecast-assumption',sequence:action.sequence,selected:action.selected,
+      width:Math.max(132,fit),minWidth:fit,...content
+    },action.sequence===1 ? 'reset' : 'reset-second');
+  }
   for (const point of points) {
     const forecast = forecastMilestones.find(item => Math.abs(item.hours - point.hours) < 1e-6);
     const afterAssumedReset=scenario?.selected&&point.hours>scenario.hours+1e-6;

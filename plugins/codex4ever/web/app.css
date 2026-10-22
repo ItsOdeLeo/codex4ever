@@ -2425,13 +2425,6 @@ legend {
 .calendar-field .calendar-summary:empty {
   display: none;
 }
-.calendar-field .calendar-summary:empty + button[data-toggle-calendar] {
-  position: absolute;
-  top: -30px;
-  right: 0;
-  padding: 3px 8px;
-  font-size: 11px;
-}
 .refresh-row {
   gap: 6px;
 }

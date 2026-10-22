@@ -251,13 +251,12 @@ footer {font-size:12px;line-height:1.8;margin-top:32px;padding-top:14px;border-t
 .calendar-field {border-bottom:1px solid var(--pool-edge)}
 .timeline-toolbar {border-top:1px solid var(--pool-edge)}
 #inputs {border-bottom:1px solid var(--pool-edge)}
-/* Compact inputs: the add button shares the banked-reset title row. */
+/* Compact inputs. */
 #inputs {padding:14px 16px}
 .compact-form {gap:12px}
 legend {margin-bottom:8px}
 .calendar-field {padding-bottom:12px}
 .calendar-field .calendar-summary:empty {display:none}
-.calendar-field .calendar-summary:empty+button[data-toggle-calendar] {position:absolute;top:-30px;right:0;padding:3px 8px;font-size:11px}
 .refresh-row {gap:6px}
 .simple-fields {gap:8px}
 /* Cautious / optimistic sit under keep available as its sub-options. */
