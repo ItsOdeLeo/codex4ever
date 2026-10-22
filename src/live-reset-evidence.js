@@ -6,8 +6,6 @@ import { completedResetEvent, normalizeResetSignalTime, RESET_CLASSIFIER_VERSION
 export const RESET_HISTORY_URL = 'https://codex-resets.com/api/v1/resets?limit=100';
 export const RESET_STATUS_URL = 'https://codex-resets.com/api/v1/status';
 const HOUR = 3_600_000;
-// A scheduled reset that has not landed still counts as an announcement for a few hours.
-const SCHEDULE_GRACE_HOURS = 6;
 const resetRelated = post => !!post.signal?.scheduledFor || /\breset(?:s|ting)?\b|重置/i.test(post.text+' '+post.context);
 const tiboUrl = value => typeof value === 'string'
   && /^https:\/\/(?:x|twitter)\.com\/thsottiaux\/status\/\d+(?:[?#].*)?$/.test(value);
@@ -124,7 +122,9 @@ export async function collectLiveResetEvidence({ now=new Date(), fallbackArchive
       ...(record.feedKind==='banked' ? {} : {resetTiming:'current',resetOccurredAt:post.createdAt})};
     if(post && record.scheduledFor)post.signal={kind:'reset_planned',confidence:1,
       reason:'Codex Resets 已安排的 reset 时间',scheduledFor:record.scheduledFor,
-      validUntil:new Date(Date.parse(record.scheduledFor)+SCHEDULE_GRACE_HOURS*HOUR).toISOString()};
+      // Once the time passes the reset has most likely landed and only awaits
+      // a public record, so it must not show up as a fresh spike at "now".
+      validUntil:record.scheduledFor};
     if(!post)continue;
     const previous=merged.get(post.sourceUrl);
     if(previous?.context && !post.context)post.context=previous.context;
