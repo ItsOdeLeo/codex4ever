@@ -2443,5 +2443,38 @@ legend {
   padding-left: 10px;
   border-left: 1px solid var(--pool-edge);
 }
+.forecast-glance > [data-forecast-glance=next-hours] {
+  flex-direction: column;
+  align-items: stretch !important;
+  gap: 6px;
+}
+.forecast-horizons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 0;
+}
+.forecast-horizons span {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.forecast-horizons small {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 400;
+}
+.forecast-horizons b {
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.forecast-horizons span:last-child {
+  align-items: flex-end;
+}
+.forecast-horizons span:nth-child(2) {
+  align-items: center;
+}
 
 /* src/styles/theme.css */

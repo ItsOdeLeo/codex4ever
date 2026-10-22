@@ -48,6 +48,8 @@ var english = {
   "\u5982\u679C\u4F60\u559C\u6B22\u8FD9\u4E2A\u4F5C\u54C1\uFF0C\u6B22\u8FCE\u5728 X \u4E0A\u5173\u6CE8\u6211": "If you like this work, follow me on X",
   "GitHub \u5F00\u6E90": "Open source on GitHub",
   "Reset \u6982\u7387": "Reset probability",
+  "\u672A\u6765 reset \u6982\u7387": "Chance of a reset in the next",
+  "{hours} \u5C0F\u65F6": "{hours}h",
   "\u7B2C\u4E8C\u6B21 reset \u6982\u7387": "Second reset probability",
   "\u4E0B\u6B21\u989D\u5916 reset": "Next extra reset",
   "\u672A\u6765 48 \u5C0F\u65F6": "Next 48h",
@@ -1239,6 +1241,9 @@ function predictReset({
   const next48Probability = todayProbability + laterProbability;
   Object.assign(prediction, {
     horizonHours: 48,
+    // Shorter horizons for planning the next hours (same cumulative model).
+    next12Probability: resetProbabilityByHours(prediction, 12),
+    next24Probability: resetProbabilityByHours(prediction, 24),
     todayProbability,
     laterGivenNoReset,
     next48Probability,
@@ -2324,8 +2329,8 @@ function renderResetForecastSummary({
   ).format(new Date(value)) : null;
   const glance = [];
   const glanceRow = (key, label, value) => glance.push(`<div data-forecast-glance="${key}"><dt>${escape(t2(label))}</dt><dd>${value}</dd></div>`);
-  if (prediction && Number.isFinite(prediction.next48Probability))
-    glanceRow("next-48h", "\u672A\u6765 48 \u5C0F\u65F6", escape(`${Number((prediction.next48Probability * 100).toFixed(1))}%`));
+  const horizons = [[12, prediction?.next12Probability], [24, prediction?.next24Probability], [48, prediction?.next48Probability]].filter(([, value]) => Number.isFinite(value));
+  if (horizons.length) glance.push(`<div data-forecast-glance="next-hours"><dt>${escape(t2("\u672A\u6765 reset \u6982\u7387"))}</dt><dd class="forecast-horizons">${horizons.map(([hours, value]) => `<span data-forecast-horizon="${hours}"><small>${escape(t2("{hours} \u5C0F\u65F6", { hours }))}</small><b>${Number((value * 100).toFixed(1))}%</b></span>`).join("")}</dd></div>`);
   const windowFrom = dayFormat(prediction?.nextResetWindow?.from), windowTo = dayFormat(prediction?.nextResetWindow?.to);
   if (windowFrom && windowTo) glanceRow("window", "\u53EF\u80FD\u7A97\u53E3", escape(windowFrom === windowTo ? windowFrom : `${windowFrom} \u2013 ${windowTo}`));
   if (last) {

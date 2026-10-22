@@ -175,6 +175,9 @@ export function predictReset({ now, timeZone = Intl.DateTimeFormat().resolvedOpt
   const next48Probability = todayProbability + laterProbability;
   Object.assign(prediction,{
     horizonHours: 48,
+    // Shorter horizons for planning the next hours (same cumulative model).
+    next12Probability:resetProbabilityByHours(prediction,12),
+    next24Probability:resetProbabilityByHours(prediction,24),
     todayProbability, laterGivenNoReset, next48Probability,
     todayEndHours,
     events: [{ inHours: todayEndHours, probability: todayProbability },
