@@ -23624,7 +23624,7 @@ function simulateResetPolicy({
     if (availableGoal) {
       const deadlines = live().filter((reset) => !held.has(reset.index) && (required2.has(reset.index) || policy.useExpiring)).map((reset) => Math.min(reset.expiresInHours - 1, normal - 1)).filter((hour) => hour > time3 + EPS4);
       const bankDeadline = deadlines.length ? Math.min(...deadlines) : null;
-      const forecastHour = policy.availabilityMode === "optimistic" && !forecastMissed ? confidentNextHour(forecast2.table(lastPublic), time3, normal, horizon) : null;
+      const forecastHour = policy.availabilityMode === "optimistic" && !forecastMissed ? policy.referenceTimes ? policy.referenceTimes.find((hour) => hour > time3 + EPS4 && hour < normal - EPS4) ?? null : confidentNextHour(forecast2.table(lastPublic), time3, normal, horizon) : null;
       availability = availabilityPace({
         quota,
         time: time3,
@@ -23847,6 +23847,7 @@ function forecastFirstPlan({ base, prediction, search, heldResetIndices = [], re
   const forecast2 = publicResetScenarios({ prediction: null, now: base.now, horizonHours: search.horizonHours });
   const targetDailyPercent = search.targetDailyPercent;
   const scheduled = search.usageStrategy && search.usageStrategy !== "balanced";
+  const availability = search.usageStrategy === "keep-available" ? { availabilityMode: "optimistic" } : {};
   const probe = simulateResetPolicy({
     base,
     policy: {
@@ -23854,7 +23855,7 @@ function forecastFirstPlan({ base, prediction, search, heldResetIndices = [], re
       bankMode: "reserve",
       waitHours: 0,
       useExpiring: false,
-      ...scheduled ? { usageStrategy: search.usageStrategy, dailyCapacityPercent: search.dailyCapacityPercent, referenceTimes: times } : {}
+      ...scheduled ? { usageStrategy: search.usageStrategy, dailyCapacityPercent: search.dailyCapacityPercent, referenceTimes: times, ...availability } : {}
     },
     scenario: { events: times },
     forecast: forecast2,
@@ -23873,7 +23874,8 @@ function forecastFirstPlan({ base, prediction, search, heldResetIndices = [], re
       quantile: null,
       referenceTimes: times,
       usageStrategy: search.usageStrategy,
-      dailyCapacityPercent: search.dailyCapacityPercent
+      dailyCapacityPercent: search.dailyCapacityPercent,
+      ...availability
     };
     const outcome = simulateResetPolicy({
       base,
@@ -23885,7 +23887,7 @@ function forecastFirstPlan({ base, prediction, search, heldResetIndices = [], re
       requiredResetIndices
     });
     return { policy: policy2, utility: outcome.utility, banksUsed: outcome.banksUsed, pauseHours: outcome.pauseHours };
-  }).sort((a, b) => b.utility - a.utility || a.banksUsed - b.banksUsed);
+  }).sort((a, b) => (availability.availabilityMode ? a.pauseHours - b.pauseHours : 0) || b.utility - a.utility || a.banksUsed - b.banksUsed);
   const policy = alternatives[0].policy;
   const trace = simulateResetPolicy({
     base,
@@ -24355,7 +24357,8 @@ function recommendedUsagePath(base, prediction, {
   alertsEnabled = false
 } = {}) {
   const availableGoal = usageStrategy === "keep-available";
-  if (availableGoal) recommendationMode = "feedback";
+  const cautious = availableGoal && availabilityMode === "cautious";
+  if (cautious) recommendationMode = "feedback";
   const originalNormal = base.originalNormalResetAt ?? base.normalResetAt;
   const initial = {
     ...base,
@@ -24375,7 +24378,7 @@ function recommendedUsagePath(base, prediction, {
     requiredResetIndices: base.requiredResetIndices ?? [],
     includeBridgeAlternative: recommendationMode === "feedback"
   });
-  const alternative = availableGoal ? null : forecastFirstPlan({
+  const alternative = cautious ? null : forecastFirstPlan({
     base: initial,
     prediction,
     search: recommendation,

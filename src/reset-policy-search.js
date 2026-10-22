@@ -205,8 +205,11 @@ export function simulateResetPolicy({base,policy,scenario,forecast,targetDailyPe
       const deadlines=live().filter(reset=>!held.has(reset.index)&&(required.has(reset.index)||policy.useExpiring))
         .map(reset=>Math.min(reset.expiresInHours-1,normal-1)).filter(hour=>hour>time+EPS);
       const bankDeadline=deadlines.length ? Math.min(...deadlines) : null;
+      // Optimistic: aim at the next counted reset (the plan's assumed times when
+      // given, else the next confident one); cautious: known supply only.
       const forecastHour=policy.availabilityMode==='optimistic'&&!forecastMissed
-        ? confidentNextHour(forecast.table(lastPublic),time,normal,horizon) : null;
+        ? policy.referenceTimes ? policy.referenceTimes.find(hour=>hour>time+EPS&&hour<normal-EPS)??null
+        : confidentNextHour(forecast.table(lastPublic),time,normal,horizon) : null;
       availability=availabilityPace({quota,time,normalHour:normal,targetDailyPercent,
         forecastHour,bankDeadline,forecastMissed});
       daily=Math.min(availability.dailyPercent,policy.dailyCapacityPercent??Infinity);
@@ -377,8 +380,10 @@ export function forecastFirstPlan({base,prediction,search,heldResetIndices=[],re
   const forecast=publicResetScenarios({prediction:null,now:base.now,horizonHours:search.horizonHours});
   const targetDailyPercent=search.targetDailyPercent;
   const scheduled=search.usageStrategy&&search.usageStrategy!=='balanced';
+  // Keep available counts these resets only in its optimistic mode.
+  const availability=search.usageStrategy==='keep-available' ? {availabilityMode:'optimistic'} : {};
   const probe=simulateResetPolicy({base,policy:{quantile:null,bankMode:'reserve',waitHours:0,useExpiring:false,
-      ...(scheduled ? {usageStrategy:search.usageStrategy,dailyCapacityPercent:search.dailyCapacityPercent,referenceTimes:times} : {})},
+      ...(scheduled ? {usageStrategy:search.usageStrategy,dailyCapacityPercent:search.dailyCapacityPercent,referenceTimes:times,...availability} : {})},
     scenario:{events:times},forecast,targetDailyPercent,stopAtFirstNormal:true});
   // Any outage in the plotted plan counts, including after the last assumed
   // reset; otherwise the plan could show a gap while holding a live bank.
@@ -391,11 +396,13 @@ export function forecastFirstPlan({base,prediction,search,heldResetIndices=[],re
       `${policy.bankMode}:${policy.waitHours}:${policy.useExpiring}`,policy])).values()];
   const alternatives=plans.map(plan=>{
     const policy={...plan,quantile:null,referenceTimes:times,
-      usageStrategy:search.usageStrategy,dailyCapacityPercent:search.dailyCapacityPercent};
+      usageStrategy:search.usageStrategy,dailyCapacityPercent:search.dailyCapacityPercent,...availability};
     const outcome=simulateResetPolicy({base,policy,scenario:{events:times},forecast,targetDailyPercent,
       heldResetIndices,requiredResetIndices});
     return {policy,utility:outcome.utility,banksUsed:outcome.banksUsed,pauseHours:outcome.pauseHours};
-  }).sort((a,b)=>b.utility-a.utility||a.banksUsed-b.banksUsed);
+  // Keep available ranks outages first, as its own policy search does.
+  }).sort((a,b)=>(availability.availabilityMode ? a.pauseHours-b.pauseHours : 0)
+    ||b.utility-a.utility||a.banksUsed-b.banksUsed);
   const policy=alternatives[0].policy;
   const trace=simulateResetPolicy({base,policy,scenario:{events:times},forecast,targetDailyPercent,
     heldResetIndices,requiredResetIndices,stopAtFirstNormal:true});

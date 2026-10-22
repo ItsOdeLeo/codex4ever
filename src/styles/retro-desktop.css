@@ -243,3 +243,22 @@ footer {font-size:12px;line-height:1.8;margin-top:32px;padding-top:14px;border-t
 }
 .strategy-graph[data-compact] .graph-node strong {font-size:12px;line-height:17px}
 .strategy-graph[data-compact] .graph-node span {font-size:10px;line-height:15px}
+/* One divider style: black outlines frame panels; every division inside a
+   panel is the same thin grey rule (no black or dotted inner lines). */
+.forecast-control {border-bottom:1px solid var(--pool-edge)}
+.forecast-glance>div {border-bottom:1px solid var(--pool-edge)!important}
+.forecast-more {border-top:1px solid var(--pool-edge)}
+.calendar-field {border-bottom:1px solid var(--pool-edge)}
+.timeline-toolbar {border-top:1px solid var(--pool-edge)}
+#inputs {border-bottom:1px solid var(--pool-edge)}
+/* Compact inputs: the add button shares the banked-reset title row. */
+#inputs {padding:14px 16px}
+.compact-form {gap:12px}
+legend {margin-bottom:8px}
+.calendar-field {padding-bottom:12px}
+.calendar-field .calendar-summary:empty {display:none}
+.calendar-field .calendar-summary:empty+button[data-toggle-calendar] {position:absolute;top:-30px;right:0;padding:3px 8px;font-size:11px}
+.refresh-row {gap:6px}
+.simple-fields {gap:8px}
+/* Cautious / optimistic sit under keep available as its sub-options. */
+.usage-strategies .availability-controls {margin:2px 0 6px 14px;padding-left:10px;border-left:1px solid var(--pool-edge)}

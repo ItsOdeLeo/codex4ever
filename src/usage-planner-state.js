@@ -119,8 +119,10 @@ export function updateUsagePlanner(planner,action) {
     const count=previous.assumedResetCount;
     // Choosing how many resets to count is an input of the one algorithm.
     const chosen=sequence===2 ? count===2 ? 1 : 2 : count ? 0 : 1;
+    // In keep available, counting a reset is its optimistic mode and counting
+    // none is cautious; the strategy itself stays.
     next={...previous,
-      ...(previous.usageStrategy==='keep-available' ? {usageStrategy:'balanced'} : {}),
+      ...(previous.usageStrategy==='keep-available' ? {availabilityMode:chosen ? 'optimistic' : 'cautious'} : {}),
       assumedResetCount:chosen,resetCountOverride:chosen};
   } else if(action.type==='toggle-bank') {
     const index=Number(action.index),choice=planner.result.backupChoices?.find(choice=>choice.index===index);

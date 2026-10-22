@@ -87,7 +87,7 @@ const english={
   '重置概率 · 截至':'Reset chance · by','首次额外重置':'First extra reset','第二次额外重置':'Second extra reset',
   '用量策略':'Usage strategy','保持节奏':'Keep pace','不浪费额度':'Use it all','按当前速度用，看什么时候用完':'Your current pace: see when quota runs out','尽量一直有额度，必要时放慢':'Stay available, slowing down if needed','在下次补满前刚好用完':'Empty quota just before the next refill','周末休息，额度分给工作日':'Rest on weekends, spread over weekdays','优先在周末用完额度':'Use quota mainly on weekends',
   '保持可用':'Keep available','规划倾向':'Planning preference','稳妥':'Cautious','乐观':'Optimistic',
-  '预留约 {buffer}%；乐观按 80% 预测分位规划。':'Reserve about {buffer}%; optimistic uses the forecast’s 80th percentile.',
+  '乐观计入预测的 reset，稳妥不计入；都预留约 {buffer}%。':'Optimistic counts predicted resets, cautious does not; both keep about {buffer}% in reserve.',
   '检查时提醒：开启':'Alerts on checks: On','检查时提醒：关闭':'Alerts on checks: Off',
   '按当前用量，{time} 耗尽。':'At current usage, depletion at {time}.',
   '当前用量无法保留目标余量。':'Current usage would use the reserved margin.',

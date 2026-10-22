@@ -2392,5 +2392,56 @@ footer {
   font-size: 10px;
   line-height: 15px;
 }
+.forecast-control {
+  border-bottom: 1px solid var(--pool-edge);
+}
+.forecast-glance > div {
+  border-bottom: 1px solid var(--pool-edge) !important;
+}
+.forecast-more {
+  border-top: 1px solid var(--pool-edge);
+}
+.calendar-field {
+  border-bottom: 1px solid var(--pool-edge);
+}
+.timeline-toolbar {
+  border-top: 1px solid var(--pool-edge);
+}
+#inputs {
+  border-bottom: 1px solid var(--pool-edge);
+}
+#inputs {
+  padding: 14px 16px;
+}
+.compact-form {
+  gap: 12px;
+}
+legend {
+  margin-bottom: 8px;
+}
+.calendar-field {
+  padding-bottom: 12px;
+}
+.calendar-field .calendar-summary:empty {
+  display: none;
+}
+.calendar-field .calendar-summary:empty + button[data-toggle-calendar] {
+  position: absolute;
+  top: -30px;
+  right: 0;
+  padding: 3px 8px;
+  font-size: 11px;
+}
+.refresh-row {
+  gap: 6px;
+}
+.simple-fields {
+  gap: 8px;
+}
+.usage-strategies .availability-controls {
+  margin: 2px 0 6px 14px;
+  padding-left: 10px;
+  border-left: 1px solid var(--pool-edge);
+}
 
 /* src/styles/theme.css */

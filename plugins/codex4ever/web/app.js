@@ -140,7 +140,7 @@ var english = {
   "\u89C4\u5212\u503E\u5411": "Planning preference",
   "\u7A33\u59A5": "Cautious",
   "\u4E50\u89C2": "Optimistic",
-  "\u9884\u7559\u7EA6 {buffer}%\uFF1B\u4E50\u89C2\u6309 80% \u9884\u6D4B\u5206\u4F4D\u89C4\u5212\u3002": "Reserve about {buffer}%; optimistic uses the forecast\u2019s 80th percentile.",
+  "\u4E50\u89C2\u8BA1\u5165\u9884\u6D4B\u7684 reset\uFF0C\u7A33\u59A5\u4E0D\u8BA1\u5165\uFF1B\u90FD\u9884\u7559\u7EA6 {buffer}%\u3002": "Optimistic counts predicted resets, cautious does not; both keep about {buffer}% in reserve.",
   "\u68C0\u67E5\u65F6\u63D0\u9192\uFF1A\u5F00\u542F": "Alerts on checks: On",
   "\u68C0\u67E5\u65F6\u63D0\u9192\uFF1A\u5173\u95ED": "Alerts on checks: Off",
   "\u6309\u5F53\u524D\u7528\u91CF\uFF0C{time} \u8017\u5C3D\u3002": "At current usage, depletion at {time}.",
@@ -1656,7 +1656,7 @@ function simulateResetPolicy({
     if (availableGoal) {
       const deadlines = live().filter((reset) => !held.has(reset.index) && (required.has(reset.index) || policy.useExpiring)).map((reset) => Math.min(reset.expiresInHours - 1, normal - 1)).filter((hour) => hour > time + EPS3);
       const bankDeadline = deadlines.length ? Math.min(...deadlines) : null;
-      const forecastHour = policy.availabilityMode === "optimistic" && !forecastMissed ? confidentNextHour(forecast.table(lastPublic), time, normal, horizon) : null;
+      const forecastHour = policy.availabilityMode === "optimistic" && !forecastMissed ? policy.referenceTimes ? policy.referenceTimes.find((hour) => hour > time + EPS3 && hour < normal - EPS3) ?? null : confidentNextHour(forecast.table(lastPublic), time, normal, horizon) : null;
       availability = availabilityPace({
         quota,
         time,
@@ -1879,6 +1879,7 @@ function forecastFirstPlan({ base, prediction, search, heldResetIndices = [], re
   const forecast = publicResetScenarios({ prediction: null, now: base.now, horizonHours: search.horizonHours });
   const targetDailyPercent = search.targetDailyPercent;
   const scheduled = search.usageStrategy && search.usageStrategy !== "balanced";
+  const availability = search.usageStrategy === "keep-available" ? { availabilityMode: "optimistic" } : {};
   const probe = simulateResetPolicy({
     base,
     policy: {
@@ -1886,7 +1887,7 @@ function forecastFirstPlan({ base, prediction, search, heldResetIndices = [], re
       bankMode: "reserve",
       waitHours: 0,
       useExpiring: false,
-      ...scheduled ? { usageStrategy: search.usageStrategy, dailyCapacityPercent: search.dailyCapacityPercent, referenceTimes: times } : {}
+      ...scheduled ? { usageStrategy: search.usageStrategy, dailyCapacityPercent: search.dailyCapacityPercent, referenceTimes: times, ...availability } : {}
     },
     scenario: { events: times },
     forecast,
@@ -1905,7 +1906,8 @@ function forecastFirstPlan({ base, prediction, search, heldResetIndices = [], re
       quantile: null,
       referenceTimes: times,
       usageStrategy: search.usageStrategy,
-      dailyCapacityPercent: search.dailyCapacityPercent
+      dailyCapacityPercent: search.dailyCapacityPercent,
+      ...availability
     };
     const outcome = simulateResetPolicy({
       base,
@@ -1917,7 +1919,7 @@ function forecastFirstPlan({ base, prediction, search, heldResetIndices = [], re
       requiredResetIndices
     });
     return { policy: policy2, utility: outcome.utility, banksUsed: outcome.banksUsed, pauseHours: outcome.pauseHours };
-  }).sort((a, b) => b.utility - a.utility || a.banksUsed - b.banksUsed);
+  }).sort((a, b) => (availability.availabilityMode ? a.pauseHours - b.pauseHours : 0) || b.utility - a.utility || a.banksUsed - b.banksUsed);
   const policy = alternatives[0].policy;
   const trace = simulateResetPolicy({
     base,
@@ -2347,9 +2349,9 @@ function renderResetForecastSummary({
 }
 
 // src/components/usage-strategies.js
-function renderUsageStrategies({ selected = "balanced", locale = "en", disabled = false } = {}, escape3 = String) {
+function renderUsageStrategies({ selected = "balanced", locale = "en", disabled = false, after = {} } = {}, escape3 = String) {
   const t2 = translator(locale);
-  return `<div class="usage-strategies" role="group" aria-label="${t2("\u7528\u91CF\u7B56\u7565")}">${usageStrategies.map((strategy) => `<button type="button" data-usage-strategy="${strategy.id}" aria-pressed="${selected === strategy.id}" title="${escape3(t2(strategy.description))}"${disabled ? " disabled" : ""}><strong>${escape3(t2(strategy.label))}</strong></button>`).join("")}</div>`;
+  return `<div class="usage-strategies" role="group" aria-label="${t2("\u7528\u91CF\u7B56\u7565")}">${usageStrategies.map((strategy) => `<button type="button" data-usage-strategy="${strategy.id}" aria-pressed="${selected === strategy.id}" title="${escape3(t2(strategy.description))}"${disabled ? " disabled" : ""}><strong>${escape3(t2(strategy.label))}</strong></button>${after[strategy.id] ?? ""}`).join("")}</div>`;
 }
 
 // src/components/availability-controls.js
@@ -2365,7 +2367,7 @@ function renderAvailabilityControls(availability, { locale = "en", mode = "optim
   const n = (value) => Number(value.toFixed(1));
   return `<div class="availability-controls" data-availability-mode="${mode}">
     <div class="usage-strategies" role="group" aria-label="${t2("\u89C4\u5212\u503E\u5411")}">${[["cautious", "\u7A33\u59A5"], ["optimistic", "\u4E50\u89C2"]].map(([id, label]) => `<button type="button" data-availability-mode="${id}" aria-pressed="${mode === id}"${disabled ? " disabled" : ""}>${escape3(t2(label))}</button>`).join("")}</div>
-    <small>${escape3(t2("\u9884\u7559\u7EA6 {buffer}%\uFF1B\u4E50\u89C2\u6309 80% \u9884\u6D4B\u5206\u4F4D\u89C4\u5212\u3002", { buffer: availability?.bufferPercent ?? 5 }))}</small>
+    <small>${escape3(t2("\u4E50\u89C2\u8BA1\u5165\u9884\u6D4B\u7684 reset\uFF0C\u7A33\u59A5\u4E0D\u8BA1\u5165\uFF1B\u90FD\u9884\u7559\u7EA6 {buffer}%\u3002", { buffer: availability?.bufferPercent ?? 5 }))}</small>
     <button type="button" data-toggle-pace-alerts aria-pressed="${alertsEnabled}"${disabled ? " disabled" : ""}>${escape3(t2(alertsEnabled ? "\u68C0\u67E5\u65F6\u63D0\u9192\uFF1A\u5F00\u542F" : "\u68C0\u67E5\u65F6\u63D0\u9192\uFF1A\u5173\u95ED"))}</button>
     ${availability?.notification.shouldNotify ? `<p class="availability-alert" role="status">${escape3(availability.currentPaceDepletionAt ? t2("\u6309\u5F53\u524D\u7528\u91CF\uFF0C{time} \u8017\u5C3D\u3002", { time: date(availability.currentPaceDepletionAt) }) : t2("\u5F53\u524D\u7528\u91CF\u65E0\u6CD5\u4FDD\u7559\u76EE\u6807\u4F59\u91CF\u3002"))}</p>` : ""}
     ${availability?.ifNoReset?.dailyPercent !== null && availability?.ifNoReset ? `<p>${escape3(t2("\u82E5 {time} \u4ECD\u672A reset\uFF1A\u6539\u4E3A {daily}% / \u5929\u3002", {
@@ -2775,7 +2777,8 @@ function recommendedUsagePath(base, prediction, {
   alertsEnabled = false
 } = {}) {
   const availableGoal = usageStrategy === "keep-available";
-  if (availableGoal) recommendationMode = "feedback";
+  const cautious = availableGoal && availabilityMode === "cautious";
+  if (cautious) recommendationMode = "feedback";
   const originalNormal = base.originalNormalResetAt ?? base.normalResetAt;
   const initial = {
     ...base,
@@ -2795,7 +2798,7 @@ function recommendedUsagePath(base, prediction, {
     requiredResetIndices: base.requiredResetIndices ?? [],
     includeBridgeAlternative: recommendationMode === "feedback"
   });
-  const alternative = availableGoal ? null : forecastFirstPlan({
+  const alternative = cautious ? null : forecastFirstPlan({
     base: initial,
     prediction,
     search: recommendation,
@@ -3379,7 +3382,7 @@ function updateUsagePlanner(planner2, action) {
     const chosen = sequence === 2 ? count === 2 ? 1 : 2 : count ? 0 : 1;
     next = {
       ...previous,
-      ...previous.usageStrategy === "keep-available" ? { usageStrategy: "balanced" } : {},
+      ...previous.usageStrategy === "keep-available" ? { availabilityMode: chosen ? "optimistic" : "cautious" } : {},
       assumedResetCount: chosen,
       resetCountOverride: chosen
     };
@@ -4872,7 +4875,7 @@ function calendar() {
     const disabled = date < today || date > maxDate;
     dates.push(`<button type="button" data-calendar-date="${date}" aria-label="${date}${backup ? t("\uFF0C\u5907\u7528 reset \u5230\u671F\u65E5") : ""}" aria-pressed="${backup}" ${disabled ? "disabled" : ""}>${day}</button>`);
   }
-  return `<div class="reset-actions"><div class="calendar-summary">${input.resetDates.length ? input.resetDates.slice().sort().map((date) => `<button type="button" data-remove-date="${escape2(date)}" aria-label="${escape2(t("\u79FB\u9664\u5907\u7528 reset {date}", { date }))}">${escape2(date)} \xD7</button>`).join("") : `<span>${t("\u6682\u65E0\u5907\u7528 reset")}</span>`}</div>
+  return `<div class="reset-actions"><div class="calendar-summary">${input.resetDates.length ? input.resetDates.slice().sort().map((date) => `<button type="button" data-remove-date="${escape2(date)}" aria-label="${escape2(t("\u79FB\u9664\u5907\u7528 reset {date}", { date }))}">${escape2(date)} \xD7</button>`).join("") : ""}</div>
     <button type="button" data-toggle-calendar aria-expanded="${calendarOpen}" aria-controls="reset-calendar">${t(calendarOpen ? "\u6536\u8D77\u65E5\u5386" : "\uFF0B \u6DFB\u52A0\u65E5\u671F")}</button></div>
   ${calendarOpen ? `<div class="calendar-panel" id="reset-calendar">
     <div class="calendar-head"><strong>${monthLabel}</strong><div><button type="button" data-month-nav="-1" aria-label="${t("\u4E0A\u4E2A\u6708")}" ${monthDistance() <= 0 ? "disabled" : ""}>\u2039</button><button type="button" data-month-nav="1" aria-label="${t("\u4E0B\u4E2A\u6708")}" ${monthDistance() >= 11 ? "disabled" : ""}>\u203A</button></div></div>
@@ -4904,12 +4907,14 @@ function renderStrategyControls() {
   $("#strategy-controls").innerHTML = `<div class="control-heading"><h3 id="strategy-controls-title">${t("\u7528\u91CF\u7B56\u7565")}</h3><span class="instant-label">${t("\u5373\u65F6\u66F4\u65B0")}</span></div>${renderUsageStrategies({
     selected: planner.intent.usageStrategy,
     locale: language,
-    disabled: !planner.result?.available
-  }, escape2)}${planner.intent.usageStrategy === "keep-available" ? renderAvailabilityControls(
-    planner.result?.recommendation?.availability ? { ...planner.result.recommendation.availability, timeZone } : null,
-    { locale: language, mode: planner.intent.availabilityMode, alertsEnabled: planner.intent.alertsEnabled, disabled: !planner.result?.available },
-    escape2
-  ) : ""}`;
+    disabled: !planner.result?.available,
+    // Cautious / optimistic belong to keep available: show them right under it.
+    after: planner.intent.usageStrategy === "keep-available" ? { "keep-available": renderAvailabilityControls(
+      planner.result?.recommendation?.availability ? { ...planner.result.recommendation.availability, timeZone } : null,
+      { locale: language, mode: planner.intent.availabilityMode, alertsEnabled: planner.intent.alertsEnabled, disabled: !planner.result?.available },
+      escape2
+    ) } : {}
+  }, escape2)}`;
 }
 function saveInput() {
   if (plugin && !manualDraft) return;

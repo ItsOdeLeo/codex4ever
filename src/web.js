@@ -92,7 +92,7 @@ function calendar() {
     const disabled = date < today || date > maxDate;
     dates.push(`<button type="button" data-calendar-date="${date}" aria-label="${date}${backup ? t('，备用 reset 到期日') : ''}" aria-pressed="${backup}" ${disabled ? 'disabled' : ''}>${day}</button>`);
   }
-  return `<div class="reset-actions"><div class="calendar-summary">${input.resetDates.length ? input.resetDates.slice().sort().map(date => `<button type="button" data-remove-date="${escape(date)}" aria-label="${escape(t('移除备用 reset {date}',{date}))}">${escape(date)} ×</button>`).join('') : `<span>${t('暂无备用 reset')}</span>`}</div>
+  return `<div class="reset-actions"><div class="calendar-summary">${input.resetDates.length ? input.resetDates.slice().sort().map(date => `<button type="button" data-remove-date="${escape(date)}" aria-label="${escape(t('移除备用 reset {date}',{date}))}">${escape(date)} ×</button>`).join('') : ''}</div>
     <button type="button" data-toggle-calendar aria-expanded="${calendarOpen}" aria-controls="reset-calendar">${t(calendarOpen ? '收起日历' : '＋ 添加日期')}</button></div>
   ${calendarOpen ? `<div class="calendar-panel" id="reset-calendar">
     <div class="calendar-head"><strong>${monthLabel}</strong><div><button type="button" data-month-nav="-1" aria-label="${t('上个月')}" ${monthDistance() <= 0 ? 'disabled' : ''}>‹</button><button type="button" data-month-nav="1" aria-label="${t('下个月')}" ${monthDistance() >= 11 ? 'disabled' : ''}>›</button></div></div>
@@ -126,9 +126,11 @@ function markChanged() {
 
 function renderStrategyControls() {
   $('#strategy-controls').innerHTML=`<div class="control-heading"><h3 id="strategy-controls-title">${t('用量策略')}</h3><span class="instant-label">${t('即时更新')}</span></div>${renderUsageStrategies({
-    selected:planner.intent.usageStrategy,locale:language,disabled:!planner.result?.available},escape)}${planner.intent.usageStrategy==='keep-available'
-      ? renderAvailabilityControls(planner.result?.recommendation?.availability ? {...planner.result.recommendation.availability,timeZone} : null,
-        {locale:language,mode:planner.intent.availabilityMode,alertsEnabled:planner.intent.alertsEnabled,disabled:!planner.result?.available},escape) : ''}`;
+    selected:planner.intent.usageStrategy,locale:language,disabled:!planner.result?.available,
+    // Cautious / optimistic belong to keep available: show them right under it.
+    after:planner.intent.usageStrategy==='keep-available' ? {'keep-available':renderAvailabilityControls(
+      planner.result?.recommendation?.availability ? {...planner.result.recommendation.availability,timeZone} : null,
+      {locale:language,mode:planner.intent.availabilityMode,alertsEnabled:planner.intent.alertsEnabled,disabled:!planner.result?.available},escape)} : {}},escape)}`;
 }
 
 function saveInput() {

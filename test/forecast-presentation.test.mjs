@@ -133,8 +133,8 @@ test('假设卡片位于保守时刻；不计入时没有额外100%补满，计�
   const plan=extra=>planUsagePath({input,now,timeZone,prediction,averagePercentPerDay:20,...extra});
   const conservative=conservativeResetTimes(plan({assumedResetCount:0}),prediction);
   const card=(graph,sequence)=>graph.nodes.find(node=>node.type==='forecast-assumption'&&node.sequence===sequence);
-  // Neither a plan that counts nothing nor keep-available (no counted plan) adds a refill.
-  for(const extra of [{assumedResetCount:0},{usageStrategy:'keep-available'}]) {
+  // Neither a plan that counts nothing nor cautious keep-available adds a refill.
+  for(const extra of [{assumedResetCount:0},{usageStrategy:'keep-available',availabilityMode:'cautious'}]) {
     const result=plan(extra),graph=layoutStrategyTree(result,{prediction});
     assert.equal(result.forecastScenario.selected,false);
     assert.equal(result.forecastScenario.at,conservative[0]);

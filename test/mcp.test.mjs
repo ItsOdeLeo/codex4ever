@@ -91,7 +91,8 @@ test('Keep available MCP接口输出同源预算和可开关的检查提醒，�
     assert.equal(b.availability.forecastUsed,true);
     assert.ok(b.recommendation.dailyPercent>a.recommendation.dailyPercent);
     assert.ok(b.availability.ifNoReset.dailyPercent>0);
-    assert.equal(b.basis,'scenario-selected-feedback-policy');
+    // Optimistic keep available counts the predicted resets, as other strategies do.
+    assert.equal(b.basis,'conditional-forecast-preview');
     assert.equal(b.contingency.selected.bankUses.length,0);
   }finally {await client.close();}
 });

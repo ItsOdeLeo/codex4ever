@@ -32,8 +32,12 @@ test('同样余额与刷新，额外 reset 概率直接影响乐观日均预算�
     assert.equal(r.recommendation.availability.forecastUsed,false);
     assert.ok(!r.milestones.points.flatMap(p=>p.events).some(e=>e.kind==='assumed-extra-reset'));
   }
-  assert.equal(optimistic.recommendation.primary,null,'即使网页默认preview，也不能把预测当已发生');
-  assert.equal(optimistic.strategy.conditional,false);
+  // Optimistic counts the predicted resets like every strategy; cautious counts none.
+  assert.ok(optimistic.recommendation.primary,'乐观模式按同一规则计入预测 reset');
+  assert.equal(optimistic.strategy.conditional,true);
+  assert.equal(conservative.recommendation.primary,null,'谨慎模式不计入预测 reset');
+  // Keep available never plans an outage while it counts those resets.
+  assert.ok(optimistic.phasePlans.every(phase=>phase.plannedRest||phase.dailyPercent>0),'计入 reset 后也一直有额度');
   const target=optimistic.recommendation.availability;
   near(target.probabilityOfResetByReview,resetProbabilityByHours(prediction,(Date.parse(target.reviewAt)-now)/HOUR));
   // Shared rule: aim where 75% of the chance before the refresh (96h) has occurred.
@@ -130,8 +134,14 @@ test('提醒开关只改变提醒，不改策略、概率、日期轴；MCP文�
   assert.equal(optimistic.intent.alertsEnabled,true);
   const off=updateUsagePlanner(optimistic,{type:'toggle-forecast'});
   near(off.result.recommendation.firstAction.dailyPercent,state.result.recommendation.firstAction.dailyPercent);
+  // Counting resets stays in keep available (optimistic); counting none is cautious.
   const preview=updateUsagePlanner(optimistic,{type:'toggle-assumption',sequence:2});
-  assert.equal(preview.intent.usageStrategy,'balanced');assert.equal(preview.intent.resetCountOverride,2);
+  assert.equal(preview.intent.usageStrategy,'keep-available');assert.equal(preview.intent.resetCountOverride,2);
+  assert.equal(preview.intent.availabilityMode,'optimistic');
   assert.equal(preview.result.forecastScenario.secondSelected,true);
+  const none=updateUsagePlanner(preview,{type:'toggle-assumption',sequence:1});
+  assert.equal(none.intent.usageStrategy,'keep-available');
+  assert.equal(none.intent.availabilityMode,'cautious');
+  assert.equal(none.result.recommendation.primary,null);
   assert.throws(()=>plan({availabilityMode:'invented'}),/availability mode/);
 });

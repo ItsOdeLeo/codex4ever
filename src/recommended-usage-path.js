@@ -17,7 +17,10 @@ export function recommendedUsagePath(base,prediction,{targetDailyPercent,sampleC
   usageStrategy='balanced',dailyCapacityPercent=null,assumedResetCount='auto',recommendationMode=DEFAULT_RECOMMENDATION_MODE,
   availabilityMode='optimistic',alertsEnabled=false}={}) {
   const availableGoal=usageStrategy==='keep-available';
-  if(availableGoal)recommendationMode='feedback';
+  // Keep available: cautious counts no predicted reset; optimistic counts them
+  // like every other strategy (same rule, same conservative times).
+  const cautious=availableGoal&&availabilityMode==='cautious';
+  if(cautious)recommendationMode='feedback';
   const originalNormal=base.originalNormalResetAt??base.normalResetAt;
   const initial={...base,normalResetAt:originalNormal,
     normalResetInHours:(Date.parse(originalNormal)-Date.parse(base.now))/HOUR};
@@ -25,7 +28,7 @@ export function recommendedUsagePath(base,prediction,{targetDailyPercent,sampleC
     availabilityMode,alertsEnabled,
     heldResetIndices:base.heldResetIndices??[],requiredResetIndices:base.requiredResetIndices??[],
     includeBridgeAlternative:recommendationMode==='feedback'});
-  const alternative=availableGoal ? null : forecastFirstPlan({base:initial,prediction,search:recommendation,assumedResetCount,
+  const alternative=cautious ? null : forecastFirstPlan({base:initial,prediction,search:recommendation,assumedResetCount,
     heldResetIndices:base.heldResetIndices??[],requiredResetIndices:base.requiredResetIndices??[]});
   const primary=recommendationMode==='feedback' ? null : alternative;
   recommendation.robustFirstAction=recommendation.firstAction;
