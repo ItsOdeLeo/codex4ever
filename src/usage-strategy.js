@@ -32,9 +32,10 @@ export function usageStrategyCalendar({now,timeZone,horizonHours=504}) {
     slots,
     allocate({strategy,start,end,quota,dailyCapacityPercent=null,cycleStart=start}) {
       const spans=slots.filter(slot=>slot.endHours>start+EPS&&slot.startHours<end-EPS);
-      const hasWeekend=slots.some(slot=>slot.weekend&&slot.endHours>cycleStart+EPS&&slot.startHours<end-EPS);
+      // Strict, like weekdays: a refill cycle without a weekend is not used,
+      // even though the next refill then covers what it brought.
       const allowed=slot=>strategy==='weekdays' ? !slot.weekend
-        : strategy==='weekend-focus'&&hasWeekend ? slot.weekend : true;
+        : strategy==='weekend-focus' ? slot.weekend : true;
       const availableHours=spans.reduce((sum,slot)=>sum+(allowed(slot)
         ? Math.max(0,Math.min(end,slot.endHours)-Math.max(start,slot.startHours)) : 0),0);
       const current=spans.find(slot=>slot.startHours<=start+EPS&&slot.endHours>start+EPS);

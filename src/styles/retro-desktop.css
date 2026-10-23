@@ -109,12 +109,15 @@ footer a {color:var(--ink);text-decoration-color:var(--link-stroke);text-underli
 .phase-reset-opportunity[data-compact-probability] time {display:flex;gap:6px;line-height:16px}
 .phase-reset-opportunity[data-cutoff-layout="stacked"] time {flex-direction:column;gap:0}
 .graph-node,.graph-node[aria-pressed]:hover {box-shadow:none}
-.graph-node.graph-selected,.graph-node.graph-normal {background:transparent}
+.graph-node.graph-selected {background:transparent}
 .graph-backup {background:var(--bank-surface);border:1px solid var(--bank-border);border-radius:3px}
 .graph-backup[aria-pressed=false] {border-style:dashed}
 .graph-backup[aria-pressed]:hover {background:var(--bank-surface);border-color:var(--ink)}
 .graph-node .deadline-warning {color:var(--danger);font-weight:650;text-decoration:none}
-.graph-depletion {border-bottom-color:var(--danger)}
+/* Run-out and refresh cards are cards like the others: same border and
+ * surface; only the run-out title is red. No underline. */
+.graph-node.graph-depletion,.graph-node.graph-normal,.graph-node.graph-horizon {background:var(--surface);border:1px solid var(--border);border-radius:3px}
+.graph-depletion strong {color:var(--danger)}
 .phase-controls button {background:var(--surface-soft);border-color:var(--pool-edge);border-radius:2px;box-shadow:none}
 .phase-controls button[aria-pressed=true] {background:var(--accent-soft);border-color:var(--border);color:var(--accent-text)}
 .graph-control {background:transparent;box-shadow:none}
@@ -259,11 +262,11 @@ legend {margin-bottom:8px}
 /* Next 12h / 24h / 48h reset chances, side by side. */
 .forecast-glance>[data-forecast-glance="next-hours"] {flex-direction:column;align-items:stretch!important;gap:6px}
 .forecast-horizons {display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0}
-.forecast-horizons span {display:flex;flex-direction:column;align-items:flex-start}
+.forecast-horizons>span {display:flex;flex-direction:column;align-items:flex-start}
 .forecast-horizons small {font-size:11px;color:var(--muted);font-weight:400}
 .forecast-horizons b {font-size:20px;line-height:24px;font-weight:700;font-variant-numeric:tabular-nums}
-.forecast-horizons span:last-child {align-items:flex-end}
-.forecast-horizons span:nth-child(2) {align-items:center}
+.forecast-horizons>span:last-child {align-items:flex-end}
+.forecast-horizons>span:nth-child(2) {align-items:center}
 /* Single plan card: heading, forecast strip and timeline on top; strategies,
    inputs and the plugin hint docked at the bottom, so one screenshot holds it all. */
 .layout {display:block}
@@ -304,7 +307,7 @@ legend {margin-bottom:8px}
 @media(max-width:680px) {.no-reset-toggle {margin-left:0}}
 /* Tiles carry their own label; "More data" belongs to them, the rule closes the group. */
 .plan-card>.toolbar {margin-bottom:18px}
-@media(max-width:680px) {.plan-card .forecast-glance>[data-forecast-glance="next-hours"]>dd {flex:1;min-width:0}.plan-card .forecast-horizons {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.plan-card .forecast-horizons span,.plan-card .forecast-horizons span:nth-child(n) {min-width:0;padding:6px 8px}.plan-card .forecast-horizons small {font-size:10px;white-space:normal}.plan-card .forecast-horizons b {font-size:16px}}
+@media(max-width:680px) {.plan-card .forecast-glance>[data-forecast-glance="next-hours"]>dd {flex:1;min-width:0}.plan-card .forecast-horizons {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.plan-card .forecast-horizons>span,.plan-card .forecast-horizons>span:nth-child(n) {min-width:0;padding:6px 8px}.plan-card .forecast-horizons small {font-size:10px;white-space:normal}.plan-card .forecast-horizons b {font-size:16px}}
 /* "More data" opened: one compact row per fact, label | value · note. */
 @media(max-width:680px) {.plan-card .forecast-more>dl>div {grid-template-columns:minmax(0,1fr);gap:0;padding:4px 0!important}}
 /* Dock inputs: one aligned row. Every field has the same small label on top
@@ -387,17 +390,17 @@ legend {margin-bottom:8px}
   .plan-card .forecast-glance dd {margin:0;font-size:12px}
   .plan-card .forecast-horizons {display:flex;gap:10px}
   .plan-card .forecast-horizons b {font-size:14px;line-height:18px}
-  .plan-card .forecast-horizons span,.plan-card .forecast-horizons span:nth-child(n) {display:flex;flex-direction:row;align-items:baseline;gap:4px}
+  .plan-card .forecast-horizons>span,.plan-card .forecast-horizons>span:nth-child(n) {display:flex;flex-direction:row;align-items:baseline;gap:4px}
   .plan-card .forecast-more {margin-top:6px;font-size:11px}
   .plan-card .forecast-more summary {color:var(--muted)}
   .plan-card .forecast-more[open] {padding:8px 0}
-  .plan-card .forecast-horizons span,.plan-card .forecast-glance dd {white-space:nowrap}
+  .plan-card .forecast-horizons>span,.plan-card .forecast-glance dd {white-space:nowrap}
   .plan-card .forecast-glance>[data-forecast-glance="next-hours"],.plan-card .forecast-horizons {flex-wrap:wrap;min-width:0}
   .plan-card .forecast-glance>div:not([data-forecast-glance="next-hours"]) {display:none!important}
   .plan-card .forecast-glance>[data-forecast-glance="next-hours"] {align-items:center!important;gap:12px}
   .plan-card .forecast-glance>[data-forecast-glance="next-hours"]>dt {font-size:12px}
   .plan-card .forecast-horizons {gap:8px}
-  .plan-card .forecast-horizons span,.plan-card .forecast-horizons span:nth-child(n) {flex-direction:column;align-items:flex-start;gap:1px;min-width:84px;padding:6px 12px;border:1px solid var(--border);border-radius:4px;background:var(--surface-soft)}
+  .plan-card .forecast-horizons>span,.plan-card .forecast-horizons>span:nth-child(n) {flex-direction:column;align-items:flex-start;gap:1px;min-width:84px;padding:6px 12px;border:1px solid var(--border);border-radius:4px;background:var(--surface-soft)}
   .plan-card .forecast-horizons small {font-size:11px}
   .plan-card .forecast-horizons b {font-size:18px;line-height:22px}
   .plan-card .forecast-glance>[data-forecast-glance="next-hours"]>dt {display:none}
@@ -435,10 +438,19 @@ html:lang(zh-CN) .brand h1, html:lang(zh-CN) .guide-page .brand a {font-size:24p
 .brand-stamp em {display:flex;align-items:center;gap:5px;font-style:normal;white-space:nowrap}
 .brand-stamp b {font-size:12px;font-weight:400}
 .brand-stamp i {font-style:normal}
-/* Phones: name over domain, so the stamp stays clear of the forecast tile. */
-@media(max-width:680px) {.brand-stamp em {flex-direction:column;align-items:flex-end;gap:3px}.brand-stamp em i {display:none}}
 /* Visually hidden, still read aloud. */
 .sr-only {position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 /* Daily usage bars: the quota area's fill and outline, one bar per day. */
 .tree-edges .daily-bar {fill:var(--quota-fill-start);stroke:var(--quota-stroke);stroke-width:1.2}
 .tree-edges .usage-gridline {stroke:var(--divider);stroke-width:1;stroke-dasharray:2 3;opacity:.6}
+/* Phones: the stamp gets its own line above the tiles, and the three
+ * horizons sit in one row with short labels. These come last so the
+ * narrow-screen rules above do not undo them. */
+@media(max-width:680px) {
+  .plan-card #forecast.forecast-panel {padding-top:30px}
+  .plan-card #forecast>.brand-stamp {left:0;right:auto}
+  .plan-card .forecast-horizons {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+  .plan-card .forecast-horizons>span,.plan-card .forecast-horizons>span:nth-child(n) {min-width:0;padding:6px 8px}
+  .forecast-horizons .horizon-long {display:none}
+  .forecast-horizons .horizon-short {display:inline}
+}

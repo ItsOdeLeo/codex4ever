@@ -35,16 +35,26 @@ test('同样额度和预测，三种策略真正改变日历用量；重置前�
     assert.equal(result.usageStrategy,strategy);
     assert.ok(result.backupChoices.every(choice=>!choice.used),'够用时不得消耗11月7日备用');
     assert.equal(trace.events.filter(event=>event.kind==='assumed-extra-reset').length,2);
+    const calendar=usageStrategyCalendar({now:now.toISOString(),timeZone,horizonHours:504});
+    let cycleStart=0;
     for(const event of trace.events.filter(event=>event.kind!=='expiry')) {
-      near(event.overwrittenPercent,0);
+      // Weekends only is strict: a refill cycle without a weekend is left
+      // unused, so only that cycle's refill may overwrite quota.
+      const weekendInCycle=calendar.slots.some(slot=>slot.weekend&&slot.endHours>cycleStart&&slot.startHours<event.atHours);
+      if(strategy!=='weekend-focus'||weekendInCycle)near(event.overwrittenPercent,0);
       near((Date.parse(event.nextNormalResetAt)-Date.parse(event.at))/HOUR,168);
+      cycleStart=event.atHours;
     }
+    if(strategy==='weekend-focus')for(const segment of trace.segments)
+      for(const slot of calendar.slots.filter(slot=>!slot.weekend))
+        if(Math.min(segment.endHours,slot.endHours)>Math.max(segment.startHours,slot.startHours)+1e-6)
+          near(segment.dailyPercent,0);
     for(const segment of trace.segments) {
       near(segment.remainingBefore-segment.remainingAfter,
         segment.dailyPercent*(segment.endHours-segment.startHours)/24);
       assert.ok(segment.remainingAfter>=0);
     }
-    near(80+100*trace.events.filter(event=>event.kind!=='expiry').length-trace.work,trace.remainingQuota);
+    near(80+trace.events.filter(event=>event.kind!=='expiry').reduce((sum,event)=>sum+100-event.overwrittenPercent,0)-trace.work,trace.remainingQuota);
     for(const locale of ['en','zh-CN'])for(const viewportWidth of [380,1400]) {
       const graph=layoutStrategyTree(result,{prediction,viewportWidth,locale});
       const html=renderStrategyTree(graph,String);
