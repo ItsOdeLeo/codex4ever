@@ -28,7 +28,7 @@ function assertWeeklyWindow(result) {
   assert.equal(result.normalResetAt,terminal.at);
 }
 
-test('额外reset替换原正常刷新日期，按本次reset后七天计算',()=>{
+test('额外 reset 替换原正常刷新日期，按本次 reset 后七天计算',()=>{
   const result=plan();
   assertWeeklyWindow(result);
   const [first]=assumedHours(result);
@@ -39,7 +39,7 @@ test('额外reset替换原正常刷新日期，按本次reset后七天计算',()
   assert.deepEqual(supplies(result).map(event=>event.kind),['assumed-extra-reset','normal-refresh']);
 });
 
-test('连续两次额外reset以后只保留第二次后七天，两个旧日期都失效',()=>{
+test('连续两次额外 reset 以后只保留第二次后七天，两个旧日期都失效',()=>{
   const prediction=predictionAt(6,42),result=plan({prediction,assumedResetCount:2});
   assertWeeklyWindow(result);
   const [first,second]=assumedHours(result);
@@ -51,7 +51,7 @@ test('连续两次额外reset以后只保留第二次后七天，两个旧日期
   near(normal.atHours,second+WEEK);
 });
 
-test('每次补给都重开七天，后来的额外reset再次覆盖正常刷新日程',()=>{
+test('每次补给都重开七天，后来的额外 reset 再次覆盖正常刷新日程',()=>{
   const result=plan({input:{...input,weeklyResetDays:0,weeklyResetHours:6},prediction:predictionAt(200)});
   assertWeeklyWindow(result);
   const [first]=assumedHours(result);
@@ -59,7 +59,7 @@ test('每次补给都重开七天，后来的额外reset再次覆盖正常刷新
     [['assumed-extra-reset',first],['normal-refresh',first+WEEK]]);
 });
 
-test('备用、额外reset、再次备用按发生顺序逐次覆盖正常刷新时间',()=>{
+test('备用、额外 reset、再次备用按发生顺序逐次覆盖正常刷新时间',()=>{
   const result=plan({input:{...input,resetDates:['2026-10-16','2026-10-20']},prediction:predictionAt(42)});
   assertWeeklyWindow(result);
   const kinds=supplies(result).map(event=>event.kind);
@@ -69,7 +69,7 @@ test('备用、额外reset、再次备用按发生顺序逐次覆盖正常刷新
     near(phase.dailyPercent,60);
 });
 
-test('未计入额外reset时，不提前移动实际正常刷新时间',()=>{
+test('未计入额外 reset 时，不提前移动实际正常刷新时间',()=>{
   const result=plan({assumedResetCount:0});
   assert.equal(result.normalResetAt,at(96));
   assert.equal(result.normalResetSource,'entered-account-time');

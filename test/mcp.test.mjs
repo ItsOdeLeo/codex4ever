@@ -58,7 +58,7 @@ async function initialize(client) {
   client.notify('notifications/initialized');
 }
 
-test('Keep available MCP接口输出同源预算和可开关的检查提醒，额外reset参与乐观策略',async()=>{
+test('Keep available MCP接口输出同源预算和可开关的检查提醒，额外 reset 参与乐观策略',async()=>{
   const now='2026-10-18T12:00:00Z';
   const source=`import {serveStdio} from '@modelcontextprotocol/server/stdio';
     import {createUsagePlannerServer} from './src/mcp-server.js';
@@ -238,7 +238,7 @@ test('MCP宿主取原帖、自己分类、回传规划，无额外模型API并�
     const history=await client.request('tools/call',{name:'plan_usage_strategy',arguments:args});
     const planned=await client.request('tools/call',{name:'plan_usage_strategy',arguments:{...args,
       evidence:{...data.evidence,posts:[{...data.evidence.posts[0],signal:{kind:'reset_planned',confidence:.95,
-        validUntil:'2026-10-16T22:00:00.000Z',reason:'合成测试：宿主识别明确预告'}}]}}});
+        validUntil:'2026-10-16T22:00:00.000Z',reason:'合成测试：宿主识别已宣布'}}]}}});
     assert.equal(history.result.isError,undefined,history.result.content?.[0]?.text);
     assert.equal(planned.result.isError,undefined,planned.result.content?.[0]?.text);
     const before=history.result.structuredContent,after=planned.result.structuredContent;

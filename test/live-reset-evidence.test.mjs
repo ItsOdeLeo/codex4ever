@@ -109,7 +109,7 @@ test('标准LLM分析回复及其上下文，缓存分类但不缓存抓取；�
   assert.equal(first.latestResetMention.context,post.context);
   assert.doesNotMatch(JSON.stringify(first),/never-output-this-key|test-token/);
   const prediction=predictionFromArchive({archive:first,now,timeZone:'Europe/Berlin',enforceResetCooldown:true}).prediction;
-  veryUnlikely(prediction.todayProbability,'开启次日冷却时，明确预告也不能提前放开');
+  veryUnlikely(prediction.todayProbability,'开启次日冷却时，已宣布也不能提前放开');
   const historyOnly=predictionFromArchive({archive:{...first,posts:[]},now,timeZone:'Europe/Berlin',enforceResetCooldown:true}).prediction;
   assert.ok(prediction.next48Probability>historyOnly.next48Probability,'回复分类真正进入概率计算');
   assert.equal(prediction.evidence.latestResetMention.sourceUrl,post.link);

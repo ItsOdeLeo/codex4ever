@@ -47,7 +47,7 @@ test('加速只把耗尽点向左移，备用及正常刷新按同一日历轴�
   near(normal.anchorX,base.funnel.refills.find(refill=>refill.kind==='normal').x);
 });
 
-test('扫描实际输出：首次／第二次假设、备用及正常补充均不重复显示耗尽，真实空档仍提示',()=>{
+test('扫描实际输出：第一次／第二次假设、备用及正常补充均不重复显示耗尽，真实空档仍提示',()=>{
   const origin=new Date('2026-10-18T12:00:00Z'),at=hours=>new Date(origin.getTime()+hours*3600000).toISOString();
   const prediction={todayEndHours:10,todayProbability:.1,laterGivenNoReset:.2,next48Probability:.28,
     evidence:{dailyFrequency:.1},
@@ -181,7 +181,7 @@ test('概率的时间点与额度使用同一坐标，切换路径仍对齐相�
   assert.match(html,/class="forecast-calendar forecast-aligned"/);
 });
 
-test('首次与第二次假设固定同一排，缩放及切换状态只调整横向避让，不改变真实时间点',()=>{
+test('第一次与第二次假设固定同一排，缩放及切换状态只调整横向避让，不改变真实时间点',()=>{
   const origin=new Date('2026-10-18T12:00:00Z'),at=hours=>new Date(origin.getTime()+hours*3600000).toISOString();
   const prediction={todayEndHours:10,todayProbability:.1,laterGivenNoReset:.2,next48Probability:.28,
     evidence:{dailyFrequency:.1},
@@ -292,7 +292,7 @@ test('横向按完整计划适应窗口，放大和缩小都会重排；尺寸�
   assert.deepEqual(conditional,original);
 });
 
-test('备用使用／保留及首次／二次发布的162种选择共用日期、每日宽度和预测坐标',()=>{
+test('备用使用／保留及第一次／二次发布的162种选择共用日期、每日宽度和预测坐标',()=>{
   const now=new Date('2026-10-18T12:00:00Z');
   const prediction=predictReset({now:now.toISOString(),timeZone,campaignTimeZone:'America/Los_Angeles',
     resetTimes:[3,7,11,13,15,17].map(day=>`2026-10-${String(day).padStart(2,'0')}T05:00:00Z`)});
@@ -342,7 +342,7 @@ test('显示范围包含到期前最后一小时兑换后的正常刷新，不�
 
 const flexNow=new Date('2026-10-15T08:00:00Z');
 const flexInput={weeklyRemaining:25,weeklyResetDays:4,weeklyResetHours:0,resetDates:['2026-10-16','2026-10-23']};
-test('额外重置只显示各日累计概率，不跳日、不画假想100%补满',()=>{
+test('额外 reset 只显示各日累计概率，不跳日、不画假想100%补满',()=>{
   const prediction=predictReset({now:flexNow.toISOString(),timeZone,priorDailyProbability:.3});
   const result=planUsagePath({input:flexInput,now:flexNow,timeZone,prediction});
   // Regression: the old display subtracted adjacent CDF values and selected
@@ -358,7 +358,7 @@ test('额外重置只显示各日累计概率，不跳日、不画假想100%补�
   }
   assert.equal(graph.funnel.refills.filter(refill=>refill.kind==='extra-reset').length,0);
   const html=renderStrategyTree(graph,String);
-  for(const probability of ['22','39.2','52.4'])assert.ok(html.includes(`额外重置 ${probability}%`));
+  for(const probability of ['22','39.2','52.4'])assert.ok(html.includes(`额外 reset ${probability}%`));
   assert.doesNotMatch(html,/extra-reset-(ghost|arrow)|data-hypothetical|发生后重算|此时间情景|>可能额外 reset</);
   assert.equal(layoutStrategyTree(planUsagePath({input:flexInput,now:flexNow,timeZone})).forecastLayout.length,0);
 });

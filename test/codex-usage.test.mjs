@@ -36,7 +36,7 @@ test('缺失备用 reset 详情时不伪造到期时间', () => {
   assert.equal(usage.bankedResetDetailsComplete, false);
 });
 
-test('从正常窗口起点和当前余量推算消耗速度与预计耗尽时间', () => {
+test('从正常窗口起点和当前余量推算消耗速度与预计用完时间', () => {
   const usage = normalizeCodexUsage(snapshot(), now);
   const pace = estimateUsagePace(usage, now);
   assert.equal(pace.elapsedHours, 11.5);

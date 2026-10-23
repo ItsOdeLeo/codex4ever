@@ -19,7 +19,7 @@ const plan=extra=>planUsagePath({input,now,timeZone,prediction,averagePercentPer
 const near=(a,b)=>assert.ok(Math.abs(a-b)<1e-9,`${a} != ${b}`);
 const assumedHours=result=>result.recommendation.primary.assumedResetTimes.map(time=>(Date.parse(time)-now.getTime())/HOUR);
 
-test('第二次假设后的阶段计算第三次机会，不借用首次累计概率，不改变已选用量',()=>{
+test('第二次假设后的阶段计算第三次机会，不借用第一次累计概率，不改变已选用量',()=>{
   const result=plan({assumedResetCount:2}),[,second]=assumedHours(result);
   const phase=result.phasePlans.find(phase=>phase.startHours===second),opportunity=phase.nextResetOpportunity;
   assert.equal(opportunity.nextExtraResetSequence,3);
@@ -33,13 +33,13 @@ test('第二次假设后的阶段计算第三次机会，不借用首次累计�
   // The chart no longer repeats these chances under each phase; the markers
   // above carry cumulative chances. The plan keeps them for text advice.
   const html=renderStrategyTree(layoutStrategyTree(result,{prediction}),String);
-  assert.doesNotMatch(html,/data-reset-opportunity|phase-probability-until|至少一次额外重置：/);
+  assert.doesNotMatch(html,/data-reset-opportunity|phase-probability-until|至少一次额外 reset：/);
   assert.doesNotMatch(html,/建议增加用量|建议减少用量/);
   const off=plan({prediction:null});
   assert.ok(off.phasePlans.every(phase=>!phase.nextResetOpportunity));
 });
 
-test('首次假设后的第二次机会以首次为起点重新计时，与第二条分布同一条件',()=>{
+test('第一次假设后的第二次机会以第一次为起点重新计时，与第二条分布同一条件',()=>{
   const result=plan({input:{...input,resetDates:['2026-11-07']},assumedResetCount:1}),[first]=assumedHours(result);
   const phase=result.phasePlans.find(phase=>phase.startHours===first),opportunity=phase.nextResetOpportunity;
   assert.equal(opportunity.nextExtraResetSequence,2);
@@ -47,7 +47,7 @@ test('首次假设后的第二次机会以首次为起点重新计时，与第�
   assert.equal(result.resetForecast.followingReset.conditionalOn,at(first),'第二条分布以同一次假设为条件');
   near(opportunity.probability,renewedResetProbabilityByHours(prediction,now,at(first),opportunity.untilHours));
   assert.notEqual(opportunity.probability,resetProbabilityByHours(prediction,opportunity.untilHours),
-    '不能直接使用首次分布的累计值');
+    '不能直接使用第一次分布的累计值');
 });
 
 test('兑换备用不重新开始Tibo冷却，概率以阶段已等待时间为条件',()=>{
@@ -55,14 +55,14 @@ test('兑换备用不重新开始Tibo冷却，概率以阶段已等待时间为�
   const result=plan({prediction:p,input:{...input,resetDates:['2026-10-23']},assumedResetCount:2});
   const bank=result.milestones.points.flatMap(point=>point.events).find(event=>event.kind==='backup');
   const [first]=assumedHours(result);
-  assert.ok(bank&&bank.atHours<first,'备用在首次假设前使用');
+  assert.ok(bank&&bank.atHours<first,'备用在第一次假设前使用');
   const phase=result.phasePlans.find(phase=>phase.startHours===bank.atHours),opportunity=phase.nextResetOpportunity;
-  assert.equal(opportunity.previousExtraResetAt,null,'用户兑换备用不算Tibo发布reset');
+  assert.equal(opportunity.previousExtraResetAt,null,'用户兑换备用不算Tibo发布 reset');
   assert.equal(opportunity.nextExtraResetSequence,1);
   const before=resetProbabilityByHours(p,bank.atHours),after=resetProbabilityByHours(p,opportunity.untilHours);
   near(opportunity.probability,(after-before)/(1-before));
   assert.notEqual(opportunity.probability,renewedResetProbabilityByHours(p,now,at(bank.atHours),opportunity.untilHours),
-    '不能把用户兑换备用当成Tibo再次发布reset');
+    '不能把用户兑换备用当成Tibo再次发布 reset');
 });
 
 test('普通路径以备用到期或下一补给为截止；近一小时到期不能跳过',()=>{

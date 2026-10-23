@@ -81,7 +81,7 @@ test('备用被随后的公开重置覆盖时损失进入评分，已到期备�
   assert.ok(salvage.utility>missed.utility);
 });
 
-test('没有额外重置机会时仍可21日用备用，没有硬编码日期禁令',()=>{
+test('没有额外 reset 机会时仍可21日用备用，没有硬编码日期禁令',()=>{
   const result=solve(null);
   assert.equal(localDay(result.backupChoices.find(choice=>choice.used).at),'2026-10-21');
   assert.equal(result.recommendation.firstAction.dailyPercent,34);
@@ -123,12 +123,12 @@ test('真实网页刷新默认纳入两次假设、按当前用量规划且保�
     assert.equal(firstRate,17);
     const refills=()=>[...element('#result').innerHTML.matchAll(/data-refill-sequence="[12]"/g)].length;
     assert.equal(refills(),2,'用户打开页面就应看到两次假设已经参与规划');
-    assert.doesNotMatch(output,/If no extra reset occurs/);
+    assert.doesNotMatch(output,/Assuming no extra reset/);
     assert.doesNotMatch(element('#result').innerHTML+element('#strategy-controls').innerHTML,/data-usage-slider/,'页面不再提供用量滑块');
     assert.equal(fetches,1,'规划不重新抓取预测');
     const click=(selector,dataset)=>element('#result').listeners.click({target:{closest:query=>query===selector ? {dataset} : null}});
     click('[data-assume-reset]',{assumptionSequence:'1'});
-    assert.equal(refills(),0,'自动选中状态要同步，首次点击就是取消，而非重新启用');
+    assert.equal(refills(),0,'自动选中状态要同步，第一次点击就是取消，而非重新启用');
     click('[data-assume-reset]',{assumptionSequence:'2'});
     assert.equal(refills(),2,'选择第二次即重新计入两次假设，仍是同一算法');
     assert.doesNotMatch(element('#result').innerHTML,/data-node-id="backup:0"/);

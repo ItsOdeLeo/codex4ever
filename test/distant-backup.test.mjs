@@ -75,7 +75,7 @@ test('耗尽时只显示确实建议使用的备用；保留分支没有日期�
   assert.equal(simultaneous.backupChoices[0].atHours,null);
 });
 
-test('首次与二次假设的补满点不能再次提示兑换远期备用，后续未耗尽时继续保留',()=>{
+test('第一次与二次假设的补满点不能再次提示兑换远期备用，后续未耗尽时继续保留',()=>{
   const at=hours=>new Date(now.getTime()+hours*HOUR).toISOString();
   const prediction={todayEndHours:10,todayProbability:.1,laterGivenNoReset:.2,next48Probability:.28,
     evidence:{dailyFrequency:.1},resetTimeMode:{pointAt:at(24),pointHours:24,fromHours:23.5,toHours:24.5,probability:.03},

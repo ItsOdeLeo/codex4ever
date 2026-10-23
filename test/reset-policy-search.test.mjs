@@ -17,7 +17,7 @@ const plan=extra=>planUsagePath({input,now,timeZone:'UTC',averagePercentPerDay:1
   ...extra});
 const near=(a,b)=>assert.ok(Math.abs(a-b)<1e-6,`${a} != ${b}`);
 
-test('联合情景保留未发生尾部，第二次以实际首次事件重启，不把条件曲线当作两次必定发生',()=>{
+test('联合情景保留未发生尾部，第二次以实际第一次事件重启，不把条件曲线当作两次必定发生',()=>{
   const snapshot=structuredClone(prediction);
   const first=publicResetScenarios({prediction,now:now.toISOString(),sampleCount:64});
   near(first.scenarios.reduce((sum,path)=>sum+path.weight,0),1);
@@ -73,7 +73,7 @@ test('两次真的发生时按当前用量用到补给，备用只在耗尽并�
     }
   }
   assert.deepEqual(happened.segments.filter(segment=>segment.endHours<30),
-    missed.segments.filter(segment=>segment.endHours<30),'首次公开事件之前无法知道未来会不会发布');
+    missed.segments.filter(segment=>segment.endHours<30),'第一次公开事件之前无法知道未来会不会发布');
   for(const event of happened.events.filter(event=>event.kind!=='expiry'))
     near((Date.parse(event.nextNormalResetAt)-Date.parse(event.at))/3600000,168);
 });

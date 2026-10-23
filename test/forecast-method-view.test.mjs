@@ -27,14 +27,14 @@ test('页面所示加权风险公式与v5实际CDF一致，钟点全历史和间
     assert.match(html,/<details><summary><h3>/);
     assert.doesNotMatch(html,/<details open| hidden/);
     if(locale==='en') {
-      assert.match(html,/All history · 5 reset days/);
+      assert.match(html,/Based on all 5 reset days/);
       assert.match(html,/Last 30 days · 4/);
-      assert.match(html,/highest-density hourly window/);
+      assert.match(html,/the hour with the highest chance/);
       assert.doesNotMatch(html,/\p{Script=Han}/u);
     }
   }
   const viewer=renderForecastMethod({source,prediction,timeZone:'Europe/Berlin',locale:'en'},String);
-  assert.match(viewer,/Typically \d{2}:\d{2} your time/);
+  assert.match(viewer,/Usually \d{2}:\d{2} local time/);
   assert.doesNotMatch(viewer,/Europe\/Berlin/,'访问者时区不以 ID 形式出现');
   assert.deepEqual(prediction,before,'解释只读取模型，不改概率或重新拟合');
 });

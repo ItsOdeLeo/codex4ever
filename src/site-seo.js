@@ -13,14 +13,14 @@ const guides={
   en:{path:'/guide/',title:'Codex Usage, Quota & Reset Planning Guide | Usage Planner',
     description:'Learn how Usage Planner estimates quota depletion, compares banked and extra resets, and plans daily Codex usage with a local MCP interface.',
     heading:'Plan your Codex usage',back:'Open the planner',
-    intro:'Usage Planner is an unofficial usage planner for OpenAI Codex. It compares how long your remaining quota can last, when a banked reset may help, and how possible extra resets affect your plan.',
+    intro:'Usage Planner (formerly Codex4ever) is an unofficial planner for your OpenAI Codex weekly quota. It shows how long your quota lasts at your current pace, when an extra reset is likely, and when a banked reset is worth using.',
     sections:[
-      ['Start with your current quota','Enter your weekly quota remaining, the time until your normal refresh, and the expiry dates of any banked resets. The planner estimates daily consumption from the quota used and elapsed time in the seven-day window. You can adjust usage and compare when it would run out.'],
-      ['Compare usage strategies','Keep your current pace, use it all before the next refill, work on weekdays only, or focus on the weekend. The timeline shows remaining quota, actual projected depletion, waiting periods and planned refills. A forecast that can cover usage takes priority over spending a banked reset; limited banked resets retain value as a fallback.'],
-      ['Understand extra reset forecasts','Historical public reset announcements inform the interval model and usual posting times. Current campaign history and available Tibo posts or replies can affect the forecast. The first curve predicts the next extra reset. The second is conditional on the first happening at its marked time. Cumulative probability means the chance of an event by a given time, not a promise that your account will refresh.'],
-      ['Explore assumptions, then recalculate','Assuming a release lets you inspect a possible refill and the daily usage leading up to it. Each simulated reset starts a new seven-day window in this model. After an actual reset, check your account and recalculate from the observed quota and refresh time. The model is experimental and its probabilities are not calibrated guarantees.'],
-      ['Use the same planner through MCP','The local MCP server exposes public reset evidence and usage planning tools to Codex or another MCP host. The host can analyze posts and pass structured evidence to the planner. Standalone use can instead connect a standard LLM API. The core calculation works without either option.'],
-      ['Keep control of your account','The website calculates your plan in your browser. It fetches public evidence without sending your quota inputs. The local MCP can read usage from a locally signed-in Codex account when requested. Neither interface redeems a reset or spends credits for you.']
+      ['Start with your current quota',"Enter how much of this week's quota is left and how long until the normal refresh, plus the expiry dates of any banked resets. The planner works out your daily usage from what you have used so far and shows when you would run out."],
+      ['Pick a strategy','Keep pace uses your current daily rate. Keep available slows down so you never run dry. Use it all spends everything before the next refill. Weekdays only and Weekends only put all the usage on those days. The timeline shows daily usage, remaining quota, refills and when you would run out.'],
+      ['Read the reset forecast','The forecast learns from every public reset announcement: how far apart resets are and what time they usually land. Posts by Tibo of the Codex team count too, and an announced reset is shown at its announced time. The first curve is the next extra reset; the second assumes the first happens at its marker. These are estimates, not promises.'],
+      ['Plan without resets too','Turn on Assume no reset to see every strategy planned as if no extra reset comes. Each refill, whether a banked reset, the normal refresh or a reset, starts a new seven-day cycle. After a real reset, update your quota and plan again.'],
+      ['Use it inside Codex','The Codex plugin reads your signed-in quota on your own computer and opens the same planner beside the chat. Other MCP clients can use the npm package usage-planner. The forecast works without any API key.'],
+      ['Your account stays yours','The website calculates everything in your browser and never sends your quota anywhere. Neither the website nor the plugin redeems a reset or spends credits for you.']
     ],
     source:'Open source on GitHub',
     credit:'Thanks to',creditSuffix:'for reset data',
@@ -34,16 +34,16 @@ const guides={
     ],
     notice:'Unofficial visual usage planner for OpenAI Codex. Not affiliated with OpenAI.'},
   'zh-CN':{path:'/zh/guide/',title:'Codex 用量、额度与 Reset 规划指南 | Usage Planner',
-    description:'了解 Usage Planner 如何估算额度耗尽时间、比较备用与额外 reset，并通过本地 MCP 规划日均 Codex 用量。',
+    description:'Usage Planner 帮你规划 Codex 每周额度：按现在的速度能用多久、额外 reset 大概什么时候来、备用 reset 什么时候值得用。',
     heading:'规划你的 Codex 用量',back:'打开规划器',
-    intro:'Usage Planner 是 OpenAI Codex 的非官方用量规划器。它比较当前额度还能用多久、何时可能需要备用 reset，以及额外重置预测对用量安排的影响。',
+    intro:'Usage Planner（原名 Codex4ever）是 OpenAI Codex 每周额度的非官方规划工具。它告诉你按现在的速度额度能撑多久、额外 reset 大概什么时候来，以及备用 reset 什么时候值得用。',
     sections:[
-      ['从当前额度开始','填写本周剩余额度、距离正常刷新的时间，以及备用 reset 的到期日期。规划器根据七天窗口中已消耗的额度和已经过去的时间估算日均消耗。你可以调整用量，比较预计在哪个时间耗尽。'],
-      ['比较使用策略','支持保持当前用量、不浪费额度（在下次补满前用完）、仅工作日使用和周末集中使用。时间轴展示剩余额度、实际预计耗尽点、停用空档和规划中的补充。预测额外重置能够覆盖用量时优先考虑该补充，保留有限的备用 reset 作为后路。'],
-      ['理解额外重置预测','公开历史 reset 公告用于估计间隔分布和常见发布钟点。当前活动内的历史，以及可获取的 Tibo 帖子和回复，也会影响预测。第一条曲线预测下次额外 reset；第二条以首次在标记时刻发生为条件。累计概率表示截至某个时间发生事件的可能性，不保证个人账户一定刷新。'],
-      ['查看假设，再按实际情况重算','假设发布后，可以查看恢复额度的情景，以及此前各段的建议日均用量。模型中每次模拟 reset 都会重新开始七天窗口。实际发生 reset 后，需要核对账户余额和刷新时间，再重新计算。模型仍处于实验阶段，概率尚未校准。'],
-      ['通过 MCP 使用同一套规划器','本地 MCP 服务向 Codex 等宿主提供公开 reset 证据和策略工具。宿主可以分析帖子，将结构化证据交给规划器；独立运行时也可以连接标准 LLM API。不连接模型也能使用核心计算。'],
-      ['账户由你控制','网页在浏览器内计算计划，获取公开证据时不会发送你填写的额度。本地 MCP 可在请求时读取本机已登录 Codex 的用量。两个入口都不会自动兑换 reset 或消耗 credits。']
+      ['从现在的额度开始','填上本周还剩多少额度、离正常刷新还有多久，有备用 reset 的话再填上到期日期。规划器会根据你已经用掉的额度算出每天的用量，并告诉你什么时候会用完。'],
+      ['选一种用法','保持节奏：按现在的速度用。保持可用：必要时放慢，保证一直有额度。用满 100%：在下次补满前全部用完。周末不用、只在周末用：把额度集中在对应的日子。时间轴上能看到每天用多少、剩多少、什么时候补满、什么时候用完。'],
+      ['看懂 reset 预测','预测参考了所有公开的 reset 记录：两次 reset 一般隔多久、通常在几点发。Codex 团队 Tibo 发的帖子也会算进去；他已经宣布的 reset，会直接按宣布的时间显示。第一条曲线是下一次额外 reset，第二条假设第一次发生在标记的时间。这些都是估算，不是保证。'],
+      ['也看看没有 reset 的情况','打开「假设没有 reset」，所有用法都会按一次额外 reset 都不来重新规划。每次补满（备用 reset、正常刷新或额外 reset）都会重新开始 7 天周期。真的 reset 之后，更新额度再算一遍就行。'],
+      ['在 Codex 里直接用','装上 Codex 插件后，它会在你自己的电脑上读取已登录账户的额度，并在对话旁边打开同一个规划器。其他 MCP 客户端可以用 npm 包 usage-planner。预测不需要任何 API key。'],
+      ['账户始终在你手里','网页的所有计算都在浏览器里完成，不会把你的额度发到任何地方。网页和插件都不会替你兑换 reset，也不会消耗 credits。']
     ],
     source:'GitHub 开源',
     credit:'感谢',creditSuffix:'提供 reset 数据',
@@ -81,7 +81,7 @@ export function renderSeoHead({siteUrl=null,page='planner',language='en'}={}) {
     description:meta.description,inLanguage:language,about:{'@type':'WebApplication',name:'Usage Planner'},
     ...(url ? {url,mainEntityOfPage:url} : {})
   } : {
-    '@context':'https://schema.org','@type':'WebApplication',name:'Usage Planner',
+    '@context':'https://schema.org','@type':'WebApplication',name:'Usage Planner',alternateName:'Codex4ever',
     description:meta.description,applicationCategory:'DeveloperApplication',operatingSystem:'Web',
     inLanguage:['en','zh-CN'],isAccessibleForFree:true,license:'https://opensource.org/licenses/MIT',
     author:{'@type':'Person',name:'ItsOdeLeo',url:CREATOR_URL},
@@ -136,7 +136,7 @@ function renderLlmsText(origin) {
 
 > ${PLANNER_METADATA.en.description} Unofficial; not affiliated with OpenAI. MIT licensed.
 
-Usage Planner estimates when your remaining OpenAI Codex quota runs out, when a banked reset could help, and how possible extra resets change a daily usage plan. The website calculates in the browser; the Codex plugin reads a locally signed-in quota. Neither redeems resets or spends credits.
+Usage Planner (formerly Codex4ever) estimates when your remaining OpenAI Codex quota runs out, when a banked reset could help, and how possible extra resets change a daily usage plan. The website calculates in the browser; the Codex plugin reads a locally signed-in quota. Neither redeems resets or spends credits.
 
 ## Pages
 

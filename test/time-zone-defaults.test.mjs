@@ -45,7 +45,8 @@ test('库默认跟随调用时的当地时区：预测显示、备用到期日�
       assert.equal(legacy.resetTimeMode.pointAt,prediction.resetTimeMode.pointAt);
       const summary = renderResetForecastSummary({ source, prediction, now });
       assert.ok(summary.includes(fixture.last));
-      assert.ok(summary.includes(fixture.zone));
+      // The status line says local time; the zone itself is no longer printed.
+      assert.ok(summary.includes('本地时间')||summary.includes('local time'));
       assert.doesNotMatch(summary, /Europe\/Berlin|undefined/);
       const result = planUsagePath({ input, now, prediction, heldResetIndices: [0] });
       assert.equal(layoutStrategyTree(result, { prediction }).forecastFocus.label, fixture.point);

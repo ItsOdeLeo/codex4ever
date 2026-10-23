@@ -8,8 +8,8 @@ export const PLANNER_METADATA={
   },
   'zh-CN':{
     title:'Usage Planner | Codex 额度与 Reset 用量规划',
-    description:'根据 Codex 剩余额度、消耗速度、备用 reset 到期时间和额外重置预测，比较日均用量策略与预计耗尽时间。支持本地运行和 MCP 接入。',
-    intro:'规划 Codex 用量、备用 reset 与额外重置，全部在浏览器里计算。',
+    description:'根据 Codex 剩余额度、消耗速度、备用 reset 到期时间和额外 reset 预测，比较日均用量策略与预计耗尽时间。支持本地运行和 MCP 接入。',
+    intro:'规划 Codex 用量、备用 reset 与额外 reset，全部在浏览器里计算。',
     locale:'zh_CN'
   }
 };

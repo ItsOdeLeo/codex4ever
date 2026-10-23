@@ -57,7 +57,7 @@ export function layoutStrategyTree(result, { expandedLevel = 0, showAll = false,
     link(action.id, chance.id, 'selected');
     if (!result.forecastCalendar && level.cumulativeResetProbability > 1e-8) {
       const reset = { id: `reset:${level.index}`, type: 'reset', x: chance.x - 85, y: 9,
-        width: 170, height: 64, title: `此前额外重置概率 ${round(level.cumulativeResetProbability * 100)}%`,
+        width: 170, height: 64, title: `此前额外 reset 概率 ${round(level.cumulativeResetProbability * 100)}%`,
         probabilityKind: 'cumulative-from-plan-start',
         probability: level.cumulativeResetProbability,
         lines: [level.until, '从现在累计；发生就重算'] };
@@ -214,7 +214,7 @@ export function renderStrategyTree(graph, escape) {
     ? renderTimelineLaneLabel({...item,id:item.kind,title:item.date,detail:item.state,note:item.unit},escape)
     : `<div class="graph-day" style="left:${item.x}px;top:${item.y}px;width:${item.width ?? 254}px"><strong>${escape(item.date)}</strong>${item.state ? `<span>${escape(item.state)}</span>` : ''}</div>`).join('');
   const days = graph.dayAxis ? (graph.dayAxis.labels??graph.dayAxis.days).map(day => `<div class="time-day" style="left:${day.x}px;width:${day.width}px">${escape(uiLocale(locale)==='zh-CN' ? day.label : new Intl.DateTimeFormat(uiLocale(locale),{timeZone:graph.timeZone,month:'short',day:'numeric'}).format(new Date(Date.parse(day.startAt)+3600000)))}</div>`).join('') : '';
-  const alignedForecast = graph.forecastLayout?.length ? `<div class="forecast-calendar forecast-aligned" aria-label="${t('固定日期之前至少发生一次额外重置的累计概率')}">${graph.forecastLayout.map(point => `<span ${point.calendar ? 'data-forecast-at' : 'data-event-forecast-at'}="${escape(point.at)}" data-probability="${point.probability}" title="${escape(t('截至 {time} 至少发生一次额外 reset',{time:point.at}))}" style="left:${point.left}px;top:${point.y}px;width:${point.width}px">${graph.probabilityPlot ? '' : `<small>${escape(point.label)}</small>`}<strong>${graph.probabilityPlot ? t('累计')+' ' : graph.compactForecast ? t('额外重置')+' ' : ''}${round(point.probability * 100)}%</strong></span>`).join('')}</div>` : '';
+  const alignedForecast = graph.forecastLayout?.length ? `<div class="forecast-calendar forecast-aligned" aria-label="${t('固定日期之前至少发生一次额外 reset 的累计概率')}">${graph.forecastLayout.map(point => `<span ${point.calendar ? 'data-forecast-at' : 'data-event-forecast-at'}="${escape(point.at)}" data-probability="${point.probability}" title="${escape(t('截至 {time} 至少发生一次额外 reset',{time:point.at}))}" style="left:${point.left}px;top:${point.y}px;width:${point.width}px">${graph.probabilityPlot ? '' : `<small>${escape(point.label)}</small>`}<strong>${graph.probabilityPlot ? t('累计')+' ' : graph.compactForecast ? t('额外 reset')+' ' : ''}${round(point.probability * 100)}%</strong></span>`).join('')}</div>` : '';
   const nodes = graph.nodes.filter(node => node.width&&node.type!=='forecast-assumption')
     .map(node=>renderStrategyNode(node,escape,locale)).join('');
   const controls = graph.controls.map(control => `<button type="button" class="graph-control" ${control.kind === 'compare' ? `data-inspect-level="${control.level}" aria-expanded="${control.expanded}"` : 'data-show-all-actions'} style="left:${control.x}px;top:${control.y}px">${control.kind === 'compare' ? t(control.expanded ? '− 收起其他做法' : '＋ 比较这一步') : t('＋ 其他 {count} 种做法',{count:control.count})}</button>`).join('');
@@ -230,8 +230,8 @@ export function renderStrategyTree(graph, escape) {
     return new Intl.DateTimeFormat('zh-CN', {timeZone: graph.timeZone,
       month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23'}).format(instant);
   };
-  const forecast = !graph.dayAxis && graph.forecastCalendar?.length ? `<div class="forecast-calendar" aria-label="${t('固定日期之前至少发生一次额外重置的累计概率')}">
-    <span>此前额外重置概率</span><div>${graph.forecastCalendar.map(point => `<span><small>${escape(forecastDate(point.at))}</small><strong>${round(point.probability * 100)}%</strong></span>`).join('')}</div></div>` : '';
+  const forecast = !graph.dayAxis && graph.forecastCalendar?.length ? `<div class="forecast-calendar" aria-label="${t('固定日期之前至少发生一次额外 reset 的累计概率')}">
+    <span>此前额外 reset 概率</span><div>${graph.forecastCalendar.map(point => `<span><small>${escape(forecastDate(point.at))}</small><strong>${round(point.probability * 100)}%</strong></span>`).join('')}</div></div>` : '';
   const forecastLegend = !graph.compactForecast && graph.forecastLayout?.length
     ? `<div class="forecast-legend">${t('蓝线：此前至少发生一次额外 reset 的概率')}</div>` : '';
   const inventory=graph.bankedCount>0 ? `<div class="retained-resets" data-banked-count="${graph.bankedCount}">${escape(t('备用 reset · {count} 个',{count:graph.bankedCount}))}</div>` : '';

@@ -39,7 +39,7 @@ test('图的每小时概率来自原CDF之差，面积预算及图外尾部守�
   }
   near(distribution.bins.reduce((sum, bin) => sum + bin.probability, 0) + distribution.tailProbability, 1);
   assert.equal(distribution.bins.at(-1).endHours, 100.5);
-  assert.ok(distribution.tailProbability > 0, '显示范围不能被当成100%必然reset');
+  assert.ok(distribution.tailProbability > 0, '显示范围不能被当成100%必然 reset');
   const masses = distribution.bins.map(bin => bin.densityPerHour);
   const peaks = masses.filter((mass, index) => index && index < masses.length - 1
     && mass > masses[index - 1] && mass > masses[index + 1]);
@@ -89,7 +89,7 @@ test('曲线、累计概率、预计钟点和额度共用当地日期轴，单�
   assert.doesNotMatch(html,/class="forecast-calendar forecast-aligned"/);
   assert.match(html,/class="reset-peak-cdf" data-forecast-peak-at=/);
   assert.ok(html.includes(`class="forecast-mode-point" cx="${focus.x}" cy="${plot.topY}"`));
-  assert.match(html, /<title>首次 reset · 10\/16 17:00 · 累计/,'鼠标提示按当地时间显示该时刻的累计概率');
+  assert.match(html, /<title>第一次 reset · 10\/16 17:00 · 累计/,'鼠标提示按当地时间显示该时刻的累计概率');
   assert.equal(graph.funnel.refills.some(refill => refill.kind === 'extra-reset'), false);
   assert.ok(graph.funnel.bands.some(band => band.kind === 'pause' && band.startHalf === 0 && band.endHalf === 0));
 });

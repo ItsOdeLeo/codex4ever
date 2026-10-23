@@ -197,7 +197,7 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
   for (const point of points) {
     const forecast = forecastMilestones.find(item => Math.abs(item.hours - point.hours) < 1e-6);
     const afterAssumedReset=scenario?.selected&&point.hours>scenario.hours+1e-6;
-    const riskLine = forecast&&!afterAssumedReset ? t(result.flexibleSchedule ? '未额外重置：{percent}%' : '此时仍未额外重置：{percent}%',{percent:round(forecast.noResetProbability*100)}) : null;
+    const riskLine = forecast&&!afterAssumedReset ? t(result.flexibleSchedule ? '未额外 reset：{percent}%' : '此时仍未额外 reset：{percent}%',{percent:round(forecast.noResetProbability*100)}) : null;
     const banks = point.events.filter(event => event.kind === 'backup');
     for (const event of banks) {
       const condition=result.backupChoices.find(choice=>choice.index===event.resetIndex)?.usageCondition;
@@ -220,7 +220,7 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
       title:t(banks.length ? '可选：使用 Credits 衔接' : '额度耗尽 · 可用 Credits 衔接'),
       lines: [time(bridge.at),t('消耗需自己预估')] }, 'credits');
     if (point.reasons.includes('depletion') && !bridge && !refillTimes.has(point.at)) card(point.hours, {
-      id: `depletion:${point.hours}`, type: 'depletion', title:t('预计耗尽'),
+      id: `depletion:${point.hours}`, type: 'depletion', title:t('预计用完'),
       lines: [time(point.at)] }, 'depletion');
   }
   for(const point of scenario?.selected ? points : [])if(point!==end&&point.events.some(event=>event.kind==='normal-refresh'))
@@ -231,7 +231,7 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
     title:t('正常刷新'),
     lines: [time(end.at)] }, 'normal');
   else if(!scenario?.selected)card(end.hours, { id: 'planning-end', type: 'horizon', title:t('后续重新规划'),
-    lines: [result.milestones.endKind==='extra-reset' ? t('额外重置后按实际余额重算')
+    lines: [result.milestones.endKind==='extra-reset' ? t('额外 reset 后按实际余额重算')
       : t('正常刷新 {time}',{time:time(result.normalResetAt)})] }, 'normal');
 
   // Both forecast actions share one row. Move their cards horizontally when
@@ -287,8 +287,8 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
     id:`reset-${index+1}`,...(compact ? {x:axis.leftPadding,y:plot.topY-62,width:plotLabelWidth,height:18}
       : {x:0,y:plot.topY+plot.height/2-10,width:gutterWidth,height:20}),inline:true,
     title:t(index===0 ? plot.announced ? '已宣布的 reset' : 'Reset 概率' : '第二次 reset 概率'),detail:'',
-    tooltip:plot.announced ? t('Tibo 已宣布这次 reset 的时间') : [t(index===0 ? '首次额外重置预测' : '第二次额外重置预测'),t('概率密度'),
-      index===1 ? t('以首次发生为前提') : ''].filter(Boolean).join(' · ')} : null);
+    tooltip:plot.announced ? t('Tibo 已宣布这次 reset 的时间') : [t(index===0 ? '第一次额外 reset 预测' : '第二次额外 reset 预测'),t('概率密度'),
+      index===1 ? t('以第一次发生为前提') : ''].filter(Boolean).join(' · ')} : null);
   const suggested=shownPhases.some(phase=>!phase.fixed&&!phase.constrained&&phase.reason!=='no-resource'
     &&Math.abs(phase.dailyPercent-phase.baselineDailyPercent)>1e-5);
   const headings = compact ? [{x:axis.leftPadding,y:phaseY-22,width:plotLabelWidth,height:18,kind:'usage',inline:true,
@@ -296,7 +296,7 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
     : [{x:0,y:phaseY,width:gutterWidth,height:20,kind:'usage',inline:true,
     date:t(gutterWidth<160 ? suggested ? '建议 / 天' : '用量 / 天' : suggested ? '建议用量 / 天' : '日均用量'),state:''},
     ...(opportunityHeight ? [{x:0,y:phaseY+36,width:gutterWidth,height:opportunityHeight,kind:'opportunity',
-      inline:true,date:t('重置概率 · 截至'),state:'',tooltip:t('固定日期之前至少发生一次额外重置的累计概率')}] : []),
+      inline:true,date:t('重置概率 · 截至'),state:'',tooltip:t('固定日期之前至少发生一次额外 reset 的累计概率')}] : []),
     {x:0,y:centerY-quotaThickness/2-10,width:gutterWidth,height:20,kind:'consumption',inline:true,
     date:t('剩余额度'),state:''}];
   return { compact,nodes, edges, headings, controls: [], phaseControls,bankedCount,retainedBanks, compactForecast: result.flexibleSchedule,

@@ -20,7 +20,7 @@ test('未运行 JavaScript 的首页也有介绍、独立元信息和可抓取�
   assert.equal((page.body.match(/name="description"/g)??[]).length,1);
   assert.equal((page.body.match(/rel="canonical"/g)??[]).length,1);
   assert.match(page.body,/<html lang="en">/);
-  assert.match(page.body,/Codex quota, banked resets and extra reset forecasts/);
+  assert.match(page.body,/<noscript><p>Usage Planner compares daily Codex usage/);
   assert.match(page.body,/<a id="planner-guide" href="\/guide\/">How it works<\/a>/);
   assert.match(page.body,/<link rel="canonical" href="https:\/\/usage-planner.example\/">/);
   assert.match(page.body,/name="robots" content="index, follow, max-image-preview:large"/);

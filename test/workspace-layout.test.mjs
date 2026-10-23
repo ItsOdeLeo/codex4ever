@@ -31,7 +31,7 @@ test('一张计划卡片：预测、策略在时间线上方，输入停靠在�
   assert.match(html,/<a id="creator-contact" href="https:\/\/x\.com\/ItsOdeLeo"/);
 });
 
-test('样式单入口实际导入配色、基础排版、reset组件和材质，颜色只在配色文件中定义',async()=>{
+test('样式单入口实际导入配色、基础排版、reset 组件和材质，颜色只在配色文件中定义',async()=>{
   const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
   const links=[...html.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(match=>match[1]);
   assert.deepEqual(links,['/src/styles/theme.css']);
@@ -57,7 +57,7 @@ test('样式单入口实际导入配色、基础排版、reset组件和材质，
   for(const [url,css] of loaded)if(!url.includes('/palettes/'))
     assert.doesNotMatch(css,/#[\da-f]{3,8}\b|(?:rgb|rgba|hsl|hsla)\(\s*\d/i,`色值散落在 ${url}`);
   assert.match(combined,/\.time-day\{position:absolute;top:0/,'入口包含顶部日期定位样式');
-  assert.match(combined,/\.reset-element\s*\{/,'入口包含reset组件样式');
+  assert.match(combined,/\.reset-element\s*\{/,'入口包含 reset 组件样式');
 });
 
 test('当前主题使用全宽容器，主文字及操作颜色对画布和两级面板达到4.5对比度',async()=>{

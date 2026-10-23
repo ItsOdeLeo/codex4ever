@@ -16,7 +16,7 @@ const props=(sequence,selected)=>({sequence,plot,focus,peaks:[],guideEndY:300,ti
   connectors:[{kind:'reset',path:'M 600 300 V 380'}],
   refills:selected ? [{sequence,path:'M 600 276 V 324'}] : []});
 
-test('第二次未选按钮直接说明两次均假设，不再附加重复的首次提示',()=>{
+test('第二次未选按钮直接说明两次均假设，不再附加重复的第一次提示',()=>{
   assert.deepEqual(resetAssumptionContent({sequence:2,selected:false,locale:'en'}),
     {title:'Count both resets',lines:[]});
   assert.deepEqual(resetAssumptionContent({sequence:2,selected:false}),
@@ -24,7 +24,7 @@ test('第二次未选按钮直接说明两次均假设，不再附加重复的�
   assert.equal(resetAssumptionContent({sequence:2,selected:true,locale:'en'}).title,'Second reset counted');
 });
 
-test('中英文的首次和第二次、未选和已选均由同一状态模板生成',()=>{
+test('中英文的第一次和第二次、未选和已选均由同一状态模板生成',()=>{
   for(const locale of ['en','zh-CN'])for(const sequence of [1,2])for(const selected of [false,true]) {
     const input=props(sequence,selected);
     input.locale=locale;
@@ -52,7 +52,7 @@ test('两条分布都省略不足1%的范围外标注，原始尾部概率和最
   }
 });
 
-test('同一reset组件管理两次曲线、标记、操作和选中状态，样式由变量驱动',async()=>{
+test('同一 reset 组件管理两次曲线、标记、操作和选中状态，样式由变量驱动',async()=>{
   for(const sequence of [1,2])for(const selected of [false,true]) {
     const input=props(sequence,selected),before=structuredClone(input);
     const element=renderResetElement(input,escape);
@@ -60,7 +60,7 @@ test('同一reset组件管理两次曲线、标记、操作和选中状态，样
     assert.ok(element.svg.includes(`data-reset-element="${sequence}"`));
     assert.ok(element.html.includes(`data-reset-state="${selected ? 'assumed' : 'forecast'}"`));
     assert.ok(element.html.includes(`aria-pressed="${selected}" data-assumption-sequence="${sequence}"`));
-    if(selected)assert.match(element.html,/<strong>已计入(?:首次|第二次) reset<\/strong><small class="reset-action-cancel">不计入<\/small>/);
+    if(selected)assert.match(element.html,/<strong>已计入(?:第一次|第二次) reset<\/strong><small class="reset-action-cancel">不计入<\/small>/);
     assert.match(element.html,/data-reset-marker/);
     assert.match(element.html,/<small>累计 50%<\/small>/);
     assert.doesNotMatch(element.html+element.svg,/每小时|\d+小时 [\d.]+%|此段 [\d.]+%/);

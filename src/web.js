@@ -28,9 +28,8 @@ const setStatus=message=>{statusMessage=message;$('#status').textContent=t(messa
 function renderStaticLanguage() {
   const metadata=syncPlannerMetadata(document,language);
   document.documentElement?.setAttribute('lang',language);
-  $('.brand p').textContent=metadata.intro;
   for(const [selector,label] of [['.affiliation-notice','OpenAI Codex 的非官方可视化用量规划工具。与 OpenAI 无隶属关系。'],['#github-star','GitHub'],['#follow-x','在 X 关注我'],
-['#source-code','GitHub 开源'],['[data-credit-label]','感谢'],['[data-credit-suffix]','提供 reset 数据'],['[data-follow-label]','如果你喜欢这个作品：'],['#creator-xiaohongshu','小红书'],['#share-site','分享'],['#calculate','↻ 更新计划'],['[data-plugin-hint]','装成 Codex 插件可自动读取。'],['#overuse-hint','用量过度提醒（仅 Codex 插件）：在 Codex 里说“打开用量过度提醒”。之后你用得比计划快时，会直接在对话里提醒你。']])
+['#source-code','GitHub 开源'],['[data-credit-label]','感谢'],['[data-credit-suffix]','提供 reset 数据'],['[data-follow-label]','如果你喜欢这个作品：'],['#creator-xiaohongshu','小红书'],['#share-site','分享'],['#calculate','↻ 更新计划'],['[data-plugin-hint]','可安装成 Codex 插件，自动读取以上数据。'],['#overuse-hint','用量过度提醒（仅 Codex 插件）：在 Codex 里说“打开用量过度提醒”。之后你用得比计划快时，会直接在对话里提醒你。']])
     {const element=$(selector);if(element)element.textContent=t(label);}
   $('#planner-guide').textContent=language==='zh-CN' ? '使用说明' : 'How it works';
   $('#planner-guide').setAttribute?.('href',language==='zh-CN' ? '/zh/guide/' : '/guide/');
@@ -154,7 +153,7 @@ function renderForecastCard(graph=null) {
   // exists, the plan just does not count it, and the card keeps its height.
   const forecastSummary = renderResetForecastSummary({ source: forecastSource, prediction: planner.snapshot.prediction,
     timeZone, now: planningNow,locale:language });
-  $('#forecast').innerHTML = `<div class="forecast-control" ${planningPrediction ? `data-forecast-48-probability="${planningPrediction.next48Probability}"` : ''}><span>${t('额外重置预测')}</span></div>${forecastSummary}${BRAND_STAMP}`;
+  $('#forecast').innerHTML = `<div class="forecast-control" ${planningPrediction ? `data-forecast-48-probability="${planningPrediction.next48Probability}"` : ''}><span>${t('额外 reset 预测')}</span></div>${forecastSummary}${BRAND_STAMP}`;
 }
 
 function renderResult(availableWidth=$('#result').clientWidth) {
@@ -180,7 +179,7 @@ function renderResult(availableWidth=$('#result').clientWidth) {
   renderForecastCard(graph);
   const policyData=result.recommendation ? ` data-policy-search="${result.recommendation.method}"${result.recommendation.primary ? ' data-plan-basis="predicted-extra-resets-first"' : ''}` : '';
   $('#result').innerHTML = `<section class="strategy-panel" aria-label="${t('用量计划')}"${policyData} style="--panel-padding:${workspace.panelPadding}px">
-    ${result.recommendation&&!result.recommendation.primary ? `<div class="timeline-toolbar"><span>${t('若始终没有额外重置')}</span></div>` : ''}
+    ${result.recommendation&&!result.recommendation.primary ? `<div class="timeline-toolbar"><span>${t('假设没有额外 reset')}</span></div>` : ''}
     ${renderStrategyTree(graph, escape)}
     </section>`;
   $('#method').innerHTML=renderForecastMethod({source:forecastSource,prediction:planningPrediction,result,timeZone,locale:language},escape);

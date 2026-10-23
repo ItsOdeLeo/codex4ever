@@ -7,7 +7,7 @@ import { conservativeResetTimes } from '../src/reset-forecast.js';
 import { layoutStrategyTree,renderStrategyTree } from '../src/strategy-tree-layout.js';
 import { activePaletteSource,paletteValue } from './helpers/theme-source.mjs';
 
-test('竖线、动作和补满点都对齐规划计入的保守时刻，不早于各自曲线最高峰；标签区分首次和第二次',()=>{
+test('竖线、动作和补满点都对齐规划计入的保守时刻，不早于各自曲线最高峰；标签区分第一次和第二次',()=>{
   const now=new Date('2026-10-17T12:00:00Z');
   const prediction=predictReset({now:now.toISOString(),timeZone:'Europe/Berlin',campaignTimeZone:'America/Los_Angeles',
     resetTimes:[3,7,11,13,15].map(day=>`2026-10-${String(day).padStart(2,'0')}T05:00:00Z`)});
@@ -35,10 +35,10 @@ test('竖线、动作和补满点都对齐规划计入的保守时刻，不早�
   }
   const html=renderStrategyTree(graph,String);
   // The marker shows only when and how likely; the full name stays in its accessible label.
-  assert.match(html,/aria-label="首次 规划时刻 reset · /);
+  assert.match(html,/aria-label="第一次 规划时刻 reset · /);
   assert.match(html,/aria-label="第二次 规划时刻 reset · /);
   assert.doesNotMatch(html,/<strong>[^<]*reset · 规划时刻/);
-  assert.match(html,/已计入首次 reset/);
+  assert.match(html,/已计入第一次 reset/);
   assert.match(html,/已计入第二次 reset/);
   assert.equal([...html.matchAll(/class="reset-action-cancel">不计入<\/small>/g)].length,2);
   assert.equal([...html.matchAll(/data-density-sequence=/g)].length,2);
@@ -61,7 +61,7 @@ test('两次曲线标题、累计概率及操作文字均达到小字号所需�
     return variable ? paletteValue(theme,variable[1]) : value;
   };
   const background=luminance(token(base,'surface'));
-  for(const [label,rule] of [['首次',base],['第二次',variant]]) {
+  for(const [label,rule] of [['第一次',base],['第二次',variant]]) {
     const color=token(rule,'text');
     const foreground=luminance(color);
     const contrast=(Math.max(background,foreground)+.05)/(Math.min(background,foreground)+.05);

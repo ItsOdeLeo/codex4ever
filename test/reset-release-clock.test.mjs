@@ -49,7 +49,7 @@ test('钟点分布提高晚间机会，预告按截止失效，累计概率与�
   assert.ok(hazard(prediction,3,4)>hazard(baseline,3,4),'预告在截止前提高机会');
   near(hazard(prediction,4,5),hazard(baseline,4,5));
   const change = (a, b) => resetProbabilityByHours(prediction, b) - resetProbabilityByHours(prediction, a);
-  assert.ok(change(20, 22) > change(7, 9) * 50, '21–23点应比08–10点更符合历史发布钟点');
+  assert.ok(change(20, 22) > change(7, 9) * 50, '21–23点应比08–10点更符合历史发布时间');
   let previous = 0;
   for (let hour = 0; hour <= 336; hour += .25) {
     const probability = resetProbabilityByHours(prediction, hour);
@@ -76,7 +76,7 @@ test('钟点使用全部历史等权样本，不随最近两周截断；跨午�
   assert.ok(midnight.typicalMinuteOfDay < 60 || midnight.typicalMinuteOfDay > 1380);
 });
 
-test('均值日期已过取下一个未来常见钟点；重复公告不增样本，备用不是自动reset样本', () => {
+test('均值日期已过取下一个未来常见钟点；重复公告不增样本，备用不是自动 reset 样本', () => {
   const clock = fitResetReleaseClock({ times: [...times, times.at(-1) + 60000], now, timeZone });
   assert.equal(clock.sampleCount, 4);
   const overdue = estimateResetTime({ lastReset: times.at(-1) - 10 * DAY, meanIntervalDays: 3,

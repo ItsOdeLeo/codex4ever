@@ -18,7 +18,7 @@ const args={now:'2026-10-17T12:00:00Z',timeZone:'Europe/Berlin',
   campaignTimeZone:'America/Los_Angeles',resetTimes:history};
 const predict=extra=>predictReset({...args,...extra});
 
-test('自动reset之后整个次日再次reset的概率极低，钟点、暗示与明确预告不能绕过',()=>{
+test('自动 reset 之后整个次日再次 reset 的概率极低，钟点、暗示与已宣布不能绕过',()=>{
   for(const kind of [null,'reset_hint','reset_planned']) {
     const p=predict({posts:kind ? [{createdAt:args.now,text:'Possible reset today.',
       signal:{kind,confidence:1,validUntil:'2026-10-18T10:00:00Z'}}] : []});
@@ -62,7 +62,7 @@ test('夏令时让两个活动日长达49小时，48小时预测边界不能提�
   assert.ok(probability(p,49.5)>0);
 });
 
-test('备用发放不启动或延长冷却，没有已确认reset时不凭空封锁',()=>{
+test('备用发放不启动或延长冷却，没有已确认 reset 时不凭空封锁',()=>{
   const now=new Date(args.now);
   const archive={retrievedAt:'2026-10-17',campaignTimeZone:args.campaignTimeZone,
     events:history.map(at=>({at,kind:'automatic'}))};
@@ -75,7 +75,7 @@ test('备用发放不启动或延长冷却，没有已确认reset时不凭空封
   assert.ok(noRecord.todayProbability>0);
 });
 
-test('实际已确认的新reset仍优先更新历史，再从新事件重新计算冷却',()=>{
+test('实际已确认的新 reset 仍优先更新历史，再从新事件重新计算冷却',()=>{
   const completed={createdAt:'2026-10-17T11:00:00Z',text:'Reset is done.',
     signal:{kind:'reset_completed',confidence:1}};
   assert.throws(()=>predict({posts:[completed]}),/先更新历史 reset 时间/);

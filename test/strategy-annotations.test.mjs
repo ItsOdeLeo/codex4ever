@@ -10,7 +10,7 @@ test('阶段标注只保留日均及有截止含义的概率，中英都不重�
       probability:.837,nextExtraResetSequence:1}};
   const before=structuredClone(phase);
   for(const [locale,rate,probability,until] of [['en','22.7% / day','At least one extra reset: 83.7%','by 22 Oct, 04:00'],
-    ['zh-CN','22.7% / 天','至少一次额外重置：83.7%','10/22 04:00之前']]) {
+    ['zh-CN','22.7% / 天','至少一次额外 reset：83.7%','10/22 04:00之前']]) {
     const html=renderPhaseControl(phase,{timeZone:'UTC',escape:String,locale});
     assert.ok(html.includes(rate));
     assert.ok(html.includes(probability));
@@ -33,7 +33,7 @@ test('横向窄阶段只有数值，建议、单位与暂停文字不重复挤�
   }
 });
 
-test('各阶段均表示至少一次额外重置，不把条件下的下一次标为第一二三次',()=>{
+test('各阶段均表示至少一次额外 reset，不把条件下的下一次标为第一二三次',()=>{
   for(const locale of ['en','zh-CN'])for(const width of [36,100])for(const sequence of [1,2,3]) {
     const phase={startAt:'2026-10-20T00:30:00Z',dailyPercent:34,baselineDailyPercent:17,
       fixed:false,quotaLabel:true,x:10,y:20,width,
@@ -44,7 +44,7 @@ test('各阶段均表示至少一次额外重置，不把条件下的下一次�
     const layout=resetOpportunityLayout(width);
     assert.match(html,/data-probability="0.196"/);
     assert.ok(html.includes(`data-next-extra-sequence="${sequence}"`),'序号只保留为内部预测来源');
-    assert.ok(html.includes(locale==='en' ? 'At least one extra reset: 19.6%' : '至少一次额外重置：19.6%'));
+    assert.ok(html.includes(locale==='en' ? 'At least one extra reset: 19.6%' : '至少一次额外 reset：19.6%'));
     assert.doesNotMatch(html,/\b(?:1st|2nd|3rd|first|second|third)\b|第[123]次/i);
     const content=html.match(/data-cutoff-layout="[^"]+"[^>]*>([\s\S]*?)<\/small>/)?.[1];
     assert.ok(content);

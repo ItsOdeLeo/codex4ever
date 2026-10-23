@@ -67,7 +67,7 @@ test('预测没发生时在耗尽前减量，真实额度守恒并留余量；�
   assert.doesNotMatch(html,/NaN|undefined/);
 });
 
-test('只响应已发生的重置，首次前不同未来路径的建议相同；续发后再次规划且每次推后七天',()=>{
+test('只响应已发生的重置，第一次前不同未来路径的建议相同；续发后再次规划且每次推后七天',()=>{
   const r=plan({input:{...input,resetDates:['2026-11-07']}}),search=r.recommendation;
   const base={...r,normalResetInHours:96};
   const forecast=publicResetScenarios({prediction,now:r.now});

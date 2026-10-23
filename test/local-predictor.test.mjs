@@ -75,7 +75,7 @@ test('标准 Chat Completions API 分类帖子并校验结构化结果', async (
   }), /分类字段无效/);
 });
 
-test('独立预测入口忽略旧事回顾，并按发生时间核对历史而非按发帖时间重复报新reset',()=>{
+test('独立预测入口忽略旧事回顾，并按发生时间核对历史而非按发帖时间重复报新 reset',()=>{
   const input={now:'2026-10-19T12:00:00Z',timeZone:'UTC',
     resetTimes:['2026-10-01T10:00:00Z','2026-10-05T10:00:00Z','2026-10-10T10:00:00Z','2026-10-18T10:00:00Z']};
   const base=predictReset(input);

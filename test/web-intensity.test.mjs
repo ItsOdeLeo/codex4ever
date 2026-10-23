@@ -218,9 +218,9 @@ test('实时证据、条件用量、备用切换和精简累计概率；保持�
     const summary = () => evidence.innerHTML.match(/<section class="forecast-summary"[\s\S]*?<\/section>/)?.[0];
     assert.match(summary(),/data-forecast-stat="last-reset"/);
     assert.match(summary(),/data-forecast-stat="mean-interval"/);
-    assert.match(summary(),/均值 95% 置信区间/);
+    assert.match(summary(),/平均间隔的 95% 置信区间/);
     assert.match(summary(),/最可能 reset 时间/);
-    assert.match(summary(),/下次 80% 预测窗口/);
+    assert.match(summary(),/80% 可能区间/);
     assert.match(summary(),/Tibo 最近相关回复/);
     assert.match(summary(),/<q>Let us try\.<\/q>/);
     assert.match(evidence.innerHTML,/data-forecast-summary/,
@@ -286,7 +286,7 @@ test('实时证据、条件用量、备用切换和精简累计概率；保持�
     // The assumed reset is the first refill here (no bank is used before it), so the week restarts there.
     assert.doesNotMatch(output.innerHTML,/data-node-id="backup:/);
     assert.ok(normal().includes(localTime(NativeDate.parse(assumedAt)+168*3600000)),
-      '首次额外reset之后，页面正常刷新必须移动到该时刻七天后');
+      '第一次额外 reset 之后，页面正常刷新必须移动到该时刻七天后');
     assert.doesNotMatch(output.innerHTML,/class="phase-advice"/,'用量未被改动，不显示建议值');
     assert.match(output.innerHTML,/<span class="timeline-lane-text">日均用量<\/span>/);
     assert.doesNotMatch(output.innerHTML,/建议增加用量|建议减少用量|日均消耗 [\d.]+% →/);
@@ -297,7 +297,7 @@ test('实时证据、条件用量、备用切换和精简累计概率；保持�
     assert.equal(probability(),fixed);
     assert.equal(mode(),originalMode,'假设补满不修改预测钟点和概率');
     // With a first reset assumed, the second curve is conditioned on that assumed time.
-    assert.match(second(),new RegExp(`data-conditional-on="${assumedAt}"`),'第二条曲线以计划假设的首次时间为前提');
+    assert.match(second(),new RegExp(`data-conditional-on="${assumedAt}"`),'第二条曲线以计划假设的第一次时间为前提');
     const assumedSecond=second();
     assert.equal(summary(),originalForecastSummary);
     assert.equal(requests.length,2,'选择假设复用同一份证据，不重新抓取');
@@ -310,7 +310,7 @@ test('实时证据、条件用量、备用切换和精简累计概率；保持�
     const secondAt=second().match(/data-reset-at="([^"]+)"/)[1];
     const starts=[...output.innerHTML.matchAll(/data-phase-start-at="([^"]+)"/g)].map(match=>NativeDate.parse(match[1]));
     assert.ok(starts.some(start=>start>=NativeDate.parse(secondAt)-1000&&normal().includes(localTime(start+168*3600000))),
-      '第二次额外reset再次覆盖正常刷新日期');
+      '第二次额外 reset 再次覆盖正常刷新日期');
     assert.match(output.innerHTML,/data-assume-reset aria-pressed="true" data-assumption-sequence="2"/);
     assert.equal([...output.innerHTML.matchAll(/class="reset-action-cancel">不计入<\/small>/g)].length,2);
     assert.match(output.innerHTML,/data-density-sequence="1"/);
@@ -337,20 +337,20 @@ test('实时证据、条件用量、备用切换和精简累计概率；保持�
     assert.equal(second(),assumedSecond);
     assert.equal(refillCount(),2);
     secondAction();
-    assert.equal(refillCount(),1,'取消第二次保留首次');
+    assert.equal(refillCount(),1,'取消第二次保留第一次');
     secondAction();
     click('[data-assume-reset]');
-    assert.equal(refillCount(),0,'取消首次同时取消后继假设');
+    assert.equal(refillCount(),0,'取消第一次同时取消后继假设');
     assert.match(output.innerHTML,/data-phase-daily="20"/);
     // Zero counted resets stays on the recommended solver: the no-reset plan, not a raw current-pace preview.
     assert.ok(depletion(),'取消全部假设后显示不含额外 reset 的推荐计划及耗尽点');
     assert.doesNotMatch(output.innerHTML,/quota-refill-assumed-extra/);
     secondAction();
-    assert.equal(refillCount(),2,'直接选第二次自动启用首次依赖');
+    assert.equal(refillCount(),2,'直接选第二次自动启用第一次依赖');
     click('[data-assume-reset]');
     click('[data-assume-reset]');
-    assert.equal(refillCount(),1,'重新选中首次假设');
-    assert.equal(refillCount(),1,'修改用量保留当前已选的首次假设');
+    assert.equal(refillCount(),1,'重新选中第一次假设');
+    assert.equal(refillCount(),1,'修改用量保留当前已选的第一次假设');
     click('[data-assume-reset]');
     forecast();
     assert.doesNotMatch(output.innerHTML,/quota-refill-assumed-extra|data-assume-reset/);
@@ -359,7 +359,7 @@ test('实时证据、条件用量、备用切换和精简累计概率；保持�
     assert.equal(probability(),fixed);
     forecast();
     assert.match(summary(),/data-forecast-stat="last-reset"/,'关闭预测保留历史数据');
-    assert.match(summary(),/均值 95% 置信区间/);
+    assert.match(summary(),/平均间隔的 95% 置信区间/);
     // "Assume no reset" only stops counting the forecast: the chance tiles stay.
     assert.match(summary(),/data-forecast-horizon="12"/);
     assert.doesNotMatch(summary(),/下次 reset 预测<\/dt><dd>已关闭/);

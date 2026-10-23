@@ -2,7 +2,7 @@ import { translator,uiLocale,diagnosticText } from './ui-language.js';
 const escape = value => String(value).replace(/[&<>"']/g, character =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
 const number = value => Number.isFinite(value) ? Number(value.toFixed(2)) : null;
-const postLabels = { reset_planned: '明确预告', reset_completed: '已重置记录', reset_hint: '可能暗示',
+const postLabels = { reset_planned: '已宣布', reset_completed: '已重置记录', reset_hint: '可能暗示',
   banked_credit: '备用 reset', new_feature: '新功能', irrelevant: '无重置信号', unknown: '暂未识别' };
 const postUrl = value => /^https:\/\/(?:x|twitter)\.com\/thsottiaux\/status\/\d+(?:[?#].*)?$/.test(value ?? '');
 
@@ -31,7 +31,7 @@ export function renderResetForecastSummary({ source, prediction = null,
   const recent = model?.source === 'recent-30-day-intervals';
   const campaignFit = model?.source === 'campaign-intervals';
   const count = model?.sampleCount ?? (recent ? model.recentIntervalCount : model?.intervals?.length);
-  const scope = campaignFit ? t('本次 campaign · {count} 次 reset',{count:model.campaignEventCount})
+  const scope = campaignFit ? t('本次活动 {count} 次 reset',{count:model.campaignEventCount})
     : recent ? t('近 {days} 天',{days:model.windowDays}) : model?.source === 'non-campaign-historical-intervals' ? t('非活动历史回退') : t('历史回退');
   const fallback = model?.selectionReason === 'campaign-has-no-complete-interval' ? t(' · 活动样本不足，暂回退') : '';
   const sample = mean === null ? '' : `${scope}${Number.isInteger(count) ? t(' · {count} 个完整间隔',{count}) : ''}${fallback}`;
@@ -41,9 +41,9 @@ export function renderResetForecastSummary({ source, prediction = null,
     : escape(last??t('暂无记录'));
   const age = number(source.daysSinceReset);
   const rows = [
-    row('last-reset', '上次公开 reset', lastValue, age === null ? '' : t('{days} 天前',{days:age})),
-    row('mean-interval', '平均 reset 间隔', mean===null ? t('数据不足') : t('{days} 天',{days:mean}), sample),
-    row('mean-confidence', t('均值 {level}% 置信区间',{level}), low===null||high===null ? t('样本不足，暂不估计') : t('{low} – {high} 天',{low,high}))
+    row('last-reset', '上次 reset', lastValue, age === null ? '' : t('{days} 天前',{days:age})),
+    row('mean-interval', '平均间隔', mean===null ? t('数据不足') : t('{days} 天',{days:mean}), sample),
+    row('mean-confidence', t('平均间隔的 {level}% 置信区间',{level}), low===null||high===null ? t('样本不足，暂不估计') : t('{low} – {high} 天',{low,high}))
   ];
   if (campaign) {
     const status = { active:'进行中',upcoming:'尚未开始',ended:'已结束' }[campaign.status];
@@ -51,17 +51,17 @@ export function renderResetForecastSummary({ source, prediction = null,
     const value = postUrl(campaign.sourceUrl)
       ? `<a href="${escape(campaign.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escape(t(campaign.name))}</a>`
       : escape(t(campaign.name));
-    rows.splice(1,0,row('campaign','特殊 campaign',`${value} · ${escape(t(status))}`,
-      t('{start} 起 · {end} 结束（按 Day 1 和活动天数推算）',{start,end})));
+    rows.splice(1,0,row('campaign','Tibo 活动',`${value} · ${escape(t(status))}`,
+      t('{start} – {end}（按 Day 1 推算）',{start,end})));
   }
   const clock = source.prediction?.releaseClock;
   if (clock?.sampleScope === 'all-history') {
     const localClock = clock.typicalTimeAt ? parts(clock.typicalTimeAt) : null;
-    rows.push(row('release-clock','常见发布钟点',escape(localClock ? `${localClock.hour}:${localClock.minute}` : clock.typicalTime),
+    rows.push(row('release-clock','常见发布时间',escape(localClock ? `${localClock.hour}:${localClock.minute}` : clock.typicalTime),
       localClock&&clock.timeZone&&clock.timeZone!==timeZone
-        ? t('全部历史 · {count} 个 reset 日 · 你的时间；Tibo 当地 {local}',{count:clock.sampleCount,
+        ? t('基于全部 {count} 个 reset 日 · 本地时间（Tibo 当地时间 {local}）',{count:clock.sampleCount,
           local:new Intl.DateTimeFormat('en-US',{timeZone:clock.timeZone,hour:'2-digit',minute:'2-digit',hourCycle:'h23',timeZoneName:'short'}).format(new Date(clock.typicalTimeAt))})
-        : t('全部历史 · {count} 个 reset 日 · 你的时间',{count:clock.sampleCount})));
+        : t('基于全部 {count} 个 reset 日 · 本地时间',{count:clock.sampleCount})));
   }
   if (prediction) {
     const estimate = prediction.resetTimeEstimate,mode = prediction.resetTimeMode;
@@ -72,7 +72,7 @@ export function renderResetForecastSummary({ source, prediction = null,
       : estimate ? row('next-reset-estimate', '平均间隔参考时间', escape(format(estimate.pointAt)),
       t('{scope} {count} 次 · 常见 {time}（{zone}）',{scope:estimate.clockSampleScope==='all-history' ? t('全部历史') : t('近 {days} 天',{days:estimate.clockWindowDays}),count:estimate.clockSampleCount,time:estimate.typicalReleaseTime,zone:estimate.releaseTimeZone}))
       : row('next-reset-median', '下次预计（中位）', escape(format(window?.medianAt)??t('暂无法估计'))),
-      row('next-reset-window', t('下次 {coverage}% 预测窗口',{coverage}), from && to ? `${escape(from)} – ${escape(to)}` : t('暂无法估计')));
+      row('next-reset-window', t('{coverage}% 可能区间',{coverage}), from && to ? `${escape(from)} – ${escape(to)}` : t('暂无法估计')));
     for (const rule of prediction.evidence?.hardRules ?? []) {
       const until = format(rule.until);
       if (!rule.applied || !until || Date.parse(rule.until) <= now.getTime()) continue;
@@ -87,7 +87,7 @@ export function renderResetForecastSummary({ source, prediction = null,
   const mention = source.latestPost??source.latestResetMention;
   if (mention && format(mention.createdAt) && postUrl(mention.sourceUrl)) {
     rows.push(row('latest-post', source.latestPost ? mention.activityType==='reply' ? 'Tibo 最近回复' : 'Tibo 最近帖子'
-      : mention.activityType==='reply' ? 'Tibo 最近相关回复' : 'Tibo 最近相关帖子',
+      : mention.activityType==='reply' ? 'Tibo 最近相关回复' : 'Tibo 最新相关帖子',
       `<a href="${escape(mention.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escape(format(mention.createdAt))}</a> · ${escape(t(postLabels[mention.signal?.kind]??'暂未识别'))}<q>${escape(mention.text ?? '')}</q>`));
   } else rows.push(row('latest-post', 'Tibo 相关帖子',t('暂无可用帖子／回复')));
   const updated = format(source.checkedAt);
@@ -107,7 +107,7 @@ export function renderResetForecastSummary({ source, prediction = null,
   else if(horizons.length)glance.push(`<div data-forecast-glance="next-hours"><dt>${escape(t('未来 reset 概率'))}</dt><dd class="forecast-horizons">${horizons.map(([hours,value])=>
     `<span data-forecast-horizon="${hours}"><small><span class="horizon-long">${escape(t('{hours} 小时内 reset',{hours}))}</span><span class="horizon-short">${escape(t('{hours} 小时',{hours}))}</span></small><b>${Number((value*100).toFixed(1))}%</b></span>`).join('')}</dd></div>`);
   const windowFrom=dayFormat(prediction?.nextResetWindow?.from),windowTo=dayFormat(prediction?.nextResetWindow?.to);
-  if(windowFrom&&windowTo)glanceRow('window','可能窗口',escape(windowFrom===windowTo ? windowFrom : `${windowFrom} – ${windowTo}`));
+  if(windowFrom&&windowTo)glanceRow('window','预计日期',escape(windowFrom===windowTo ? windowFrom : `${windowFrom} – ${windowTo}`));
   if(last) {
     const hours=age===null ? null : Math.round(age*24);
     const ago=hours===null ? '' : hours<24 ? t('{hours} 小时前',{hours}) : t('{days} 天前',{days:Number(age.toFixed(1))});
@@ -118,12 +118,13 @@ export function renderResetForecastSummary({ source, prediction = null,
   if(campaign?.status==='active'&&Number.isFinite(Date.parse(campaign.startsAt))&&Number.isFinite(Date.parse(campaign.endsAt))) {
     const DAY=86400000,start=Date.parse(campaign.startsAt);
     const total=Math.round((Date.parse(campaign.endsAt)-start)/DAY),day=Math.min(total,Math.floor((now.getTime()-start)/DAY)+1);
-    glanceRow('campaign','活动',escape(t('第 {day} / {total} 天 · {end} 结束',{day,total,end:dayFormat(campaign.endsAt)})));
+    glanceRow('campaign','Tibo 活动',escape(t('第 {day} / {total} 天 · {end} 结束',{day,total,end:dayFormat(campaign.endsAt)})));
   }
   if(mention && format(mention.createdAt) && postUrl(mention.sourceUrl))
     glanceRow('tibo','Tibo',`<a href="${escape(mention.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escape(mention.signal?.scheduledFor && format(mention.signal.scheduledFor)
-      ? t('已安排 · {time} 前',{time:format(mention.signal.scheduledFor)})
+      ? t('已宣布 · {time} 前',{time:format(mention.signal.scheduledFor)})
       : `${t(postLabels[mention.signal?.kind]??'暂未识别')} · ${dayFormat(mention.createdAt)}`)}</a>`);
-  const statusLine=`<p>${escape(`${status}${updated ? t(' · 更新 {time}',{time:updated}) : ''} · ${t('你的时间（{zone}）',{zone:timeZone})}`)}${prediction ? ` · ${t(prediction.calibrated===true ? '模型预测' : '模型未校准')}` : ''}</p>`;
-  return `<section class="forecast-summary" data-forecast-summary aria-label="${t('额外 reset 预测关键数据')}">${glance.length ? `<dl class="forecast-glance">${glance.join('')}</dl>` : ''}<details class="forecast-more"><summary>${t('更多数据')}</summary><dl>${rows.join('')}</dl>${statusLine}</details></section>`;
+  // One plain line: when the data was fetched, in the viewer's own time.
+  const statusLine=`<p>${escape(updated ? t('数据更新于 {time}（本地时间）',{time:updated}) : status)}${prediction&&prediction.calibrated!==true ? ` · ${escape(t('模型未校准'))}` : ''}</p>`;
+  return `<section class="forecast-summary" data-forecast-summary aria-label="${t('额外 reset 预测关键数据')}">${glance.length ? `<dl class="forecast-glance">${glance.join('')}</dl>` : ''}<details class="forecast-more"><summary>${t('详细数据')}</summary><dl>${rows.join('')}</dl>${statusLine}</details></section>`;
 }

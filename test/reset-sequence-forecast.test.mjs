@@ -15,7 +15,7 @@ const fixture=()=>({model:'local-recent-intervals-v5',enforceResetCooldown:true,
   evidence:{intervalModel:{meanIntervalDays:3.7}},
   releaseClock:{timeZone:'America/Los_Angeles',typicalMinuteOfDay:22*60,typicalTime:'22:00'}});
 
-test('第二次取首次参考时间加近期均值，按历史钟点校准，不把首次CDF当第二次概率',()=>{
+test('第二次取第一次参考时间加近期均值，按历史钟点校准，不把第一次CDF当第二次概率',()=>{
   const prediction=fixture(),before=structuredClone(prediction);
   const result=followingResetEstimate({prediction,now});
   assert.equal(result.conditionalOn,'2026-10-18T05:30:00Z');
@@ -40,7 +40,7 @@ test('短间隔仍尊重发布者次日冷却约束，显式关闭时不强加',
   assert.ok(Date.parse(unblocked.pointAt)<Date.parse(blocked.pointAt));
 });
 
-test('缺少近期均值或首次参考时间不编造第二次；关闭预测不留下标线',()=>{
+test('缺少近期均值或第一次参考时间不编造第二次；关闭预测不留下标线',()=>{
   const prediction=fixture();
   prediction.evidence.intervalModel=null;
   assert.equal(followingResetEstimate({prediction,now}),null);
@@ -76,9 +76,9 @@ test('第二次预测与用量／备用独立，共用时间轴，不产生未�
     assert.ok(graph.dayAxis.days.at(-1).endHours>=next.pointHours);
     const html=renderStrategyTree(graph,String);
     assert.match(html,/data-reset-sequence="2"/);
-    assert.match(html,/第二次额外重置预测/);
+    assert.match(html,/第二次额外 reset 预测/);
     assert.match(html,/<span class="timeline-lane-text">第二次 reset 概率<\/span>/);
-    assert.match(graph.resetLaneLabels[1].tooltip,/概率密度 · 以首次发生为前提/);
+    assert.match(graph.resetLaneLabels[1].tooltip,/概率密度 · 以第一次发生为前提/);
     assert.match(html,/data-density-sequence="2"/);
     assert.ok(graph.followingPlot.topY>graph.probabilityPlot.bottomY,'两次事件分开成行，共用日期坐标');
     assert.ok(!graph.funnel.refills.some(refill=>refill.at===next.pointAt));
@@ -91,7 +91,7 @@ test('第二次预测与用量／备用独立，共用时间轴，不产生未�
   assert.ok(Math.abs(graphs[0].forecastFollowing.x-graphs[0].forecastFocus.x-expectedDelta*180/24)<1e-6);
 });
 
-test('发布钟点按发布者时区估计，显示转换到当地并跨夏令时，不写死柏林',()=>{
+test('发布时间按发布者时区估计，显示转换到当地并跨夏令时，不写死柏林',()=>{
   const prediction=fixture();
   prediction.resetTimeMode.pointAt='2026-10-24T05:30:00Z';
   const result=followingResetEstimate({prediction,now:'2026-10-23T12:00:00Z'});
@@ -122,5 +122,5 @@ test('第二条曲线来自重新计时后的条件CDF，质量守恒、冷却�
   hinted.next48Probability=.999;
   hinted.evidence.signalEffects=[{hint:1,ratio:1000}];
   assert.equal(followingResetProbabilityByHours(hinted,now,firstHours+96),
-    followingResetProbabilityByHours(prediction,now,firstHours+96),'不把针对首次的旧提示重复使用到第二次');
+    followingResetProbabilityByHours(prediction,now,firstHours+96),'不把针对第一次的旧提示重复使用到第二次');
 });

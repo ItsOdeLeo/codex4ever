@@ -17,16 +17,16 @@ const source = { available: true, prediction, lastResetAt: '2026-10-15T06:28:00Z
     activityType: 'reply', text: 'Let us try.', signal: { kind: 'unknown' } } };
 const render = extra => renderResetForecastSummary({ source, prediction, now, timeZone, ...extra });
 
-test('预测关键数据映射到固定行：实际reset、近期均值及95%区间与下次80%窗口分别显示', () => {
+test('预测关键数据映射到固定行：实际 reset、近期均值及95%区间与下次80%窗口分别显示', () => {
   const html = render();
   assert.match(html,/>10\/15 08:28<\/a><small>1.01 天前/);
   assert.match(html,/>3.7 天<small>近 30 天 · 5 个完整间隔/);
-  assert.match(html,/均值 95% 置信区间<\/dt><dd>1.57 – 5.83 天/);
+  assert.match(html,/平均间隔的 95% 置信区间<\/dt><dd>1.57 – 5.83 天/);
   assert.match(html,/下次预计（中位）<\/dt><dd>10\/19 11:36/);
-  assert.match(html,/下次 80% 预测窗口<\/dt><dd>10\/17 10:30 – 10\/22 23:27/);
+  assert.match(html,/80% 可能区间<\/dt><dd>10\/17 10:30 – 10\/22 23:27/);
   assert.match(html,/Tibo 最近相关回复/);
   assert.match(html,/>10\/16 06:30<\/a> · 暂未识别<q>Let us try\.<\/q>/);
-  assert.match(html,/实时记录 · 更新 10\/16 08:46 · 你的时间（Europe\/Berlin） · 模型未校准/);
+  assert.match(html,/数据更新于 10\/16 08:46（本地时间） · 模型未校准/);
 });
 
 test('关闭预测保留历史统计，数据不足或超出预测范围不编造置信区间和日期', () => {
@@ -38,7 +38,7 @@ test('关闭预测保留历史统计，数据不足或超出预测范围不编�
   sparse.prediction.evidence.intervalModel.meanIntervalConfidence = null;
   sparse.prediction.nextResetWindow = { coverage: .8, from: null, medianAt: null, to: null };
   assert.match(render({ source: sparse, prediction: sparse.prediction }), /样本不足，暂不估计/);
-  assert.match(render({ source: sparse, prediction: sparse.prediction }), /下次 80% 预测窗口<\/dt><dd>暂无法估计/);
+  assert.match(render({ source: sparse, prediction: sparse.prediction }), /80% 可能区间<\/dt><dd>暂无法估计/);
   const missing = render({ source: { available: false, reason: '历史数据已过期，暂不预测' }, prediction: null });
   assert.match(missing, /历史数据已过期，暂不预测/);
   assert.doesNotMatch(missing, /NaN|Invalid Date|95%|80%/);
@@ -58,7 +58,7 @@ test('旧历史回退不能写成近期样本，跨年时间显示年份；活�
   assert.match(html, /Day 11 功能帖 · 0%<small>截至 10\/16 09:00 · 用户设定规则/);
 });
 
-test('公开帖子只按文本显示，未知分类不当成reset承诺，链接不执行网页代码', () => {
+test('公开帖子只按文本显示，未知分类不当成 reset 承诺，链接不执行网页代码', () => {
   const hostile = structuredClone(source);
   hostile.latestResetMention.text = '<img src=x onerror="alert(1)">';
   const html = render({ source: hostile });
@@ -79,13 +79,13 @@ test('活动范围、当前间隔样本及全历史钟点分别显示，全部�
     typicalTimeAt:'2026-10-16T01:00:00Z',timeZone:'America/Los_Angeles'};
   const html=render({source:campaignSource,prediction:p});
   assert.match(html,/28 天改进或 reset<\/a> · 进行中/);
-  assert.match(html,/10\/05 09:00 起 · 11\/02 09:00 结束（按 Day 1 和活动天数推算）/);
-  assert.match(html,/2.68 天<small>本次 campaign · 5 次 reset · 4 个完整间隔/);
-  assert.match(html,/常见发布钟点<\/dt><dd>03:00<small>全部历史 · 56 个 reset 日 · 你的时间；Tibo 当地 18:00 (PDT|GMT-7)/);
-  assert.match(html,/你的时间（Europe\/Berlin）/,'时区只作为访问者自己的时间出现');
+  assert.match(html,/10\/05 09:00 – 11\/02 09:00（按 Day 1 推算）/);
+  assert.match(html,/2.68 天<small>本次活动 5 次 reset · 4 个完整间隔/);
+  assert.match(html,/常见发布时间<\/dt><dd>03:00<small>基于全部 56 个 reset 日 · 本地时间（Tibo 当地时间 18:00 (PDT|GMT-7)）/);
+  assert.match(html,/（本地时间）/,'时间都换算成访问者的本地时间');
   assert.doesNotMatch(html,/近 30 天/);
   const shanghai=render({source:campaignSource,prediction:p,timeZone:'Asia/Shanghai'});
-  assert.match(shanghai,/常见发布钟点<\/dt><dd>09:00/);
+  assert.match(shanghai,/常见发布时间<\/dt><dd>09:00/);
   p.evidence.campaign.status='ended';
   assert.match(render({source:campaignSource,prediction:null}),/28 天改进或 reset<\/a> · 已结束/);
 });

@@ -47,7 +47,7 @@ test('近期只有一个完整间隔仍以近期为主，但不编造均值置�
   assert.equal(p.evidence.intervalModel.meanIntervalConfidence,null);
 });
 
-test('刚reset当天及次日概率极低，冷却解除后再按已等待时间计算',()=>{
+test('刚 reset 当天及次日概率极低，冷却解除后再按已等待时间计算',()=>{
   const early=predict({now:'2026-10-13T12:00:00Z',timeZone:'UTC',enforceResetCooldown:true});
   const later=predict({now:'2026-10-15T12:00:00Z',timeZone:'UTC',enforceResetCooldown:true});
   veryUnlikely(early.todayProbability);
@@ -56,7 +56,7 @@ test('刚reset当天及次日概率极低，冷却解除后再按已等待时间
   assert.equal(early.evidence.hardRules[0].until,'2026-10-15T07:00:00.000Z');
 });
 
-test('Day功能帖当天概率极低，弱暗示和明确预告都不能冲掉指定硬规则',()=>{
+test('Day功能帖当天概率极低，弱暗示和已宣布都不能冲掉指定硬规则',()=>{
   const hint={text:'Perhaps a Codex reset?',createdAt:'2026-10-16T18:00:00Z',signal:{kind:'reset_hint',confidence:1}};
   const promise={...hint,signal:{kind:'reset_planned',confidence:1,validUntil:'2026-10-17T06:00:00Z'}};
   const p=predict({posts:[feature,hint,promise],enforceCampaignFeatureRule:true});
@@ -84,7 +84,7 @@ test('功能硬规则不延续到次日；普通功能帖或父帖Day编号不�
   assert.equal(ordinary.evidence.hardRules.length,0);
 });
 
-test('明确预告在日内到期后停止加成；极低先验不虚构一年内的预测窗口',()=>{
+test('已宣布在日内到期后停止加成；极低先验不虚构一年内的预测窗口',()=>{
   const args={now:'2026-10-16T12:00:00Z',timeZone:'UTC',priorDailyProbability:.1};
   const base=predictReset(args),boost=predictReset({...args,posts:[{text:'Codex reset in two hours.',createdAt:args.now,
     signal:{kind:'reset_planned',confidence:1,validUntil:'2026-10-16T14:00:00Z'}}]});
@@ -117,7 +117,7 @@ test('状态API observed_at回复被接入且不覆盖父帖；Day功能/完成/
   assert.ok(p.next48Probability<1);
 });
 
-test('Day宣布reset先进入已完成历史，备用不会伪装成自动恢复',async()=>{
+test('Day宣布 reset 先进入已完成历史，备用不会伪装成自动恢复',async()=>{
   const completed='2026-10-16T19:00:00Z';
   const archive=await collectLiveResetEvidence({now:new Date(now),classifyWithLLM:false,xBearerToken:X_TOKEN,
     fetchImpl:withX(url=>url===RESET_HISTORY_URL ? historyFeed : {data:{}},{
