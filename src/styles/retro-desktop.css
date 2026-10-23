@@ -332,3 +332,11 @@ legend {margin-bottom:8px}
 .plan-card .forecast-more {border-top:0;margin-top:8px;padding-top:0}
 .plan-card>.toolbar {margin-bottom:18px}
 @media(max-width:680px) {.plan-card .forecast-glance>[data-forecast-glance="next-hours"]>dd {flex:1;min-width:0}.plan-card .forecast-horizons {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.plan-card .forecast-horizons span,.plan-card .forecast-horizons span:nth-child(n) {min-width:0;padding:6px 8px}.plan-card .forecast-horizons small {font-size:10px;white-space:normal}.plan-card .forecast-horizons b {font-size:16px}}
+/* "More data" opened: one compact row per fact, label | value · note. */
+.plan-card .forecast-more>dl>div {display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr);gap:2px 14px;align-items:baseline;padding:3px 0!important;border:0!important}
+.plan-card .forecast-more dt {margin:0;font-size:12px}
+.plan-card .forecast-more dd {font-size:12px;line-height:1.5}
+.plan-card .forecast-more dd small {display:inline;margin:0 0 0 6px;font-size:11px}
+.plan-card .forecast-more dd q {-webkit-line-clamp:1;margin-top:2px;font-size:11px}
+.plan-card .forecast-more>p {margin:6px 0 0}
+@media(max-width:680px) {.plan-card .forecast-more>dl>div {grid-template-columns:minmax(0,1fr);gap:0;padding:4px 0!important}}
