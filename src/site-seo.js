@@ -1,6 +1,5 @@
 import { PLANNER_METADATA } from './page-metadata.js';
 import { BRAND_MARK_SVG } from './brand-mark.js';
-import { WORDMARK_EN,WORDMARK_ZH } from './wordmarks.js';
 
 const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const json=value=>JSON.stringify(value).replace(/</g,'\\u003c');
@@ -120,7 +119,7 @@ function renderGuide({language,siteUrl}) {
 ${renderSeoHead({siteUrl,page:'guide',language})}
 <meta name="theme-color" content="#F7D5D5"><link rel="stylesheet" href="/src/styles/guide.css"></head>
 <body class="guide-page"><main>
-<header class="site-header"><div class="brand"><span class="brand-mark" aria-hidden="true">${BRAND_MARK_SVG}</span><div><a href="/" aria-label="${language==='zh-CN' ? '赛博牛马规划器' : 'Usage Planner'}">${language==='zh-CN' ? WORDMARK_ZH : WORDMARK_EN}</a></div></div>
+<header class="site-header"><div class="brand"><span class="brand-mark" aria-hidden="true">${BRAND_MARK_SVG}</span><div><a href="/">${language==='zh-CN' ? '赛博牛马规划器' : 'Usage Planner'}</a></div></div>
 <nav aria-label="${language==='en' ? 'Language' : '语言'}"><a href="/guide/" lang="en" hreflang="en"${language==='en' ? ' aria-current="page"' : ''}>English</a> · <a href="/zh/guide/" lang="zh-CN" hreflang="zh-CN"${language==='zh-CN' ? ' aria-current="page"' : ''}>中文</a></nav></header>
 <article><h1>${escape(guide.heading)}</h1><p>${escape(guide.intro)}</p>
 ${guide.sections.map(([heading,text])=>`<section><h2>${escape(heading)}</h2><p>${escape(text)}</p></section>`).join('\n')}
