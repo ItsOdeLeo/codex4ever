@@ -339,7 +339,17 @@ $('#inputs').addEventListener('click', event => {
   if (!data.monthNav && data.toggleCalendar === undefined) markChanged();
 });
 
-$('#calculate').addEventListener('click', calculate);
+// The refresh button spins the same square as the no-reset switch while the
+// plan is recomputed, then hides once the new plan is shown.
+$('#calculate').addEventListener('click',async()=>{
+  const button=$('#calculate');
+  if(button.getAttribute?.('aria-busy')==='true')return;
+  if(typeof requestAnimationFrame!=='function')return calculate();
+  button.setAttribute('aria-busy','true');button.textContent=t('更新中…');
+  await new Promise(resolve=>requestAnimationFrame(()=>setTimeout(resolve,0)));
+  try {await calculate();}
+  finally {button.removeAttribute('aria-busy');button.textContent=t('↻ 更新计划');}
+});
 // Share: the system sheet where there is one, otherwise copy the link.
 $('#share-site')?.addEventListener?.('click',async()=>{
   // The plugin page lives on localhost; share the public site instead.

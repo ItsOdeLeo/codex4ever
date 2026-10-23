@@ -125,7 +125,7 @@ test('每段用量统一紧贴绿色额度上沿；假设、备用、窄屏均�
         assert.equal(graph.headings.some(heading=>heading.kind==='opportunity'),false,'不再单列重置概率行');
         assert.equal(new Set(graph.phaseControls.map(phase=>phase.y)).size,1,'用量说明共用一条水平线');
         for(const [index,phase] of graph.phaseControls.entries()) {
-          near(phase.y+phase.labelHeight+28,graph.dayAxis.quotaTopY);
+          near(phase.y+phase.labelHeight,graph.dayAxis.quotaTopY);
           assert.equal(phase.quotaLabel,true);
           assert.ok(phase.x>=0&&phase.x+phase.width<=graph.width);
           if(index) {
@@ -379,11 +379,12 @@ test('每天一根用量柱：同一天不出现两根，落在当天格内，�
       const planned=result.phasePlans.reduce((sum,phase)=>sum+phase.dailyPercent*(phase.endHours-Math.max(0,phase.startHours))/24,0);
       const shown=graph.dailyBars.reduce((sum,bar)=>sum+bar.percent,0);
       assert.ok(Math.abs(planned-shown)<=.06*graph.dailyBars.length+.1,`${shown} != ${planned}`);
-      assert.deepEqual(graph.usageScale.ticks.map(tick=>tick.percent),[0,25,50,75,100],'刻度固定，不随计划变化');
-      const [zero,,,,full]=graph.usageScale.ticks;
+      assert.deepEqual(graph.usageScale.ticks.map(tick=>tick.percent),[25,50,75,100],'刻度固定，不随计划变化');
+      const zero=graph.usageScale.zeroY,full=graph.usageScale.ticks.at(-1).y;
+      assert.ok(Math.abs(full-graph.dayAxis.quotaTopY)<1e-6,'100% 线与额度区顶端齐平');
       for(const bar of graph.dailyBars) {
-        assert.ok(Math.abs(bar.y-zero.y)<1e-6,'柱子从 0% 线向下');
-        if(bar.percent>=1)assert.ok(Math.abs(bar.height-(full.y-zero.y)*Math.min(100,bar.percent)/100)<.1,'柱长按固定刻度');
+        assert.ok(Math.abs(bar.y-zero)<1e-6,'柱子从同一顶边向下');
+        if(bar.percent>=1)assert.ok(Math.abs(bar.height-(full-zero)*Math.min(100,bar.percent)/100)<.1,'柱长按固定刻度');
       }
       assert.match(renderStrategyTree(graph,String),/class="sr-only"><div class="phase-controls"/,'读屏仍能读到各段用量');
     }

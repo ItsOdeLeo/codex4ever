@@ -418,7 +418,9 @@ legend {margin-bottom:8px}
 #strategy-controls[aria-busy=true] .switch-knob {animation:busy-turn .8s steps(8) infinite}
 #strategy-controls[aria-busy=true] {cursor:progress}
 @keyframes busy-turn {to {transform:rotate(360deg)}}
-@media(prefers-reduced-motion:reduce) {#strategy-controls[aria-busy=true] .switch-knob {animation:none;background:var(--accent)}}
+.refresh-overlay[aria-busy=true] {display:inline-flex;align-items:center;gap:8px;cursor:progress}
+.refresh-overlay[aria-busy=true]::before {content:'';width:12px;height:12px;border:1px solid var(--border);border-radius:2px;background:var(--surface);box-shadow:1px 1px 0 var(--border);animation:busy-turn .8s steps(8) infinite}
+@media(prefers-reduced-motion:reduce) {#strategy-controls[aria-busy=true] .switch-knob,.refresh-overlay[aria-busy=true]::before {animation:none;background:var(--accent)}}
 /* Wide card, announced: one full-width entry under its own heading. */
 @media(min-width:1180px) {
   .forecast-horizons:has([data-forecast-horizon=announced]) {display:block}
@@ -440,4 +442,3 @@ html:lang(zh-CN) .brand h1, html:lang(zh-CN) .guide-page .brand a {font-size:24p
 /* Daily usage bars: the quota area's fill and outline, one bar per day. */
 .tree-edges .daily-bar {fill:var(--quota-fill-start);stroke:var(--quota-stroke);stroke-width:1.2}
 .tree-edges .usage-gridline {stroke:var(--divider);stroke-width:1;stroke-dasharray:2 3;opacity:.6}
-.tree-edges .usage-baseline {stroke:var(--quota-stroke);stroke-width:1.2}

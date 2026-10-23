@@ -137,7 +137,8 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
   const headingY = lastPlot ? lastPlot.bottomY+20 : forecastEndY + (forecastFocus ? 92 : 0) + 12;
   const phaseControls = [];
   const phaseWidth = 198;
-  const quotaThickness=40,labelGap=28,phaseY=headingY+12;
+  // The quota area's top sits on the usage scale's 100% line.
+  const quotaThickness=40,labelGap=0,phaseY=headingY+12;
   const restPeriods=(result.phasePlans??[]).filter(phase=>phase.plannedRest);
   const shownPhases=timelineUsagePhases(result.phasePlans??[],axis.xAtHours);
   for(const [index,phase] of shownPhases.entries()) {
@@ -155,7 +156,7 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
   }
   const opportunityHeight=Math.max(0,...phaseControls.map(phase=>phase.nextResetOpportunity
     ? resetOpportunityLayout(phase.width).height : 0));
-  const labelHeight=Math.max(108,20+(opportunityHeight ? 16+opportunityHeight : 0));
+  const labelHeight=Math.max(104,20+(opportunityHeight ? 16+opportunityHeight : 0));
   const centerY=phaseY+labelHeight+labelGap+quotaThickness;
   for(const phase of phaseControls)Object.assign(phase,{labelHeight,quotaAnchorY:centerY-quotaThickness});
   // One bar per calendar day: what the plan uses that day (today counts from
@@ -164,10 +165,11 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
   const usageOn=day=>(result.phasePlans??[]).reduce((sum,phase)=>sum+phase.dailyPercent
     *Math.max(0,Math.min(phase.endHours,day.endHours)-Math.max(phase.startHours,day.startHours,0))/24,0);
   const dayUsage=axis.days.map(day=>({day,percent:usageOn(day)}));
-  const barTop=phaseY+4,barSpace=labelHeight-8;
+  const barTop=phaseY+4,barSpace=labelHeight-4;
   const yAt=percent=>barTop+barSpace*Math.min(100,percent)/100;
-  const usageScale={x1:axis.leftPadding,x2:axis.width-axis.padding,labelX:axis.width-axis.padding+4,
-    ticks:[0,25,50,75,100].map(percent=>({percent,y:yAt(percent)}))};
+  // No drawn 0% line: the bars' common top edge already shows it.
+  const usageScale={x1:axis.leftPadding,x2:axis.width-axis.padding,labelX:axis.width-axis.padding+4,zeroY:barTop,
+    ticks:[25,50,75,100].map(percent=>({percent,y:yAt(percent)}))};
   const dailyBars=dayUsage.filter(item=>item.percent>0.05).map(({day,percent})=>{
     const from=axis.xAtHours(Math.max(day.startHours,0)),to=day.x+day.width;
     const width=Math.min(26,Math.max(4,(to-from)*.5)),height=Math.max(1,yAt(percent)-barTop);
