@@ -288,7 +288,7 @@ test('横向按完整计划适应窗口，放大和缩小都会重排；尺寸�
   const smaller=layoutStrategyTree(conditional,{prediction,viewportWidth:1340});
   const larger=layoutStrategyTree(conditional,{prediction,viewportWidth:2200});
   assert.ok(smaller.width<larger.width,'从全屏缩回时图表不能保留旧宽度');
-  assert.ok(smaller.nodes.find(node=>node.id==='normal-reset').x+190<=smaller.width);
+  assert.ok((node=>node.x+node.width)(smaller.nodes.find(node=>node.id==='normal-reset'))<=smaller.width);
   assert.deepEqual(conditional,original);
 });
 

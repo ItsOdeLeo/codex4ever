@@ -29,11 +29,10 @@ var english = {
   "\u9700\u8981\u5907\u7528": "Chance of using a banked reset",
   "\u4FDD\u6301\u6240\u9009\u7528\u91CF": "Keep selected usage",
   "\u540C\u4E00\u6279\u91CD\u7F6E\u60C5\u666F\uFF1B\u7EFC\u5408\u5B8C\u6210\u7528\u91CF\u3001\u505C\u7528\u3001\u504F\u79BB\u76EE\u6807\u548C\u5269\u4F59\u8D44\u6E90\u3002\u9884\u6D4B\u672A\u6821\u51C6\u3002": "Same reset scenarios; balances completed usage, pauses, deviation and remaining resources. Forecast uncalibrated.",
-  "\u82E5\u59CB\u7EC8\u6CA1\u6709\u989D\u5916\u91CD\u7F6E": "If no extra reset occurs",
+  "\u5047\u8BBE\u6CA1\u6709\u989D\u5916 reset": "Assuming no extra reset",
   "Usage Planner \xB7 \u7528\u91CF\u7B56\u7565\u5EFA\u8BAE": "Usage Planner \xB7 Usage planner",
   "\u89C4\u5212\u63A5\u4E0B\u6765\u600E\u4E48\u7528\uFF0C\u4EC0\u4E48\u65F6\u5019\u8865\u7ED9\u3002": "Plan your usage and your next reset.",
   "OpenAI Codex \u7684\u975E\u5B98\u65B9\u53EF\u89C6\u5316\u7528\u91CF\u89C4\u5212\u5DE5\u5177\u3002\u4E0E OpenAI \u65E0\u96B6\u5C5E\u5173\u7CFB\u3002": "Unofficial visual usage planner for OpenAI Codex. Not affiliated with OpenAI.",
-  "\u5728 X \u5173\u6CE8\u6211": "Follow on X",
   "\u72B6\u6001\u4E0E\u9884\u6D4B": "State and forecast",
   "\u7B97\u6CD5\u8F93\u5165": "Usage inputs",
   "\u9884\u6D4B\u4F9D\u636E": "Forecast evidence",
@@ -51,16 +50,20 @@ var english = {
   "\u5047\u8BBE\u6CA1\u6709 reset": "Assume no reset",
   "\u611F\u8C22": "Thanks to",
   "\u63D0\u4F9B reset \u6570\u636E": "for reset data",
-  "\u5982\u679C\u4F60\u559C\u6B22\u8FD9\u4E2A\u4F5C\u54C1\uFF1A": "If you like this work:",
+  "\u5982\u679C\u4F60\u559C\u6B22\u8FD9\u4E2A\u4F5C\u54C1\uFF0C\u6B22\u8FCE\u5728 ": "If you like this work, please follow me on ",
+  " \u6216": " or ",
+  "\u5173\u6CE8\u6211\uFF0C\u6216\u8005": ", or ",
+  "\u5206\u4EAB\u7ED9\u670B\u53CB": "share it",
+  "\u3002": ".",
   "\u5C0F\u7EA2\u4E66": "Xiaohongshu",
-  "\u5206\u4EAB": "Share",
   "\u5DF2\u590D\u5236\u94FE\u63A5": "Link copied",
   "\u21BB \u66F4\u65B0\u8BA1\u5212": "\u21BB Update plan",
+  "\u66F4\u65B0\u4E2D\u2026": "Updating\u2026",
   "{time} \u524D": "By {time}",
   "\u672C\u5468\u989D\u5EA6\u8FD8\u5269": "Weekly quota left",
   "{hours} \u5C0F\u65F6\u5185 reset": "Reset within {hours}h",
   "\u7528\u91CF\u8FC7\u5EA6\u63D0\u9192\uFF08\u4EC5 Codex \u63D2\u4EF6\uFF09\uFF1A\u5728 Codex \u91CC\u8BF4\u201C\u6253\u5F00\u7528\u91CF\u8FC7\u5EA6\u63D0\u9192\u201D\u3002\u4E4B\u540E\u4F60\u7528\u5F97\u6BD4\u8BA1\u5212\u5FEB\u65F6\uFF0C\u4F1A\u76F4\u63A5\u5728\u5BF9\u8BDD\u91CC\u63D0\u9192\u4F60\u3002": "Overuse alert (Codex plugin only): tell Codex \u201Cturn on overuse alerts\u201D. When you use more than the plan, it reminds you right in the conversation.",
-  "\u88C5\u6210 Codex \u63D2\u4EF6\u53EF\u81EA\u52A8\u8BFB\u53D6\u3002": "Fill these in automatically with the Codex plugin.",
+  "\u53EF\u5B89\u88C5\u6210 Codex \u63D2\u4EF6\uFF0C\u81EA\u52A8\u8BFB\u53D6\u4EE5\u4E0A\u6570\u636E\u3002": "Install the Codex plugin to fill these in automatically.",
   "\u6309\u4E0B\u540E\u9690\u85CF\u9884\u6D4B\u7684 reset\uFF0C\u6240\u6709\u7B56\u7565\u90FD\u6309\u6CA1\u6709\u989D\u5916 reset \u6765\u89C4\u5212\u3002": "Hides the predicted resets and plans every strategy as if no extra reset comes.",
   "\u5DF2\u5BA3\u5E03\u7684 reset": "Announced reset",
   "\u5DF2\u5BA3\u5E03": "Announced",
@@ -99,7 +102,7 @@ var english = {
   "\u5DF2\u8BA1\u7B97": "Calculated",
   "\u8BF7\u68C0\u67E5\u8F93\u5165": "Check your inputs",
   "\u6700\u591A\u9009\u62E9 8 \u4E2A\u5907\u7528 reset \u65E5\u671F": "Choose up to 8 banked reset dates",
-  "\u989D\u5916\u91CD\u7F6E\u9884\u6D4B": "Extra reset forecast",
+  "\u989D\u5916 reset \u9884\u6D4B": "Extra reset forecast",
   " \xB7 48\u5C0F\u65F6 {percent}%": " \xB7 48h {percent}%",
   "\u5DF2\u5F00\u542F": "On",
   "\u5DF2\u5173\u95ED": "Off",
@@ -142,17 +145,17 @@ var english = {
   "\u5EFA\u8BAE / \u5929": "Suggested / day",
   "\u7528\u91CF / \u5929": "Usage / day",
   "\u91CD\u7F6E\u6982\u7387 \xB7 \u622A\u81F3": "Reset chance \xB7 by",
-  "\u9996\u6B21\u989D\u5916\u91CD\u7F6E": "First extra reset",
-  "\u7B2C\u4E8C\u6B21\u989D\u5916\u91CD\u7F6E": "Second extra reset",
+  "\u7B2C\u4E00\u6B21\u989D\u5916 reset": "First extra reset",
+  "\u7B2C\u4E8C\u6B21\u989D\u5916 reset": "Second extra reset",
   "\u7528\u91CF\u7B56\u7565": "Usage strategy",
-  "\u4FDD\u6301\u8282\u594F": "Keep pace",
-  "\u4E0D\u6D6A\u8D39\u989D\u5EA6": "Use it all",
+  "\u7A33\u5982\u8001\u72D7": "Keep pace",
+  "\u8D5B\u535A\u725B\u9A6C\u62C9\u6EE1": "Use it all",
   "\u6309\u5F53\u524D\u901F\u5EA6\u7528\uFF0C\u770B\u4EC0\u4E48\u65F6\u5019\u7528\u5B8C": "Your current pace: see when quota runs out",
   "\u5C3D\u91CF\u4E00\u76F4\u6709\u989D\u5EA6\uFF0C\u5FC5\u8981\u65F6\u653E\u6162": "Stay available, slowing down if needed",
   "\u5728\u4E0B\u6B21\u8865\u6EE1\u524D\u521A\u597D\u7528\u5B8C": "Empty quota just before the next refill",
   "\u5468\u672B\u4F11\u606F\uFF0C\u989D\u5EA6\u5206\u7ED9\u5DE5\u4F5C\u65E5": "Rest on weekends, spread over weekdays",
-  "\u4F18\u5148\u5728\u5468\u672B\u7528\u5B8C\u989D\u5EA6": "Use quota mainly on weekends",
-  "\u4FDD\u6301\u53EF\u7528": "Keep available",
+  "\u5E73\u65F6\u4E0D\u7528\uFF0C\u989D\u5EA6\u90FD\u7559\u5230\u5468\u672B": "Use quota mainly on weekends",
+  "\u7EC6\u6C34\u957F\u6D41": "Keep available",
   "\u89C4\u5212\u503E\u5411": "Planning preference",
   "\u7A33\u59A5": "Cautious",
   "\u4E50\u89C2": "Optimistic",
@@ -162,9 +165,9 @@ var english = {
   "\u6309\u5F53\u524D\u7528\u91CF\uFF0C{time} \u8017\u5C3D\u3002": "At current usage, depletion at {time}.",
   "\u5F53\u524D\u7528\u91CF\u65E0\u6CD5\u4FDD\u7559\u76EE\u6807\u4F59\u91CF\u3002": "Current usage would use the reserved margin.",
   "\u82E5\u4ECD\u672A\u989D\u5916 reset": "If still no extra reset",
-  "\u5468\u672B\u4E0D\u4F7F\u7528": "Weekdays only",
-  "\u5468\u672B\u96C6\u4E2D\u4F7F\u7528": "Weekend focus",
-  "\u989D\u5916\u91CD\u7F6E\u6982\u7387": "Reset chance",
+  "\u5468\u672B\u8EBA\u5E73": "Weekdays only",
+  "\u5468\u672B\u5377\u8D77\u6765": "Weekends only",
+  "\u989D\u5916 reset \u6982\u7387": "Reset chance",
   "\u622A\u6B62\u65F6\u95F4": "By",
   "\u81F3\u5C11\u4E00\u6B21 \xB7 \u622A\u81F3": "At least one \xB7 by",
   "\u4FDD\u6301\u5F53\u524D\u7528\u91CF": "Keep current usage",
@@ -173,22 +176,22 @@ var english = {
   "\u6682\u505C": "Paused",
   "\u5EFA\u8BAE {daily}% / \u5929": "Suggested {daily}% / day",
   "{daily}% / \u5929": "{daily}% / day",
-  "\u989D\u5916\u91CD\u7F6E\u6982\u7387\uFF1A{percent}%": "Reset chance: {percent}%",
+  "\u989D\u5916 reset \u6982\u7387\uFF1A{percent}%": "Reset chance: {percent}%",
   "{time}\u4E4B\u524D": "by {time}",
-  "\u81F3\u5C11\u4E00\u6B21\u989D\u5916\u91CD\u7F6E\uFF1A{percent}%": "At least one extra reset: {percent}%",
+  "\u81F3\u5C11\u4E00\u6B21\u989D\u5916 reset\uFF1A{percent}%": "At least one extra reset: {percent}%",
   "\u6D88\u8017": "Consumption",
   "\u6BCF\u5468\u603B\u989D\u5EA6 % / \u5929": "% of weekly quota / day",
-  "\u9996\u6B21\u91CD\u7F6E": "1st reset",
+  "\u7B2C\u4E00\u6B21\u91CD\u7F6E": "1st reset",
   "\u7B2C\u4E8C\u6B21\u91CD\u7F6E": "2nd reset",
   "\u65F6\u95F4\u5206\u5E03": "Time distribution",
-  "\u9996\u6B21\u989D\u5916\u91CD\u7F6E\u9884\u6D4B": "First extra reset prediction",
-  "\u7B2C\u4E8C\u6B21\u989D\u5916\u91CD\u7F6E\u9884\u6D4B": "Second extra reset prediction",
+  "\u7B2C\u4E00\u6B21\u989D\u5916 reset \u9884\u6D4B": "First extra reset prediction",
+  "\u7B2C\u4E8C\u6B21\u989D\u5916 reset \u9884\u6D4B": "Second extra reset prediction",
   "\u6982\u7387\u5BC6\u5EA6": "Probability density",
-  "\u4EE5\u9996\u6B21\u53D1\u751F\u4E3A\u524D\u63D0": "Given 1st reset",
+  "\u4EE5\u7B2C\u4E00\u6B21\u53D1\u751F\u4E3A\u524D\u63D0": "Given 1st reset",
   "\u5269\u4F59\u989D\u5EA6": "Quota remaining",
   "\u6BCF\u5468\u989D\u5EA6 % / \u5929": "% quota / day",
   "\u6BCF\u5468\u989D\u5EA6 %": "% quota",
-  "\u4EE5\u9996\u6B21\u5728\u6807\u8BB0\u65F6\u523B\u53D1\u751F\u4E3A\u6761\u4EF6\u3002": "Conditional on the first reset at its marker. ",
+  "\u4EE5\u7B2C\u4E00\u6B21\u5728\u6807\u8BB0\u65F6\u523B\u53D1\u751F\u4E3A\u6761\u4EF6\u3002": "Conditional on the first reset at its marker. ",
   "\u5230\u671F\u524D reset\uFF1A{percent}%": "Reset before expiry: {percent}%",
   "\u7528\u5907\u7528\u524D reset\uFF1A{percent}%": "Reset before backup: {percent}%",
   "\u5237\u65B0\u524D reset\uFF1A{percent}%": "Reset before refresh: {percent}%",
@@ -210,62 +213,62 @@ var english = {
   "\u9884\u6D4B\u70B9\u524D": "Before the forecast marker",
   "\u672C\u6BB5": "This phase",
   "{boundary}\u518D reset\uFF1A{percent}%": "{boundary}: another reset {percent}%",
-  "\u622A\u81F3 {time}\uFF1B\u4EE5\u672C\u6BB5\u5F00\u59CB\u524D\u672A\u518D\u53D1\u751F\u989D\u5916reset\u4E3A\u6761\u4EF6{renewal}": "By {time}; conditional on no further reset before this phase{renewal}",
-  "\uFF0C\u4ECE\u6700\u8FD1\u9009\u62E9\u7684\u989D\u5916reset\u91CD\u65B0\u8BA1\u65F6": "; the clock restarts at the latest assumed reset",
-  "\u9996\u6B21": "First",
+  "\u622A\u81F3 {time}\uFF1B\u4EE5\u672C\u6BB5\u5F00\u59CB\u524D\u672A\u518D\u53D1\u751F\u989D\u5916 reset \u4E3A\u6761\u4EF6{renewal}": "By {time}; conditional on no further reset before this phase{renewal}",
+  "\uFF0C\u4ECE\u6700\u8FD1\u9009\u62E9\u7684\u989D\u5916 reset \u91CD\u65B0\u8BA1\u65F6": "; the clock restarts at the latest assumed reset",
+  "\u7B2C\u4E00\u6B21": "First",
   "\u7B2C\u4E8C\u6B21": "Second",
-  "\u8BA1\u5165\u9996\u6B21 reset": "Count first reset",
+  "\u8BA1\u5165\u7B2C\u4E00\u6B21 reset": "Count first reset",
   "\u8BA1\u5165\u7B2C\u4E8C\u6B21 reset": "Count second reset",
   "\u8BA1\u5165\u4E24\u6B21 reset": "Count both resets",
   "\u82E5\u8017\u5C3D\uFF0C\u7528\u5907\u7528": "Banked reset if depleted",
   "\u672A\u518D reset\uFF1A{percent}%": "No further reset: {percent}%",
-  "\u5DF2\u8BA1\u5165\u9996\u6B21 reset": "First reset counted",
-  "\u5DF2\u8BA1\u5165\u7B2C\u4E8C\u6B21 reset": "Second reset counted",
-  "\u540C\u65F6\u5047\u8BBE\u9996\u6B21\u53D1\u751F": "Also assumes the first reset",
+  "\u5DF2\u8BA1\u5165\u7B2C\u4E00\u6B21 reset": "1st reset counted",
+  "\u5DF2\u8BA1\u5165\u7B2C\u4E8C\u6B21 reset": "2nd reset counted",
+  "\u540C\u65F6\u5047\u8BBE\u7B2C\u4E00\u6B21\u53D1\u751F": "Also assumes the first reset",
   "\u4E0D\u8BA1\u5165": "Don't count",
-  "\u53D6\u6D88\u7B2C\u4E8C\u6B21\u5047\u8BBE\uFF0C\u4FDD\u7559\u9996\u6B21": "Cancel the second assumption; keep the first",
-  "\u53D6\u6D88\u9996\u6B21\u53CA\u540E\u7EE7\u5047\u8BBE": "Cancel the first and subsequent assumptions",
+  "\u53D6\u6D88\u7B2C\u4E8C\u6B21\u5047\u8BBE\uFF0C\u4FDD\u7559\u7B2C\u4E00\u6B21": "Cancel the second assumption; keep the first",
+  "\u53D6\u6D88\u7B2C\u4E00\u6B21\u53CA\u540E\u7EE7\u5047\u8BBE": "Cancel the first and subsequent assumptions",
   "\u5047\u8BBE\u4E24\u6B21\u5747\u53D1\u5E03\uFF0C\u8BA1\u7B97\u5404\u6BB5\u7528\u91CF": "Count both resets and calculate each phase",
-  "\u8BA1\u5165\u9996\u6B21 reset\uFF0C\u8BA1\u7B97\u5404\u6BB5\u7528\u91CF": "Count the first reset and calculate each phase",
+  "\u8BA1\u5165\u7B2C\u4E00\u6B21 reset\uFF0C\u8BA1\u7B97\u5404\u6BB5\u7528\u91CF": "Count the first reset and calculate each phase",
   "\u6700\u53EF\u80FD": "likely",
   "\u7D2F\u8BA1": "Cumulative",
   "\u8303\u56F4\u5916 {percent}%": "Beyond view {percent}%",
   "\u89C4\u5212\u65F6\u523B": "planned",
   "\u6807\u7EBF\u662F\u89C4\u5212\u8BA1\u5165\u8FD9\u6B21 reset \u7684\u4FDD\u5B88\u65F6\u523B\uFF1A\u6B63\u5E38\u5237\u65B0\u524D\u53EF\u80FD\u53D1\u751F\u7684\u90E8\u5206\uFF0C\u6709 75% \u5728\u6B64\u4E4B\u524D\u3002": "The line marks the conservative time the plan counts this reset: 75% of its chance before the normal refresh falls before it.",
   "\u989D\u5916 reset": "extra reset",
-  "\u5047\u8BBE\u9996\u6B21\u53D1\u751F": "assuming the first occurs",
+  "\u5047\u8BBE\u7B2C\u4E00\u6B21\u53D1\u751F": "assuming the first occurs",
   "\u6982\u7387\u5206\u5E03": "distribution",
-  "\u9996\u6B21\u53D1\u751F\u540E": "after the first",
-  "\u7B2C\u4E8C\u6B21\uFF08\u5047\u8BBE\u9996\u6B21\u53D1\u751F\uFF09": "Second (assuming the first)",
-  "\u9996\u6B21\u989D\u5916reset\u7684\u6982\u7387\u5206\u5E03\u3002": "First extra reset distribution. ",
+  "\u7B2C\u4E00\u6B21\u53D1\u751F\u540E": "after the first",
+  "\u7B2C\u4E8C\u6B21\uFF08\u5047\u8BBE\u7B2C\u4E00\u6B21\u53D1\u751F\uFF09": "Second (assuming the first)",
+  "\u7B2C\u4E00\u6B21\u989D\u5916 reset \u7684\u6982\u7387\u5206\u5E03\u3002": "First extra reset distribution. ",
   "\u6807\u7EBF\u5BF9\u5E94\u672C\u6761\u5206\u5E03\u6700\u9AD8\u5CF0\u3002": "The marker is at this distribution\u2019s highest-density hourly window. ",
-  "\u7B2C\u4E8C\u6B21\u4EE5\u9996\u6B21\u5728\u9884\u6D4B\u70B9\u53D1\u751F\u4E3A\u524D\u63D0\u3002": "The second assumes the first happens at its marker.",
+  "\u7B2C\u4E8C\u6B21\u4EE5\u7B2C\u4E00\u6B21\u5728\u9884\u6D4B\u70B9\u53D1\u751F\u4E3A\u524D\u63D0\u3002": "The second assumes the first happens at its marker.",
   "\u6807\u7EBF\u5BF9\u5E94\u6982\u7387\u5206\u5E03\u7684\u6700\u9AD8\u5CF0\u3002": "The marker is at the distribution\u2019s highest-density hourly window. ",
-  "\u4E0A\u6B21reset\u52A0\u8FD1\u671F\u5E73\u5747\u95F4\u9694\uFF0C\u518D\u6821\u51C6\u5230\u5E38\u89C1\u53D1\u5E03\u949F\u70B9\u7684\u53C2\u8003\u65F6\u95F4\u3002": "Last reset plus the recent mean interval, aligned to the usual posting time. ",
+  "\u4E0A\u6B21 reset \u52A0\u8FD1\u671F\u5E73\u5747\u95F4\u9694\uFF0C\u518D\u6821\u51C6\u5230\u5E38\u89C1\u53D1\u5E03\u949F\u70B9\u7684\u53C2\u8003\u65F6\u95F4\u3002": "Last reset plus the recent mean interval, aligned to the usual posting time. ",
   "\u5DE6\u53F3\u4E3A\u4F30\u8BA1\u8303\u56F4\u4E4B\u5916\u7684\u6982\u7387\u3002": "The values on either side are outside the estimated range.",
   "\u2190 \u66F4\u65E9 {percent}%": "\u2190 Earlier {percent}%",
   "\u66F4\u665A {percent}% \u2192": "Later {percent}% \u2192",
   "\u6700\u53EF\u80FD\u989D\u5916 reset": "Most likely extra reset",
   "\u9884\u8BA1\u989D\u5916 reset": "Estimated extra reset",
-  "\u9996\u6B21\u989D\u5916reset\u7D2F\u8BA1\u6982\u7387": "First extra reset cumulative probability",
-  "\u4EE5\u9996\u6B21\u53D1\u751F\u4E3A\u524D\u63D0\u7684\u7B2C\u4E8C\u6B21\u7D2F\u8BA1\u6982\u7387": "Second reset cumulative probability, conditional on the first",
+  "\u7B2C\u4E00\u6B21\u989D\u5916 reset \u7D2F\u8BA1\u6982\u7387": "First extra reset cumulative probability",
+  "\u4EE5\u7B2C\u4E00\u6B21\u53D1\u751F\u4E3A\u524D\u63D0\u7684\u7B2C\u4E8C\u6B21\u7D2F\u8BA1\u6982\u7387": "Second reset cumulative probability, conditional on the first",
   "\u4F7F\u7528 1 \u4E2A\u5907\u7528 reset": "Use 1 banked reset",
   "\u4FDD\u7559\u5907\u7528 reset": "Keep banked reset",
-  "{date} 24:00\u5230\u671F\uFF08\u4F30\u7B97\uFF09": "Expires {date} 24:00 (est.)",
+  "{date} 24:00 \u5230\u671F\uFF08\u4F30\u7B97\uFF09": "Expires {date} 24:00 (est.)",
   "{date}\u5230\u671F": "Expires {date}",
   "{date}\u7ED3\u675F": "End of {date}",
-  "\u63D0\u524D\u5151\u6362\u5C06\u8986\u76D6 {percent}%": "Replaces {percent}% remaining",
-  "\u672A\u989D\u5916\u91CD\u7F6E\uFF1A{percent}%": "No extra reset: {percent}%",
-  "\u6B64\u65F6\u4ECD\u672A\u989D\u5916\u91CD\u7F6E\uFF1A{percent}%": "Still no extra reset: {percent}%",
+  "\u5151\u6362\u524D\u5148\u7528\u5B8C\u5269\u4E0B\u7684 {percent}%": "Use the {percent}% left before redeeming",
+  "\u672A\u989D\u5916 reset\uFF1A{percent}%": "No extra reset: {percent}%",
+  "\u6B64\u65F6\u4ECD\u672A\u989D\u5916 reset\uFF1A{percent}%": "Still no extra reset: {percent}%",
   "\u672A\u91CD\u7F6E\u65F6\u6682\u505C\uFF1A{percent}%": "Pause if no reset: {percent}%",
   "\u6682\u505C\uFF0C\u7B49\u5F85\u6B63\u5E38\u5237\u65B0": "Pause until normal refresh",
-  "\u9884\u8BA1\u8017\u5C3D": "Estimated depletion",
+  "\u9884\u8BA1\u7528\u5B8C": "Runs out",
   "\u5907\u7528\u5230\u671F\uFF0C\u672A\u4F7F\u7528": "Banked reset expires unused",
   "\u6B63\u5E38\u5237\u65B0": "Normal refresh",
   "\u9884\u8BA1\u6B63\u5E38\u5237\u65B0": "Estimated normal refresh",
   "\u540E\u7EED\u91CD\u65B0\u89C4\u5212": "Replan later",
   "\u6B63\u5E38\u5237\u65B0 {time}": "Normal refresh {time}",
-  "\u989D\u5916\u91CD\u7F6E\u540E\u6309\u5B9E\u9645\u4F59\u989D\u91CD\u7B97": "Replan from the actual balance after the extra reset",
+  "\u989D\u5916 reset \u540E\u6309\u5B9E\u9645\u4F59\u989D\u91CD\u7B97": "Replan from the actual balance after the extra reset",
   "\u9884\u8BA1\u6B63\u5E38\u5237\u65B0 {time}": "Estimated normal refresh {time}",
   "\u5C06\u5148\u5230\u671F\uFF0C\u70B9\u51FB\u4F7F\u7528": "Expires first \xB7 Click to use",
   "\u70B9\u51FB\u4F7F\u7528": "Click to use",
@@ -275,10 +278,9 @@ var english = {
   "\u672C\u8F6E\u4FDD\u7559": "Kept for later",
   "\u5907\u7528 reset \xB7 {date} \u5230\u671F": "Banked reset \xB7 Expires {date}",
   "\u4ECE\u5DE6\u5411\u53F3\u7684\u989D\u5EA6\u6F0F\u6597\u4E0E\u7B56\u7565\u9009\u62E9\uFF0C\u53EF\u6A2A\u5411\u6EDA\u52A8": "Quota timeline and planning choices; scroll horizontally",
-  "\u56FA\u5B9A\u65E5\u671F\u4E4B\u524D\u81F3\u5C11\u53D1\u751F\u4E00\u6B21\u989D\u5916\u91CD\u7F6E\u7684\u7D2F\u8BA1\u6982\u7387": "Cumulative probability of at least one extra reset by each date",
+  "\u56FA\u5B9A\u65E5\u671F\u4E4B\u524D\u81F3\u5C11\u53D1\u751F\u4E00\u6B21\u989D\u5916 reset \u7684\u7D2F\u8BA1\u6982\u7387": "Cumulative probability of at least one extra reset by each date",
   "\u622A\u81F3 {time} \u81F3\u5C11\u53D1\u751F\u4E00\u6B21\u989D\u5916 reset": "At least one extra reset by {time}",
-  "\u989D\u5916\u91CD\u7F6E": "Extra reset",
-  "\u6B64\u524D\u989D\u5916\u91CD\u7F6E\u6982\u7387": "Probability of an extra reset by then",
+  "\u6B64\u524D\u989D\u5916 reset \u6982\u7387": "Probability of an extra reset by then",
   "\u84DD\u7EBF\uFF1A\u6B64\u524D\u81F3\u5C11\u53D1\u751F\u4E00\u6B21\u989D\u5916 reset \u7684\u6982\u7387": "Curve: probability of at least one extra reset by then",
   "\u2212 \u6536\u8D77\u5176\u4ED6\u505A\u6CD5": "\u2212 Hide alternatives",
   "\uFF0B \u6BD4\u8F83\u8FD9\u4E00\u6B65": "+ Compare this step",
@@ -286,48 +288,45 @@ var english = {
   "\u53EF\u9009\uFF1A\u4F7F\u7528 Credits \u8854\u63A5": "Optional credits bridge",
   "\u989D\u5EA6\u8017\u5C3D \xB7 \u53EF\u7528 Credits \u8854\u63A5": "Quota depleted \xB7 Optional credits bridge",
   "\u6D88\u8017\u9700\u81EA\u5DF1\u9884\u4F30": "Estimate credit spending yourself",
-  "\u660E\u786E\u9884\u544A": "Announced",
   "\u5DF2\u91CD\u7F6E\u8BB0\u5F55": "Reset confirmed",
   "\u53EF\u80FD\u6697\u793A": "Possible hint",
   "\u5907\u7528 reset": "Banked reset",
   "\u65B0\u529F\u80FD": "New feature",
   "\u65E0\u91CD\u7F6E\u4FE1\u53F7": "No reset signal",
   "\u6682\u672A\u8BC6\u522B": "Unclassified",
-  "\u4E0A\u6B21\u516C\u5F00 reset": "Last public reset",
   "{days} \u5929\u524D": "{days} days ago",
   "\u6682\u65E0\u8BB0\u5F55": "No record",
-  "\u5E73\u5747 reset \u95F4\u9694": "Mean reset interval",
+  "\u5E73\u5747\u95F4\u9694": "Average gap",
   "\u6570\u636E\u4E0D\u8DB3": "Not enough data",
   "{days} \u5929": "{days} days",
-  "\u672C\u6B21 campaign \xB7 {count} \u6B21 reset": "Current campaign \xB7 {count} resets",
+  "\u672C\u6B21\u6D3B\u52A8 {count} \u6B21 reset": "This campaign: {count} resets",
   "\u8FD1 {days} \u5929": "Last {days} days",
   "\u975E\u6D3B\u52A8\u5386\u53F2\u56DE\u9000": "Non-campaign history fallback",
   "\u5386\u53F2\u56DE\u9000": "Historical fallback",
   " \xB7 \u6D3B\u52A8\u6837\u672C\u4E0D\u8DB3\uFF0C\u6682\u56DE\u9000": " \xB7 Too few campaign intervals; using fallback",
-  " \xB7 {count} \u4E2A\u5B8C\u6574\u95F4\u9694": " \xB7 {count} complete intervals",
-  "\u5747\u503C {level}% \u7F6E\u4FE1\u533A\u95F4": "{level}% confidence interval for the mean",
+  " \xB7 {count} \u4E2A\u5B8C\u6574\u95F4\u9694": " \xB7 {count} complete gaps",
+  "\u5E73\u5747\u95F4\u9694\u7684 {level}% \u7F6E\u4FE1\u533A\u95F4": "{level}% confidence range of the average gap",
   "\u6837\u672C\u4E0D\u8DB3\uFF0C\u6682\u4E0D\u4F30\u8BA1": "Too few samples to estimate",
   "{low} \u2013 {high} \u5929": "{low} \u2013 {high} days",
-  "\u7279\u6B8A campaign": "Current campaign",
   "\u8FDB\u884C\u4E2D": "Active",
   "\u5C1A\u672A\u5F00\u59CB": "Upcoming",
   "\u5DF2\u7ED3\u675F": "Ended",
   "28 \u5929\u6539\u8FDB\u6216 reset": "28 days of improvements or resets",
-  "{start} \u8D77 \xB7 {end} \u7ED3\u675F\uFF08\u6309 Day 1 \u548C\u6D3B\u52A8\u5929\u6570\u63A8\u7B97\uFF09": "{start} to {end} (derived from Day 1 and campaign duration)",
-  "\u5E38\u89C1\u53D1\u5E03\u949F\u70B9": "Typical posting time",
+  "{start} \u2013 {end}\uFF08\u6309 Day 1 \u63A8\u7B97\uFF09": "{start} \u2013 {end} (counted from Day 1)",
+  "\u5E38\u89C1\u53D1\u5E03\u65F6\u95F4": "Typical reset time",
   "\u4F60\u7684\u65F6\u95F4\uFF08{zone}\uFF09": "your time ({zone})",
-  "\u5168\u90E8\u5386\u53F2 \xB7 {count} \u4E2A reset \u65E5 \xB7 \u4F60\u7684\u65F6\u95F4\uFF1BTibo \u5F53\u5730 {local}": "All history \xB7 {count} reset days \xB7 your time; {local} Tibo\u2019s time",
-  "\u5168\u90E8\u5386\u53F2 \xB7 {count} \u4E2A reset \u65E5 \xB7 \u4F60\u7684\u65F6\u95F4": "All history \xB7 {count} reset days \xB7 your time",
+  "\u57FA\u4E8E\u5168\u90E8 {count} \u4E2A reset \u65E5 \xB7 \u672C\u5730\u65F6\u95F4\uFF08Tibo \u5F53\u5730\u65F6\u95F4 {local}\uFF09": "Based on all {count} reset days \xB7 local time ({local} for Tibo)",
+  "\u57FA\u4E8E\u5168\u90E8 {count} \u4E2A reset \u65E5 \xB7 \u672C\u5730\u65F6\u95F4": "Based on all {count} reset days \xB7 local time",
   "\u6700\u53EF\u80FD reset \u65F6\u95F4": "Most likely reset time",
   "\u5E73\u5747\u95F4\u9694\u53C2\u8003\u65F6\u95F4": "Mean-interval reference time",
   "\u5168\u90E8\u5386\u53F2": "All history",
   "{scope} {count} \u6B21 \xB7 \u5E38\u89C1 {time}\uFF08{zone}\uFF09": "{scope} \xB7 {count} resets \xB7 Typical {time} ({zone})",
   "\u4E0B\u6B21\u9884\u8BA1\uFF08\u4E2D\u4F4D\uFF09": "Next reset estimate (median)",
   "\u6682\u65E0\u6CD5\u4F30\u8BA1": "Not enough data to estimate",
-  "\u4E0B\u6B21 {coverage}% \u9884\u6D4B\u7A97\u53E3": "Next reset \xB7 {coverage}% prediction window",
+  "{coverage}% \u53EF\u80FD\u533A\u95F4": "{coverage}% likely range",
   "Day {day} \u529F\u80FD\u5E16": "Day {day} feature post",
   "reset \u6B21\u65E5\u51B7\u5374\u671F": "Day-after-reset cooldown",
-  "\u5DF2\u5B89\u6392 \xB7 {time} \u524D": "Scheduled \xB7 by {time}",
+  "\u5DF2\u5BA3\u5E03 \xB7 {time} \u524D": "Announced \xB7 by {time}",
   "\u6D3B\u52A8\u65E5\u5185\u5DF2 reset": "Reset already occurred on this campaign day",
   "\u5F53\u524D\u9884\u6D4B\u7EA6\u675F": "Active forecast constraint",
   "\u622A\u81F3 {time}{rule}": "Until {time}{rule}",
@@ -336,46 +335,46 @@ var english = {
   "Tibo \u6700\u8FD1\u56DE\u590D": "Tibo\u2019s latest reply",
   "Tibo \u6700\u8FD1\u5E16\u5B50": "Tibo\u2019s latest post",
   "Tibo \u6700\u8FD1\u76F8\u5173\u56DE\u590D": "Tibo\u2019s latest related reply",
-  "Tibo \u6700\u8FD1\u76F8\u5173\u5E16\u5B50": "Tibo\u2019s latest related post",
+  "Tibo \u6700\u65B0\u76F8\u5173\u5E16\u5B50": "Tibo\u2019s latest related post",
   "Tibo \u76F8\u5173\u5E16\u5B50": "Tibo\u2019s related posts",
   "\u6682\u65E0\u53EF\u7528\u5E16\u5B50\uFF0F\u56DE\u590D": "No post or reply available",
-  "\u5B9E\u65F6\u8BB0\u5F55": "Live history",
+  "\u5B9E\u65F6\u8BB0\u5F55": "Live data",
+  "\u6570\u636E\u66F4\u65B0\u4E8E {time}\uFF08\u672C\u5730\u65F6\u95F4\uFF09": "Data updated {time} (local time)",
   "\u7F13\u5B58 {date}": "Cached {date}",
   " \xB7 \u66F4\u65B0 {time}": " \xB7 Updated {time}",
   "\u6A21\u578B\u9884\u6D4B": "Model forecast",
   "\u6A21\u578B\u672A\u6821\u51C6": "Uncalibrated model",
-  "\u66F4\u591A\u6570\u636E": "More data",
+  "\u8BE6\u7EC6\u6570\u636E": "Details",
   "\u964D\u5230\u5E73\u65F6\u7684 {percent}%": "{percent}% of usual",
-  "\u53EF\u80FD\u7A97\u53E3": "Likely window",
+  "\u9884\u8BA1\u65E5\u671F": "Likely dates",
   "\u4E0A\u6B21 reset": "Last reset",
-  "\u6D3B\u52A8": "Campaign",
+  "Tibo \u6D3B\u52A8": "Tibo's campaign",
   "\u7B2C {day} / {total} \u5929 \xB7 {end} \u7ED3\u675F": "Day {day} of {total} \xB7 ends {end}",
   "{hours} \u5C0F\u65F6\u524D": "{hours}h ago",
   "\u989D\u5916 reset \u9884\u6D4B\u5173\u952E\u6570\u636E": "Extra reset forecast evidence",
   "\u9884\u6D4B\u600E\u4E48\u7B97": "How the forecast is built",
-  "\u53D1\u5E03\u949F\u70B9": "Time of day",
-  "\u91CD\u7F6E\u95F4\u9694": "Time between resets",
-  "\u8DDD\u4E0A\u6B21\u91CD\u7F6E": "Time since last reset",
-  "\u5168\u90E8\u5386\u53F2 \xB7 {count} \u4E2A\u91CD\u7F6E\u65E5": "All history \xB7 {count} reset days",
-  "\u5F53\u524D\u6D3B\u52A8 \xB7 {count} \u4E2A\u5B8C\u6574\u95F4\u9694": "Current campaign \xB7 {count} complete intervals",
+  "\u53D1\u5E03\u65F6\u95F4": "Reset time",
+  "reset \u95F4\u9694": "Time between resets",
+  "\u8DDD\u4E0A\u6B21 reset": "Time since last reset",
+  "\u57FA\u4E8E\u5168\u90E8 {count} \u4E2A reset \u65E5": "Based on all {count} reset days",
+  "\u57FA\u4E8E\u672C\u6B21\u6D3B\u52A8 {count} \u4E2A\u5B8C\u6574\u95F4\u9694": "Based on {count} complete gaps in this campaign",
   "\u8FD130\u5929\uFF0F\u5386\u53F2\u56DE\u9000 \xB7 {count} \u4E2A\u95F4\u9694": "Recent 30 days / history fallback \xB7 {count} intervals",
-  "\u5E38\u89C1 \u4F60\u7684\u65F6\u95F4 {time} \xB7 Tibo \u5F53\u5730 {local}": "Typically {time} your time \xB7 {local} Tibo\u2019s time",
-  "\u5E38\u89C1 \u4F60\u7684\u65F6\u95F4 {time}": "Typically {time} your time",
-  "\u5E73\u5747 {days} \u5929": "Mean {days} days",
+  "\u901A\u5E38\u672C\u5730\u65F6\u95F4 {time}\uFF08Tibo \u5F53\u5730\u65F6\u95F4 {local}\uFF09": "Usually {time} local time ({local} for Tibo)",
+  "\u901A\u5E38\u672C\u5730\u65F6\u95F4 {time}": "Usually {time} local time",
+  "\u5E73\u5747 {days} \u5929": "Average {days} days",
   "\u81EA {time} \u8D77\uFF0C\u5DF2\u8FC7 {days} \u5929": "{days} days since {time}",
-  "\u53D1\u5E03\u949F\u70B9\u4F7F\u7528\u5168\u90E8\u5386\u53F2\u81EA\u52A8\u91CD\u7F6E\u65E5\uFF1B\u91CD\u7F6E\u95F4\u9694\u4F18\u5148\u4F7F\u7528\u5F53\u524D\u6D3B\u52A8\u5185\u7684\u5B8C\u6574\u95F4\u9694\uFF0C\u6837\u672C\u4E0D\u8DB3\u65F6\u56DE\u9000\u5230\u8FD1\u671F\u6216\u5386\u53F2\u3002": "Posting time uses all recorded automatic-reset days. Reset intervals use complete intervals within the active campaign, falling back to recent or historical data when needed.",
-  "\u57FA\u7840\u98CE\u9669\u7ED3\u5408\u8DDD\u4E0A\u6B21\u91CD\u7F6E\u7684\u65F6\u95F4\u3001\u6240\u9009\u95F4\u9694\u5206\u5E03\u548C\u5E16\u5B50\u4FE1\u53F7\uFF0C\u518D\u7528\u5386\u53F2\u53D1\u5E03\u949F\u70B9\u52A0\u6743\u3002": "Base risk combines time since the last reset, the selected interval distribution and post signals, then weights it by historical release times.",
-  "\u65F6\u6BB5\u98CE\u9669 = \u57FA\u7840\u98CE\u9669 \xD7 \u5386\u53F2\u949F\u70B9\u6743\u91CD \xF7 \u5F53\u65E5\u5E73\u5747\u6743\u91CD": "Time-slot risk = base risk \xD7 historical clock weight \xF7 that day\u2019s mean weight",
-  "F\u2080\uFF1A\u57FA\u7840\u7D2F\u8BA1\u6982\u7387\uFF1Bw\uFF1A\u5168\u5386\u53F2\u949F\u70B9\u6743\u91CD\uFF1Bt*\uFF1A\u6700\u53EF\u80FD\u7684\u5C0F\u65F6\u7A97\u53E3\u3002": "F\u2080: base cumulative probability; w: all-history clock weight; t*: most likely hourly window.",
-  "\u7D2F\u8BA1\u6982\u7387\u7531\u52A0\u6743\u98CE\u9669\u7D2F\u79EF\u5F97\u5230\uFF1B\u6700\u53EF\u80FD\u65F6\u95F4\u53D6\u5B9E\u9645\u5206\u5E03\u4E2D\u6982\u7387\u5BC6\u5EA6\u6700\u9AD8\u7684\u5C0F\u65F6\u7A97\u53E3\uFF0C\u4E0D\u662F\u7B80\u5355\u628A\u5E73\u5747\u5929\u6570\u52A0\u5230\u4E0A\u6B21\u65F6\u95F4\u3002": "Cumulative probability comes from the weighted risk. The most likely time is the highest-density hourly window of the resulting distribution, rather than simply the last reset plus the mean interval.",
-  "\u7B2C\u4E8C\u6761\u66F2\u7EBF\u4EE5\u9996\u6B21\u5728\u6807\u8BB0\u65F6\u95F4\u53D1\u751F\u4E3A\u524D\u63D0\uFF0C\u4ECE\u8BE5\u70B9\u91CD\u65B0\u8BA1\u65F6\uFF1B\u5176\u7D2F\u8BA1\u503C\u4E5F\u4EE5\u8FD9\u4E2A\u524D\u63D0\u4E3A\u6761\u4EF6\u3002": "The second curve assumes the first reset happens at its marker and restarts the clock there. Its cumulative values are conditional on that first reset.",
+  "\u5148\u6839\u636E\u8DDD\u4E0A\u6B21 reset \u7684\u65F6\u95F4\u3001\u5386\u53F2\u95F4\u9694\u548C Tibo \u7684\u5E16\u5B50\u7B97\u51FA\u57FA\u7840\u6982\u7387\uFF0C\u518D\u6309\u5386\u53F2\u4E0A\u5E38\u89C1\u7684\u53D1\u5E03\u65F6\u95F4\u5206\u5230\u6BCF\u4E2A\u5C0F\u65F6\u3002": "The base chance comes from the time since the last reset, past gaps and Tibo\u2019s posts, then spread over the hours by past reset times.",
+  "\u6BCF\u5C0F\u65F6\u6982\u7387 = \u57FA\u7840\u6982\u7387 \xD7 \u8BE5\u5C0F\u65F6\u7684\u5386\u53F2\u6743\u91CD \xF7 \u5F53\u5929\u5E73\u5747\u6743\u91CD": "Hourly chance = base chance \xD7 that hour\u2019s past weight \xF7 the day\u2019s average weight",
+  "F\u2080\uFF1A\u57FA\u7840\u7D2F\u8BA1\u6982\u7387\uFF1Bw\uFF1A\u8BE5\u5C0F\u65F6\u7684\u5386\u53F2\u6743\u91CD\uFF1Bt*\uFF1A\u6982\u7387\u6700\u9AD8\u7684\u90A3\u4E2A\u5C0F\u65F6\u3002": "F\u2080: base cumulative chance; w: that hour\u2019s past weight; t*: the most likely hour.",
+  "\u6700\u53EF\u80FD\u65F6\u95F4\u662F\u6982\u7387\u6700\u9AD8\u7684\u90A3\u4E2A\u5C0F\u65F6\uFF0C\u4E0D\u662F\u5728\u4E0A\u6B21 reset \u4E0A\u7B80\u5355\u52A0\u5E73\u5747\u5929\u6570\u3002": "The most likely time is the hour with the highest chance, not the last reset plus the average gap.",
+  "\u7B2C\u4E8C\u6761\u66F2\u7EBF\u5047\u8BBE\u7B2C\u4E00\u6B21 reset \u53D1\u751F\u5728\u6807\u8BB0\u7684\u65F6\u95F4\uFF0C\u4ECE\u90A3\u65F6\u91CD\u65B0\u8BA1\u7B97\u3002": "The second curve assumes the first reset happens at its marker and counts again from there.",
   "\u5F53\u524D\u5047\u8BBE": "Current assumptions",
-  "\u672A\u5047\u8BBE\u989D\u5916\u91CD\u7F6E": "No extra reset assumed",
-  "\u8BA1\u5212\u4E2D\u7684\u5907\u7528\u3001\u6B63\u5E38\u548C\u5047\u8BBE\u91CD\u7F6E\u90FD\u4ECE\u8BE5\u65F6\u523B\u91CD\u65B0\u5F00\u59CB7\u5929\u5468\u671F\uFF1B\u53EA\u6709\u9009\u4E2D\u7684\u5047\u8BBE\u624D\u4F1A\u8865\u6EE1\u9884\u6D4B\u989D\u5EA6\u3002": "Planned banked, normal and assumed resets each restart the seven-day cycle. Forecast quota is added only for selected assumptions.",
-  "\u9996\u6B21 {first}": "First: {first}",
-  "\u9996\u6B21 {first} \xB7 \u7B2C\u4E8C\u6B21 {second}": "First: {first} \xB7 Second: {second}",
+  "\u672A\u5047\u8BBE\u989D\u5916 reset": "No extra reset assumed",
+  "\u6BCF\u6B21\u8865\u6EE1\uFF08\u5907\u7528 reset\u3001\u6B63\u5E38\u5237\u65B0\u6216\u8BA1\u5165\u7684 reset\uFF09\u90FD\u4F1A\u91CD\u65B0\u5F00\u59CB 7 \u5929\u5468\u671F\u3002": "Every refill (a banked reset, the normal refresh or a counted reset) restarts the seven-day cycle.",
+  "\u7B2C\u4E00\u6B21 {first}": "First: {first}",
+  "\u7B2C\u4E00\u6B21 {first} \xB7 \u7B2C\u4E8C\u6B21 {second}": "First: {first} \xB7 Second: {second}",
   "\u9884\u6D4B\u5DF2\u5173\u95ED\uFF0C\u5386\u53F2\u7EDF\u8BA1\u4ECD\u4FDD\u7559\u3002": "Forecast is off. Historical statistics remain available.",
-  "\u672C\u5730\u4F30\u8BA1\uFF0C\u6A21\u578B\u5C1A\u672A\u6821\u51C6\u3002": "Local estimate; the model has not been calibrated."
+  "\u4EE5\u4E0A\u662F\u672C\u5730\u4F30\u7B97\uFF0C\u6A21\u578B\u672A\u7ECF\u6821\u51C6\u3002": "A local estimate; the model is not calibrated."
 };
 function translate(language2, source, values = {}) {
   source = String(source ?? "");
@@ -416,23 +415,23 @@ function renderForecastMethod({ source, prediction, result, timeZone: timeZone2,
   const posting = clock?.typicalTimeAt ? clockIn(timeZone2) : clock?.typicalTime;
   const publisher = clock?.typicalTimeAt && clock.timeZone && clock.timeZone !== timeZone2 ? clockIn(clock.timeZone) : null;
   const count = interval?.sampleCount ?? interval?.recentIntervalCount ?? 0;
-  const scope = interval?.source === "campaign-intervals" ? t2("\u5F53\u524D\u6D3B\u52A8 \xB7 {count} \u4E2A\u5B8C\u6574\u95F4\u9694", { count }) : interval?.source === "recent-30-day-intervals" ? `${t2("\u8FD1 {days} \u5929", { days: interval.windowDays ?? 30 })} \xB7 ${count}` : t2("\u8FD130\u5929\uFF0F\u5386\u53F2\u56DE\u9000 \xB7 {count} \u4E2A\u95F4\u9694", { count });
+  const scope = interval?.source === "campaign-intervals" ? t2("\u57FA\u4E8E\u672C\u6B21\u6D3B\u52A8 {count} \u4E2A\u5B8C\u6574\u95F4\u9694", { count }) : interval?.source === "recent-30-day-intervals" ? `${t2("\u8FD1 {days} \u5929", { days: interval.windowDays ?? 30 })} \xB7 ${count}` : t2("\u8FD130\u5929\uFF0F\u5386\u53F2\u56DE\u9000 \xB7 {count} \u4E2A\u95F4\u9694", { count });
   const row = (label, value, note) => `<div><dt>${escape3(t2(label))}</dt><dd>${escape3(value)}<small>${escape3(note)}</small></dd></div>`;
   const rows = [
     row(
-      "\u53D1\u5E03\u949F\u70B9",
-      posting ? publisher ? t2("\u5E38\u89C1 \u4F60\u7684\u65F6\u95F4 {time} \xB7 Tibo \u5F53\u5730 {local}", { time: posting, local: publisher }) : t2("\u5E38\u89C1 \u4F60\u7684\u65F6\u95F4 {time}", { time: posting }) : t2("\u6570\u636E\u4E0D\u8DB3"),
-      t2("\u5168\u90E8\u5386\u53F2 \xB7 {count} \u4E2A\u91CD\u7F6E\u65E5", { count: clock?.sampleCount ?? 0 })
+      "\u53D1\u5E03\u65F6\u95F4",
+      posting ? publisher ? t2("\u901A\u5E38\u672C\u5730\u65F6\u95F4 {time}\uFF08Tibo \u5F53\u5730\u65F6\u95F4 {local}\uFF09", { time: posting, local: publisher }) : t2("\u901A\u5E38\u672C\u5730\u65F6\u95F4 {time}", { time: posting }) : t2("\u6570\u636E\u4E0D\u8DB3"),
+      t2("\u57FA\u4E8E\u5168\u90E8 {count} \u4E2A reset \u65E5", { count: clock?.sampleCount ?? 0 })
     ),
-    row("\u91CD\u7F6E\u95F4\u9694", Number.isFinite(interval?.meanIntervalDays) ? t2("\u5E73\u5747 {days} \u5929", { days: round(interval.meanIntervalDays) }) : t2("\u6570\u636E\u4E0D\u8DB3"), scope),
-    row("\u8DDD\u4E0A\u6B21\u91CD\u7F6E", Number.isFinite(source?.daysSinceReset) ? t2("{days} \u5929\u524D", { days: round(source.daysSinceReset) }) : t2("\u6570\u636E\u4E0D\u8DB3"), date(source?.lastResetAt))
+    row("reset \u95F4\u9694", Number.isFinite(interval?.meanIntervalDays) ? t2("\u5E73\u5747 {days} \u5929", { days: round(interval.meanIntervalDays) }) : t2("\u6570\u636E\u4E0D\u8DB3"), scope),
+    row("\u8DDD\u4E0A\u6B21 reset", Number.isFinite(source?.daysSinceReset) ? t2("{days} \u5929\u524D", { days: round(source.daysSinceReset) }) : t2("\u6570\u636E\u4E0D\u8DB3"), date(source?.lastResetAt))
   ];
   const scenario = result?.forecastScenario;
   const first = scenario?.selected ? date(scenario.at ?? scenario.pointAt ?? new Date(Date.parse(result.now) + scenario.hours * 36e5).toISOString()) : null;
   const second = scenario?.following?.selected ? date(Number.isFinite(scenario.following.hours) ? new Date(Date.parse(result.now) + scenario.following.hours * 36e5).toISOString() : scenario.following.at ?? scenario.following.pointAt) : null;
-  const assumptions = first ? second ? t2("\u9996\u6B21 {first} \xB7 \u7B2C\u4E8C\u6B21 {second}", { first, second }) : t2("\u9996\u6B21 {first}", { first }) : t2("\u672A\u5047\u8BBE\u989D\u5916\u91CD\u7F6E");
-  const formula = prediction?.model === "local-recent-intervals-v5" ? `<div class="forecast-formula" data-forecast-formula><p>${escape3(t2("\u65F6\u6BB5\u98CE\u9669 = \u57FA\u7840\u98CE\u9669 \xD7 \u5386\u53F2\u949F\u70B9\u6743\u91CD \xF7 \u5F53\u65E5\u5E73\u5747\u6743\u91CD"))}</p><code>\u0394H\u1D62 = log[(1 \u2212 F\u2080(t\u1D62\u208B\u2081)) / (1 \u2212 F\u2080(t\u1D62))] \xD7 w\u1D62 / w\u0304(day\u1D62)</code><code>F(t) = 1 \u2212 exp(\u2212\u03A3 \u0394H\u1D62) \xB7 t* = argmax(\u0394F\u1D62 / \u0394t\u1D62)</code><small>${t2("F\u2080\uFF1A\u57FA\u7840\u7D2F\u8BA1\u6982\u7387\uFF1Bw\uFF1A\u5168\u5386\u53F2\u949F\u70B9\u6743\u91CD\uFF1Bt*\uFF1A\u6700\u53EF\u80FD\u7684\u5C0F\u65F6\u7A97\u53E3\u3002")}</small></div>` : "";
-  return `<section class="forecast-method" data-forecast-method aria-label="${t2("\u9884\u6D4B\u600E\u4E48\u7B97")}"><details><summary><h3>${t2("\u9884\u6D4B\u600E\u4E48\u7B97")}</h3></summary><dl>${rows.join("")}</dl><p>${t2("\u53D1\u5E03\u949F\u70B9\u4F7F\u7528\u5168\u90E8\u5386\u53F2\u81EA\u52A8\u91CD\u7F6E\u65E5\uFF1B\u91CD\u7F6E\u95F4\u9694\u4F18\u5148\u4F7F\u7528\u5F53\u524D\u6D3B\u52A8\u5185\u7684\u5B8C\u6574\u95F4\u9694\uFF0C\u6837\u672C\u4E0D\u8DB3\u65F6\u56DE\u9000\u5230\u8FD1\u671F\u6216\u5386\u53F2\u3002")}</p>${prediction ? `<p>${t2("\u57FA\u7840\u98CE\u9669\u7ED3\u5408\u8DDD\u4E0A\u6B21\u91CD\u7F6E\u7684\u65F6\u95F4\u3001\u6240\u9009\u95F4\u9694\u5206\u5E03\u548C\u5E16\u5B50\u4FE1\u53F7\uFF0C\u518D\u7528\u5386\u53F2\u53D1\u5E03\u949F\u70B9\u52A0\u6743\u3002")}</p>${formula}<p>${t2("\u7D2F\u8BA1\u6982\u7387\u7531\u52A0\u6743\u98CE\u9669\u7D2F\u79EF\u5F97\u5230\uFF1B\u6700\u53EF\u80FD\u65F6\u95F4\u53D6\u5B9E\u9645\u5206\u5E03\u4E2D\u6982\u7387\u5BC6\u5EA6\u6700\u9AD8\u7684\u5C0F\u65F6\u7A97\u53E3\uFF0C\u4E0D\u662F\u7B80\u5355\u628A\u5E73\u5747\u5929\u6570\u52A0\u5230\u4E0A\u6B21\u65F6\u95F4\u3002")}</p><p class="forecast-conditional-note">${t2("\u7B2C\u4E8C\u6761\u66F2\u7EBF\u4EE5\u9996\u6B21\u5728\u6807\u8BB0\u65F6\u95F4\u53D1\u751F\u4E3A\u524D\u63D0\uFF0C\u4ECE\u8BE5\u70B9\u91CD\u65B0\u8BA1\u65F6\uFF1B\u5176\u7D2F\u8BA1\u503C\u4E5F\u4EE5\u8FD9\u4E2A\u524D\u63D0\u4E3A\u6761\u4EF6\u3002")}</p>` : `<p>${t2("\u9884\u6D4B\u5DF2\u5173\u95ED\uFF0C\u5386\u53F2\u7EDF\u8BA1\u4ECD\u4FDD\u7559\u3002")}</p>`}<p class="forecast-assumptions"><strong>${t2("\u5F53\u524D\u5047\u8BBE")}:</strong> ${escape3(assumptions)}</p><p>${t2("\u8BA1\u5212\u4E2D\u7684\u5907\u7528\u3001\u6B63\u5E38\u548C\u5047\u8BBE\u91CD\u7F6E\u90FD\u4ECE\u8BE5\u65F6\u523B\u91CD\u65B0\u5F00\u59CB7\u5929\u5468\u671F\uFF1B\u53EA\u6709\u9009\u4E2D\u7684\u5047\u8BBE\u624D\u4F1A\u8865\u6EE1\u9884\u6D4B\u989D\u5EA6\u3002")}</p><small>${t2("\u672C\u5730\u4F30\u8BA1\uFF0C\u6A21\u578B\u5C1A\u672A\u6821\u51C6\u3002")}</small></details></section>`;
+  const assumptions = first ? second ? t2("\u7B2C\u4E00\u6B21 {first} \xB7 \u7B2C\u4E8C\u6B21 {second}", { first, second }) : t2("\u7B2C\u4E00\u6B21 {first}", { first }) : t2("\u672A\u5047\u8BBE\u989D\u5916 reset");
+  const formula = prediction?.model === "local-recent-intervals-v5" ? `<div class="forecast-formula" data-forecast-formula><p>${escape3(t2("\u6BCF\u5C0F\u65F6\u6982\u7387 = \u57FA\u7840\u6982\u7387 \xD7 \u8BE5\u5C0F\u65F6\u7684\u5386\u53F2\u6743\u91CD \xF7 \u5F53\u5929\u5E73\u5747\u6743\u91CD"))}</p><code>\u0394H\u1D62 = log[(1 \u2212 F\u2080(t\u1D62\u208B\u2081)) / (1 \u2212 F\u2080(t\u1D62))] \xD7 w\u1D62 / w\u0304(day\u1D62)</code><code>F(t) = 1 \u2212 exp(\u2212\u03A3 \u0394H\u1D62) \xB7 t* = argmax(\u0394F\u1D62 / \u0394t\u1D62)</code><small>${t2("F\u2080\uFF1A\u57FA\u7840\u7D2F\u8BA1\u6982\u7387\uFF1Bw\uFF1A\u8BE5\u5C0F\u65F6\u7684\u5386\u53F2\u6743\u91CD\uFF1Bt*\uFF1A\u6982\u7387\u6700\u9AD8\u7684\u90A3\u4E2A\u5C0F\u65F6\u3002")}</small></div>` : "";
+  return `<section class="forecast-method" data-forecast-method aria-label="${t2("\u9884\u6D4B\u600E\u4E48\u7B97")}"><details><summary><h3>${t2("\u9884\u6D4B\u600E\u4E48\u7B97")}</h3></summary><dl>${rows.join("")}</dl>${prediction ? `<p>${t2("\u5148\u6839\u636E\u8DDD\u4E0A\u6B21 reset \u7684\u65F6\u95F4\u3001\u5386\u53F2\u95F4\u9694\u548C Tibo \u7684\u5E16\u5B50\u7B97\u51FA\u57FA\u7840\u6982\u7387\uFF0C\u518D\u6309\u5386\u53F2\u4E0A\u5E38\u89C1\u7684\u53D1\u5E03\u65F6\u95F4\u5206\u5230\u6BCF\u4E2A\u5C0F\u65F6\u3002")}</p>${formula}<p>${t2("\u6700\u53EF\u80FD\u65F6\u95F4\u662F\u6982\u7387\u6700\u9AD8\u7684\u90A3\u4E2A\u5C0F\u65F6\uFF0C\u4E0D\u662F\u5728\u4E0A\u6B21 reset \u4E0A\u7B80\u5355\u52A0\u5E73\u5747\u5929\u6570\u3002")}</p><p class="forecast-conditional-note">${t2("\u7B2C\u4E8C\u6761\u66F2\u7EBF\u5047\u8BBE\u7B2C\u4E00\u6B21 reset \u53D1\u751F\u5728\u6807\u8BB0\u7684\u65F6\u95F4\uFF0C\u4ECE\u90A3\u65F6\u91CD\u65B0\u8BA1\u7B97\u3002")}</p>` : `<p>${t2("\u9884\u6D4B\u5DF2\u5173\u95ED\uFF0C\u5386\u53F2\u7EDF\u8BA1\u4ECD\u4FDD\u7559\u3002")}</p>`}<p class="forecast-assumptions"><strong>${t2("\u5F53\u524D\u5047\u8BBE")}:</strong> ${escape3(assumptions)}</p><p>${t2("\u6BCF\u6B21\u8865\u6EE1\uFF08\u5907\u7528 reset\u3001\u6B63\u5E38\u5237\u65B0\u6216\u8BA1\u5165\u7684 reset\uFF09\u90FD\u4F1A\u91CD\u65B0\u5F00\u59CB 7 \u5929\u5468\u671F\u3002")}</p><small>${t2("\u4EE5\u4E0A\u662F\u672C\u5730\u4F30\u7B97\uFF0C\u6A21\u578B\u672A\u7ECF\u6821\u51C6\u3002")}</small></details></section>`;
 }
 
 // src/reset-interval-model.js
@@ -1397,11 +1396,11 @@ function baseResetProbabilityByHours(prediction, hours) {
 var HOUR5 = 36e5;
 var EPS = 1e-7;
 var usageStrategies = Object.freeze([
-  Object.freeze({ id: "balanced", label: "\u4FDD\u6301\u8282\u594F", description: "\u6309\u5F53\u524D\u901F\u5EA6\u7528\uFF0C\u770B\u4EC0\u4E48\u65F6\u5019\u7528\u5B8C" }),
-  Object.freeze({ id: "keep-available", label: "\u4FDD\u6301\u53EF\u7528", description: "\u5C3D\u91CF\u4E00\u76F4\u6709\u989D\u5EA6\uFF0C\u5FC5\u8981\u65F6\u653E\u6162" }),
-  Object.freeze({ id: "maximize", label: "\u4E0D\u6D6A\u8D39\u989D\u5EA6", description: "\u5728\u4E0B\u6B21\u8865\u6EE1\u524D\u521A\u597D\u7528\u5B8C" }),
-  Object.freeze({ id: "weekdays", label: "\u5468\u672B\u4E0D\u4F7F\u7528", description: "\u5468\u672B\u4F11\u606F\uFF0C\u989D\u5EA6\u5206\u7ED9\u5DE5\u4F5C\u65E5" }),
-  Object.freeze({ id: "weekend-focus", label: "\u5468\u672B\u96C6\u4E2D\u4F7F\u7528", description: "\u4F18\u5148\u5728\u5468\u672B\u7528\u5B8C\u989D\u5EA6" })
+  Object.freeze({ id: "balanced", label: "\u7A33\u5982\u8001\u72D7", description: "\u6309\u5F53\u524D\u901F\u5EA6\u7528\uFF0C\u770B\u4EC0\u4E48\u65F6\u5019\u7528\u5B8C" }),
+  Object.freeze({ id: "keep-available", label: "\u7EC6\u6C34\u957F\u6D41", description: "\u5C3D\u91CF\u4E00\u76F4\u6709\u989D\u5EA6\uFF0C\u5FC5\u8981\u65F6\u653E\u6162" }),
+  Object.freeze({ id: "maximize", label: "\u8D5B\u535A\u725B\u9A6C\u62C9\u6EE1", description: "\u5728\u4E0B\u6B21\u8865\u6EE1\u524D\u521A\u597D\u7528\u5B8C" }),
+  Object.freeze({ id: "weekdays", label: "\u5468\u672B\u8EBA\u5E73", description: "\u5468\u672B\u4F11\u606F\uFF0C\u989D\u5EA6\u5206\u7ED9\u5DE5\u4F5C\u65E5" }),
+  Object.freeze({ id: "weekend-focus", label: "\u5468\u672B\u5377\u8D77\u6765", description: "\u5E73\u65F6\u4E0D\u7528\uFF0C\u989D\u5EA6\u90FD\u7559\u5230\u5468\u672B" })
 ]);
 var validUsageStrategy = (value) => usageStrategies.some((strategy) => strategy.id === value);
 function usageStrategyCalendar({ now, timeZone: timeZone2, horizonHours = 504 }) {
@@ -1434,8 +1433,7 @@ function usageStrategyCalendar({ now, timeZone: timeZone2, horizonHours = 504 })
     slots,
     allocate({ strategy, start, end, quota, dailyCapacityPercent = null, cycleStart = start }) {
       const spans = slots.filter((slot) => slot.endHours > start + EPS && slot.startHours < end - EPS);
-      const hasWeekend = slots.some((slot) => slot.weekend && slot.endHours > cycleStart + EPS && slot.startHours < end - EPS);
-      const allowed = (slot) => strategy === "weekdays" ? !slot.weekend : strategy === "weekend-focus" && hasWeekend ? slot.weekend : true;
+      const allowed = (slot) => strategy === "weekdays" ? !slot.weekend : strategy === "weekend-focus" ? slot.weekend : true;
       const availableHours = spans.reduce((sum, slot) => sum + (allowed(slot) ? Math.max(0, Math.min(end, slot.endHours) - Math.max(start, slot.startHours)) : 0), 0);
       const current = spans.find((slot) => slot.startHours <= start + EPS && slot.endHours > start + EPS);
       const active = !!current && allowed(current);
@@ -2260,7 +2258,7 @@ function forecastAssumptionCards(result, prediction) {
 var escape = (value) => String(value).replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]);
 var number = (value) => Number.isFinite(value) ? Number(value.toFixed(2)) : null;
 var postLabels = {
-  reset_planned: "\u660E\u786E\u9884\u544A",
+  reset_planned: "\u5DF2\u5BA3\u5E03",
   reset_completed: "\u5DF2\u91CD\u7F6E\u8BB0\u5F55",
   reset_hint: "\u53EF\u80FD\u6697\u793A",
   banked_credit: "\u5907\u7528 reset",
@@ -2304,16 +2302,16 @@ function renderResetForecastSummary({
   const recent = model?.source === "recent-30-day-intervals";
   const campaignFit = model?.source === "campaign-intervals";
   const count = model?.sampleCount ?? (recent ? model.recentIntervalCount : model?.intervals?.length);
-  const scope = campaignFit ? t2("\u672C\u6B21 campaign \xB7 {count} \u6B21 reset", { count: model.campaignEventCount }) : recent ? t2("\u8FD1 {days} \u5929", { days: model.windowDays }) : model?.source === "non-campaign-historical-intervals" ? t2("\u975E\u6D3B\u52A8\u5386\u53F2\u56DE\u9000") : t2("\u5386\u53F2\u56DE\u9000");
+  const scope = campaignFit ? t2("\u672C\u6B21\u6D3B\u52A8 {count} \u6B21 reset", { count: model.campaignEventCount }) : recent ? t2("\u8FD1 {days} \u5929", { days: model.windowDays }) : model?.source === "non-campaign-historical-intervals" ? t2("\u975E\u6D3B\u52A8\u5386\u53F2\u56DE\u9000") : t2("\u5386\u53F2\u56DE\u9000");
   const fallback = model?.selectionReason === "campaign-has-no-complete-interval" ? t2(" \xB7 \u6D3B\u52A8\u6837\u672C\u4E0D\u8DB3\uFF0C\u6682\u56DE\u9000") : "";
   const sample = mean === null ? "" : `${scope}${Number.isInteger(count) ? t2(" \xB7 {count} \u4E2A\u5B8C\u6574\u95F4\u9694", { count }) : ""}${fallback}`;
   const last = format(source.lastResetAt);
   const lastValue = last && postUrl(source.lastResetSource) ? `<a href="${escape(source.lastResetSource)}" target="_blank" rel="noopener noreferrer">${escape(last)}</a>` : escape(last ?? t2("\u6682\u65E0\u8BB0\u5F55"));
   const age = number(source.daysSinceReset);
   const rows = [
-    row("last-reset", "\u4E0A\u6B21\u516C\u5F00 reset", lastValue, age === null ? "" : t2("{days} \u5929\u524D", { days: age })),
-    row("mean-interval", "\u5E73\u5747 reset \u95F4\u9694", mean === null ? t2("\u6570\u636E\u4E0D\u8DB3") : t2("{days} \u5929", { days: mean }), sample),
-    row("mean-confidence", t2("\u5747\u503C {level}% \u7F6E\u4FE1\u533A\u95F4", { level }), low === null || high === null ? t2("\u6837\u672C\u4E0D\u8DB3\uFF0C\u6682\u4E0D\u4F30\u8BA1") : t2("{low} \u2013 {high} \u5929", { low, high }))
+    row("last-reset", "\u4E0A\u6B21 reset", lastValue, age === null ? "" : t2("{days} \u5929\u524D", { days: age })),
+    row("mean-interval", "\u5E73\u5747\u95F4\u9694", mean === null ? t2("\u6570\u636E\u4E0D\u8DB3") : t2("{days} \u5929", { days: mean }), sample),
+    row("mean-confidence", t2("\u5E73\u5747\u95F4\u9694\u7684 {level}% \u7F6E\u4FE1\u533A\u95F4", { level }), low === null || high === null ? t2("\u6837\u672C\u4E0D\u8DB3\uFF0C\u6682\u4E0D\u4F30\u8BA1") : t2("{low} \u2013 {high} \u5929", { low, high }))
   ];
   if (campaign) {
     const status2 = { active: "\u8FDB\u884C\u4E2D", upcoming: "\u5C1A\u672A\u5F00\u59CB", ended: "\u5DF2\u7ED3\u675F" }[campaign.status];
@@ -2321,9 +2319,9 @@ function renderResetForecastSummary({
     const value = postUrl(campaign.sourceUrl) ? `<a href="${escape(campaign.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escape(t2(campaign.name))}</a>` : escape(t2(campaign.name));
     rows.splice(1, 0, row(
       "campaign",
-      "\u7279\u6B8A campaign",
+      "Tibo \u6D3B\u52A8",
       `${value} \xB7 ${escape(t2(status2))}`,
-      t2("{start} \u8D77 \xB7 {end} \u7ED3\u675F\uFF08\u6309 Day 1 \u548C\u6D3B\u52A8\u5929\u6570\u63A8\u7B97\uFF09", { start, end })
+      t2("{start} \u2013 {end}\uFF08\u6309 Day 1 \u63A8\u7B97\uFF09", { start, end })
     ));
   }
   const clock = source.prediction?.releaseClock;
@@ -2331,12 +2329,12 @@ function renderResetForecastSummary({
     const localClock = clock.typicalTimeAt ? parts2(clock.typicalTimeAt) : null;
     rows.push(row(
       "release-clock",
-      "\u5E38\u89C1\u53D1\u5E03\u949F\u70B9",
+      "\u5E38\u89C1\u53D1\u5E03\u65F6\u95F4",
       escape(localClock ? `${localClock.hour}:${localClock.minute}` : clock.typicalTime),
-      localClock && clock.timeZone && clock.timeZone !== timeZone2 ? t2("\u5168\u90E8\u5386\u53F2 \xB7 {count} \u4E2A reset \u65E5 \xB7 \u4F60\u7684\u65F6\u95F4\uFF1BTibo \u5F53\u5730 {local}", {
+      localClock && clock.timeZone && clock.timeZone !== timeZone2 ? t2("\u57FA\u4E8E\u5168\u90E8 {count} \u4E2A reset \u65E5 \xB7 \u672C\u5730\u65F6\u95F4\uFF08Tibo \u5F53\u5730\u65F6\u95F4 {local}\uFF09", {
         count: clock.sampleCount,
         local: new Intl.DateTimeFormat("en-US", { timeZone: clock.timeZone, hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZoneName: "short" }).format(new Date(clock.typicalTimeAt))
-      }) : t2("\u5168\u90E8\u5386\u53F2 \xB7 {count} \u4E2A reset \u65E5 \xB7 \u4F60\u7684\u65F6\u95F4", { count: clock.sampleCount })
+      }) : t2("\u57FA\u4E8E\u5168\u90E8 {count} \u4E2A reset \u65E5 \xB7 \u672C\u5730\u65F6\u95F4", { count: clock.sampleCount })
     ));
   }
   if (prediction) {
@@ -2351,7 +2349,7 @@ function renderResetForecastSummary({
         escape(format(estimate.pointAt)),
         t2("{scope} {count} \u6B21 \xB7 \u5E38\u89C1 {time}\uFF08{zone}\uFF09", { scope: estimate.clockSampleScope === "all-history" ? t2("\u5168\u90E8\u5386\u53F2") : t2("\u8FD1 {days} \u5929", { days: estimate.clockWindowDays }), count: estimate.clockSampleCount, time: estimate.typicalReleaseTime, zone: estimate.releaseTimeZone })
       ) : row("next-reset-median", "\u4E0B\u6B21\u9884\u8BA1\uFF08\u4E2D\u4F4D\uFF09", escape(format(window2?.medianAt) ?? t2("\u6682\u65E0\u6CD5\u4F30\u8BA1"))),
-      row("next-reset-window", t2("\u4E0B\u6B21 {coverage}% \u9884\u6D4B\u7A97\u53E3", { coverage }), from && to ? `${escape(from)} \u2013 ${escape(to)}` : t2("\u6682\u65E0\u6CD5\u4F30\u8BA1"))
+      row("next-reset-window", t2("{coverage}% \u53EF\u80FD\u533A\u95F4", { coverage }), from && to ? `${escape(from)} \u2013 ${escape(to)}` : t2("\u6682\u65E0\u6CD5\u4F30\u8BA1"))
     );
     for (const rule of prediction.evidence?.hardRules ?? []) {
       const until = format(rule.until);
@@ -2370,7 +2368,7 @@ function renderResetForecastSummary({
   if (mention && format(mention.createdAt) && postUrl(mention.sourceUrl)) {
     rows.push(row(
       "latest-post",
-      source.latestPost ? mention.activityType === "reply" ? "Tibo \u6700\u8FD1\u56DE\u590D" : "Tibo \u6700\u8FD1\u5E16\u5B50" : mention.activityType === "reply" ? "Tibo \u6700\u8FD1\u76F8\u5173\u56DE\u590D" : "Tibo \u6700\u8FD1\u76F8\u5173\u5E16\u5B50",
+      source.latestPost ? mention.activityType === "reply" ? "Tibo \u6700\u8FD1\u56DE\u590D" : "Tibo \u6700\u8FD1\u5E16\u5B50" : mention.activityType === "reply" ? "Tibo \u6700\u8FD1\u76F8\u5173\u56DE\u590D" : "Tibo \u6700\u65B0\u76F8\u5173\u5E16\u5B50",
       `<a href="${escape(mention.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escape(format(mention.createdAt))}</a> \xB7 ${escape(t2(postLabels[mention.signal?.kind] ?? "\u6682\u672A\u8BC6\u522B"))}<q>${escape(mention.text ?? "")}</q>`
     ));
   } else rows.push(row("latest-post", "Tibo \u76F8\u5173\u5E16\u5B50", t2("\u6682\u65E0\u53EF\u7528\u5E16\u5B50\uFF0F\u56DE\u590D")));
@@ -2388,7 +2386,7 @@ function renderResetForecastSummary({
     glance.push(`<div data-forecast-glance="next-hours"><dt>${escape(t2("\u5DF2\u5BA3\u5E03\u7684 reset"))}</dt><dd class="forecast-horizons"><span data-forecast-horizon="announced"><small>${escape(t2("\u5DF2\u5BA3\u5E03\u7684 reset"))}</small><b>${escape(t2("{time} \u524D", { time: format(announcedAt) }))}</b></span></dd></div>`);
   else if (horizons.length) glance.push(`<div data-forecast-glance="next-hours"><dt>${escape(t2("\u672A\u6765 reset \u6982\u7387"))}</dt><dd class="forecast-horizons">${horizons.map(([hours, value]) => `<span data-forecast-horizon="${hours}"><small><span class="horizon-long">${escape(t2("{hours} \u5C0F\u65F6\u5185 reset", { hours }))}</span><span class="horizon-short">${escape(t2("{hours} \u5C0F\u65F6", { hours }))}</span></small><b>${Number((value * 100).toFixed(1))}%</b></span>`).join("")}</dd></div>`);
   const windowFrom = dayFormat(prediction?.nextResetWindow?.from), windowTo = dayFormat(prediction?.nextResetWindow?.to);
-  if (windowFrom && windowTo) glanceRow("window", "\u53EF\u80FD\u7A97\u53E3", escape(windowFrom === windowTo ? windowFrom : `${windowFrom} \u2013 ${windowTo}`));
+  if (windowFrom && windowTo) glanceRow("window", "\u9884\u8BA1\u65E5\u671F", escape(windowFrom === windowTo ? windowFrom : `${windowFrom} \u2013 ${windowTo}`));
   if (last) {
     const hours = age === null ? null : Math.round(age * 24);
     const ago = hours === null ? "" : hours < 24 ? t2("{hours} \u5C0F\u65F6\u524D", { hours }) : t2("{days} \u5929\u524D", { days: Number(age.toFixed(1)) });
@@ -2398,12 +2396,12 @@ function renderResetForecastSummary({
   if (campaign?.status === "active" && Number.isFinite(Date.parse(campaign.startsAt)) && Number.isFinite(Date.parse(campaign.endsAt))) {
     const DAY5 = 864e5, start = Date.parse(campaign.startsAt);
     const total = Math.round((Date.parse(campaign.endsAt) - start) / DAY5), day = Math.min(total, Math.floor((now.getTime() - start) / DAY5) + 1);
-    glanceRow("campaign", "\u6D3B\u52A8", escape(t2("\u7B2C {day} / {total} \u5929 \xB7 {end} \u7ED3\u675F", { day, total, end: dayFormat(campaign.endsAt) })));
+    glanceRow("campaign", "Tibo \u6D3B\u52A8", escape(t2("\u7B2C {day} / {total} \u5929 \xB7 {end} \u7ED3\u675F", { day, total, end: dayFormat(campaign.endsAt) })));
   }
   if (mention && format(mention.createdAt) && postUrl(mention.sourceUrl))
-    glanceRow("tibo", "Tibo", `<a href="${escape(mention.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escape(mention.signal?.scheduledFor && format(mention.signal.scheduledFor) ? t2("\u5DF2\u5B89\u6392 \xB7 {time} \u524D", { time: format(mention.signal.scheduledFor) }) : `${t2(postLabels[mention.signal?.kind] ?? "\u6682\u672A\u8BC6\u522B")} \xB7 ${dayFormat(mention.createdAt)}`)}</a>`);
-  const statusLine = `<p>${escape(`${status}${updated ? t2(" \xB7 \u66F4\u65B0 {time}", { time: updated }) : ""} \xB7 ${t2("\u4F60\u7684\u65F6\u95F4\uFF08{zone}\uFF09", { zone: timeZone2 })}`)}${prediction ? ` \xB7 ${t2(prediction.calibrated === true ? "\u6A21\u578B\u9884\u6D4B" : "\u6A21\u578B\u672A\u6821\u51C6")}` : ""}</p>`;
-  return `<section class="forecast-summary" data-forecast-summary aria-label="${t2("\u989D\u5916 reset \u9884\u6D4B\u5173\u952E\u6570\u636E")}">${glance.length ? `<dl class="forecast-glance">${glance.join("")}</dl>` : ""}<details class="forecast-more"><summary>${t2("\u66F4\u591A\u6570\u636E")}</summary><dl>${rows.join("")}</dl>${statusLine}</details></section>`;
+    glanceRow("tibo", "Tibo", `<a href="${escape(mention.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escape(mention.signal?.scheduledFor && format(mention.signal.scheduledFor) ? t2("\u5DF2\u5BA3\u5E03 \xB7 {time} \u524D", { time: format(mention.signal.scheduledFor) }) : `${t2(postLabels[mention.signal?.kind] ?? "\u6682\u672A\u8BC6\u522B")} \xB7 ${dayFormat(mention.createdAt)}`)}</a>`);
+  const statusLine = `<p>${escape(updated ? t2("\u6570\u636E\u66F4\u65B0\u4E8E {time}\uFF08\u672C\u5730\u65F6\u95F4\uFF09", { time: updated }) : status)}${prediction && prediction.calibrated !== true ? ` \xB7 ${escape(t2("\u6A21\u578B\u672A\u6821\u51C6"))}` : ""}</p>`;
+  return `<section class="forecast-summary" data-forecast-summary aria-label="${t2("\u989D\u5916 reset \u9884\u6D4B\u5173\u952E\u6570\u636E")}">${glance.length ? `<dl class="forecast-glance">${glance.join("")}</dl>` : ""}<details class="forecast-more"><summary>${t2("\u8BE6\u7EC6\u6570\u636E")}</summary><dl>${rows.join("")}</dl>${statusLine}</details></section>`;
 }
 
 // src/components/usage-strategies.js
@@ -3780,7 +3778,7 @@ function renderTimelineLaneLabel({ id, x, y, width, height = 52, title, detail, 
 // src/components/reset-element.js
 var round2 = (value) => Number(value.toFixed(1));
 var probability = (value) => value > 0 && value < 1e-4 ? "&lt;0.01" : round2(value * 100);
-var name = (sequence, locale) => translator(locale)(sequence === 1 ? "\u9996\u6B21" : "\u7B2C\u4E8C\u6B21");
+var name = (sequence, locale) => translator(locale)(sequence === 1 ? "\u7B2C\u4E00\u6B21" : "\u7B2C\u4E8C\u6B21");
 var position = ({ left, x, y, width, height, viewportWidth }) => `data-reset-position style="--reset-left:${viewportWidth ? `${(left ?? x) / viewportWidth * 100}%` : `${left ?? x}px`};--reset-top:${y}px;--reset-width:${viewportWidth ? `${width / viewportWidth * 100}%` : `${width}px`};--reset-height:${height ?? 0}px"`;
 function resetOpportunityLayout(width = Infinity) {
   const stacked = width < 80;
@@ -3799,16 +3797,16 @@ function renderResetOpportunity(opportunity, { timeZone: timeZone2, escape: esca
   });
   const until = time.format(new Date(opportunity.until));
   const sequence = Math.max(1, Math.trunc(Number(opportunity.nextExtraResetSequence)) || 1);
-  const fullLabel = t2("\u81F3\u5C11\u4E00\u6B21\u989D\u5916\u91CD\u7F6E\uFF1A{percent}%", { percent: probability(opportunity.probability) });
+  const fullLabel = t2("\u81F3\u5C11\u4E00\u6B21\u989D\u5916 reset\uFF1A{percent}%", { percent: probability(opportunity.probability) });
   const layout = resetOpportunityLayout(width);
   const day = compact ? new Intl.DateTimeFormat(uiLocale(locale), { timeZone: timeZone2, month: "2-digit", day: "2-digit" }).format(new Date(opportunity.until)) : null;
   const clock = compact ? new Intl.DateTimeFormat("en-GB", { timeZone: timeZone2, hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date(opportunity.until)) : null;
   const content = compact ? `<span class="phase-probability-value">${probability(opportunity.probability)}%</span><span class="phase-probability-until"><time datetime="${escape3(opportunity.until)}"><span>${escape3(day)}</span>${dateOnly ? "" : ` <span>${escape3(clock)}</span>`}</time></span>` : `<span>${fullLabel}</span><span class="phase-probability-until">${escape3(t2("{time}\u4E4B\u524D", { time: until }))}</span>`;
-  return `<small class="reset-element phase-reset-opportunity" data-reset-element="${sequence >= 2 ? 2 : 1}" data-reset-opportunity data-next-extra-sequence="${sequence}" data-probability="${opportunity.probability}" ${compact ? `data-compact-probability data-cutoff-layout="${layout.stacked ? "stacked" : "inline"}"` : ""} title="${escape3(fullLabel + " \xB7 " + t2("\u622A\u81F3 {time}\uFF1B\u4EE5\u672C\u6BB5\u5F00\u59CB\u524D\u672A\u518D\u53D1\u751F\u989D\u5916reset\u4E3A\u6761\u4EF6{renewal}", { time: until, renewal: opportunity.previousExtraResetAt ? t2("\uFF0C\u4ECE\u6700\u8FD1\u9009\u62E9\u7684\u989D\u5916reset\u91CD\u65B0\u8BA1\u65F6") : "" }))}">${content}</small>`;
+  return `<small class="reset-element phase-reset-opportunity" data-reset-element="${sequence >= 2 ? 2 : 1}" data-reset-opportunity data-next-extra-sequence="${sequence}" data-probability="${opportunity.probability}" ${compact ? `data-compact-probability data-cutoff-layout="${layout.stacked ? "stacked" : "inline"}"` : ""} title="${escape3(fullLabel + " \xB7 " + t2("\u622A\u81F3 {time}\uFF1B\u4EE5\u672C\u6BB5\u5F00\u59CB\u524D\u672A\u518D\u53D1\u751F\u989D\u5916 reset \u4E3A\u6761\u4EF6{renewal}", { time: until, renewal: opportunity.previousExtraResetAt ? t2("\uFF0C\u4ECE\u6700\u8FD1\u9009\u62E9\u7684\u989D\u5916 reset \u91CD\u65B0\u8BA1\u65F6") : "" }))}">${content}</small>`;
 }
 var resetActionCopy = {
-  1: { idle: "\u8BA1\u5165\u9996\u6B21 reset", selected: "\u5DF2\u8BA1\u5165\u9996\u6B21 reset", cancelHint: "\u53D6\u6D88\u9996\u6B21\u53CA\u540E\u7EE7\u5047\u8BBE" },
-  2: { idle: "\u8BA1\u5165\u4E24\u6B21 reset", selected: "\u5DF2\u8BA1\u5165\u7B2C\u4E8C\u6B21 reset", cancelHint: "\u53D6\u6D88\u7B2C\u4E8C\u6B21\u5047\u8BBE\uFF0C\u4FDD\u7559\u9996\u6B21" }
+  1: { idle: "\u8BA1\u5165\u7B2C\u4E00\u6B21 reset", selected: "\u5DF2\u8BA1\u5165\u7B2C\u4E00\u6B21 reset", cancelHint: "\u53D6\u6D88\u7B2C\u4E00\u6B21\u53CA\u540E\u7EE7\u5047\u8BBE" },
+  2: { idle: "\u8BA1\u5165\u4E24\u6B21 reset", selected: "\u5DF2\u8BA1\u5165\u7B2C\u4E8C\u6B21 reset", cancelHint: "\u53D6\u6D88\u7B2C\u4E8C\u6B21\u5047\u8BBE\uFF0C\u4FDD\u7559\u7B2C\u4E00\u6B21" }
 };
 function resetAssumptionState({ sequence, selected, locale = "zh-CN" }) {
   const t2 = translator(locale);
@@ -3830,11 +3828,11 @@ function renderMode({ sequence, focus, plot, vertical = false, escape: escape3, 
   const data = sequence === 1 ? `data-reset-estimate="${escape3(focus.pointAt)}" data-estimate-cdf="${focus.cumulativeProbability}" data-estimate-probability="${focus.probability}"` : `data-reset-sequence="2" data-reset-at="${escape3(focus.pointAt)}" data-conditional-on="${escape3(focus.conditionalOn)}"`;
   if (!plot && sequence === 1 && !vertical) {
     const mode = ["maximum-hour-window-mass", "maximum-hour-window-density"].includes(focus.method);
-    return `<div class="forecast-mode" ${data} ${position(focus)} title="${t2(mode ? "\u6807\u7EBF\u5BF9\u5E94\u6982\u7387\u5206\u5E03\u7684\u6700\u9AD8\u5CF0\u3002" : "\u4E0A\u6B21reset\u52A0\u8FD1\u671F\u5E73\u5747\u95F4\u9694\uFF0C\u518D\u6821\u51C6\u5230\u5E38\u89C1\u53D1\u5E03\u949F\u70B9\u7684\u53C2\u8003\u65F6\u95F4\u3002")}${t2("\u5DE6\u53F3\u4E3A\u4F30\u8BA1\u8303\u56F4\u4E4B\u5916\u7684\u6982\u7387\u3002")}"><span data-estimate-earlier="${focus.earlierProbability}">${t2("\u2190 \u66F4\u65E9 {percent}%", { percent: round2(focus.earlierProbability * 100) })}</span><strong>${t2(mode ? "\u6700\u53EF\u80FD\u989D\u5916 reset" : "\u9884\u8BA1\u989D\u5916 reset")}<small>${escape3(focus.label)}</small></strong><span data-estimate-later="${focus.laterProbability}">${t2("\u66F4\u665A {percent}% \u2192", { percent: round2(focus.laterProbability * 100) })}</span></div>`;
+    return `<div class="forecast-mode" ${data} ${position(focus)} title="${t2(mode ? "\u6807\u7EBF\u5BF9\u5E94\u6982\u7387\u5206\u5E03\u7684\u6700\u9AD8\u5CF0\u3002" : "\u4E0A\u6B21 reset \u52A0\u8FD1\u671F\u5E73\u5747\u95F4\u9694\uFF0C\u518D\u6821\u51C6\u5230\u5E38\u89C1\u53D1\u5E03\u949F\u70B9\u7684\u53C2\u8003\u65F6\u95F4\u3002")}${t2("\u5DE6\u53F3\u4E3A\u4F30\u8BA1\u8303\u56F4\u4E4B\u5916\u7684\u6982\u7387\u3002")}"><span data-estimate-earlier="${focus.earlierProbability}">${t2("\u2190 \u66F4\u65E9 {percent}%", { percent: round2(focus.earlierProbability * 100) })}</span><strong>${t2(mode ? "\u6700\u53EF\u80FD\u989D\u5916 reset" : "\u9884\u8BA1\u989D\u5916 reset")}<small>${escape3(focus.label)}</small></strong><span data-estimate-later="${focus.laterProbability}">${t2("\u66F4\u665A {percent}% \u2192", { percent: round2(focus.laterProbability * 100) })}</span></div>`;
   }
   if (focus.announced) return `<div class="forecast-mode forecast-mode-on-plot" ${data} data-reset-announced data-reset-marker ${position(focus)} aria-label="${t2("\u5DF2\u5BA3\u5E03\u7684 reset")} \xB7 ${escape3(focus.label)}"><strong>${escape3(focus.label)}<small>${t2("\u5DF2\u5BA3\u5E03")}</small></strong></div>`;
   const className = sequence === 1 ? "forecast-mode forecast-mode-on-plot" : "forecast-following";
-  return `<div class="${className}" ${data} data-reset-marker ${position(focus)} aria-label="${name(sequence, locale)} ${t2(focus.planned ? "\u89C4\u5212\u65F6\u523B" : "\u6700\u53EF\u80FD")} reset \xB7 ${escape3(focus.label)}" title="${t2(focus.planned ? "\u6807\u7EBF\u662F\u89C4\u5212\u8BA1\u5165\u8FD9\u6B21 reset \u7684\u4FDD\u5B88\u65F6\u523B\uFF1A\u6B63\u5E38\u5237\u65B0\u524D\u53EF\u80FD\u53D1\u751F\u7684\u90E8\u5206\uFF0C\u6709 75% \u5728\u6B64\u4E4B\u524D\u3002" : "\u6807\u7EBF\u5BF9\u5E94\u672C\u6761\u5206\u5E03\u6700\u9AD8\u5CF0\u3002")}${sequence === 2 ? t2("\u7B2C\u4E8C\u6B21\u4EE5\u9996\u6B21\u5728\u9884\u6D4B\u70B9\u53D1\u751F\u4E3A\u524D\u63D0\u3002") : ""}"><strong>${escape3(focus.planned ? focus.label : `${t2("\u6700\u53EF\u80FD")} ${focus.clockLabel ?? focus.label}`)}<small>${t2("\u7D2F\u8BA1")} ${probability(focus.cumulativeProbability)}%</small></strong></div>`;
+  return `<div class="${className}" ${data} data-reset-marker ${position(focus)} aria-label="${name(sequence, locale)} ${t2(focus.planned ? "\u89C4\u5212\u65F6\u523B" : "\u6700\u53EF\u80FD")} reset \xB7 ${escape3(focus.label)}" title="${t2(focus.planned ? "\u6807\u7EBF\u662F\u89C4\u5212\u8BA1\u5165\u8FD9\u6B21 reset \u7684\u4FDD\u5B88\u65F6\u523B\uFF1A\u6B63\u5E38\u5237\u65B0\u524D\u53EF\u80FD\u53D1\u751F\u7684\u90E8\u5206\uFF0C\u6709 75% \u5728\u6B64\u4E4B\u524D\u3002" : "\u6807\u7EBF\u5BF9\u5E94\u672C\u6761\u5206\u5E03\u6700\u9AD8\u5CF0\u3002")}${sequence === 2 ? t2("\u7B2C\u4E8C\u6B21\u4EE5\u7B2C\u4E00\u6B21\u5728\u9884\u6D4B\u70B9\u53D1\u751F\u4E3A\u524D\u63D0\u3002") : ""}"><strong>${escape3(focus.planned ? focus.label : `${t2("\u6700\u53EF\u80FD")} ${focus.clockLabel ?? focus.label}`)}<small>${t2("\u7D2F\u8BA1")} ${probability(focus.cumulativeProbability)}%</small></strong></div>`;
 }
 function renderAction(action, escape3, locale) {
   if (!action) return "";
@@ -3861,15 +3859,15 @@ function renderResetElement({
   const t2 = translator(locale);
   const vertical = orientation === "vertical";
   const date = new Intl.DateTimeFormat(uiLocale(locale), { timeZone: timeZone2, month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
-  const plotSvg = plot && !plot.announced ? `<g class="reset-density-series" data-density-sequence="${sequence}" data-reset-density-plot data-cumulative-probability="${plot.cumulativeProbability}" data-tail-probability="${plot.tailProbability}"><path class="reset-density-baseline" d="M ${plot.startX} ${plot.bottomY} H ${plot.endX}"/><path class="reset-density-area" d="${plot.areaPath}"/><path class="reset-density-line" d="${plot.densityPath}"/>${plot.bins.map((bin) => `<rect class="reset-density-hit" x="${bin.x1}" y="${plot.topY}" width="${bin.x2 - bin.x1}" height="${plot.height}" data-bin-probability="${bin.probability}" data-bin-cdf="${bin.cumulativeProbability}"><title>${t2(sequence === 2 ? "\u7B2C\u4E8C\u6B21\uFF08\u5047\u8BBE\u9996\u6B21\u53D1\u751F\uFF09" : "\u9996\u6B21")} reset \xB7 ${escape3(date.format(new Date(bin.endAt)))} \xB7 ${t2("\u7D2F\u8BA1")} ${probability(bin.cumulativeProbability)}%</title></rect>`).join("")}</g>` : "";
+  const plotSvg = plot && !plot.announced ? `<g class="reset-density-series" data-density-sequence="${sequence}" data-reset-density-plot data-cumulative-probability="${plot.cumulativeProbability}" data-tail-probability="${plot.tailProbability}"><path class="reset-density-baseline" d="M ${plot.startX} ${plot.bottomY} H ${plot.endX}"/><path class="reset-density-area" d="${plot.areaPath}"/><path class="reset-density-line" d="${plot.densityPath}"/>${plot.bins.map((bin) => `<rect class="reset-density-hit" x="${bin.x1}" y="${plot.topY}" width="${bin.x2 - bin.x1}" height="${plot.height}" data-bin-probability="${bin.probability}" data-bin-cdf="${bin.cumulativeProbability}"><title>${t2(sequence === 2 ? "\u7B2C\u4E8C\u6B21\uFF08\u5047\u8BBE\u7B2C\u4E00\u6B21\u53D1\u751F\uFF09" : "\u7B2C\u4E00\u6B21")} reset \xB7 ${escape3(date.format(new Date(bin.endAt)))} \xB7 ${t2("\u7D2F\u8BA1")} ${probability(bin.cumulativeProbability)}%</title></rect>`).join("")}</g>` : "";
   const peakSvg = peaks.map((peak) => vertical ? `<path class="reset-peak-leader" d="M ${peak.curveX + 4} ${peak.timeY} H ${peak.left - 2}"/><circle class="reset-peak-point" cx="${peak.curveX}" cy="${peak.timeY}" r="2.5"/>` : `<path class="reset-peak-leader" d="M ${peak.x} ${peak.curveY - 4} V ${peak.y + peak.height}"/><circle class="reset-peak-point" cx="${peak.x}" cy="${peak.curveY}" r="2.5"/>`).join("");
   const guide = focus ? vertical ? `<path class="${sequence === 1 ? "forecast-mode-guide" : "forecast-following-guide"}" d="M ${guideStartX} ${focus.x} H ${plot?.bottomY ?? guideStartX}"/><circle class="${sequence === 1 ? "forecast-mode-point" : "forecast-following-point"}" cx="${plot?.topY ?? guideStartX}" cy="${focus.x}" r="3.5"/>` : plot || sequence === 2 ? `<path class="${sequence === 1 ? "forecast-mode-guide" : "forecast-following-guide"}" d="M ${focus.x} ${plot ? plot.topY - 4 : focus.y + 38} V ${guideEndY}"/><circle class="${sequence === 1 ? "forecast-mode-point" : "forecast-following-point"}" cx="${focus.x}" cy="${plot ? plot.topY : focus.y + 38}" r="3.5"/>` : `<path class="forecast-mode-range" d="M ${focus.fromX} ${focus.y + 66} H ${focus.toX}"/><path class="forecast-mode-guide" d="M ${focus.left + focus.width / 2} ${focus.y + 61} L ${focus.x} ${focus.y + 74} V ${guideEndY}"/>` : "";
   const tailLabel = plot && !plot.announced && plot.tailProbability >= 0.01 ? t2("\u8303\u56F4\u5916 {percent}%", { percent: probability(plot.tailProbability) }) : "";
   const caption = laneLabel ? renderTimelineLaneLabel({
     ...laneLabel,
-    tooltip: [laneLabel.tooltip, t2(sequence === 2 ? "\u4EE5\u9996\u6B21\u5728\u6807\u8BB0\u65F6\u523B\u53D1\u751F\u4E3A\u6761\u4EF6\u3002" : "\u9996\u6B21\u989D\u5916reset\u7684\u6982\u7387\u5206\u5E03\u3002"), tailLabel].filter(Boolean).join(" ")
-  }, escape3) : plot ? `<div class="reset-density-caption" ${position(captionPosition ?? { left: plot.startX, y: plot.topY - 62, width: plot.endX - plot.startX })} title="${t2(sequence === 2 ? "\u4EE5\u9996\u6B21\u5728\u6807\u8BB0\u65F6\u523B\u53D1\u751F\u4E3A\u6761\u4EF6\u3002" : "\u9996\u6B21\u989D\u5916reset\u7684\u6982\u7387\u5206\u5E03\u3002")}${tailLabel}"><span>${vertical ? `${name(sequence, locale)} reset` : `${name(sequence, locale)}${uiLocale(locale) === "zh-CN" ? "" : " "}${t2("\u989D\u5916 reset")} \xB7 ${sequence === 2 ? `<span class="reset-caption-condition">${t2("\u5047\u8BBE\u9996\u6B21\u53D1\u751F")}</span>` : t2("\u6982\u7387\u5206\u5E03")}`}</span>${vertical ? `<span>${t2(sequence === 2 ? "\u9996\u6B21\u53D1\u751F\u540E" : "\u6982\u7387\u5206\u5E03")}</span>` : tailLabel ? `<span>${tailLabel}</span>` : ""}</div>` : "";
-  const labels = peaks.map((peak) => `<div class="reset-peak-cdf" data-forecast-peak-at="${escape3(peak.at)}" data-peak-sequence="${sequence}" data-probability="${peak.cumulativeProbability}" ${position(peak)} title="${escape3(date.format(new Date(peak.at)))} \xB7 ${t2(sequence === 2 ? "\u4EE5\u9996\u6B21\u53D1\u751F\u4E3A\u524D\u63D0\u7684\u7B2C\u4E8C\u6B21\u7D2F\u8BA1\u6982\u7387" : "\u9996\u6B21\u989D\u5916reset\u7D2F\u8BA1\u6982\u7387")}">${t2("\u7D2F\u8BA1")}${vertical ? `<small>${probability(peak.cumulativeProbability)}%</small>` : ` ${probability(peak.cumulativeProbability)}%`}</div>`).join("");
+    tooltip: [laneLabel.tooltip, t2(sequence === 2 ? "\u4EE5\u7B2C\u4E00\u6B21\u5728\u6807\u8BB0\u65F6\u523B\u53D1\u751F\u4E3A\u6761\u4EF6\u3002" : "\u7B2C\u4E00\u6B21\u989D\u5916 reset \u7684\u6982\u7387\u5206\u5E03\u3002"), tailLabel].filter(Boolean).join(" ")
+  }, escape3) : plot ? `<div class="reset-density-caption" ${position(captionPosition ?? { left: plot.startX, y: plot.topY - 62, width: plot.endX - plot.startX })} title="${t2(sequence === 2 ? "\u4EE5\u7B2C\u4E00\u6B21\u5728\u6807\u8BB0\u65F6\u523B\u53D1\u751F\u4E3A\u6761\u4EF6\u3002" : "\u7B2C\u4E00\u6B21\u989D\u5916 reset \u7684\u6982\u7387\u5206\u5E03\u3002")}${tailLabel}"><span>${vertical ? `${name(sequence, locale)} reset` : `${name(sequence, locale)}${uiLocale(locale) === "zh-CN" ? "" : " "}${t2("\u989D\u5916 reset")} \xB7 ${sequence === 2 ? `<span class="reset-caption-condition">${t2("\u5047\u8BBE\u7B2C\u4E00\u6B21\u53D1\u751F")}</span>` : t2("\u6982\u7387\u5206\u5E03")}`}</span>${vertical ? `<span>${t2(sequence === 2 ? "\u7B2C\u4E00\u6B21\u53D1\u751F\u540E" : "\u6982\u7387\u5206\u5E03")}</span>` : tailLabel ? `<span>${tailLabel}</span>` : ""}</div>` : "";
+  const labels = peaks.map((peak) => `<div class="reset-peak-cdf" data-forecast-peak-at="${escape3(peak.at)}" data-peak-sequence="${sequence}" data-probability="${peak.cumulativeProbability}" ${position(peak)} title="${escape3(date.format(new Date(peak.at)))} \xB7 ${t2(sequence === 2 ? "\u4EE5\u7B2C\u4E00\u6B21\u53D1\u751F\u4E3A\u524D\u63D0\u7684\u7B2C\u4E8C\u6B21\u7D2F\u8BA1\u6982\u7387" : "\u7B2C\u4E00\u6B21\u989D\u5916 reset \u7D2F\u8BA1\u6982\u7387")}">${t2("\u7D2F\u8BA1")}${vertical ? `<small>${probability(peak.cumulativeProbability)}%</small>` : ` ${probability(peak.cumulativeProbability)}%`}</div>`).join("");
   const connectionSvg = connectors.map((edge) => `<path class="reset-action-connection edge-${edge.kind}" d="${edge.path}"/>`).join("");
   const refillSvg = refills.map((refill) => `<path class="quota-refill quota-refill-assumed-extra${sequence === 2 ? " quota-refill-sequence-2" : ""}" data-refill-sequence="${sequence}" d="${refill.path}"/>`).join("");
   const state2 = action?.selected ? "assumed" : "forecast";
@@ -4067,7 +4065,7 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
   const headingY = lastPlot ? lastPlot.bottomY + 20 : forecastEndY + (forecastFocus ? 92 : 0) + 12;
   const phaseControls = [];
   const phaseWidth = 198;
-  const quotaThickness = 40, labelGap = 10, phaseY = headingY + 28;
+  const quotaThickness = 40, labelGap = 0, phaseY = headingY + 12;
   const restPeriods = (result.phasePlans ?? []).filter((phase) => phase.plannedRest);
   const shownPhases = timelineUsagePhases(result.phasePlans ?? [], axis.xAtHours);
   for (const [index, phase] of shownPhases.entries()) {
@@ -4087,9 +4085,25 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
     });
   }
   const opportunityHeight = Math.max(0, ...phaseControls.map((phase) => phase.nextResetOpportunity ? resetOpportunityLayout(phase.width).height : 0));
-  const labelHeight = Math.max(34, 20 + (opportunityHeight ? 16 + opportunityHeight : 0));
+  const labelHeight = Math.max(104, 20 + (opportunityHeight ? 16 + opportunityHeight : 0));
   const centerY = phaseY + labelHeight + labelGap + quotaThickness;
   for (const phase of phaseControls) Object.assign(phase, { labelHeight, quotaAnchorY: centerY - quotaThickness });
+  const usageOn = (day) => (result.phasePlans ?? []).reduce((sum, phase) => sum + phase.dailyPercent * Math.max(0, Math.min(phase.endHours, day.endHours) - Math.max(phase.startHours, day.startHours, 0)) / 24, 0);
+  const dayUsage = axis.days.map((day) => ({ day, percent: usageOn(day) }));
+  const barTop = phaseY + 4, barSpace = labelHeight - 4;
+  const yAt = (percent) => barTop + barSpace * Math.min(100, percent) / 100;
+  const usageScale = {
+    x1: axis.leftPadding,
+    x2: axis.width - axis.padding,
+    labelX: axis.width - axis.padding + 4,
+    zeroY: barTop,
+    ticks: [25, 50, 75, 100].map((percent) => ({ percent, y: yAt(percent) }))
+  };
+  const dailyBars = dayUsage.filter((item) => item.percent > 0.05).map(({ day, percent }) => {
+    const from = axis.xAtHours(Math.max(day.startHours, 0)), to = day.x + day.width;
+    const width = Math.min(26, Math.max(4, (to - from) * 0.5)), height2 = Math.max(1, yAt(percent) - barTop);
+    return { x: (from + to) / 2 - width / 2, y: barTop, width, height: height2, percent: Number(percent.toFixed(1)), startAt: day.startAt };
+  });
   const funnel = quotaFunnelGeometry(result.milestones, {
     centerY,
     xAtHours: axis.xAtHours,
@@ -4120,11 +4134,11 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
     anchorX: axis.xAtHours(hours),
     atHours: hours,
     edgeKind: kind,
-    width: Math.min(compact ? Math.max(COMPACT_CARD_WIDTH, node.minWidth ?? 0) : node.width ?? 190, plotLabelWidth),
+    width: Math.min(node.fixedWidth ?? (compact ? Math.max(COMPACT_CARD_WIDTH, node.minWidth ?? 0) : node.width ?? 190), plotLabelWidth),
     height: 64,
     from: `decision:${Math.max(0, pointIndex(hours))}`
   });
-  const expires = (reset) => t2("{date} 24:00\u5230\u671F\uFF08\u4F30\u7B97\uFF09", { date: reset.expiresOn.slice(5).replace("-", "/") });
+  const expires = (reset) => t2("{date} 24:00 \u5230\u671F\uFF08\u4F30\u7B97\uFF09", { date: reset.expiresOn.slice(5).replace("-", "/") });
   const scenario = result.forecastScenario;
   const bankedCount = result.resets.length;
   const retainedBanks = result.backupChoices.filter((choice) => !choice.used && choice.atHours === null);
@@ -4158,7 +4172,7 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
   for (const point of points) {
     const forecast = forecastMilestones.find((item) => Math.abs(item.hours - point.hours) < 1e-6);
     const afterAssumedReset = scenario?.selected && point.hours > scenario.hours + 1e-6;
-    const riskLine = forecast && !afterAssumedReset ? t2(result.flexibleSchedule ? "\u672A\u989D\u5916\u91CD\u7F6E\uFF1A{percent}%" : "\u6B64\u65F6\u4ECD\u672A\u989D\u5916\u91CD\u7F6E\uFF1A{percent}%", { percent: round3(forecast.noResetProbability * 100) }) : null;
+    const riskLine = forecast && !afterAssumedReset ? t2(result.flexibleSchedule ? "\u672A\u989D\u5916 reset\uFF1A{percent}%" : "\u6B64\u65F6\u4ECD\u672A\u989D\u5916 reset\uFF1A{percent}%", { percent: round3(forecast.noResetProbability * 100) }) : null;
     const banks = point.events.filter((event) => event.kind === "backup");
     for (const event of banks) {
       const condition = result.backupChoices.find((choice) => choice.index === event.resetIndex)?.usageCondition;
@@ -4173,7 +4187,7 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
         lines: [
           time(event.at),
           event.deadlineDriven ? expires(event) : t2("{date}\u5230\u671F", { date: event.expiresOn.slice(5).replace("-", "/") }),
-          ...event.overwrittenPercent > 1e-6 ? [t2("\u63D0\u524D\u5151\u6362\u5C06\u8986\u76D6 {percent}%", { percent: round3(event.overwrittenPercent) })] : [],
+          ...event.overwrittenPercent > 1e-6 ? [t2("\u5151\u6362\u524D\u5148\u7528\u5B8C\u5269\u4E0B\u7684 {percent}%", { percent: round3(event.overwrittenPercent) })] : [],
           ...bankRisk ? [bankRisk] : []
         ],
         lineTones: [
@@ -4194,7 +4208,9 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
     if (point.reasons.includes("depletion") && !bridge && !refillTimes.has(point.at)) card(point.hours, {
       id: `depletion:${point.hours}`,
       type: "depletion",
-      title: t2("\u9884\u8BA1\u8017\u5C3D"),
+      title: t2("\u9884\u8BA1\u7528\u5B8C"),
+      // Two short lines: as wide as a date and time, on every screen.
+      fixedWidth: 118,
       lines: [time(point.at)]
     }, "depletion");
   }
@@ -4203,19 +4219,21 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
       id: `normal:${point.hours}`,
       type: "normal",
       title: t2("\u6B63\u5E38\u5237\u65B0"),
+      fixedWidth: 118,
       lines: [clock(point.at)]
     }, "normal");
   if (result.milestones.endKind === "normal-refresh") card(end.hours, {
     id: "normal-reset",
     type: "normal",
     title: t2("\u6B63\u5E38\u5237\u65B0"),
+    fixedWidth: 118,
     lines: [time(end.at)]
   }, "normal");
   else if (!scenario?.selected) card(end.hours, {
     id: "planning-end",
     type: "horizon",
     title: t2("\u540E\u7EED\u91CD\u65B0\u89C4\u5212"),
-    lines: [result.milestones.endKind === "extra-reset" ? t2("\u989D\u5916\u91CD\u7F6E\u540E\u6309\u5B9E\u9645\u4F59\u989D\u91CD\u7B97") : t2("\u6B63\u5E38\u5237\u65B0 {time}", { time: time(result.normalResetAt) })]
+    lines: [result.milestones.endKind === "extra-reset" ? t2("\u989D\u5916 reset \u540E\u6309\u5B9E\u9645\u4F59\u989D\u91CD\u7B97") : t2("\u6B63\u5E38\u5237\u65B0 {time}", { time: time(result.normalResetAt) })]
   }, "normal");
   const rows = [];
   const annotationHeight = (node) => 32 + (node.lines.length + (node.type === "forecast-assumption" && node.selected ? 1 : 0)) * 16;
@@ -4274,9 +4292,9 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
     title: t2(index === 0 ? plot.announced ? "\u5DF2\u5BA3\u5E03\u7684 reset" : "Reset \u6982\u7387" : "\u7B2C\u4E8C\u6B21 reset \u6982\u7387"),
     detail: "",
     tooltip: plot.announced ? t2("Tibo \u5DF2\u5BA3\u5E03\u8FD9\u6B21 reset \u7684\u65F6\u95F4") : [
-      t2(index === 0 ? "\u9996\u6B21\u989D\u5916\u91CD\u7F6E\u9884\u6D4B" : "\u7B2C\u4E8C\u6B21\u989D\u5916\u91CD\u7F6E\u9884\u6D4B"),
+      t2(index === 0 ? "\u7B2C\u4E00\u6B21\u989D\u5916 reset \u9884\u6D4B" : "\u7B2C\u4E8C\u6B21\u989D\u5916 reset \u9884\u6D4B"),
       t2("\u6982\u7387\u5BC6\u5EA6"),
-      index === 1 ? t2("\u4EE5\u9996\u6B21\u53D1\u751F\u4E3A\u524D\u63D0") : ""
+      index === 1 ? t2("\u4EE5\u7B2C\u4E00\u6B21\u53D1\u751F\u4E3A\u524D\u63D0") : ""
     ].filter(Boolean).join(" \xB7 ")
   } : null);
   const suggested = shownPhases.some((phase) => !phase.fixed && !phase.constrained && phase.reason !== "no-resource" && Math.abs(phase.dailyPercent - phase.baselineDailyPercent) > 1e-5);
@@ -4309,7 +4327,7 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
       inline: true,
       date: t2("\u91CD\u7F6E\u6982\u7387 \xB7 \u622A\u81F3"),
       state: "",
-      tooltip: t2("\u56FA\u5B9A\u65E5\u671F\u4E4B\u524D\u81F3\u5C11\u53D1\u751F\u4E00\u6B21\u989D\u5916\u91CD\u7F6E\u7684\u7D2F\u8BA1\u6982\u7387")
+      tooltip: t2("\u56FA\u5B9A\u65E5\u671F\u4E4B\u524D\u81F3\u5C11\u53D1\u751F\u4E00\u6B21\u989D\u5916 reset \u7684\u7D2F\u8BA1\u6982\u7387")
     }] : [],
     {
       x: 0,
@@ -4329,6 +4347,8 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
     headings,
     controls: [],
     phaseControls,
+    dailyBars,
+    usageScale,
     bankedCount,
     retainedBanks,
     compactForecast: result.flexibleSchedule,
@@ -4474,7 +4494,7 @@ function layoutStrategyTree(result, { expandedLevel = 0, showAll = false, predic
         y: 9,
         width: 170,
         height: 64,
-        title: `\u6B64\u524D\u989D\u5916\u91CD\u7F6E\u6982\u7387 ${round5(level.cumulativeResetProbability * 100)}%`,
+        title: `\u6B64\u524D\u989D\u5916 reset \u6982\u7387 ${round5(level.cumulativeResetProbability * 100)}%`,
         probabilityKind: "cumulative-from-plan-start",
         probability: level.cumulativeResetProbability,
         lines: [level.until, "\u4ECE\u73B0\u5728\u7D2F\u8BA1\uFF1B\u53D1\u751F\u5C31\u91CD\u7B97"]
@@ -4529,7 +4549,7 @@ function layoutStrategyTree(result, { expandedLevel = 0, showAll = false, predic
         lines: [
           time(event.at),
           `${event.expiresOn.slice(5).replace("-", "/")}\u5230\u671F`,
-          ...event.overwrittenPercent > 1e-6 ? [`\u63D0\u524D\u5151\u6362\u5C06\u8986\u76D6 ${round5(event.overwrittenPercent)}%`] : []
+          ...event.overwrittenPercent > 1e-6 ? [`\u5151\u6362\u524D\u5148\u7528\u5B8C\u5269\u4E0B\u7684 ${round5(event.overwrittenPercent)}%`] : []
         ]
       };
       nodes.push(backup);
@@ -4674,6 +4694,8 @@ function renderStrategyTree(graph, escape3) {
     ${graph.dayAxis ? graph.dayAxis.days.filter((_, index) => index % 2).map((day) => `<rect class="time-day-band" x="${day.x}" y="${graph.dayAxis.gridTop}" width="${graph.dayAxis.dayWidth}" height="${graph.dayAxis.gridBottom - graph.dayAxis.gridTop}"/>`).join("") : ""}
     ${graph.dayAxis ? [...graph.dayAxis.days.map((day) => day.x), graph.dayAxis.days.at(-1).x + graph.dayAxis.dayWidth].map((x) => `<path class="time-grid-line" d="M ${x} ${graph.dayAxis.gridTop} V ${graph.dayAxis.gridBottom}"/>`).join("") : ""}
     ${resetElements.map((element) => element.svg).join("")}
+    ${graph.usageScale ? graph.usageScale.ticks.map((tick) => `<path class="usage-gridline" d="M ${graph.usageScale.x1} ${tick.y} H ${graph.usageScale.x2}"/><text class="quota-label" x="${graph.usageScale.labelX}" y="${tick.y + 4}">${tick.percent}%</text>`).join("") : ""}
+    ${(graph.dailyBars ?? []).map((bar) => `<rect class="daily-bar" data-day="${bar.startAt}" data-percent="${bar.percent}" x="${bar.x}" y="${bar.y}" width="${bar.width}" height="${bar.height}"><title>${round5(bar.percent)}%</title></rect>`).join("")}
     ${!graph.compactForecast && graph.forecastLayout?.length ? `<path class="time-forecast-line" d="M ${graph.forecastLayout[0].x} ${graph.dayAxis.forecastY} H ${graph.forecastLayout.at(-1).x}"/>${graph.forecastLayout.map((point) => `<circle class="time-forecast-point" cx="${point.x}" cy="${graph.dayAxis.forecastY}" r="2.5"/>`).join("")}` : ""}
     ${graph.funnel.bands.map((band) => `<g class="quota-phase${band.kind === "assumed-refresh" ? " quota-phase-assumed" : ""}"${band.kind === "rest" ? " data-quota-rest" : ""} data-start-quota="${band.startQuota}" data-end-quota="${band.endQuota}">
       <path class="quota-baseline${band.kind === "pause" ? " quota-paused-line" : band.kind === "rest" ? " quota-rest-line" : ""}" d="${band.baseline}"/>
@@ -4687,7 +4709,7 @@ function renderStrategyTree(graph, escape3) {
   </svg>`;
   const headings = graph.headings.map((item) => ["consumption", "usage", "opportunity"].includes(item.kind) ? renderTimelineLaneLabel({ ...item, id: item.kind, title: item.date, detail: item.state, note: item.unit }, escape3) : `<div class="graph-day" style="left:${item.x}px;top:${item.y}px;width:${item.width ?? 254}px"><strong>${escape3(item.date)}</strong>${item.state ? `<span>${escape3(item.state)}</span>` : ""}</div>`).join("");
   const days = graph.dayAxis ? (graph.dayAxis.labels ?? graph.dayAxis.days).map((day) => `<div class="time-day" style="left:${day.x}px;width:${day.width}px">${escape3(uiLocale(locale) === "zh-CN" ? day.label : new Intl.DateTimeFormat(uiLocale(locale), { timeZone: graph.timeZone, month: "short", day: "numeric" }).format(new Date(Date.parse(day.startAt) + 36e5)))}</div>`).join("") : "";
-  const alignedForecast = graph.forecastLayout?.length ? `<div class="forecast-calendar forecast-aligned" aria-label="${t2("\u56FA\u5B9A\u65E5\u671F\u4E4B\u524D\u81F3\u5C11\u53D1\u751F\u4E00\u6B21\u989D\u5916\u91CD\u7F6E\u7684\u7D2F\u8BA1\u6982\u7387")}">${graph.forecastLayout.map((point) => `<span ${point.calendar ? "data-forecast-at" : "data-event-forecast-at"}="${escape3(point.at)}" data-probability="${point.probability}" title="${escape3(t2("\u622A\u81F3 {time} \u81F3\u5C11\u53D1\u751F\u4E00\u6B21\u989D\u5916 reset", { time: point.at }))}" style="left:${point.left}px;top:${point.y}px;width:${point.width}px">${graph.probabilityPlot ? "" : `<small>${escape3(point.label)}</small>`}<strong>${graph.probabilityPlot ? t2("\u7D2F\u8BA1") + " " : graph.compactForecast ? t2("\u989D\u5916\u91CD\u7F6E") + " " : ""}${round5(point.probability * 100)}%</strong></span>`).join("")}</div>` : "";
+  const alignedForecast = graph.forecastLayout?.length ? `<div class="forecast-calendar forecast-aligned" aria-label="${t2("\u56FA\u5B9A\u65E5\u671F\u4E4B\u524D\u81F3\u5C11\u53D1\u751F\u4E00\u6B21\u989D\u5916 reset \u7684\u7D2F\u8BA1\u6982\u7387")}">${graph.forecastLayout.map((point) => `<span ${point.calendar ? "data-forecast-at" : "data-event-forecast-at"}="${escape3(point.at)}" data-probability="${point.probability}" title="${escape3(t2("\u622A\u81F3 {time} \u81F3\u5C11\u53D1\u751F\u4E00\u6B21\u989D\u5916 reset", { time: point.at }))}" style="left:${point.left}px;top:${point.y}px;width:${point.width}px">${graph.probabilityPlot ? "" : `<small>${escape3(point.label)}</small>`}<strong>${graph.probabilityPlot ? t2("\u7D2F\u8BA1") + " " : graph.compactForecast ? t2("\u989D\u5916 reset") + " " : ""}${round5(point.probability * 100)}%</strong></span>`).join("")}</div>` : "";
   const nodes = graph.nodes.filter((node) => node.width && node.type !== "forecast-assumption").map((node) => renderStrategyNode(node, escape3, locale)).join("");
   const controls = graph.controls.map((control) => `<button type="button" class="graph-control" ${control.kind === "compare" ? `data-inspect-level="${control.level}" aria-expanded="${control.expanded}"` : "data-show-all-actions"} style="left:${control.x}px;top:${control.y}px">${control.kind === "compare" ? t2(control.expanded ? "\u2212 \u6536\u8D77\u5176\u4ED6\u505A\u6CD5" : "\uFF0B \u6BD4\u8F83\u8FD9\u4E00\u6B65") : t2("\uFF0B \u5176\u4ED6 {count} \u79CD\u505A\u6CD5", { count: control.count })}</button>`).join("");
   const phaseControls = (graph.phaseControls ?? []).map((phase) => renderPhaseControl(phase, {
@@ -4697,6 +4719,7 @@ function renderStrategyTree(graph, escape3) {
     escape: escape3,
     locale
   })).join("");
+  const phaseText = graph.dailyBars && phaseControls ? `<div class="sr-only">${phaseControls}</div>` : phaseControls;
   const forecastDate = (value) => {
     const instant = new Date(value);
     const clock = new Intl.DateTimeFormat("en-GB", {
@@ -4719,11 +4742,11 @@ function renderStrategyTree(graph, escape3) {
       hourCycle: "h23"
     }).format(instant);
   };
-  const forecast = !graph.dayAxis && graph.forecastCalendar?.length ? `<div class="forecast-calendar" aria-label="${t2("\u56FA\u5B9A\u65E5\u671F\u4E4B\u524D\u81F3\u5C11\u53D1\u751F\u4E00\u6B21\u989D\u5916\u91CD\u7F6E\u7684\u7D2F\u8BA1\u6982\u7387")}">
-    <span>\u6B64\u524D\u989D\u5916\u91CD\u7F6E\u6982\u7387</span><div>${graph.forecastCalendar.map((point) => `<span><small>${escape3(forecastDate(point.at))}</small><strong>${round5(point.probability * 100)}%</strong></span>`).join("")}</div></div>` : "";
+  const forecast = !graph.dayAxis && graph.forecastCalendar?.length ? `<div class="forecast-calendar" aria-label="${t2("\u56FA\u5B9A\u65E5\u671F\u4E4B\u524D\u81F3\u5C11\u53D1\u751F\u4E00\u6B21\u989D\u5916 reset \u7684\u7D2F\u8BA1\u6982\u7387")}">
+    <span>\u6B64\u524D\u989D\u5916 reset \u6982\u7387</span><div>${graph.forecastCalendar.map((point) => `<span><small>${escape3(forecastDate(point.at))}</small><strong>${round5(point.probability * 100)}%</strong></span>`).join("")}</div></div>` : "";
   const forecastLegend = !graph.compactForecast && graph.forecastLayout?.length ? `<div class="forecast-legend">${t2("\u84DD\u7EBF\uFF1A\u6B64\u524D\u81F3\u5C11\u53D1\u751F\u4E00\u6B21\u989D\u5916 reset \u7684\u6982\u7387")}</div>` : "";
   const inventory = graph.bankedCount > 0 ? `<div class="retained-resets" data-banked-count="${graph.bankedCount}">${escape3(t2("\u5907\u7528 reset \xB7 {count} \u4E2A", { count: graph.bankedCount }))}</div>` : "";
-  return `${forecast}${forecastLegend}<div class="tree-scroll" data-timeline-orientation="horizontal" tabindex="0" role="region" aria-label="${t2("\u4ECE\u5DE6\u5411\u53F3\u7684\u989D\u5EA6\u6F0F\u6597\u4E0E\u7B56\u7565\u9009\u62E9\uFF0C\u53EF\u6A2A\u5411\u6EDA\u52A8")}"><div class="strategy-graph"${graph.compact ? " data-compact" : ""} style="width:${graph.width}px;height:${graph.height}px" ${graph.dayAxis ? `data-timeline-from="${graph.dayAxis.days[0].startAt}" data-timeline-to="${graph.dayAxis.days.at(-1).endAt}"` : ""}>${svg}${days}${alignedForecast}${resetElements.map((element) => element.html).join("")}${headings}${phaseControls}${nodes}${controls}</div></div>${inventory}`;
+  return `${forecast}${forecastLegend}<div class="tree-scroll" data-timeline-orientation="horizontal" tabindex="0" role="region" aria-label="${t2("\u4ECE\u5DE6\u5411\u53F3\u7684\u989D\u5EA6\u6F0F\u6597\u4E0E\u7B56\u7565\u9009\u62E9\uFF0C\u53EF\u6A2A\u5411\u6EDA\u52A8")}"><div class="strategy-graph"${graph.compact ? " data-compact" : ""} style="width:${graph.width}px;height:${graph.height}px" ${graph.dayAxis ? `data-timeline-from="${graph.dayAxis.days[0].startAt}" data-timeline-to="${graph.dayAxis.days.at(-1).endAt}"` : ""}>${svg}${days}${alignedForecast}${resetElements.map((element) => element.html).join("")}${headings}${phaseText}${nodes}${controls}</div></div>${inventory}`;
 }
 
 // src/workspace-layout.js
@@ -4742,9 +4765,9 @@ var PLANNER_METADATA = {
     locale: "en_GB"
   },
   "zh-CN": {
-    title: "Usage Planner | Codex \u989D\u5EA6\u4E0E Reset \u7528\u91CF\u89C4\u5212",
-    description: "\u6839\u636E Codex \u5269\u4F59\u989D\u5EA6\u3001\u6D88\u8017\u901F\u5EA6\u3001\u5907\u7528 reset \u5230\u671F\u65F6\u95F4\u548C\u989D\u5916\u91CD\u7F6E\u9884\u6D4B\uFF0C\u6BD4\u8F83\u65E5\u5747\u7528\u91CF\u7B56\u7565\u4E0E\u9884\u8BA1\u8017\u5C3D\u65F6\u95F4\u3002\u652F\u6301\u672C\u5730\u8FD0\u884C\u548C MCP \u63A5\u5165\u3002",
-    intro: "\u89C4\u5212 Codex \u7528\u91CF\u3001\u5907\u7528 reset \u4E0E\u989D\u5916\u91CD\u7F6E\uFF0C\u5168\u90E8\u5728\u6D4F\u89C8\u5668\u91CC\u8BA1\u7B97\u3002",
+    title: "\u8D5B\u535A\u725B\u9A6C\u89C4\u5212\u5668 | Codex \u989D\u5EA6\u4E0E reset \u89C4\u5212\u5DE5\u5177",
+    description: "\u8D5B\u535A\u725B\u9A6C\u89C4\u5212\u5668\uFF08Usage Planner\uFF09\u5E2E\u4F60\u89C4\u5212 Codex \u6BCF\u5468\u989D\u5EA6\uFF1A\u6309\u73B0\u5728\u7684\u901F\u5EA6\u54EA\u5929\u7528\u5B8C\u3001\u989D\u5916 reset \u5927\u6982\u4EC0\u4E48\u65F6\u5019\u6765\u3001\u5907\u7528 reset \u4EC0\u4E48\u65F6\u5019\u503C\u5F97\u7528\uFF0C\u518D\u7B97\u51FA\u6BCF\u5929\u7528\u591A\u5C11\u3002\u514D\u8D39\u5F00\u6E90\uFF0C\u4E5F\u80FD\u88C5\u6210 Codex \u63D2\u4EF6\u3002",
+    intro: "\u89C4\u5212 Codex \u7528\u91CF\u3001\u5907\u7528 reset \u4E0E\u989D\u5916 reset\uFF0C\u5168\u90E8\u5728\u6D4F\u89C8\u5668\u91CC\u8BA1\u7B97\u3002",
     locale: "zh_CN"
   }
 };
@@ -4789,7 +4812,10 @@ function pluginPageClient(location2 = globalThis.location, fetcher = globalThis.
 var BRAND_MARK_SVG = '<svg class="pixel-mark" viewBox="0 0 22 11" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M2 0h5v1h-5zM15 0h5v1h-5zM1 1h2v1h-2zM6 1h2v1h-2zM14 1h2v1h-2zM19 1h2v1h-2zM0 2h2v1h-2zM7 2h2v1h-2zM13 2h2v1h-2zM20 2h2v1h-2zM0 3h2v1h-2zM8 3h2v1h-2zM12 3h2v1h-2zM20 3h2v1h-2zM0 4h2v1h-2zM9 4h4v1h-4zM20 4h2v1h-2zM0 5h2v1h-2zM10 5h2v1h-2zM20 5h2v1h-2zM0 6h2v1h-2zM9 6h4v1h-4zM20 6h2v1h-2zM0 7h2v1h-2zM8 7h2v1h-2zM12 7h2v1h-2zM20 7h2v1h-2zM0 8h2v1h-2zM7 8h2v1h-2zM13 8h2v1h-2zM20 8h2v1h-2zM1 9h2v1h-2zM6 9h2v1h-2zM14 9h2v1h-2zM19 9h2v1h-2zM2 10h5v1h-5zM15 10h5v1h-5z"/></svg>';
 
 // src/planner-name.js
+var PRODUCT_NAME = "Usage Planner";
+var PRODUCT_NAME_ZH = "\u8D5B\u535A\u725B\u9A6C\u89C4\u5212\u5668";
 var PRODUCT_DOMAIN = "usageplanner.com";
+var HOMES = { en: "/", "zh-CN": "/zh/" };
 
 // src/web.js
 var $ = (selector) => document.querySelector(selector);
@@ -4801,7 +4827,8 @@ try {
   savedLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY) ?? localStorage.getItem(LEGACY_LANGUAGE_STORAGE_KEY);
 } catch {
 }
-var language = chooseLanguage({
+var plugin = pluginPageClient();
+var language = globalThis.location?.pathname === HOMES["zh-CN"] && !plugin ? "zh-CN" : chooseLanguage({
   saved: savedLanguage,
   browserLanguages: typeof navigator === "undefined" ? [] : navigator.languages,
   browserLanguage: typeof navigator === "undefined" ? void 0 : navigator.language
@@ -4813,22 +4840,32 @@ var setStatus = (message) => {
   statusMessage = message;
   $("#status").textContent = t(message);
 };
+function syncLanguagePath() {
+  const path = globalThis.location?.pathname;
+  if (plugin || !Object.values(HOMES).includes(path) || path === HOMES[language]) return;
+  history.replaceState?.(history.state, "", HOMES[language] + location.search + location.hash);
+}
 function renderStaticLanguage() {
+  syncLanguagePath();
   const metadata = syncPlannerMetadata(document, language);
+  const heading = $(".brand h1");
+  if (heading) heading.textContent = language === "zh-CN" ? PRODUCT_NAME_ZH : PRODUCT_NAME;
   document.documentElement?.setAttribute("lang", language);
-  $(".brand p").textContent = metadata.intro;
   for (const [selector, label] of [
     [".affiliation-notice", "OpenAI Codex \u7684\u975E\u5B98\u65B9\u53EF\u89C6\u5316\u7528\u91CF\u89C4\u5212\u5DE5\u5177\u3002\u4E0E OpenAI \u65E0\u96B6\u5C5E\u5173\u7CFB\u3002"],
     ["#github-star", "GitHub"],
-    ["#follow-x", "\u5728 X \u5173\u6CE8\u6211"],
+    ["#follow-x", "X"],
     ["#source-code", "GitHub \u5F00\u6E90"],
     ["[data-credit-label]", "\u611F\u8C22"],
     ["[data-credit-suffix]", "\u63D0\u4F9B reset \u6570\u636E"],
-    ["[data-follow-label]", "\u5982\u679C\u4F60\u559C\u6B22\u8FD9\u4E2A\u4F5C\u54C1\uFF1A"],
+    ["[data-follow-label]", "\u5982\u679C\u4F60\u559C\u6B22\u8FD9\u4E2A\u4F5C\u54C1\uFF0C\u6B22\u8FCE\u5728 "],
+    ["[data-follow-or]", " \u6216"],
     ["#creator-xiaohongshu", "\u5C0F\u7EA2\u4E66"],
-    ["#share-site", "\u5206\u4EAB"],
+    ["[data-follow-tail]", "\u5173\u6CE8\u6211\uFF0C\u6216\u8005"],
+    ["#share-site", "\u5206\u4EAB\u7ED9\u670B\u53CB"],
+    ["[data-follow-end]", "\u3002"],
     ["#calculate", "\u21BB \u66F4\u65B0\u8BA1\u5212"],
-    ["[data-plugin-hint]", "\u88C5\u6210 Codex \u63D2\u4EF6\u53EF\u81EA\u52A8\u8BFB\u53D6\u3002"],
+    ["[data-plugin-hint]", "\u53EF\u5B89\u88C5\u6210 Codex \u63D2\u4EF6\uFF0C\u81EA\u52A8\u8BFB\u53D6\u4EE5\u4E0A\u6570\u636E\u3002"],
     ["#overuse-hint", "\u7528\u91CF\u8FC7\u5EA6\u63D0\u9192\uFF08\u4EC5 Codex \u63D2\u4EF6\uFF09\uFF1A\u5728 Codex \u91CC\u8BF4\u201C\u6253\u5F00\u7528\u91CF\u8FC7\u5EA6\u63D0\u9192\u201D\u3002\u4E4B\u540E\u4F60\u7528\u5F97\u6BD4\u8BA1\u5212\u5FEB\u65F6\uFF0C\u4F1A\u76F4\u63A5\u5728\u5BF9\u8BDD\u91CC\u63D0\u9192\u4F60\u3002"]
   ]) {
     const element = $(selector);
@@ -4844,7 +4881,6 @@ function renderStaticLanguage() {
   if (lastError) $("#error").textContent = diagnosticText(language, lastError, "input");
 }
 var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-var plugin = pluginPageClient();
 var pluginRevision = null;
 var manualDraft = false;
 var localDate = (date) => new Intl.DateTimeFormat("en-CA", {
@@ -4955,7 +4991,7 @@ function saveInput() {
   }
 }
 var MOBILE_TIMELINE_WIDTH = 640;
-var BRAND_STAMP = `<div class="brand-stamp" aria-hidden="true"><span>${BRAND_MARK_SVG}</span> ${PRODUCT_DOMAIN}</div>`;
+var brandStamp = () => `<div class="brand-stamp" aria-hidden="true"><span>${BRAND_MARK_SVG}</span>${language === "zh-CN" ? `<em><b>${PRODUCT_NAME_ZH}</b><i>\xB7</i>` : "<em>"}${PRODUCT_DOMAIN}</em></div>`;
 function renderForecastCard(graph = null) {
   const planningPrediction = activePlannerPrediction(planner), planningNow = new Date(planner.snapshot.now);
   const forecastSummary = renderResetForecastSummary({
@@ -4965,7 +5001,7 @@ function renderForecastCard(graph = null) {
     now: planningNow,
     locale: language
   });
-  $("#forecast").innerHTML = `<div class="forecast-control" ${planningPrediction ? `data-forecast-48-probability="${planningPrediction.next48Probability}"` : ""}><span>${t("\u989D\u5916\u91CD\u7F6E\u9884\u6D4B")}</span></div>${forecastSummary}${BRAND_STAMP}`;
+  $("#forecast").innerHTML = `<div class="forecast-control" ${planningPrediction ? `data-forecast-48-probability="${planningPrediction.next48Probability}"` : ""}><span>${t("\u989D\u5916 reset \u9884\u6D4B")}</span></div>${forecastSummary}${brandStamp()}`;
 }
 function renderResult(availableWidth = $("#result").clientWidth) {
   const result = planner.result;
@@ -4993,7 +5029,7 @@ function renderResult(availableWidth = $("#result").clientWidth) {
   renderForecastCard(graph);
   const policyData = result.recommendation ? ` data-policy-search="${result.recommendation.method}"${result.recommendation.primary ? ' data-plan-basis="predicted-extra-resets-first"' : ""}` : "";
   $("#result").innerHTML = `<section class="strategy-panel" aria-label="${t("\u7528\u91CF\u8BA1\u5212")}"${policyData} style="--panel-padding:${workspace.panelPadding}px">
-    ${result.recommendation && !result.recommendation.primary ? `<div class="timeline-toolbar"><span>${t("\u82E5\u59CB\u7EC8\u6CA1\u6709\u989D\u5916\u91CD\u7F6E")}</span></div>` : ""}
+    ${result.recommendation && !result.recommendation.primary ? `<div class="timeline-toolbar"><span>${t("\u5047\u8BBE\u6CA1\u6709\u989D\u5916 reset")}</span></div>` : ""}
     ${renderStrategyTree(graph, escape2)}
     </section>`;
   $("#method").innerHTML = renderForecastMethod({ source: forecastSource, prediction: planningPrediction, result, timeZone, locale: language }, escape2);
@@ -5153,16 +5189,30 @@ $("#inputs").addEventListener("click", (event) => {
   renderInputs();
   if (!data.monthNav && data.toggleCalendar === void 0) markChanged();
 });
-$("#calculate").addEventListener("click", calculate2);
-$("#share-site")?.addEventListener?.("click", async () => {
-  const url = globalThis.location?.origin ? `${location.origin}/` : "https://usageplanner.com/";
+$("#calculate").addEventListener("click", async () => {
+  const button = $("#calculate");
+  if (button.getAttribute?.("aria-busy") === "true") return;
+  if (typeof requestAnimationFrame !== "function") return calculate2();
+  button.setAttribute("aria-busy", "true");
+  button.textContent = t("\u66F4\u65B0\u4E2D\u2026");
+  await new Promise((resolve) => requestAnimationFrame(() => setTimeout(resolve, 0)));
   try {
-    if (navigator.share) await navigator.share({ title: "Usage Planner", url });
+    await calculate2();
+  } finally {
+    button.removeAttribute("aria-busy");
+    button.textContent = t("\u21BB \u66F4\u65B0\u8BA1\u5212");
+  }
+});
+$("#share-site")?.addEventListener?.("click", async () => {
+  const origin = plugin || !globalThis.location?.origin ? `https://${PRODUCT_DOMAIN}` : location.origin;
+  const url = origin + HOMES[language];
+  try {
+    if (navigator.share) await navigator.share({ title: language === "zh-CN" ? PRODUCT_NAME_ZH : PRODUCT_NAME, url });
     else {
       await navigator.clipboard.writeText(url);
       $("#share-site").textContent = t("\u5DF2\u590D\u5236\u94FE\u63A5");
       setTimeout(() => {
-        $("#share-site").textContent = t("\u5206\u4EAB");
+        $("#share-site").textContent = t("\u5206\u4EAB\u7ED9\u670B\u53CB");
       }, 2e3);
     }
   } catch {

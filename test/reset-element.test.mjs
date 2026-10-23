@@ -21,7 +21,7 @@ test('第二次未选按钮直接说明两次均假设，不再附加重复的�
     {title:'Count both resets',lines:[]});
   assert.deepEqual(resetAssumptionContent({sequence:2,selected:false}),
     {title:'计入两次 reset',lines:[]});
-  assert.equal(resetAssumptionContent({sequence:2,selected:true,locale:'en'}).title,'Second reset counted');
+  assert.equal(resetAssumptionContent({sequence:2,selected:true,locale:'en'}).title,'2nd reset counted');
 });
 
 test('中英文的第一次和第二次、未选和已选均由同一状态模板生成',()=>{

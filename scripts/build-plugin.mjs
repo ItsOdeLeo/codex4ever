@@ -37,6 +37,10 @@ for(const name of ['@modelcontextprotocol/server','@modelcontextprotocol/core','
   if(!license)throw new Error(`Missing dependency license: ${name}`);
   notices.push(`${name}\n${await readFile(resolve(base,license),'utf8')}`);
 }
+// The page CSS inlines subsets of both brand fonts (SIL Open Font License).
+for(const [name,file] of [['VT323','public/fonts/vt323/OFL.txt'],['Fusion Pixel Font','public/fonts/fusion-pixel/OFL.txt'],
+  ['Ark Pixel Font (glyphs in Fusion Pixel Font)','public/fonts/fusion-pixel/ARK-PIXEL-OFL.txt']])
+  notices.push(`${name}\n${await readFile(resolve(root,file),'utf8')}`);
 await writeFile(resolve(plugin,'THIRD_PARTY_NOTICES.txt'),notices.join('\n\n'));
 // Compatibility metadata is generated from the portable source, not edited
 // separately. Dependencies are in the bundle; installation runs no npm scripts.

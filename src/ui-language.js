@@ -124,7 +124,7 @@ const english={
   '第一次':'First','第二次':'Second','计入第一次 reset':'Count first reset','计入第二次 reset':'Count second reset',
   '计入两次 reset':'Count both resets',
   '若耗尽，用备用':'Banked reset if depleted','未再 reset：{percent}%':'No further reset: {percent}%',
-  '已计入第一次 reset':'First reset counted','已计入第二次 reset':'Second reset counted','同时假设第一次发生':'Also assumes the first reset',
+  '已计入第一次 reset':'1st reset counted','已计入第二次 reset':'2nd reset counted','同时假设第一次发生':'Also assumes the first reset',
   '不计入':"Don't count",'取消第二次假设，保留第一次':'Cancel the second assumption; keep the first',
   '取消第一次及后继假设':'Cancel the first and subsequent assumptions',
   '假设两次均发布，计算各段用量':'Count both resets and calculate each phase',

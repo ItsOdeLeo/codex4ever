@@ -189,7 +189,7 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
   const annotations = [];
   const pointIndex = hours => points.findIndex(point => Math.abs(point.hours - hours) < 1e-6);
   const card = (hours, node, kind) => annotations.push({ ...node, anchorX: axis.xAtHours(hours),
-    atHours: hours, edgeKind: kind, width: Math.min(compact ? Math.max(COMPACT_CARD_WIDTH,node.minWidth??0) : node.width??190,plotLabelWidth), height: 64,
+    atHours: hours, edgeKind: kind, width: Math.min(node.fixedWidth ?? (compact ? Math.max(COMPACT_CARD_WIDTH,node.minWidth??0) : node.width??190),plotLabelWidth), height: 64,
     from: `decision:${Math.max(0, pointIndex(hours))}` });
   const expires = reset => t('{date} 24:00 到期（估算）',{date:reset.expiresOn.slice(5).replace('-', '/')});
   const scenario=result.forecastScenario;
@@ -238,15 +238,16 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
       lines: [time(bridge.at),t('消耗需自己预估')] }, 'credits');
     if (point.reasons.includes('depletion') && !bridge && !refillTimes.has(point.at)) card(point.hours, {
       id: `depletion:${point.hours}`, type: 'depletion', title:t('预计用完'),
-      lines: [time(point.at)] }, 'depletion');
+      // Two short lines: as wide as a date and time, on every screen.
+      fixedWidth:118,lines: [time(point.at)] }, 'depletion');
   }
   for(const point of scenario?.selected ? points : [])if(point!==end&&point.events.some(event=>event.kind==='normal-refresh'))
     card(point.hours,{id:`normal:${point.hours}`,type:'normal',title:t('正常刷新'),
-      lines:[clock(point.at)]},'normal');
+      fixedWidth:118,lines:[clock(point.at)]},'normal');
   if (result.milestones.endKind === 'normal-refresh') card(end.hours, {
     id: 'normal-reset', type: 'normal',
     title:t('正常刷新'),
-    lines: [time(end.at)] }, 'normal');
+    fixedWidth:118,lines: [time(end.at)] }, 'normal');
   else if(!scenario?.selected)card(end.hours, { id: 'planning-end', type: 'horizon', title:t('后续重新规划'),
     lines: [result.milestones.endKind==='extra-reset' ? t('额外 reset 后按实际余额重算')
       : t('正常刷新 {time}',{time:time(result.normalResetAt)})] }, 'normal');

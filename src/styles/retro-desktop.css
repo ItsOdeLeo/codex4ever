@@ -454,3 +454,7 @@ html:lang(zh-CN) .brand h1, html:lang(zh-CN) .guide-page .brand a {font-size:24p
   .forecast-horizons .horizon-long {display:none}
   .forecast-horizons .horizon-short {display:inline}
 }
+/* The name never breaks; on a narrow window the header buttons wrap instead. */
+.brand h1 {white-space:nowrap}
+.site-header .brand {flex:none}
+@media(max-width:400px) {#language-switch {position:static}}
