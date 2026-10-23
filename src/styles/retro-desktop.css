@@ -273,18 +273,6 @@ legend {margin-bottom:8px}
 .layout {display:block}
 .plan-card {background:var(--surface);border:1px solid var(--border);border-radius:7px;box-shadow:3px 3px 0 color-mix(in srgb,var(--shadow) 18%,transparent);padding:24px}
 .plan-card .strategy-panel {border:0;box-shadow:none;background:none;padding:0}
-.plan-card #forecast.forecast-panel {border:0;box-shadow:none;background:none;padding:0 0 12px;margin:0 0 16px;border-bottom:1px solid var(--divider);border-radius:0}
-.plan-card .forecast-control {display:none}
-.plan-card .forecast-glance {display:flex;flex-wrap:wrap;gap:6px 22px;margin:0}
-.plan-card .forecast-glance>div,.plan-card .forecast-glance>[data-forecast-glance="next-hours"] {display:flex;flex-direction:row;align-items:baseline!important;gap:6px;padding:0!important;border:0!important}
-.plan-card .forecast-glance dt {font-size:11px;color:var(--muted)}
-.plan-card .forecast-glance dd {margin:0;font-size:12px}
-.plan-card .forecast-horizons {display:flex;gap:10px}
-.plan-card .forecast-horizons b {font-size:14px;line-height:18px}
-.plan-card .forecast-horizons span,.plan-card .forecast-horizons span:nth-child(n) {display:flex;flex-direction:row;align-items:baseline;gap:4px}
-.plan-card .forecast-more {margin-top:6px;font-size:11px}
-.plan-card .forecast-more summary {color:var(--muted)}
-.plan-card .forecast-more[open] {padding:8px 0}
 .plan-dock {display:flex;flex-direction:column;gap:14px;margin-top:18px;padding-top:16px;border-top:1px solid var(--divider)}
 .plan-card #strategy-controls .control-heading {display:none}
 .plan-card .usage-strategies {display:flex;flex-wrap:wrap;gap:6px}
@@ -301,17 +289,8 @@ legend {margin-bottom:8px}
 #method:empty {display:none}
 #method {margin-top:16px}
 @media(max-width:680px) {.plan-card {padding:14px}.plan-dock .input-state {flex-direction:column;align-items:stretch}}
-.plan-card .forecast-horizons span,.plan-card .forecast-glance dd {white-space:nowrap}
 .plan-dock .toolbar {order:1}.plan-dock .input-state {order:2}.plan-dock-footer {order:3}
-.plan-card .forecast-glance>[data-forecast-glance="next-hours"],.plan-card .forecast-horizons {flex-wrap:wrap;min-width:0}
 /* Forecast strip: three horizon tiles; the other facts live under "More data". */
-.plan-card .forecast-glance>div:not([data-forecast-glance="next-hours"]) {display:none!important}
-.plan-card .forecast-glance>[data-forecast-glance="next-hours"] {align-items:center!important;gap:12px}
-.plan-card .forecast-glance>[data-forecast-glance="next-hours"]>dt {font-size:12px}
-.plan-card .forecast-horizons {gap:8px}
-.plan-card .forecast-horizons span,.plan-card .forecast-horizons span:nth-child(n) {flex-direction:column;align-items:flex-start;gap:1px;min-width:84px;padding:6px 12px;border:1px solid var(--border);border-radius:4px;background:var(--surface-soft)}
-.plan-card .forecast-horizons small {font-size:11px}
-.plan-card .forecast-horizons b {font-size:18px;line-height:22px}
 .plan-card #strategy-controls {display:flex;flex-wrap:wrap;align-items:flex-start;gap:6px}
 .plan-dock #inputs {flex:0 1 auto}.plan-dock .input-update {align-self:flex-end;margin-bottom:6px}
 @media(max-width:680px) {.plan-dock .input-update {align-self:flex-start}}
@@ -328,17 +307,9 @@ legend {margin-bottom:8px}
 .plan-card .timeline-toolbar {border-top:0;padding-top:4px}
 @media(max-width:680px) {.no-reset-toggle {margin-left:0}}
 /* Tiles carry their own label; "More data" belongs to them, the rule closes the group. */
-.plan-card .forecast-glance>[data-forecast-glance="next-hours"]>dt {display:none}
-.plan-card .forecast-more {border-top:0;margin-top:8px;padding-top:0}
 .plan-card>.toolbar {margin-bottom:18px}
 @media(max-width:680px) {.plan-card .forecast-glance>[data-forecast-glance="next-hours"]>dd {flex:1;min-width:0}.plan-card .forecast-horizons {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.plan-card .forecast-horizons span,.plan-card .forecast-horizons span:nth-child(n) {min-width:0;padding:6px 8px}.plan-card .forecast-horizons small {font-size:10px;white-space:normal}.plan-card .forecast-horizons b {font-size:16px}}
 /* "More data" opened: one compact row per fact, label | value · note. */
-.plan-card .forecast-more>dl>div {display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr);gap:2px 14px;align-items:baseline;padding:3px 0!important;border:0!important}
-.plan-card .forecast-more dt {margin:0;font-size:12px}
-.plan-card .forecast-more dd {font-size:12px;line-height:1.5}
-.plan-card .forecast-more dd small {display:inline;margin:0 0 0 6px;font-size:11px}
-.plan-card .forecast-more dd q {-webkit-line-clamp:1;margin-top:2px;font-size:11px}
-.plan-card .forecast-more>p {margin:6px 0 0}
 @media(max-width:680px) {.plan-card .forecast-more>dl>div {grid-template-columns:minmax(0,1fr);gap:0;padding:4px 0!important}}
 /* Dock inputs: one aligned row. Every field has the same small label on top
    and a 36px control below, so labels and controls each share one line. */
@@ -402,23 +373,59 @@ legend {margin-bottom:8px}
   .plan-dock-footer {flex-direction:column;align-items:flex-start}
 }
 /* Brand stamp sits with the forecast at the top of the card. */
-.plan-card #forecast {position:relative}
-.plan-card #forecast>.brand-stamp {position:absolute;top:0;right:0;margin:0}
-@media(min-width:1180px) {.plan-card #forecast>.brand-stamp {top:18px;right:20px}}
 /* Footer Share reads as a link like its neighbours. */
 .footer-link {padding:0;border:0;background:none;box-shadow:none;font:inherit;color:var(--ink);text-decoration:underline;text-decoration-color:var(--link-stroke);text-underline-offset:3px;cursor:pointer}
 .footer-link:hover:not(:disabled) {background:none}
 @media(min-width:1180px) {
-  .plan-card #forecast>.brand-stamp {position:static;justify-content:flex-start;margin-top:12px}
   .plan-card .no-reset-toggle {white-space:nowrap;gap:6px}
 }
-/* Wide forecast card, as the old sidebar card: chance tiles, then the four
-   short facts (window, last reset, campaign, Tibo), More data folded. */
+
+/* The one-card layout's compact forecast strip. Wide screens give the
+   forecast its own card and use the original card styles unchanged. */
+@media(max-width:1179px) {
+  .plan-card #forecast.forecast-panel {border:0;box-shadow:none;background:none;padding:0 0 12px;margin:0 0 16px;border-bottom:1px solid var(--divider);border-radius:0}
+  .plan-card .forecast-control {display:none}
+  .plan-card .forecast-glance {display:flex;flex-wrap:wrap;gap:6px 22px;margin:0}
+  .plan-card .forecast-glance>div,.plan-card .forecast-glance>[data-forecast-glance="next-hours"] {display:flex;flex-direction:row;align-items:baseline!important;gap:6px;padding:0!important;border:0!important}
+  .plan-card .forecast-glance dt {font-size:11px;color:var(--muted)}
+  .plan-card .forecast-glance dd {margin:0;font-size:12px}
+  .plan-card .forecast-horizons {display:flex;gap:10px}
+  .plan-card .forecast-horizons b {font-size:14px;line-height:18px}
+  .plan-card .forecast-horizons span,.plan-card .forecast-horizons span:nth-child(n) {display:flex;flex-direction:row;align-items:baseline;gap:4px}
+  .plan-card .forecast-more {margin-top:6px;font-size:11px}
+  .plan-card .forecast-more summary {color:var(--muted)}
+  .plan-card .forecast-more[open] {padding:8px 0}
+  .plan-card .forecast-horizons span,.plan-card .forecast-glance dd {white-space:nowrap}
+  .plan-card .forecast-glance>[data-forecast-glance="next-hours"],.plan-card .forecast-horizons {flex-wrap:wrap;min-width:0}
+  .plan-card .forecast-glance>div:not([data-forecast-glance="next-hours"]) {display:none!important}
+  .plan-card .forecast-glance>[data-forecast-glance="next-hours"] {align-items:center!important;gap:12px}
+  .plan-card .forecast-glance>[data-forecast-glance="next-hours"]>dt {font-size:12px}
+  .plan-card .forecast-horizons {gap:8px}
+  .plan-card .forecast-horizons span,.plan-card .forecast-horizons span:nth-child(n) {flex-direction:column;align-items:flex-start;gap:1px;min-width:84px;padding:6px 12px;border:1px solid var(--border);border-radius:4px;background:var(--surface-soft)}
+  .plan-card .forecast-horizons small {font-size:11px}
+  .plan-card .forecast-horizons b {font-size:18px;line-height:22px}
+  .plan-card .forecast-glance>[data-forecast-glance="next-hours"]>dt {display:none}
+  .plan-card .forecast-more {border-top:0;margin-top:8px;padding-top:0}
+  .plan-card .forecast-more>dl>div {display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr);gap:2px 14px;align-items:baseline;padding:3px 0!important;border:0!important}
+  .plan-card .forecast-more dt {margin:0;font-size:12px}
+  .plan-card .forecast-more dd {font-size:12px;line-height:1.5}
+  .plan-card .forecast-more dd small {display:inline;margin:0 0 0 6px;font-size:11px}
+  .plan-card .forecast-more dd q {-webkit-line-clamp:1;margin-top:2px;font-size:11px}
+  .plan-card .forecast-more>p {margin:6px 0 0}
+  .plan-card #forecast {position:relative}
+  .plan-card #forecast>.brand-stamp {position:absolute;top:0;right:0;margin:0}
+  .forecast-horizons .horizon-short {display:none}
+}
+@media(min-width:1180px) {.forecast-horizons .horizon-long {display:none}}
+/* Busy marker while a strategy or the switch replans: the switch's square
+   knob turns in pixel steps until the plan is ready. */
+#strategy-controls[aria-busy=true] .switch-knob {animation:busy-turn .8s steps(8) infinite}
+#strategy-controls[aria-busy=true] {cursor:progress}
+@keyframes busy-turn {to {transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce) {#strategy-controls[aria-busy=true] .switch-knob {animation:none;background:var(--accent)}}
+/* Wide card, announced: one full-width entry under its own heading. */
 @media(min-width:1180px) {
-  .plan-card .forecast-glance {display:block}
-  .plan-card .forecast-glance>div:not([data-forecast-glance="next-hours"]) {display:flex!important;justify-content:space-between;align-items:baseline;gap:12px;padding:9px 0!important;border-bottom:1px solid var(--divider)!important}
-  .plan-card .forecast-glance>[data-forecast-glance="next-hours"] {padding:0 0 12px!important;border-bottom:1px solid var(--divider)!important}
-  .plan-card .forecast-glance>div:not([data-forecast-glance="next-hours"]) dt {font-size:12px;color:var(--muted)}
-  .plan-card .forecast-glance>div:not([data-forecast-glance="next-hours"]) dd {font-size:12px;text-align:right}
-  .plan-card .forecast-more {margin-top:10px}
+  .forecast-horizons:has([data-forecast-horizon=announced]) {display:block}
+  .forecast-horizons [data-forecast-horizon=announced] {align-items:flex-start!important}
+  .forecast-horizons [data-forecast-horizon=announced] small {display:none}
 }

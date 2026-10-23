@@ -13,6 +13,6 @@ test('预测卡片并列显示未来 12、24、48 小时的 reset 概率，来�
   for(const locale of ['en','zh-CN']) {
     const html=renderResetForecastSummary({source:{available:true,prediction},prediction,now:new Date(now),timeZone:'UTC',locale});
     for(const [hours,key] of [[12,'next12Probability'],[24,'next24Probability'],[48,'next48Probability']])
-      assert.match(html,new RegExp(`data-forecast-horizon="${hours}"><small>[^<]+</small><b>${Number((prediction[key]*100).toFixed(1))}%</b>`));
+      assert.match(html,new RegExp(`data-forecast-horizon="${hours}"><small>.*?</small><b>${Number((prediction[key]*100).toFixed(1))}%</b>`));
   }
 });

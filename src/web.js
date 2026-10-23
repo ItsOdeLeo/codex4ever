@@ -184,6 +184,16 @@ function renderResult(availableWidth=$('#result').clientWidth) {
 }
 
 
+// Replanning takes a moment: paint the busy marker first, then compute, so a
+// click never looks ignored. Without a browser frame (tests) it runs at once.
+function busyDispatch(action) {
+  const host=$('#strategy-controls');
+  const run=()=>{dispatchPlanning(action);saveInput();host.removeAttribute?.('aria-busy');};
+  if(typeof requestAnimationFrame!=='function')return run();
+  host.setAttribute('aria-busy','true');
+  requestAnimationFrame(()=>setTimeout(run,0));
+}
+
 function dispatchPlanning(action) {
   planner=updateUsagePlanner(planner,action);
   renderResult();
@@ -333,15 +343,8 @@ function handlePlanClick(event) {
     saveInput();return;
   }
   const strategy=event.target.closest('[data-usage-strategy]');
-  if(strategy) {
-    dispatchPlanning({type:'set-strategy',strategy:strategy.dataset.usageStrategy});
-    saveInput();return;
-  }
-  if (event.target.closest('[data-toggle-forecast]')) {
-    dispatchPlanning({type:'toggle-forecast'});
-    saveInput();
-    return;
-  }
+  if(strategy) {busyDispatch({type:'set-strategy',strategy:strategy.dataset.usageStrategy});return;}
+  if (event.target.closest('[data-toggle-forecast]')) {busyDispatch({type:'toggle-forecast'});return;}
   const assumptionButton=event.target.closest('[data-assume-reset]');
   if(assumptionButton) {
     dispatchPlanning({type:'toggle-assumption',sequence:assumptionButton.dataset.assumptionSequence});
