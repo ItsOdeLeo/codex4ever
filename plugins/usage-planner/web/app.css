@@ -1751,11 +1751,11 @@ footer a {
   color: inherit;
 }
 .reset-element .timeline-lane-label[data-lane-inline] {
-  color: var(--reset-curve);
+  color: var(--ink);
 }
 .reset-element .timeline-lane-label > strong,
 .reset-element .timeline-lane-note {
-  color: var(--reset-curve);
+  color: var(--ink);
 }
 .timeline-lane-label[data-lane-label=usage] {
   justify-content: flex-start;
@@ -3146,16 +3146,36 @@ legend {
 }
 .refresh-overlay[aria-busy=true]::before {
   content: "";
+  background: var(--surface) !important;
+}
+.share-card-button[aria-busy=true]::before {
+  content: "";
+}
+.busy-square,
+.refresh-overlay[aria-busy=true]::before,
+.share-card-button[aria-busy=true]::before {
+  flex: none;
   width: 12px;
   height: 12px;
   border: 1px solid var(--border);
   border-radius: 2px;
-  background: var(--surface);
+  background: var(--accent);
   box-shadow: 1px 1px 0 var(--border);
   animation: busy-turn .8s steps(8) infinite;
+  will-change: transform;
+}
+.plan-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 320px;
+  font-size: 14px;
+  color: var(--muted);
 }
 @media (prefers-reduced-motion: reduce) {
   #strategy-controls[aria-busy=true] .switch-knob,
+  .busy-square,
   .refresh-overlay[aria-busy=true]::before {
     animation: none;
     background: var(--accent);
@@ -3253,10 +3273,138 @@ html:lang(zh-CN) .guide-page .brand a {
 .site-header .brand {
   flex: none;
 }
-@media (max-width: 400px) {
+@media (max-width: 374px) {
   #language-switch {
     position: static;
   }
+}
+.plan-card #forecast:empty {
+  display: none;
+}
+.page-loading {
+  display: none;
+}
+body[data-loading] .layout {
+  position: relative;
+  min-height: 60vh;
+}
+body[data-loading] .layout > *:not(.page-loading),
+body[data-loading] footer {
+  visibility: hidden;
+}
+body[data-loading] .page-loading {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--muted);
+}
+#forecast {
+  position: relative;
+}
+.share-control {
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  right: 0;
+}
+.share-card-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  padding: 0 9px;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 2px 2px 0 color-mix(in srgb, var(--shadow) 18%, transparent);
+  cursor: pointer;
+}
+.share-card-button[aria-busy=true] {
+  cursor: progress;
+}
+.share-card-button[aria-expanded=true] {
+  background: var(--accent);
+}
+.share-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  min-width: 150px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface);
+  box-shadow: 3px 3px 0 color-mix(in srgb, var(--shadow) 25%, transparent);
+}
+.share-menu[hidden] {
+  display: none;
+}
+.share-menu button {
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+  color: var(--ink);
+  font-size: 13px;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.share-menu button:hover,
+.share-menu button:focus-visible {
+  background: var(--accent-soft,var(--accent));
+}
+@media (min-width: 1180px) {
+  .plan-card > #forecast .share-control {
+    top: 14px;
+    right: 16px;
+  }
+}
+@media (max-width: 1179px) {
+  .plan-card #forecast > .brand-stamp {
+    right: 72px;
+  }
+}
+@media (max-width: 680px) {
+  .plan-card #forecast > .brand-stamp {
+    right: auto;
+  }
+}
+.share-frame {
+  position: fixed;
+  left: -10000px;
+  top: 0;
+  width: 380px;
+  padding: 22px;
+  background: var(--canvas);
+}
+.share-frame .share-card {
+  margin: 0;
+  padding: 18px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  box-shadow: 3px 3px 0 color-mix(in srgb, var(--shadow) 18%, transparent);
+}
+.share-frame .forecast-more,
+.share-frame .forecast-horizons .horizon-long {
+  display: none;
+}
+.share-frame .forecast-horizons .horizon-short {
+  display: inline;
+}
+.share-frame .brand-stamp {
+  position: static;
+  margin-top: 14px;
 }
 
 /* src/styles/theme.css */

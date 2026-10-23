@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "usage-planner",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Plan Codex usage from your current quota, banked resets and public reset evidence.",
   "author": {
     "name": "ItsOdeLeo",
