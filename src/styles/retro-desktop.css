@@ -353,7 +353,7 @@ legend {margin-bottom:8px}
 .plan-dock .compact-form fieldset.simple-fields {display:grid;justify-items:start;grid-template-columns:auto auto;grid-template-rows:var(--field-label-height) var(--field-control-height);column-gap:28px;row-gap:6px;align-items:center}
 .plan-dock .simple-fields>legend {display:none}
 .plan-dock .simple-fields>label {grid-row:1;grid-column:1}
-.plan-dock .simple-fields>input {grid-row:2;grid-column:1;width:88px;height:var(--field-control-height)}
+.plan-dock .simple-fields>.delay-control {grid-row:2;grid-column:1}
 .plan-dock .refresh-row {display:contents}
 .plan-dock .refresh-row>.refresh-label {grid-row:1;grid-column:2}
 .plan-dock .refresh-row>.delay-controls {grid-row:2;grid-column:2}
@@ -362,8 +362,13 @@ legend {margin-bottom:8px}
 .plan-dock .input-update #calculate {height:var(--field-control-height);padding:0 14px;font-size:12px}
 @media(max-width:680px) {
   .plan-dock .compact-form fieldset.simple-fields {grid-template-columns:minmax(0,1fr);grid-template-rows:none}
-  .plan-dock .simple-fields>label {grid-row:1}.plan-dock .simple-fields>input {grid-row:2}
+  .plan-dock .simple-fields>label {grid-row:1}.plan-dock .simple-fields>.delay-control {grid-row:2}
   .plan-dock .refresh-row>.refresh-label {grid-row:3;grid-column:1}.plan-dock .refresh-row>.delay-controls {grid-row:4;grid-column:1}
   .plan-dock .simple-fields>label,.plan-dock .refresh-label {height:auto}
   .plan-dock .input-update {align-self:flex-start}
 }
+/* Narrower steppers: the numbers are at most three digits. */
+.plan-dock .delay-control button {padding:0 7px}
+.plan-dock .delay-control input[type=number] {width:32px}
+.plan-dock .delay-control span {padding-right:2px}
+.plan-dock .input-update {flex-wrap:nowrap}.plan-dock .input-update #status {flex:0 1 auto;white-space:nowrap}

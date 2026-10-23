@@ -101,15 +101,16 @@ function calendar() {
   </div>` : ''}`;
 }
 
-function delayControl(field, label, unit, max) {
-  return `<div class="delay-control"><button type="button" data-delay-step="${field}" data-delta="-1" aria-label="${t('减少{label}',{label:t(label)})}">−</button><input type="number" data-field="${field}" aria-label="${t(label)}" min="0" max="${max}" step="1" value="${escape(input[field])}"><span>${t(unit)}</span><button type="button" data-delay-step="${field}" data-delta="1" aria-label="${t('增加{label}',{label:t(label)})}">＋</button></div>`;
+// One − / + stepper for every number the user types: quota and refresh time.
+function delayControl(field, label, unit, max, {id='',step='1'}={}) {
+  return `<div class="delay-control"><button type="button" data-delay-step="${field}" data-delta="-1" aria-label="${t('减少{label}',{label:t(label)})}">−</button><input type="number"${id ? ` id="${id}"` : ''} data-field="${field}" aria-label="${t(label)}" min="0" max="${max}" step="${step}" value="${escape(input[field])}"><span>${t(unit)}</span><button type="button" data-delay-step="${field}" data-delta="1" aria-label="${t('增加{label}',{label:t(label)})}">＋</button></div>`;
 }
 
 function renderInputs() {
   $('#inputs').innerHTML = `<div class="compact-form">
     <fieldset class="calendar-field"><legend>${t('备用 reset · {count} 个',{count:input.resetDates.length})}</legend>${calendar()}</fieldset>
     <fieldset class="simple-fields"><legend>${t('当前状态')}</legend>
-      <label for="weekly-remaining">${t('本周额度还剩多少 %')}</label><input id="weekly-remaining" data-field="weeklyRemaining" type="number" min="0" max="100" step="any" value="${escape(input.weeklyRemaining)}">
+      <label for="weekly-remaining">${t('本周额度还剩')}</label>${delayControl('weeklyRemaining','本周额度还剩多少 %','%',100,{id:'weekly-remaining',step:'any'})}
       <div class="refresh-row"><div class="refresh-label">${t('正常刷新还有')}</div><div class="delay-controls">${delayControl('weeklyResetDays', '正常刷新剩余天数', '天', 7)}${delayControl('weeklyResetHours', '正常刷新剩余小时', '小时', 23)}</div></div>
     </fieldset>
   </div>`;
@@ -272,6 +273,13 @@ $('#inputs').addEventListener('click', event => {
   const button = event.target.closest('button');
   if (!button || !$('#inputs').contains(button)) return;
   const data = button.dataset;
+  if (data.delayStep === 'weeklyRemaining') {
+    const current = Number.isFinite(input.weeklyRemaining) ? Math.round(input.weeklyRemaining) : 0;
+    input.weeklyRemaining = Math.max(0, Math.min(100, current + Number(data.delta)));
+    renderInputs();
+    markChanged();
+    return;
+  }
   if (data.delayStep) {
     const total = input.weeklyResetDays * 24 + input.weeklyResetHours + Number(data.delta) * (data.delayStep === 'weeklyResetDays' ? 24 : 1);
     if (Number.isInteger(total) && total >= 1 && total <= 168) {
