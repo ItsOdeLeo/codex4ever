@@ -447,7 +447,7 @@ html:lang(zh-CN) .brand h1, html:lang(zh-CN) .guide-page .brand a {font-size:24p
 /* Daily usage bars: the quota area's fill and outline, one bar per day. */
 .tree-edges .daily-bar {fill:var(--quota-fill-start);stroke:var(--quota-stroke);stroke-width:1.2}
 .tree-edges .usage-gridline {stroke:var(--divider);stroke-width:1;stroke-dasharray:2 3;opacity:.6}
-/* Phones: the stamp gets its own line above the tiles, and the three
+/* Phones: the share button gets its own line above the tiles, and the three
  * horizons sit in one row with short labels. These come last so the
  * narrow-screen rules above do not undo them. */
 @media(max-width:680px) {
@@ -484,8 +484,6 @@ body[data-loading] .page-loading {position:absolute;inset:0;z-index:1;display:fl
 .share-menu button {padding:8px 10px;border:0;border-radius:2px;background:transparent;color:var(--ink);font-size:13px;text-align:left;white-space:nowrap;cursor:pointer}
 .share-menu button:hover,.share-menu button:focus-visible {background:var(--accent-soft,var(--accent))}
 @media(min-width:1180px) {.plan-card>#forecast .share-control {top:14px;right:16px}}
-@media(max-width:1179px) {.plan-card #forecast>.brand-stamp {right:72px}}
-@media(max-width:680px) {.plan-card #forecast>.brand-stamp {right:auto}}
 /* The shared picture: the small forecast card on the page colour, built off
  * screen at a fixed width so every device shares the same card. */
 .share-frame {position:fixed;left:-10000px;top:0;width:380px;padding:22px;background:var(--canvas)}

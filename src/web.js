@@ -155,9 +155,9 @@ function saveInput() {
 
 const round = value => Number(value.toFixed(1));
 const MOBILE_TIMELINE_WIDTH=640;
-// The name rides with the forecast at the top, inside any screenshot.
-// The domain, not just the name, so a screenshot tells people where to go;
-// in Chinese the Chinese name too, which is what people search on Xiaohongshu.
+// The stamp is added to shared pictures only, not shown on the page: the
+// domain tells people where to go, and in Chinese the Chinese name too,
+// which is what people search on Xiaohongshu.
 const brandStamp=()=>`<div class="brand-stamp" aria-hidden="true"><span>${BRAND_MARK_SVG}</span>${language==='zh-CN' ? `<em><b>${PRODUCT_NAME_ZH}</b><i>·</i>` : '<em>'}${PRODUCT_DOMAIN}</em></div>`;
 
 // One-tap sharing of the forecast card as a picture (it carries the stamp).
@@ -172,7 +172,7 @@ async function shareForecastCard(button) {
   if(!menu.hidden) {menu.hidden=true;button.setAttribute('aria-expanded','false');return;}
   button.setAttribute('aria-busy','true');
   try {
-    const blob=await cardImage($('#forecast'));
+    const blob=await cardImage($('#forecast'),{stamp:brandStamp()});
     const file=new File([blob],language==='zh-CN' ? '赛博牛马规划器.png' : 'usage-planner.png',{type:'image/png'});
     sharedCard={blob,file,text:t('Codex 下次 reset 大概什么时候来、每天用多少，用赛博牛马规划器看看'),url:publicPageUrl()};
     if(prefersSystemShare(file)) {
@@ -227,7 +227,7 @@ function renderForecastCard(graph=null) {
   // exists, the plan just does not count it, and the card keeps its height.
   const forecastSummary = renderResetForecastSummary({ source: forecastSource, prediction: planner.snapshot.prediction,
     timeZone, now: planningNow,locale:language });
-  $('#forecast').innerHTML = `<div class="forecast-control" ${planningPrediction ? `data-forecast-48-probability="${planningPrediction.next48Probability}"` : ''}><span>${t('额外 reset 预测')}</span></div>${forecastSummary}${brandStamp()}${shareControl()}`;
+  $('#forecast').innerHTML = `<div class="forecast-control" ${planningPrediction ? `data-forecast-48-probability="${planningPrediction.next48Probability}"` : ''}><span>${t('额外 reset 预测')}</span></div>${forecastSummary}${shareControl()}`;
 }
 
 function renderResult(availableWidth=$('#result').clientWidth) {

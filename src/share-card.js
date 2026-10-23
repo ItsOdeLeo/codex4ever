@@ -1,15 +1,15 @@
 
 /** The shared picture is always the small card, whatever the screen: the
- * forecast's markup is copied into a fixed-width card on the page colour,
- * off screen, captured, and removed. The share controls are left out. */
-export async function cardImage(source,doc=globalThis.document) {
+ * forecast's markup and the brand stamp go into a fixed-width card on the
+ * page colour, off screen, captured, and removed. Share controls stay out. */
+export async function cardImage(source,{stamp=''}={},doc=globalThis.document) {
   // Loaded on first share only. A path, not a bare name: the site build
   // bundles it and the dev server serves it as one bundle (its own imports
   // have no extensions, which neither browsers nor Node follow).
   const { toBlob }=await import('../node_modules/html-to-image/es/index.js');
   const frame=doc.createElement('div');
   frame.className='share-frame';
-  frame.innerHTML=`<section class="forecast-panel share-card">${source.innerHTML}</section>`;
+  frame.innerHTML=`<section class="forecast-panel share-card">${source.innerHTML}${stamp}</section>`;
   frame.querySelector('[data-share-control]')?.remove();
   doc.body.append(frame);
   try {
