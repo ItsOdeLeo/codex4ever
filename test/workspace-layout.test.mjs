@@ -22,11 +22,11 @@ test('一张计划卡片：预测、策略在时间线上方，输入停靠在�
   const card=html.match(/<section id="output" class="plan-card"[\s\S]*?<div id="method"><\/div>/)?.[0];
   assert.ok(card,'所有控件都在同一张卡片里');
   assert.doesNotMatch(html,/controls-panel/,'不再有左侧栏');
-  const order=['id="forecast"','id="strategy-controls"','id="result"','class="plan-dock"','id="inputs"','id="calculate"','id="plugin-hint"']
+  const order=['id="forecast"','id="strategy-controls"','id="result"','class="plan-dock"','id="inputs"','id="status"','id="plugin-hint"']
     .map(token=>card.indexOf(token));
-  assert.ok(order.every(index=>index>=0),'卡片包含结果、预测、策略、输入、更新和插件提示');
+  assert.ok(order.every(index=>index>=0),'卡片包含预测、策略、结果、输入、状态和插件提示');
   assert.deepEqual([...order].sort((a,b)=>a-b),order,'策略在时间线上方不随图高度跳动；输入在下方，插件提示在最后');
-  assert.match(card,/<div class="input-update">\s*<button id="calculate" type="button"/);
+  assert.doesNotMatch(card,/id="calculate"/,'输入改完自动更新，不需要更新按钮');
   assert.match(card,/href="https:\/\/github\.com\/ItsOdeLeo\/codex4ever#use-it"/);
   assert.match(html,/<a id="creator-contact" href="https:\/\/x\.com\/ItsOdeLeo"/);
 });

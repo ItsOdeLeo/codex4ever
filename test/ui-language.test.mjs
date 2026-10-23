@@ -50,7 +50,6 @@ test('整页切换中英不重新抓取或改变分支，记住语言，英文�
     assert.equal(document.title,'Codex4ever | Codex Quota & Reset Planner');
     assert.match(element('meta[name="description"]').attributes.content,/Plan OpenAI Codex usage/);
     assert.equal(element('#planner-guide').attributes.href,'/guide/');
-    assert.equal(element('#calculate').textContent,'Update data');
     assert.equal(element('#creator-contact').textContent,'If you like this work, follow me on X');
     assert.match(element('#strategy-controls').innerHTML,/Updates instantly/);
     assert.equal(element('.affiliation-notice').textContent,
@@ -92,7 +91,6 @@ test('整页切换中英不重新抓取或改变分支，记住语言，英文�
     assert.equal(document.title,'Codex4ever | Codex 额度与 Reset 用量规划');
     assert.match(element('meta[name="description"]').attributes.content,/根据 Codex 剩余额度/);
     assert.equal(element('#planner-guide').attributes.href,'/zh/guide/');
-    assert.equal(element('#calculate').textContent,'更新数据');
     assert.equal(element('#creator-contact').textContent,'如果你喜欢这个作品，欢迎在 X 上关注我');
     assert.match(element('#strategy-controls').innerHTML,/即时更新/);
     assert.equal(element('.affiliation-notice').textContent,'OpenAI Codex 的非官方可视化用量规划工具。与 OpenAI 无隶属关系。');

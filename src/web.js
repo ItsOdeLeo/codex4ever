@@ -27,9 +27,8 @@ function renderStaticLanguage() {
   document.documentElement?.setAttribute('lang',language);
   $('.brand p').textContent=metadata.intro;
   for(const [selector,label] of [['.affiliation-notice','OpenAI Codex 的非官方可视化用量规划工具。与 OpenAI 无隶属关系。'],['#github-star','GitHub'],['#follow-x','在 X 关注我'],
-    ['#calculate','更新数据'],['#source-code','GitHub 开源'],['#creator-contact','如果你喜欢这个作品，欢迎在 X 上关注我'],['[data-credit-label]','重置数据来源'],['[data-plugin-hint]','安装成 Codex 插件，就能自动读取这些数据。'],['#overuse-hint','用量过度提醒（仅 Codex 插件）：在 Codex 里说“打开用量过度提醒”。之后你用得比计划快时，会直接在对话里提醒你。']])
+['#source-code','GitHub 开源'],['#creator-contact','如果你喜欢这个作品，欢迎在 X 上关注我'],['[data-credit-label]','重置数据来源'],['[data-plugin-hint]','安装成 Codex 插件，就能自动读取这些数据。'],['#overuse-hint','用量过度提醒（仅 Codex 插件）：在 Codex 里说“打开用量过度提醒”。之后你用得比计划快时，会直接在对话里提醒你。']])
     {const element=$(selector);if(element)element.textContent=t(label);}
-  $('#calculate').setAttribute?.('title',t('采用输入修改并刷新重置证据'));
   $('#planner-guide').textContent=language==='zh-CN' ? '使用说明' : 'How it works';
   $('#planner-guide').setAttribute?.('href',language==='zh-CN' ? '/zh/guide/' : '/guide/');
   for(const [selector,label] of [['#inputs','算法输入'],['#forecast','预测依据'],['#output','算法输出']])
@@ -116,13 +115,15 @@ function renderInputs() {
   </div>`;
 }
 
+// Inputs apply themselves shortly after the last change: no update button to
+// find, and the plan never sits greyed out waiting for one.
+let autoCalculation=null;
+const AUTO_CALCULATION_DELAY_MS=400;
 function markChanged() {
   manualDraft=true;
   calculationRun++;
-  setStatus('已修改，请更新数据');
-  $('#result').classList.add('stale');
-  planner=updateUsagePlanner(planner,{type:'invalidate'});
-  renderStrategyControls();
+  clearTimeout(autoCalculation);
+  autoCalculation=setTimeout(calculate,AUTO_CALCULATION_DELAY_MS);
 }
 
 function renderStrategyControls() {
@@ -198,10 +199,10 @@ async function bundledPrediction(now) {
 }
 
 async function calculate() {
+  clearTimeout(autoCalculation);
   const run = ++calculationRun;
   $('#error').hidden = true;
   lastError=null;
-    setStatus('更新重置证据…');
   try {
     if(plugin&&!manualDraft) {
       const update=await plugin.refresh({timeZone,language,usageStrategy:planner.intent.usageStrategy,
@@ -217,7 +218,7 @@ async function calculate() {
     forecastSource = publicForecast;
     planner=updateUsagePlanner(planner,{type:'new-snapshot',input,now,prediction:publicForecast.prediction});
     renderResult();
-    setStatus('已计算');
+    setStatus('');
     saveInput();
   } catch (error) {
     if (run !== calculationRun) return;
@@ -306,7 +307,8 @@ $('#inputs').addEventListener('click', event => {
   if (!data.monthNav && data.toggleCalendar === undefined) markChanged();
 });
 
-$('#calculate').addEventListener('click', calculate);
+// Inputs apply themselves; tests (and any embedder) may still trigger a run.
+$('#calculate')?.addEventListener?.('click', calculate);
 function handlePlanClick(event) {
   if (!planner.result) return;
   const availability=event.target.closest('button[data-availability-mode]');

@@ -77,8 +77,7 @@ test('真实页面策略按钮驱动统一规划，切换不抓取证据、不�
     assert.equal(fetches,3,'只有Calculate重新获取证据');
     checkControls();
     element('#inputs').listeners.input({target:{dataset:{field:'weeklyRemaining'},value:'101'}});
-    assert.equal([...strategies.innerHTML.matchAll(/ aria-pressed="(?:true|false)" title="[^"]*" disabled/g)].length,5,
-      '输入已改时不能拿旧快照切换策略');
+    // Inputs apply themselves; an invalid value then disables the strategies.
     await element('#calculate').listeners.click();
     assert.equal(element('#error').hidden,false);
     assert.equal([...strategies.innerHTML.matchAll(/ aria-pressed="(?:true|false)" title="[^"]*" disabled/g)].length,5);

@@ -100,7 +100,11 @@ export function renderResetForecastSummary({ source, prediction = null,
   // Next 12h / 24h / 48h side by side: short horizons to plan the day, 48h for the trend.
   const horizons=[[12,prediction?.next12Probability],[24,prediction?.next24Probability],[48,prediction?.next48Probability]]
     .filter(([,value])=>Number.isFinite(value));
-  if(horizons.length)glance.push(`<div data-forecast-glance="next-hours"><dt>${escape(t('未来 reset 概率'))}</dt><dd class="forecast-horizons">${horizons.map(([hours,value])=>
+  // An announced reset is a known time, not a chance: one tile replaces the three.
+  const announcedAt=prediction?.evidence?.scheduledResetAt;
+  if(announcedAt&&Date.parse(announcedAt)>now.getTime()&&format(announcedAt))
+    glance.push(`<div data-forecast-glance="next-hours"><dt>${escape(t('已宣布的 reset'))}</dt><dd class="forecast-horizons"><span data-forecast-horizon="announced"><small>${escape(t('已宣布的 reset'))}</small><b>${escape(t('{time} 前',{time:format(announcedAt)}))}</b></span></dd></div>`);
+  else if(horizons.length)glance.push(`<div data-forecast-glance="next-hours"><dt>${escape(t('未来 reset 概率'))}</dt><dd class="forecast-horizons">${horizons.map(([hours,value])=>
     `<span data-forecast-horizon="${hours}"><small>${escape(t('{hours} 小时内 reset',{hours}))}</small><b>${Number((value*100).toFixed(1))}%</b></span>`).join('')}</dd></div>`);
   const windowFrom=dayFormat(prediction?.nextResetWindow?.from),windowTo=dayFormat(prediction?.nextResetWindow?.to);
   if(windowFrom&&windowTo)glanceRow('window','可能窗口',escape(windowFrom===windowTo ? windowFrom : `${windowFrom} – ${windowTo}`));

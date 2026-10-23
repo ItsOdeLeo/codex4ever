@@ -96,3 +96,18 @@ test('活动样本不足时不把历史回退均值当成活动均值',()=>{
   sparse.prediction.evidence.intervalModel.selectionReason='campaign-has-no-complete-interval';
   assert.match(render({source:sparse}),/近 30 天 · 5 个完整间隔 · 活动样本不足，暂回退/);
 });
+
+test('已宣布的 reset：三个概率块合成一个“已宣布 · 某时前”',()=>{
+  const now=new Date('2026-10-23T08:00:00Z');
+  const prediction={next12Probability:.99,next24Probability:.992,next48Probability:.995,
+    evidence:{scheduledResetAt:'2026-10-23T17:00:00.000Z'}};
+  const html=renderResetForecastSummary({source:{available:true,prediction},prediction,timeZone:'UTC',now,locale:'en'});
+  assert.match(html,/data-forecast-horizon="announced"/);
+  assert.match(html,/Announced reset/);
+  assert.match(html,/By 23 Oct, 17:00/);
+  assert.doesNotMatch(html,/data-forecast-horizon="12"/);
+  // Once the announced time has passed, the chance tiles return.
+  const later=renderResetForecastSummary({source:{available:true,prediction},prediction,timeZone:'UTC',
+    now:new Date('2026-10-23T18:00:00Z'),locale:'en'});
+  assert.match(later,/data-forecast-horizon="12"/);
+});
