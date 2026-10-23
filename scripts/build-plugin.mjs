@@ -31,7 +31,8 @@ await mkdir(resolve(plugin,'experiments'),{recursive:true});
 await copyFile(resolve(root,'experiments/public-reset-events.json'),resolve(plugin,'experiments/public-reset-events.json'));
 await copyFile(resolve(root,'LICENSE'),resolve(plugin,'LICENSE'));
 const notices=[];
-for(const name of ['@modelcontextprotocol/server','@modelcontextprotocol/core','zod']) {
+// The server bundles the first three; the planner page bundles html-to-image.
+for(const name of ['@modelcontextprotocol/server','@modelcontextprotocol/core','zod','html-to-image']) {
   const base=resolve(root,'node_modules',name),files=await readdir(base);
   const license=files.find(file=>/^license(?:\.|$)/i.test(file));
   if(!license)throw new Error(`Missing dependency license: ${name}`);

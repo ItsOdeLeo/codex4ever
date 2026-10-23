@@ -6,6 +6,7 @@ import { collectLiveResetEvidence } from '../src/live-reset-evidence.js';
 import { publicSiteOrigin,seoResponse } from '../src/site-seo.js';
 import { loadLocalLLMEnvironment } from '../src/local-llm-environment.js';
 import { plannerEnv } from '../src/planner-name.js';
+import { build } from 'esbuild';
 
 await loadLocalLLMEnvironment();
 
@@ -16,7 +17,7 @@ const types = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascrip
 const classificationCache = new Map();
 // Reuse one crawl for a while so repeated page loads cannot hammer upstream sources.
 const evidenceTtlMs=Number(plannerEnv('EVIDENCE_TTL_MINUTES') || 30)*60_000;
-let refreshInFlight,cachedSnapshot,cachedAt=0;
+let refreshInFlight,cachedSnapshot,cachedAt=0,vendorBundle;
 async function evidence() {
   if(cachedSnapshot && Date.now()-cachedAt<evidenceTtlMs)return cachedSnapshot;
   if(refreshInFlight)return refreshInFlight;
@@ -45,6 +46,15 @@ const server=http.createServer(async (req, res) => {
       const snapshot=await evidence();
       res.writeHead(200,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Robots-Tag':'noindex',
         'X-Content-Type-Options':'nosniff'}).end(JSON.stringify(snapshot));
+      return;
+    }
+    // Browsers cannot follow this package's extensionless imports; serve it
+    // as one bundle so src/share-card.js runs unbundled here as well.
+    if(url.pathname==='/node_modules/html-to-image/es/index.js') {
+      vendorBundle??=build({entryPoints:[resolve(root,'node_modules/html-to-image/es/index.js')],bundle:true,
+        format:'esm',write:false}).then(out=>out.outputFiles[0].text);
+      res.writeHead(200,{'Content-Type':'text/javascript; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'})
+        .end(req.method==='HEAD' ? undefined : await vendorBundle);
       return;
     }
     if(['GET','HEAD'].includes(req.method)) {

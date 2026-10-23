@@ -11,6 +11,7 @@ import { syncPlannerMetadata } from './page-metadata.js';
 import { pluginPageClient } from './plugin-page-client.js';
 import { BRAND_MARK_SVG } from './brand-mark.js';
 import { HOMES,PRODUCT_DOMAIN,PRODUCT_NAME,PRODUCT_NAME_ZH } from './planner-name.js';
+import { cardImage,prefersSystemShare,xPostUrl,downloadBlob,copyImage } from './share-card.js';
 
 const $ = selector => document.querySelector(selector);
 const escape = value => String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
@@ -159,13 +160,74 @@ const MOBILE_TIMELINE_WIDTH=640;
 // in Chinese the Chinese name too, which is what people search on Xiaohongshu.
 const brandStamp=()=>`<div class="brand-stamp" aria-hidden="true"><span>${BRAND_MARK_SVG}</span>${language==='zh-CN' ? `<em><b>${PRODUCT_NAME_ZH}</b><i>·</i>` : '<em>'}${PRODUCT_DOMAIN}</em></div>`;
 
+// One-tap sharing of the forecast card as a picture (it carries the stamp).
+const shareControl=()=>`<div class="share-control" data-share-control><button type="button" class="share-card-button" aria-haspopup="menu" aria-expanded="false">${t('分享')}</button>
+  <div class="share-menu" role="menu" hidden><button type="button" role="menuitem" data-share-action="x">${t('发到 X')}</button><button type="button" role="menuitem" data-share-action="copy">${t('复制图片')}</button><button type="button" role="menuitem" data-share-action="download">${t('下载图片')}</button>${globalThis.navigator?.canShare ? `<button type="button" role="menuitem" data-share-action="system">${t('更多…')}</button>` : ''}</div></div>`;
+// The public page in the shown language; the plugin page lives on localhost.
+const publicPageUrl=()=>`${plugin||!globalThis.location?.origin ? `https://${PRODUCT_DOMAIN}` : location.origin}${HOMES[language]}`;
+let sharedCard=null;
+
+async function shareForecastCard(button) {
+  const control=button.closest('[data-share-control]'),menu=control.querySelector('.share-menu');
+  if(!menu.hidden) {menu.hidden=true;button.setAttribute('aria-expanded','false');return;}
+  button.setAttribute('aria-busy','true');
+  try {
+    const blob=await cardImage($('#forecast'));
+    const file=new File([blob],language==='zh-CN' ? '赛博牛马规划器.png' : 'usage-planner.png',{type:'image/png'});
+    sharedCard={blob,file,text:t('Codex 下次 reset 大概什么时候来、每天用多少，用赛博牛马规划器看看'),url:publicPageUrl()};
+    if(prefersSystemShare(file)) {
+      try {await navigator.share({files:[file],text:`${sharedCard.text} ${sharedCard.url}`});}
+      catch { /* Dismissed share sheet: nothing to do. */ }
+      return;
+    }
+    menu.hidden=false;button.setAttribute('aria-expanded','true');
+    menu.querySelector('button')?.focus();
+  } catch {
+    button.textContent=t('生成图片失败');setTimeout(()=>{button.textContent=t('分享');},2500);
+  } finally {button.removeAttribute('aria-busy');}
+}
+
+async function runShareAction(action,item) {
+  if(!sharedCard)return;
+  const {blob,file,text,url}=sharedCard,label=item.textContent;
+  const flash=message=>{item.textContent=message;setTimeout(()=>{item.textContent=label;},2500);};
+  if(action==='download')downloadBlob(blob,file.name);
+  else if(action==='copy')flash(t(await copyImage(blob) ? '已复制图片' : '复制失败，请下载'));
+  else if(action==='x') {
+    // X post links carry text only: copy the picture first so it can be pasted.
+    const copied=await copyImage(blob);
+    globalThis.open?.(xPostUrl(text,url),'_blank','noopener');
+    flash(t(copied ? '图片已复制，在 X 里粘贴' : '请先下载图片'));
+  } else if(action==='system') {
+    try {await navigator.share({files:[file],text:`${text} ${url}`});}catch { /* Dismissed. */ }
+  }
+}
+
+$('#forecast')?.addEventListener?.('click',event=>{
+  const button=event.target.closest?.('.share-card-button');
+  if(button) {shareForecastCard(button);return;}
+  const item=event.target.closest?.('[data-share-action]');
+  if(item)runShareAction(item.dataset.shareAction,item);
+});
+document.addEventListener?.('click',event=>{
+  if(event.target.closest?.('[data-share-control]'))return;
+  for(const menu of document.querySelectorAll?.('.share-menu:not([hidden])')??[]) {
+    menu.hidden=true;menu.previousElementSibling?.setAttribute('aria-expanded','false');
+  }
+});
+document.addEventListener?.('keydown',event=>{
+  if(event.key!=='Escape')return;
+  const menu=document.querySelector?.('.share-menu:not([hidden])');
+  if(menu) {menu.hidden=true;menu.previousElementSibling?.setAttribute('aria-expanded','false');menu.previousElementSibling?.focus();}
+});
+
 function renderForecastCard(graph=null) {
   const planningPrediction=activePlannerPrediction(planner),planningNow=new Date(planner.snapshot.now);
   // The chance tiles stay while "Assume no reset" is on: the forecast still
   // exists, the plan just does not count it, and the card keeps its height.
   const forecastSummary = renderResetForecastSummary({ source: forecastSource, prediction: planner.snapshot.prediction,
     timeZone, now: planningNow,locale:language });
-  $('#forecast').innerHTML = `<div class="forecast-control" ${planningPrediction ? `data-forecast-48-probability="${planningPrediction.next48Probability}"` : ''}><span>${t('额外 reset 预测')}</span></div>${forecastSummary}${brandStamp()}`;
+  $('#forecast').innerHTML = `<div class="forecast-control" ${planningPrediction ? `data-forecast-48-probability="${planningPrediction.next48Probability}"` : ''}><span>${t('额外 reset 预测')}</span></div>${forecastSummary}${brandStamp()}${shareControl()}`;
 }
 
 function renderResult(availableWidth=$('#result').clientWidth) {
