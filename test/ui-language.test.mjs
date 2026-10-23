@@ -56,7 +56,7 @@ test('整页切换中英不重新抓取或改变分支，记住语言，英文�
     assert.equal(element('.affiliation-notice').textContent,
       'Unofficial visual usage planner for OpenAI Codex. Not affiliated with OpenAI.');
     assert.match(input.innerHTML,/Weekly quota remaining %/);
-    assert.match(output.innerHTML,/Current daily usage/);
+    assert.match(element('#forecast').innerHTML,/Reset within 12h/);
     assert.match(output.innerHTML,/data-lane-label="consumption"/);
     assert.match(output.innerHTML,/<span class="timeline-lane-text">Quota remaining<\/span>/);
     assert.match(output.innerHTML,/<span class="timeline-lane-text">Reset probability<\/span>/);
@@ -96,7 +96,7 @@ test('整页切换中英不重新抓取或改变分支，记住语言，英文�
     assert.equal(element('#creator-contact').textContent,'如果你喜欢这个作品，欢迎在 X 上关注我');
     assert.match(element('#strategy-controls').innerHTML,/即时更新/);
     assert.equal(element('.affiliation-notice').textContent,'OpenAI Codex 的非官方可视化用量规划工具。与 OpenAI 无隶属关系。');
-    assert.match(output.innerHTML,/当前日均消耗/);
+    assert.match(element('#forecast').innerHTML,/12 小时内 reset/);
     assert.match(element('#strategy-controls').innerHTML,/不浪费额度/);
     assert.match(element('#strategy-controls').innerHTML,/周末不使用/);
     assert.match(element('#strategy-controls').innerHTML,/周末集中使用/);
@@ -128,7 +128,7 @@ test('整页切换中英不重新抓取或改变分支，记住语言，英文�
     await import('../src/web.js?language-chinese-reload');
     await new Promise(resolve=>setImmediate(resolve));
     assert.equal(html.attributes.lang,'zh-CN');
-    assert.match(output.innerHTML,/当前日均消耗/);
+    assert.match(element('#forecast').innerHTML,/12 小时内 reset/);
   } finally {
     for(const key of ['document','localStorage','fetch','Date']) {
       if(originals[key]===undefined)delete globalThis[key];else globalThis[key]=originals[key];

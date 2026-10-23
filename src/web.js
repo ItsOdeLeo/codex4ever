@@ -3,7 +3,6 @@ import { renderForecastMethod } from './forecast-method-view.js';
 import { predictionFromArchive } from './reset-forecast.js';
 import { renderResetForecastSummary } from './reset-forecast-summary.js';
 import { renderUsageStrategies } from './components/usage-strategies.js';
-import { usageConsumptionSummary } from './usage-consumption-summary.js';
 import { createUsagePlannerState,updateUsagePlanner,activePlannerPrediction } from './usage-planner-state.js';
 import { layoutStrategyTree, renderStrategyTree } from './strategy-tree-layout.js';
 import { COMPACT_TIMELINE_WIDTH } from './strategy-time-layout.js';
@@ -149,11 +148,12 @@ function renderResult(availableWidth=$('#result').clientWidth) {
   $('#result').classList.remove('stale');
   const workspace=workspaceLayout(availableWidth);
   renderedWidth=workspace.width;
-  const forecastSummary = renderResetForecastSummary({ source: forecastSource, prediction: planningPrediction,
+  // The chance tiles stay while "Assume no reset" is on: the forecast still
+  // exists, the plan just does not count it, and the card keeps its height.
+  const forecastSummary = renderResetForecastSummary({ source: forecastSource, prediction: planner.snapshot.prediction,
     timeZone, now: planningNow,locale:language });
   $('#forecast').innerHTML = `<div class="forecast-control" ${planningPrediction ? `data-forecast-48-probability="${planningPrediction.next48Probability}"` : ''}><span>${t('额外重置预测')}</span></div>${forecastSummary}`;
   renderStrategyControls();
-  parkForecast();
   if (!result.available) {
     $('#result').innerHTML = `<p class="empty-result">${escape(diagnosticText(language,result.reason,'input'))}</p>`;
     $('#method').innerHTML='';
@@ -165,24 +165,14 @@ function renderResult(availableWidth=$('#result').clientWidth) {
     viewportWidth:availableWidth<COMPACT_TIMELINE_WIDTH ? workspace.timelineWidth
       : Math.max(workspace.timelineWidth,availableWidth<680 ? MOBILE_TIMELINE_WIDTH : 0),
     displayEndHours:planner.displayEndHours,locale:language });
-  const consumption=usageConsumptionSummary(result,{locale:language});
   const policyData=result.recommendation ? ` data-policy-search="${result.recommendation.method}"${result.recommendation.primary ? ' data-plan-basis="predicted-extra-resets-first"' : ''}` : '';
-  $('#result').innerHTML = `<section class="strategy-panel" aria-label="${t('用量计划')}"${policyData} style="--panel-padding:${workspace.panelPadding}px"><div class="pace-controls"><div data-current-consumption data-daily="${consumption.dailyPercent}"><span>${t('当前日均消耗 {daily}%',{daily:round(consumption.dailyPercent)})}</span></div>
-    </div><div data-forecast-slot></div>
+  $('#result').innerHTML = `<section class="strategy-panel" aria-label="${t('用量计划')}"${policyData} style="--panel-padding:${workspace.panelPadding}px">
     ${result.recommendation&&!result.recommendation.primary ? `<div class="timeline-toolbar"><span>${t('若始终没有额外重置')}</span></div>` : ''}
     ${renderStrategyTree(graph, escape)}
     </section>`;
-  // The forecast strip sits under the heading, inside the one plan card.
-  const slot=$('#result').querySelector?.('[data-forecast-slot]');
-  if(slot?.replaceWith)slot.replaceWith($('#forecast'));
   $('#method').innerHTML=renderForecastMethod({source:forecastSource,prediction:planningPrediction,result,timeZone,locale:language},escape);
 }
 
-// Rewriting the plan would discard the forecast strip placed inside it.
-function parkForecast() {
-  const forecast=$('#forecast'),result=$('#result');
-  if(result.contains?.(forecast))result.after?.(forecast);
-}
 
 function dispatchPlanning(action) {
   planner=updateUsagePlanner(planner,action);

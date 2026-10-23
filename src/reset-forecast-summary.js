@@ -101,7 +101,7 @@ export function renderResetForecastSummary({ source, prediction = null,
   const horizons=[[12,prediction?.next12Probability],[24,prediction?.next24Probability],[48,prediction?.next48Probability]]
     .filter(([,value])=>Number.isFinite(value));
   if(horizons.length)glance.push(`<div data-forecast-glance="next-hours"><dt>${escape(t('未来 reset 概率'))}</dt><dd class="forecast-horizons">${horizons.map(([hours,value])=>
-    `<span data-forecast-horizon="${hours}"><small>${escape(t('{hours} 小时',{hours}))}</small><b>${Number((value*100).toFixed(1))}%</b></span>`).join('')}</dd></div>`);
+    `<span data-forecast-horizon="${hours}"><small>${escape(t('{hours} 小时内 reset',{hours}))}</small><b>${Number((value*100).toFixed(1))}%</b></span>`).join('')}</dd></div>`);
   const windowFrom=dayFormat(prediction?.nextResetWindow?.from),windowTo=dayFormat(prediction?.nextResetWindow?.to);
   if(windowFrom&&windowTo)glanceRow('window','可能窗口',escape(windowFrom===windowTo ? windowFrom : `${windowFrom} – ${windowTo}`));
   if(last) {

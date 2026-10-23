@@ -247,7 +247,7 @@ test('实时证据、条件用量、备用切换和精简累计概率；保持�
     assert.doesNotMatch(output.innerHTML,/保持当前用量|沿用已选用量|自选用量/,'不重复描述用量状态，直接显示每段日均');
     assert.doesNotMatch(output.innerHTML,/data-pace-multiplier|data-phase-pace|usage-choice/);
     assert.doesNotMatch(output.innerHTML,/用量 \+10%|用量 \+20%|用量增加|用量减少/);
-    assert.match(output.innerHTML,/当前日均消耗 20%/);
+    assert.match(output.innerHTML,/data-phase-daily="20"/);
     assert.doesNotMatch(output.innerHTML,/本周剩 40% · 刷新剩/,'左侧输入已显示剩余额度与刷新时间');
     assert.doesNotMatch(output.innerHTML.match(/<section class="strategy-panel"[\s\S]*?<\/section>/)[0],/÷/,
       '图表顶部不再展示计算公式');
@@ -341,7 +341,7 @@ test('实时证据、条件用量、备用切换和精简累计概率；保持�
     secondAction();
     click('[data-assume-reset]');
     assert.equal(refillCount(),0,'取消首次同时取消后继假设');
-    assert.match(output.innerHTML,/当前日均消耗 20%/);
+    assert.match(output.innerHTML,/data-phase-daily="20"/);
     // Zero counted resets stays on the recommended solver: the no-reset plan, not a raw current-pace preview.
     assert.ok(depletion(),'取消全部假设后显示不含额外 reset 的推荐计划及耗尽点');
     assert.doesNotMatch(output.innerHTML,/quota-refill-assumed-extra/);
@@ -360,17 +360,18 @@ test('实时证据、条件用量、备用切换和精简累计概率；保持�
     forecast();
     assert.match(summary(),/data-forecast-stat="last-reset"/,'关闭预测保留历史数据');
     assert.match(summary(),/均值 95% 置信区间/);
-    assert.match(summary(),/下次 reset 预测<\/dt><dd>已关闭/);
-    assert.doesNotMatch(summary(),/next-reset-window|next-reset-median|next-reset-estimate|next-reset-mode/);
+    // "Assume no reset" only stops counting the forecast: the chance tiles stay.
+    assert.match(summary(),/data-forecast-horizon="12"/);
+    assert.doesNotMatch(summary(),/下次 reset 预测<\/dt><dd>已关闭/);
     assert.equal(mode(), undefined);
     assert.equal(second(),undefined,'关闭预测同时隐藏第二次预测');
     assert.doesNotMatch(output.innerHTML, /data-reset-density-plot/);
     assert.equal(probability(),undefined);
     assert.doesNotMatch(output.innerHTML,/data-forecast-at=/);
-    assert.match(output.innerHTML,/当前日均消耗 20%/,'关闭预测不改变已选用量');
+    assert.match(output.innerHTML,/data-phase-daily="20"/,'关闭预测不改变已选用量');
     assert.match(depletion(),/10月16日 14:00/);
     assert.doesNotMatch(output.innerHTML,/data-phase-auto|采用算法建议|比当前减少|用量减少/);
-    assert.match(output.innerHTML,/当前日均消耗 20%/);
+    assert.match(output.innerHTML,/data-phase-daily="20"/);
     assert.match(depletion(),/10月16日 14:00/);
     assert.match(output.innerHTML,/quota-paused-line/);
     forecast();

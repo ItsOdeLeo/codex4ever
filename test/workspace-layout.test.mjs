@@ -17,15 +17,15 @@ test('策略区始终使用实际可用宽度，不用最小图宽把窄窗口�
   assert.ok(workspaceLayout(1920).timelineWidth>1100);
 });
 
-test('一张计划卡片：标题、预测、时间线在上，策略和输入停靠在底部，说明在卡片外',async()=>{
+test('一张计划卡片：预测、策略在时间线上方，输入停靠在底部，说明在卡片外',async()=>{
   const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
   const card=html.match(/<section id="output" class="plan-card"[\s\S]*?<div id="method"><\/div>/)?.[0];
   assert.ok(card,'所有控件都在同一张卡片里');
   assert.doesNotMatch(html,/controls-panel/,'不再有左侧栏');
-  const order=['id="result"','id="forecast"','class="plan-dock"','id="strategy-controls"','id="inputs"','id="calculate"','id="plugin-hint"']
+  const order=['id="forecast"','id="strategy-controls"','id="result"','class="plan-dock"','id="inputs"','id="calculate"','id="plugin-hint"']
     .map(token=>card.indexOf(token));
   assert.ok(order.every(index=>index>=0),'卡片包含结果、预测、策略、输入、更新和插件提示');
-  assert.deepEqual([...order].sort((a,b)=>a-b),order,'策略和输入在时间线下方，插件提示在最后');
+  assert.deepEqual([...order].sort((a,b)=>a-b),order,'策略在时间线上方不随图高度跳动；输入在下方，插件提示在最后');
   assert.match(card,/<div class="input-update">\s*<button id="calculate" type="button"/);
   assert.match(card,/href="https:\/\/github\.com\/ItsOdeLeo\/codex4ever#use-it"/);
   assert.match(html,/<a id="creator-contact" href="https:\/\/x\.com\/ItsOdeLeo"/);

@@ -273,7 +273,7 @@ legend {margin-bottom:8px}
 .layout {display:block}
 .plan-card {background:var(--surface);border:1px solid var(--border);border-radius:7px;box-shadow:3px 3px 0 color-mix(in srgb,var(--shadow) 18%,transparent);padding:24px}
 .plan-card .strategy-panel {border:0;box-shadow:none;background:none;padding:0}
-.plan-card #forecast.forecast-panel {border:0;box-shadow:none;background:none;padding:0;margin:-6px 0 14px}
+.plan-card #forecast.forecast-panel {border:0;box-shadow:none;background:none;padding:0 0 12px;margin:0 0 16px;border-bottom:1px solid var(--divider);border-radius:0}
 .plan-card .forecast-control {display:none}
 .plan-card .forecast-glance {display:flex;flex-wrap:wrap;gap:6px 22px;margin:0}
 .plan-card .forecast-glance>div,.plan-card .forecast-glance>[data-forecast-glance="next-hours"] {display:flex;flex-direction:row;align-items:baseline!important;gap:6px;padding:0!important;border:0!important}
@@ -286,9 +286,9 @@ legend {margin-bottom:8px}
 .plan-card .forecast-more summary {color:var(--muted)}
 .plan-card .forecast-more[open] {padding:8px 0}
 .plan-dock {display:flex;flex-direction:column;gap:14px;margin-top:18px;padding-top:16px;border-top:1px solid var(--divider)}
-.plan-dock #strategy-controls .control-heading {display:none}
-.plan-dock .usage-strategies {display:flex;flex-wrap:wrap;gap:6px}
-.plan-dock .usage-strategies button {display:block;padding:7px 12px}
+.plan-card #strategy-controls .control-heading {display:none}
+.plan-card .usage-strategies {display:flex;flex-wrap:wrap;gap:6px}
+.plan-card .usage-strategies button {display:block;padding:7px 12px}
 .plan-dock .input-state {display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px 20px}
 .plan-dock #inputs {border:0;box-shadow:none;background:none;padding:0;flex:1 1 auto;min-width:0}
 .plan-dock .compact-form {display:flex;flex-wrap:wrap;align-items:flex-start;gap:12px 28px}
@@ -312,7 +312,7 @@ legend {margin-bottom:8px}
 .plan-card .forecast-horizons span,.plan-card .forecast-horizons span:nth-child(n) {flex-direction:column;align-items:flex-start;gap:1px;min-width:84px;padding:6px 12px;border:1px solid var(--border);border-radius:4px;background:var(--surface-soft)}
 .plan-card .forecast-horizons small {font-size:11px}
 .plan-card .forecast-horizons b {font-size:18px;line-height:22px}
-.plan-dock #strategy-controls {display:flex;flex-wrap:wrap;align-items:flex-start;gap:6px}
+.plan-card #strategy-controls {display:flex;flex-wrap:wrap;align-items:flex-start;gap:6px}
 .plan-dock #inputs {flex:0 1 auto}.plan-dock .input-update {align-self:flex-end;margin-bottom:6px}
 @media(max-width:680px) {.plan-dock .input-update {align-self:flex-start}}
 /* "Assume no reset" as a square retro switch beside the strategies: the knob
@@ -327,3 +327,7 @@ legend {margin-bottom:8px}
 @media(prefers-reduced-motion:reduce) {.switch-knob {transition:none}}
 .plan-card .timeline-toolbar {border-top:0;padding-top:4px}
 @media(max-width:680px) {.no-reset-toggle {margin-left:0}}
+/* Tiles carry their own label; "More data" belongs to them, the rule closes the group. */
+.plan-card .forecast-glance>[data-forecast-glance="next-hours"]>dt {display:none}
+.plan-card .forecast-more {border-top:0;margin-top:8px;padding-top:0}
+.plan-card>.toolbar {margin-bottom:18px}
