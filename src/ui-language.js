@@ -91,7 +91,6 @@ const english={
   '检查时提醒：开启':'Alerts on checks: On','检查时提醒：关闭':'Alerts on checks: Off',
   '按当前用量，{time} 耗尽。':'At current usage, depletion at {time}.',
   '当前用量无法保留目标余量。':'Current usage would use the reserved margin.',
-  '若 {time} 仍未 reset：改为 {daily}% / 天。':'If no reset by {time}: use {daily}% / day.',
   '若仍未额外 reset':'If still no extra reset',
   '周末不使用':'Weekdays only','周末集中使用':'Weekend focus',
   '额外重置概率':'Reset chance','截止时间':'By','至少一次 · 截至':'At least one · by',

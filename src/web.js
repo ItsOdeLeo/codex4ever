@@ -3,7 +3,6 @@ import { renderForecastMethod } from './forecast-method-view.js';
 import { predictionFromArchive } from './reset-forecast.js';
 import { renderResetForecastSummary } from './reset-forecast-summary.js';
 import { renderUsageStrategies } from './components/usage-strategies.js';
-import { renderAvailabilityControls } from './components/availability-controls.js';
 import { usageConsumptionSummary } from './usage-consumption-summary.js';
 import { createUsagePlannerState,updateUsagePlanner,activePlannerPrediction } from './usage-planner-state.js';
 import { layoutStrategyTree, renderStrategyTree } from './strategy-tree-layout.js';
@@ -129,11 +128,7 @@ function markChanged() {
 function renderStrategyControls() {
   const planningPrediction=activePlannerPrediction(planner);
   $('#strategy-controls').innerHTML=`<div class="control-heading"><h3 id="strategy-controls-title">${t('用量策略')}</h3><span class="instant-label">${t('即时更新')}</span></div>${renderUsageStrategies({
-    selected:planner.intent.usageStrategy,locale:language,disabled:!planner.result?.available,
-    // Cautious / optimistic belong to keep available: show them right under it.
-    after:planner.intent.usageStrategy==='keep-available' ? {'keep-available':renderAvailabilityControls(
-      planner.result?.recommendation?.availability ? {...planner.result.recommendation.availability,timeZone} : null,
-      {locale:language,mode:planner.intent.availabilityMode},escape)} : {}},escape)}${forecastSource.available&&planner.result?.available ? `<button type="button" class="no-reset-toggle" data-toggle-forecast aria-pressed="${!planningPrediction}" title="${escape(t('按下后隐藏预测的 reset，所有策略都按没有额外 reset 来规划。'))}">${escape(t('假设没有 reset'))}</button>` : ''}`;
+    selected:planner.intent.usageStrategy,locale:language,disabled:!planner.result?.available},escape)}${forecastSource.available&&planner.result?.available ? `<button type="button" class="no-reset-toggle" role="switch" data-toggle-forecast aria-checked="${!planningPrediction}" title="${escape(t('按下后隐藏预测的 reset，所有策略都按没有额外 reset 来规划。'))}"><span class="switch-track" aria-hidden="true"><span class="switch-knob"></span></span>${escape(t('假设没有 reset'))}</button>` : ''}`;
 }
 
 function saveInput() {

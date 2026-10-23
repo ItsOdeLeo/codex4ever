@@ -56,11 +56,6 @@ legend{font-size:12px;font-weight:650;color:var(--ink);margin-bottom:12px;paddin
 .input-update #status{flex:1 1 120px;min-width:0;line-height:1.4}
 .control-heading{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:6px}
 .instant-label{font-size:11px;white-space:nowrap;color:var(--muted)}
-.availability-controls{display:grid;gap:8px;margin-top:12px}
-.availability-controls>small{font-size:11px;line-height:1.5;color:var(--muted)}
-.availability-controls>button{justify-self:start}
-.availability-controls>p{margin:0;font-size:12px;line-height:1.5}
-.availability-controls .availability-alert{color:var(--danger-text)}
 #status{font-size:11px;color:var(--muted)}
 #output{min-width:0}
 #result{min-width:0;width:100%}

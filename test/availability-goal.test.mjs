@@ -5,7 +5,6 @@ import { publicResetScenarios,simulateResetPolicy } from '../src/reset-policy-se
 import { resetProbabilityByHours } from '../src/local-predictor.js';
 import { createUsagePlannerState,updateUsagePlanner } from '../src/usage-planner-state.js';
 import { mcpUsageAdvice,renderMcpUsageAdvice } from '../src/mcp-usage-advice.js';
-import { renderAvailabilityControls } from '../src/components/availability-controls.js';
 import { layoutStrategyTree,renderStrategyTree } from '../src/strategy-tree-layout.js';
 
 const now=new Date('2026-10-18T12:00:00Z'),HOUR=3600000;
@@ -124,10 +123,6 @@ test('提醒开关只改变提醒，不改策略、概率、日期轴；MCP文�
     const text=renderMcpUsageAdvice(advice,{language});
     assert.match(text,language==='en' ? /Pace alert/ : /用量提醒/);
     assert.doesNotMatch(text,/undefined|NaN/);
-    const html=renderAvailabilityControls(advice.availability,{locale:language,mode:'cautious'},String);
-    // Real overuse alerts live in the Codex plugin; the page has no toggle.
-    assert.doesNotMatch(html,/data-toggle-pace-alerts/);
-    assert.doesNotMatch(html,/undefined|NaN/);
   }
   const optimistic=updateUsagePlanner(state,{type:'set-availability-mode',mode:'optimistic'});
   assert.equal(optimistic.snapshot,state.snapshot);assert.equal(optimistic.displayEndHours,state.displayEndHours);
