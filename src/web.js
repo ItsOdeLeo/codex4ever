@@ -72,7 +72,9 @@ input.resetDates = [...new Set((Array.isArray(input.resetDates) ? input.resetDat
 // Plans start from the observed pace; a slider value saved by older versions is ignored.
 let planner=createUsagePlannerState({timeZone,
   forecastEnabled:savedPlannerPreferences?.forecastEnabled,usageStrategy:savedPlannerPreferences?.usageStrategy,
-  availabilityMode:savedPlannerPreferences?.availabilityMode,alertsEnabled:savedPlannerPreferences?.alertsEnabled});
+  // "Assume no reset" replaced the cautious/optimistic choice; an old saved
+  // cautious mode would otherwise stick with no control to leave it.
+  alertsEnabled:savedPlannerPreferences?.alertsEnabled});
 
 const monthIndex = date => date.getFullYear() * 12 + date.getMonth();
 const monthDistance = () => monthIndex(visibleMonth) - monthIndex(new Date());
