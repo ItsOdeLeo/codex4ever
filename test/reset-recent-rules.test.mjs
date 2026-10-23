@@ -59,7 +59,7 @@ test('刚reset当天及次日概率极低，冷却解除后再按已等待时间
 test('Day功能帖当天概率极低，弱暗示和明确预告都不能冲掉指定硬规则',()=>{
   const hint={text:'Perhaps a Codex reset?',createdAt:'2026-10-16T18:00:00Z',signal:{kind:'reset_hint',confidence:1}};
   const promise={...hint,signal:{kind:'reset_planned',confidence:1,validUntil:'2026-10-17T06:00:00Z'}};
-  const p=predict({posts:[feature,hint,promise]});
+  const p=predict({posts:[feature,hint,promise],enforceCampaignFeatureRule:true});
   veryUnlikely(p.todayProbability);
   assert.equal(p.timeZone,'America/Los_Angeles');
   assert.equal(p.displayTimeZone,'Europe/Berlin');

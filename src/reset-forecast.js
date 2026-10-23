@@ -7,7 +7,7 @@ const DAY = 86_400_000;
 
 /** Offline adapter. Keep data freshness separate from the forecast clock. */
 export function predictionFromArchive({ archive, now = new Date(), timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone,
-  enforceResetCooldown = false } = {}) {
+  enforceResetCooldown = false, enforceCampaignFeatureRule = false } = {}) {
   const retrieved = Date.parse(`${archive?.retrievedAt}T00:00:00Z`);
   const age = (now.getTime() - retrieved) / DAY;
   if (!Number.isFinite(age) || age < 0 || age > 14)
@@ -29,7 +29,7 @@ export function predictionFromArchive({ archive, now = new Date(), timeZone = In
   if(landed)resetTimes.push(new Date(landed.at).toISOString());
   const prediction = predictReset({ now: now.toISOString(), timeZone, resetTimes,
     posts: archive.posts ?? [],campaignTimeZone:archive.campaignTimeZone??'America/Los_Angeles',
-    campaign:selectResetCampaign({campaigns:archive.campaigns,now:now.getTime()}),enforceResetCooldown });
+    campaign:selectResetCampaign({campaigns:archive.campaigns,now:now.getTime()}),enforceResetCooldown,enforceCampaignFeatureRule });
   prediction.evidence.dataAsOf = archive.retrievedAt;
   prediction.evidence.liveCoverage = archive.coverage ?? null;
   const mention=archive.latestResetMention;

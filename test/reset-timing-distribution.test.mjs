@@ -64,7 +64,7 @@ test('所有日期概率为零或没有有效CDF时，不编造most likely日期
 
 test('预测器输出独立的最可能日期，不把中位时间当成mode；活动约束也进入该分布', () => {
   const now = '2026-10-16T20:00:00Z', timeZone = 'Europe/Berlin';
-  const prediction = predictReset({ now, timeZone, campaignTimeZone: 'America/Los_Angeles',
+  const prediction = predictReset({ now, timeZone, enforceCampaignFeatureRule: true, campaignTimeZone: 'America/Los_Angeles',
     priorDailyProbability: .15, posts: [{ text: 'Day 12/ Shipped a new feature.', createdAt: now,
       signal: { kind: 'new_feature', confidence: .95 } }] });
   const mode = prediction.resetTimingDistribution.mostLikely;

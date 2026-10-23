@@ -93,7 +93,7 @@ test('均值日期已过取下一个未来常见钟点；重复公告不增样�
 
 test('当天功能硬规则不被平均间隔和常见晚间钟点绕过，预计点必须晚于封锁期限', () => {
   const forecastNow = '2026-10-22T12:00:00Z';
-  const prediction = predict({ now: forecastNow, posts: [{ createdAt: forecastNow, text: 'Day 18/ New feature.',
+  const prediction = predict({ now: forecastNow, enforceCampaignFeatureRule: true, posts: [{ createdAt: forecastNow, text: 'Day 18/ New feature.',
     signal: { kind: 'new_feature', confidence: .95 } }] });
   veryUnlikely(prediction.todayProbability);
   assert.equal(prediction.resetTimeEstimate.meanAlreadyPassed, true);

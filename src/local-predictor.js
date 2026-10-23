@@ -94,10 +94,11 @@ function postEffects(posts, nowMs, elapsedDays, lastResetMs) {
  * Returns experimental event probabilities, not calibrated account odds.
  */
 export function predictReset({ now, timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone,
-  resetTimes = [], posts = [], priorDailyProbability, campaignTimeZone=timeZone, campaign=null, enforceResetCooldown=false,
+  resetTimes = [], posts = [], priorDailyProbability, campaignTimeZone=timeZone, campaign=null, enforceResetCooldown=false, enforceCampaignFeatureRule=false,
   suppressedHazardFactor=SUPPRESSED_HAZARD_FACTOR } = {}) {
   const nowMs = dateMs(now, '当前时间');
   if(typeof enforceResetCooldown!=='boolean')throw new Error('enforceResetCooldown 必须是布尔值');
+  if(typeof enforceCampaignFeatureRule!=='boolean')throw new Error('enforceCampaignFeatureRule 必须是布尔值');
   if(!Number.isFinite(suppressedHazardFactor)||suppressedHazardFactor<0||suppressedHazardFactor>1)
     throw new Error('suppressedHazardFactor 必须在 0–1 之间');
   const suppress=suppressWith(suppressedHazardFactor);
@@ -138,7 +139,10 @@ export function predictReset({ now, timeZone = Intl.DateTimeFormat().resolvedOpt
   const cooldownRule=enforceResetCooldown
     ? resetCooldownRule({lastReset:times.at(-1),now:nowMs,timeZone:forecastTimeZone}) : null;
   const cooldown=cooldownRule ? {...cooldownRule,hazardFactor:suppressedHazardFactor} : null;
-  const feature=posts.filter(post=>campaignFeature(post)
+  // Off by default: without a validated feature-strength signal, a Day N
+  // feature post is no evidence either way (Day N posts that say "reset"
+  // are classified as resets on their own).
+  const feature=enforceCampaignFeatureRule&&posts.filter(post=>campaignFeature(post)
     && dateMs(post.createdAt,'帖子时间')<=nowMs
     && localDay.format(new Date(post.createdAt))===localDay.format(new Date(nowMs)))
     .sort((a,b)=>dateMs(b.createdAt,'帖子时间')-dateMs(a.createdAt,'帖子时间'))[0];
