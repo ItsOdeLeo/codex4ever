@@ -48,8 +48,8 @@ test('近期只有一个完整间隔仍以近期为主，但不编造均值置�
 });
 
 test('刚reset当天及次日概率极低，冷却解除后再按已等待时间计算',()=>{
-  const early=predict({now:'2026-10-13T12:00:00Z',timeZone:'UTC'});
-  const later=predict({now:'2026-10-15T12:00:00Z',timeZone:'UTC'});
+  const early=predict({now:'2026-10-13T12:00:00Z',timeZone:'UTC',enforceResetCooldown:true});
+  const later=predict({now:'2026-10-15T12:00:00Z',timeZone:'UTC',enforceResetCooldown:true});
   veryUnlikely(early.todayProbability);
   assert.ok(resetProbabilityByHours(early,24)<resetProbabilityByHours(later,24));
   assert.equal(early.evidence.hardRules[0].kind,'reset-next-day-cooldown');

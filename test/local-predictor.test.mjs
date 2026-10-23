@@ -135,5 +135,5 @@ test('同一天多次公开公告按事件日计数，不产生超过 100% 的�
       '2026-10-12T20:00:00Z', '2026-10-13T01:00:00Z'] });
   assert.equal(result.evidence.recentEventDays, 3);
   assert.ok(result.evidence.dailyFrequency < 1);
-  veryUnlikely(result.todayProbability);
+  assert.ok(result.todayProbability < 1);
 });

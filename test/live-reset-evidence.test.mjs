@@ -108,9 +108,9 @@ test('标准LLM分析回复及其上下文，缓存分类但不缓存抓取；�
   assert.equal(first.latestResetMention.sourceUrl,post.link);
   assert.equal(first.latestResetMention.context,post.context);
   assert.doesNotMatch(JSON.stringify(first),/never-output-this-key|test-token/);
-  const prediction=predictionFromArchive({archive:first,now,timeZone:'Europe/Berlin'}).prediction;
-  veryUnlikely(prediction.todayProbability,'刚reset后的次日冷却期内，明确预告也不能提前放开');
-  const historyOnly=predictionFromArchive({archive:{...first,posts:[]},now,timeZone:'Europe/Berlin'}).prediction;
+  const prediction=predictionFromArchive({archive:first,now,timeZone:'Europe/Berlin',enforceResetCooldown:true}).prediction;
+  veryUnlikely(prediction.todayProbability,'开启次日冷却时，明确预告也不能提前放开');
+  const historyOnly=predictionFromArchive({archive:{...first,posts:[]},now,timeZone:'Europe/Berlin',enforceResetCooldown:true}).prediction;
   assert.ok(prediction.next48Probability>historyOnly.next48Probability,'回复分类真正进入概率计算');
   assert.equal(prediction.evidence.latestResetMention.sourceUrl,post.link);
 });
@@ -194,7 +194,7 @@ test('采集链路使用真实事件时间入库，JSON代码块可进入预测�
   assert.equal(added[0].reportedAt,'2026-10-15T19:00:00.000Z');
   assert.equal(added[0].timeBasis,'explicit');
   assert.equal(archive.posts.find(p=>p.sourceUrl.endsWith('/502')).signal.kind,'unknown');
-  const prediction=predictionFromArchive({archive,now,timeZone:'Europe/Berlin'});
+  const prediction=predictionFromArchive({archive,now,timeZone:'Europe/Berlin',enforceResetCooldown:true});
   assert.equal(prediction.available,true);
   assert.equal(prediction.prediction.evidence.hardRules.find(r=>r.kind==='reset-next-day-cooldown').lastResetAt,
     '2026-10-15T18:00:00.000Z');
@@ -224,7 +224,9 @@ test('Codex Resets 已宣布的 reset：按确定事件处理，过了时间就�
   assert.equal(later.prediction.evidence.scheduledResetAt,null);
   assert.equal(later.lastResetAt,'2026-10-22T17:00:00.000Z');
   assert.equal(later.lastResetSource,'https://x.com/thsottiaux/status/9');
-  veryUnlikely(later.prediction.next12Probability,'刚 reset 后进入冷却期');
+  // The forecast restarts its clock from the landed reset.
+  assert.ok(Math.abs(later.daysSinceReset-4/24)<1e-9);
+  assert.ok(Math.abs(later.prediction.evidence.daysSinceReset-4/24)<1e-9);
   // Landed early and already recorded: never counted twice.
   const early=record('10','2026-10-22T15:00:00Z');
   const recorded=await collectLiveResetEvidence({now:new Date('2026-10-22T21:00:00Z'),classifyWithLLM:false,xBearerToken:null,

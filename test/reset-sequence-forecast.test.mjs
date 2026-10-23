@@ -1,10 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { followingResetEstimate,followingResetDistribution,followingResetProbabilityByHours } from '../src/reset-sequence-forecast.js';
-import { predictReset,resetProbabilityByHours } from '../src/local-predictor.js';
+import { predictReset as predictWithoutCooldown,resetProbabilityByHours } from '../src/local-predictor.js';
 import { planUsagePath } from '../src/usage-path-planner.js';
 import { layoutStrategyTree,renderStrategyTree } from '../src/strategy-tree-layout.js';
 import { conservativeResetTimes } from '../src/reset-forecast.js';
+// The cooldown is off by default (backtest); these tests exercise it when enabled.
+const predictReset=options=>predictWithoutCooldown({enforceResetCooldown:true,...options});
+
 
 const now='2026-10-17T12:00:00Z',HOUR=3600000;
 const fixture=()=>({model:'local-recent-intervals-v5',enforceResetCooldown:true,

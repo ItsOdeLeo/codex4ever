@@ -94,7 +94,7 @@ function postEffects(posts, nowMs, elapsedDays, lastResetMs) {
  * Returns experimental event probabilities, not calibrated account odds.
  */
 export function predictReset({ now, timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone,
-  resetTimes = [], posts = [], priorDailyProbability, campaignTimeZone=timeZone, campaign=null, enforceResetCooldown=true,
+  resetTimes = [], posts = [], priorDailyProbability, campaignTimeZone=timeZone, campaign=null, enforceResetCooldown=false,
   suppressedHazardFactor=SUPPRESSED_HAZARD_FACTOR } = {}) {
   const nowMs = dateMs(now, '当前时间');
   if(typeof enforceResetCooldown!=='boolean')throw new Error('enforceResetCooldown 必须是布尔值');

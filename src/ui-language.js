@@ -200,7 +200,7 @@ const english={
   '常见 你的时间 {time} · Tibo 当地 {local}':'Typically {time} your time · {local} Tibo’s time','常见 你的时间 {time}':'Typically {time} your time',
   '平均 {days} 天':'Mean {days} days','自 {time} 起，已过 {days} 天':'{days} days since {time}',
   '发布钟点使用全部历史自动重置日；重置间隔优先使用当前活动内的完整间隔，样本不足时回退到近期或历史。':'Posting time uses all recorded automatic-reset days. Reset intervals use complete intervals within the active campaign, falling back to recent or historical data when needed.',
-  '基础风险结合距上次重置的时间、所选间隔分布、帖子信号和冷却规则，再用历史发布钟点加权。':'Base risk combines time since the last reset, the selected interval distribution, post signals and cooldown rules. Historical posting times then weight that risk.',
+  '基础风险结合距上次重置的时间、所选间隔分布和帖子信号，再用历史发布钟点加权。':'Base risk combines time since the last reset, the selected interval distribution and post signals, then weights it by historical release times.',
   '时段风险 = 基础风险 × 历史钟点权重 ÷ 当日平均权重':'Time-slot risk = base risk × historical clock weight ÷ that day’s mean weight',
   'F₀：基础累计概率；w：全历史钟点权重；t*：最可能的小时窗口。':'F₀: base cumulative probability; w: all-history clock weight; t*: most likely hourly window.',
   '累计概率由加权风险累积得到；最可能时间取实际分布中概率密度最高的小时窗口，不是简单把平均天数加到上次时间。':'Cumulative probability comes from the weighted risk. The most likely time is the highest-density hourly window of the resulting distribution, rather than simply the last reset plus the mean interval.',

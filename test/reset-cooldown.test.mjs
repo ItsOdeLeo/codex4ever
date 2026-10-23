@@ -1,9 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { predictReset,resetProbabilityByHours as probability } from '../src/local-predictor.js';
-import { predictionFromArchive } from '../src/reset-forecast.js';
+import { predictReset as predictWithoutCooldown,resetProbabilityByHours as probability } from '../src/local-predictor.js';
+import { predictionFromArchive as archivePrediction } from '../src/reset-forecast.js';
 import { resetProbabilityBins } from '../src/reset-probability-plot.js';
 import { renderResetForecastSummary } from '../src/reset-forecast-summary.js';
+// The cooldown is off by default (backtest); these tests exercise it when enabled.
+const predictReset=options=>predictWithoutCooldown({enforceResetCooldown:true,...options});
+const predictionFromArchive=options=>archivePrediction({enforceResetCooldown:true,...options});
+
 
 // Suppressed windows keep about 5% of the usual rate: very unlikely, not impossible.
 const veryUnlikely=(value,message)=>assert.ok(value>=0&&value<.05,message??`${value} 应很低`);

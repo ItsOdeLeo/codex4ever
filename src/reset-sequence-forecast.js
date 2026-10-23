@@ -13,7 +13,7 @@ function renewalModel(prediction,now,resetAt=null) {
   const first=Date.parse(firstAt),mean=prediction.evidence?.intervalModel?.meanIntervalDays;
   if(!Number.isFinite(first)||first<origin||!Number.isFinite(mean)||mean<=0)return null;
   const sourceClock=prediction.releaseClock;
-  const enforce=prediction.enforceResetCooldown??prediction.model==='local-recent-intervals-v5';
+  const enforce=prediction.enforceResetCooldown??false;
   const learned=prediction.evidence?.intervalDistribution;
   if(!caches.has(prediction))caches.set(prediction,new Map());
   const models=caches.get(prediction),key=`${origin}:${first}`;
@@ -78,7 +78,7 @@ export function followingResetEstimate({prediction,now,firstAt:assumedAt=null}) 
   const mean=prediction?.evidence?.intervalModel?.meanIntervalDays;
   if(!Number.isFinite(first)||!Number.isFinite(origin)||first<=origin||!Number.isFinite(mean)||mean<=0)return null;
   const clock=prediction.releaseClock;
-  const enforce=prediction.enforceResetCooldown??prediction.model==='local-recent-intervals-v5';
+  const enforce=prediction.enforceResetCooldown??false;
   const cooldown=enforce ? resetCooldownRule({lastReset:first,now:first,
     timeZone:clock?.timeZone??prediction.timeZone??prediction.displayTimeZone??'UTC'}) : null;
   const notBefore=Math.max(first+1,cooldown ? Date.parse(cooldown.until) : first+1);
