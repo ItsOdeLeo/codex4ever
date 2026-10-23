@@ -409,11 +409,16 @@ legend {margin-bottom:8px}
 .footer-link {padding:0;border:0;background:none;box-shadow:none;font:inherit;color:var(--ink);text-decoration:underline;text-decoration-color:var(--link-stroke);text-underline-offset:3px;cursor:pointer}
 .footer-link:hover:not(:disabled) {background:none}
 @media(min-width:1180px) {
-  /* Narrow forecast card: one line per fact, numbers only; notes stay in the
-     narrow-screen layout and the method section. */
-  .plan-card .forecast-more>dl>div {grid-template-columns:104px minmax(0,1fr);gap:0 10px;padding:2px 0!important}
-  .plan-card .forecast-more dt,.plan-card .forecast-more dd {font-size:11px;line-height:1.5}
-  .plan-card .forecast-more dd small,.plan-card .forecast-more dd q {display:none}
   .plan-card #forecast>.brand-stamp {position:static;justify-content:flex-start;margin-top:12px}
   .plan-card .no-reset-toggle {white-space:nowrap;gap:6px}
+}
+/* Wide forecast card, as the old sidebar card: chance tiles, then the four
+   short facts (window, last reset, campaign, Tibo), More data folded. */
+@media(min-width:1180px) {
+  .plan-card .forecast-glance {display:block}
+  .plan-card .forecast-glance>div:not([data-forecast-glance="next-hours"]) {display:flex!important;justify-content:space-between;align-items:baseline;gap:12px;padding:9px 0!important;border-bottom:1px solid var(--divider)!important}
+  .plan-card .forecast-glance>[data-forecast-glance="next-hours"] {padding:0 0 12px!important;border-bottom:1px solid var(--divider)!important}
+  .plan-card .forecast-glance>div:not([data-forecast-glance="next-hours"]) dt {font-size:12px;color:var(--muted)}
+  .plan-card .forecast-glance>div:not([data-forecast-glance="next-hours"]) dd {font-size:12px;text-align:right}
+  .plan-card .forecast-more {margin-top:10px}
 }

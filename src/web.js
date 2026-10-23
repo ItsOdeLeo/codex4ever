@@ -150,9 +150,7 @@ function renderForecastCard(graph=null) {
   // The chance tiles stay while "Assume no reset" is on: the forecast still
   // exists, the plan just does not count it, and the card keeps its height.
   const forecastSummary = renderResetForecastSummary({ source: forecastSource, prediction: planner.snapshot.prediction,
-    timeZone, now: planningNow,locale:language,
-    // Wide screens give the forecast its own card, with room to show the details.
-    moreOpen:globalThis.matchMedia?.('(min-width:1180px)').matches??false });
+    timeZone, now: planningNow,locale:language });
   $('#forecast').innerHTML = `<div class="forecast-control" ${planningPrediction ? `data-forecast-48-probability="${planningPrediction.next48Probability}"` : ''}><span>${t('额外重置预测')}</span></div>${forecastSummary}${BRAND_STAMP}`;
 }
 
