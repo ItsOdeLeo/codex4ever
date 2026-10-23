@@ -11,8 +11,8 @@ function startMcp(env = {}, source = null) {
   const child = spawn(process.execPath, source ? ['--input-type=module','-e',source] : ['src/mcp-server.js'], {
     cwd: new URL('..', import.meta.url).pathname,
     // Never touch the user's real reminder settings from a test run.
-    env: { ...process.env, CODEX4EVER_HOME: join(tmpdir(), `codex4ever-home-test-${process.pid}-${Math.random()}`),
-      CODEX4EVER_ALERT_FILE: join(tmpdir(), `codex4ever-alerts-test-${process.pid}-${Math.random()}.json`), ...env }, stdio: ['pipe', 'pipe', 'pipe']
+    env: { ...process.env, USAGE_PLANNER_HOME: join(tmpdir(), `usage-planner-home-test-${process.pid}-${Math.random()}`),
+      USAGE_PLANNER_ALERT_FILE: join(tmpdir(), `usage-planner-alerts-test-${process.pid}-${Math.random()}.json`), ...env }, stdio: ['pipe', 'pipe', 'pipe']
   });
   const pending = new Map();
   let stderr = '';
@@ -52,18 +52,18 @@ function startMcp(env = {}, source = null) {
 async function initialize(client) {
   const init = await client.request('initialize', {
     protocolVersion: '2025-06-18', capabilities: {},
-    clientInfo: { name: 'codex4ever-test', version: '1.0.0' }
+    clientInfo: { name: 'usage-planner-test', version: '1.0.0' }
   });
-  assert.equal(init.result.serverInfo.name, 'codex4ever');
+  assert.equal(init.result.serverInfo.name, 'usage-planner');
   client.notify('notifications/initialized');
 }
 
 test('Keep available MCP接口输出同源预算和可开关的检查提醒，额外reset参与乐观策略',async()=>{
   const now='2026-10-18T12:00:00Z';
   const source=`import {serveStdio} from '@modelcontextprotocol/server/stdio';
-    import {createCodex4everServer} from './src/mcp-server.js';
-    serveStdio(()=>createCodex4everServer({clock:()=>new Date(${JSON.stringify(now)})}));`;
-  const client=startMcp({CODEX4EVER_LLM_MODEL:''},source);
+    import {createUsagePlannerServer} from './src/mcp-server.js';
+    serveStdio(()=>createUsagePlannerServer({clock:()=>new Date(${JSON.stringify(now)})}));`;
+  const client=startMcp({USAGE_PLANNER_LLM_MODEL:''},source);
   try {
     await initialize(client);
     const call=async extra=>(await client.request('tools/call',{name:'plan_usage_strategy',arguments:{
@@ -105,10 +105,10 @@ test('MCP 可显式采用配置模型，事件发生时间穿过工具schema进�
   const archive={retrievedAt:'2026-10-19',checkedAt:now,posts:[post],
     events:[1,5,9,13,17].map(day=>({kind:'automatic',at:`2026-10-${String(day).padStart(2,'0')}T02:00:00Z`}))};
   const source=`import {serveStdio} from '@modelcontextprotocol/server/stdio';
-    import {createCodex4everServer} from './src/mcp-server.js';
-    serveStdio(()=>createCodex4everServer({collectEvidence:async({classifyWithLLM})=>({...${JSON.stringify(archive)},
+    import {createUsagePlannerServer} from './src/mcp-server.js';
+    serveStdio(()=>createUsagePlannerServer({collectEvidence:async({classifyWithLLM})=>({...${JSON.stringify(archive)},
       classification:classifyWithLLM?'llm':'explicit-text',classificationModel:classifyWithLLM?'claude-haiku-5-5':null})}));`;
-  const client=startMcp({CODEX4EVER_LLM_MODEL:''},source);
+  const client=startMcp({USAGE_PLANNER_LLM_MODEL:''},source);
   try {
     await initialize(client);
     const call=async(name,args)=>(await client.request('tools/call',{name,arguments:args})).result;
@@ -135,15 +135,15 @@ test('MCP 直接打开完整前端，按需刷新沿用已分析证据，新帖�
     windowDurationMins:10080,resetsAt:Date.parse('2026-10-24T20:00:00Z')/1000},secondary:null}},
     rateLimitResetCredits:{availableCount:0,credits:[]}};
   const source=`import {serveStdio} from '@modelcontextprotocol/server/stdio';
-    import {createCodex4everServer} from './src/mcp-server.js';
+    import {createUsagePlannerServer} from './src/mcp-server.js';
     import {startPlannerPage} from './src/local-planner-page.js';
-    const page=await startPlannerPage({root:new URL(${JSON.stringify(new URL('../plugins/codex4ever/web/',import.meta.url).href)})});
+    const page=await startPlannerPage({root:new URL(${JSON.stringify(new URL('../plugins/usage-planner/web/',import.meta.url).href)})});
     process.stdin.once('end',()=>page.close());let reads=0,collects=0;
-    serveStdio(()=>createCodex4everServer({plannerPage:page,clock:()=>new Date(${JSON.stringify(now)}),
+    serveStdio(()=>createUsagePlannerServer({plannerPage:page,clock:()=>new Date(${JSON.stringify(now)}),
       readUsage:async()=>{reads++;return ${JSON.stringify(raw)};},
       collectEvidence:async()=>{collects++;return {...${JSON.stringify(archive)},posts:collects>2
         ? [{...${JSON.stringify(posts[0])},text:'A different, unclassified reply.'}] : ${JSON.stringify(posts)}};} }));`;
-  const client=startMcp({CODEX4EVER_LLM_MODEL:''},source);
+  const client=startMcp({USAGE_PLANNER_LLM_MODEL:''},source);
   try {
     await initialize(client);
     const opened=await client.request('tools/call',{name:'open_planner',arguments:{timeZone:'UTC',language:'en'}});
@@ -212,12 +212,12 @@ test('MCP宿主取原帖、自己分类、回传规划，无额外模型API并�
     lastResetAt:'2026-10-14T08:00:00.000Z',lastResetSource:'https://x.com/thsottiaux/status/998',
     coverage:{history:{status:'live'},social:{status:'partial'}}};
   const source=`import {serveStdio} from '@modelcontextprotocol/server/stdio';
-    import {createCodex4everServer} from './src/mcp-server.js';
-    serveStdio(()=>createCodex4everServer({collectEvidence:async options=>{
+    import {createUsagePlannerServer} from './src/mcp-server.js';
+    serveStdio(()=>createUsagePlannerServer({collectEvidence:async options=>{
       if(options.classifyWithLLM!==false)throw new Error('宿主模式不能另调LLM API');
       return ${JSON.stringify(archive)};
     }}));`;
-  const client=startMcp({CODEX4EVER_LLM_MODEL:''},source);
+  const client=startMcp({USAGE_PLANNER_LLM_MODEL:''},source);
   try {
     await initialize(client);
     const raw=await client.request('tools/call',{name:'get_reset_evidence',arguments:{now,timeZone:'UTC'}});
@@ -374,8 +374,8 @@ test('MCP默认采用运行环境时区，证据时区和显式用户时区按�
   const archive = { retrievedAt: '2026-10-16', campaignTimeZone: 'America/Los_Angeles', posts: [],
     events: [6, 9, 12, 15].map(day => ({ kind: 'automatic', at: `2026-10-${String(day).padStart(2, '0')}T05:00:00Z` })) };
   const client = startMcp({ TZ: 'Asia/Tokyo' }, `import {serveStdio} from '@modelcontextprotocol/server/stdio';
-    import {createCodex4everServer} from './src/mcp-server.js';
-    serveStdio(()=>createCodex4everServer({collectEvidence:async()=>(${JSON.stringify(archive)})}));`);
+    import {createUsagePlannerServer} from './src/mcp-server.js';
+    serveStdio(()=>createUsagePlannerServer({collectEvidence:async()=>(${JSON.stringify(archive)})}));`);
   try {
     await initialize(client);
     const raw = await client.request('tools/call', { name: 'get_reset_evidence', arguments: { now } });
@@ -437,7 +437,7 @@ test('MCP 默认与网页同一规则：按置信度计入 reset；显式 feedba
 });
 
 test('单次 MCP 调用读取 Codex 快照并计算策略', async () => {
-  const dir = await mkdtemp(join(tmpdir(), 'codex4ever-mock-'));
+  const dir = await mkdtemp(join(tmpdir(), 'usage-planner-mock-'));
   const executable = join(dir, 'codex-mock.mjs');
   const resetAt = Math.floor(Date.now() / 1000) + 6 * 24 * 3600;
   const expiry = Math.floor(Date.now() / 1000) + 10 * 24 * 3600;
@@ -455,7 +455,7 @@ test('单次 MCP 调用读取 Codex 快照并计算策略', async () => {
     `});\n`;
   await writeFile(executable, script);
   await chmod(executable, 0o755);
-  const client = startMcp({ CODEX4EVER_CODEX_CLI: executable });
+  const client = startMcp({ USAGE_PLANNER_CODEX_CLI: executable });
   try {
     await initialize(client);
     const read = await client.request('tools/call', { name: 'get_usage_snapshot', arguments: { timeZone: 'UTC' } });
@@ -484,7 +484,7 @@ test('单次 MCP 调用读取 Codex 快照并计算策略', async () => {
 });
 
 test('MCP 把帖子预测接进策略情景，并在未配置模型时明确报错', async () => {
-  const client = startMcp({ CODEX4EVER_LLM_MODEL: '' });
+  const client = startMcp({ USAGE_PLANNER_LLM_MODEL: '' });
   try {
     await initialize(client);
     const result = await client.request('tools/call', { name: 'plan_usage_strategy', arguments: {

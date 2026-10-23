@@ -2,6 +2,7 @@ import { classifyTiboPosts } from './llm-classifier.js';
 import { campaignDay } from './reset-day-evidence.js';
 import { RESET_CAMPAIGNS } from './reset-campaign.js';
 import { completedResetEvent, normalizeResetSignalTime, RESET_CLASSIFIER_VERSION } from './reset-event-time.js';
+import { plannerEnv } from './planner-name.js';
 
 export const RESET_HISTORY_URL = 'https://codex-resets.com/api/v1/resets?limit=100';
 export const RESET_STATUS_URL = 'https://codex-resets.com/api/v1/status';
@@ -92,7 +93,7 @@ export async function readTiboTimeline({bearerToken,fetchImpl=fetch,timeoutMs=60
 /** Fetch public evidence, never another site's likelihood or credentials. */
 export async function collectLiveResetEvidence({ now=new Date(), fallbackArchive, fetchImpl=fetch,
   timeoutMs=6000, llm={}, classifyWithLLM=true, classificationCache=new Map(),
-  xBearerToken=process.env.CODEX4EVER_X_BEARER_TOKEN }={}) {
+  xBearerToken=plannerEnv('X_BEARER_TOKEN') }={}) {
   // One public source (Codex Resets: history and status, including the Tibo
   // posts behind each record); the full timeline only with an X API key.
   const sources=[RESET_HISTORY_URL,RESET_STATUS_URL];
@@ -137,12 +138,12 @@ export async function collectLiveResetEvidence({ now=new Date(), fallbackArchive
     .sort((a,b)=>(campaignDay(b)!==null ? 2 : Number(resetRelated(b)))
       -(campaignDay(a)!==null ? 2 : Number(resetRelated(a)))
       || Date.parse(b.createdAt)-Date.parse(a.createdAt)).slice(0,8);
-  const model=classifyWithLLM ? llm.model??process.env.CODEX4EVER_LLM_MODEL : null;
+  const model=classifyWithLLM ? llm.model??plannerEnv('LLM_MODEL') : null;
   let classification='explicit-text', classificationError=null,modelCalls=0;
   const classified=[];
   for(const post of posts) {
     if(post.signal) {classified.push(post);continue;}
-    const key=[RESET_CLASSIFIER_VERSION,model??'explicit-text',llm.baseUrl??process.env.CODEX4EVER_LLM_BASE_URL,
+    const key=[RESET_CLASSIFIER_VERSION,model??'explicit-text',llm.baseUrl??plannerEnv('LLM_BASE_URL'),
       post.sourceUrl,post.createdAt,post.text,post.context].join('\0');
     if(classificationCache.has(key)) {
       const cached=classificationCache.get(key);

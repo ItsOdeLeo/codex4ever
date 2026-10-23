@@ -5,12 +5,13 @@
 // spends anything; reading quota is local and costs no Codex usage.
 import { readFile,writeFile,mkdir } from 'node:fs/promises';
 import { dirname,join } from 'node:path';
-import { homedir } from 'node:os';
 import { execFile } from 'node:child_process';
 import { alertBaseline,checkUsageAgainstPlan } from './usage-alert.js';
+import { plannerEnv } from './planner-name.js';
+import { plannerHome } from './planner-home.js';
 
-export const defaultAlertFile=()=>process.env.CODEX4EVER_ALERT_FILE
-  ??join(process.env.CODEX4EVER_HOME??join(homedir(),'.codex4ever'),'alerts.json');
+export const defaultAlertFile=()=>plannerEnv('ALERT_FILE')
+  ??join(plannerHome(),'alerts.json');
 
 const appleString=value=>`"${String(value).replace(/\\/g,'\\\\').replace(/"/g,'\\"')}"`;
 /** macOS banner; other systems only get the result in the conversation. */

@@ -1,4 +1,4 @@
 interface:
-  display_name: "Codex4ever"
+  display_name: "Usage Planner"
   short_description: "Plan Codex quota, usage and resets"
   default_prompt: "Use $codex-usage to plan my Codex usage from my current quota and reset evidence."

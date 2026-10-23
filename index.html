@@ -4,19 +4,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- site-meta:start -->
-  <title>Codex4ever | Codex Quota &amp; Reset Planner</title>
+  <title>Usage Planner | Codex Quota &amp; Reset Planner</title>
   <meta name="description" content="Plan OpenAI Codex usage with quota depletion estimates, banked reset deadlines and extra reset forecasts. Compare daily usage strategies locally or through MCP.">
   <meta name="robots" content="noindex, follow">
-  <meta property="og:site_name" content="Codex4ever">
+  <meta property="og:site_name" content="Usage Planner">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Codex4ever | Codex Quota &amp; Reset Planner">
+  <meta property="og:title" content="Usage Planner | Codex Quota &amp; Reset Planner">
   <meta property="og:description" content="Plan OpenAI Codex usage with quota depletion estimates, banked reset deadlines and extra reset forecasts. Compare daily usage strategies locally or through MCP.">
   <meta property="og:locale" content="en_GB">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Codex4ever | Codex Quota &amp; Reset Planner">
+  <meta name="twitter:title" content="Usage Planner | Codex Quota &amp; Reset Planner">
   <meta name="twitter:description" content="Plan OpenAI Codex usage with quota depletion estimates, banked reset deadlines and extra reset forecasts. Compare daily usage strategies locally or through MCP.">
 
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Codex4ever","description":"Plan OpenAI Codex usage with quota depletion estimates, banked reset deadlines and extra reset forecasts. Compare daily usage strategies locally or through MCP.","applicationCategory":"DeveloperApplication","operatingSystem":"Web","inLanguage":["en","zh-CN"],"isAccessibleForFree":true,"license":"https://opensource.org/licenses/MIT","author":{"@type":"Person","name":"ItsOdeLeo","url":"https://x.com/ItsOdeLeo"},"sameAs":["https://github.com/ItsOdeLeo/codex4ever"]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Usage Planner","description":"Plan OpenAI Codex usage with quota depletion estimates, banked reset deadlines and extra reset forecasts. Compare daily usage strategies locally or through MCP.","applicationCategory":"DeveloperApplication","operatingSystem":"Web","inLanguage":["en","zh-CN"],"isAccessibleForFree":true,"license":"https://opensource.org/licenses/MIT","author":{"@type":"Person","name":"ItsOdeLeo","url":"https://x.com/ItsOdeLeo"},"sameAs":["https://github.com/ItsOdeLeo/usage-planner"]}</script>
   <!-- site-meta:end -->
   <meta name="theme-color" content="#F7D5D5">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' shape-rendering='crispEdges'%3E%3Crect width='24' height='24' rx='3' fill='%23AFE5DD'/%3E%3Cpath transform='translate(1 6.5)' d='M2 0h5v1h-5zM15 0h5v1h-5zM1 1h2v1h-2zM6 1h2v1h-2zM14 1h2v1h-2zM19 1h2v1h-2zM0 2h2v1h-2zM7 2h2v1h-2zM13 2h2v1h-2zM20 2h2v1h-2zM0 3h2v1h-2zM8 3h2v1h-2zM12 3h2v1h-2zM20 3h2v1h-2zM0 4h2v1h-2zM9 4h4v1h-4zM20 4h2v1h-2zM0 5h2v1h-2zM10 5h2v1h-2zM20 5h2v1h-2zM0 6h2v1h-2zM9 6h4v1h-4zM20 6h2v1h-2zM0 7h2v1h-2zM8 7h2v1h-2zM12 7h2v1h-2zM20 7h2v1h-2zM0 8h2v1h-2zM7 8h2v1h-2zM13 8h2v1h-2zM20 8h2v1h-2zM1 9h2v1h-2zM6 9h2v1h-2zM14 9h2v1h-2zM19 9h2v1h-2zM2 10h5v1h-5zM15 10h5v1h-5z'/%3E%3C/svg%3E">
@@ -38,11 +38,11 @@
   </svg>
   <main>
     <header class="site-header">
-      <div class="brand"><span class="brand-mark" aria-hidden="true"><svg class="pixel-mark" viewBox="0 0 22 11" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M2 0h5v1h-5zM15 0h5v1h-5zM1 1h2v1h-2zM6 1h2v1h-2zM14 1h2v1h-2zM19 1h2v1h-2zM0 2h2v1h-2zM7 2h2v1h-2zM13 2h2v1h-2zM20 2h2v1h-2zM0 3h2v1h-2zM8 3h2v1h-2zM12 3h2v1h-2zM20 3h2v1h-2zM0 4h2v1h-2zM9 4h4v1h-4zM20 4h2v1h-2zM0 5h2v1h-2zM10 5h2v1h-2zM20 5h2v1h-2zM0 6h2v1h-2zM9 6h4v1h-4zM20 6h2v1h-2zM0 7h2v1h-2zM8 7h2v1h-2zM12 7h2v1h-2zM20 7h2v1h-2zM0 8h2v1h-2zM7 8h2v1h-2zM13 8h2v1h-2zM20 8h2v1h-2zM1 9h2v1h-2zM6 9h2v1h-2zM14 9h2v1h-2zM19 9h2v1h-2zM2 10h5v1h-5zM15 10h5v1h-5z"/></svg></span><div><h1>Codex4ever</h1>
+      <div class="brand"><span class="brand-mark" aria-hidden="true"><svg class="pixel-mark" viewBox="0 0 22 11" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M2 0h5v1h-5zM15 0h5v1h-5zM1 1h2v1h-2zM6 1h2v1h-2zM14 1h2v1h-2zM19 1h2v1h-2zM0 2h2v1h-2zM7 2h2v1h-2zM13 2h2v1h-2zM20 2h2v1h-2zM0 3h2v1h-2zM8 3h2v1h-2zM12 3h2v1h-2zM20 3h2v1h-2zM0 4h2v1h-2zM9 4h4v1h-4zM20 4h2v1h-2zM0 5h2v1h-2zM10 5h2v1h-2zM20 5h2v1h-2zM0 6h2v1h-2zM9 6h4v1h-4zM20 6h2v1h-2zM0 7h2v1h-2zM8 7h2v1h-2zM12 7h2v1h-2zM20 7h2v1h-2zM0 8h2v1h-2zM7 8h2v1h-2zM13 8h2v1h-2zM20 8h2v1h-2zM1 9h2v1h-2zM6 9h2v1h-2zM14 9h2v1h-2zM19 9h2v1h-2zM2 10h5v1h-5zM15 10h5v1h-5z"/></svg></span><div><h1>Usage Planner</h1>
       <p>Plan Codex quota, banked resets and extra reset forecasts, right in your browser.</p></div></div>
-      <div class="header-actions"><a id="github-star" class="header-link" href="https://github.com/ItsOdeLeo/codex4ever" target="_blank" rel="noopener">GitHub</a><a id="follow-x" class="header-link" href="https://x.com/ItsOdeLeo" target="_blank" rel="noopener">Follow on X</a><div id="language-switch" class="language-switch" role="group" aria-label="Language"><button type="button" data-language="en" lang="en" aria-pressed="true">English</button><button type="button" data-language="zh-CN" lang="zh-CN" aria-pressed="false">中文</button></div></div>
+      <div class="header-actions"><a id="github-star" class="header-link" href="https://github.com/ItsOdeLeo/usage-planner" target="_blank" rel="noopener">GitHub</a><a id="follow-x" class="header-link" href="https://x.com/ItsOdeLeo" target="_blank" rel="noopener">Follow on X</a><div id="language-switch" class="language-switch" role="group" aria-label="Language"><button type="button" data-language="en" lang="en" aria-pressed="true">English</button><button type="button" data-language="zh-CN" lang="zh-CN" aria-pressed="false">中文</button></div></div>
     </header>
-    <noscript><p>Codex4ever compares daily Codex usage, quota depletion, banked reset deadlines and possible extra resets. Enable JavaScript to calculate a plan, or <a href="/guide/">read how the planner works</a>.</p></noscript>
+    <noscript><p>Usage Planner compares daily Codex usage, quota depletion, banked reset deadlines and possible extra resets. Enable JavaScript to calculate a plan, or <a href="/guide/">read how the planner works</a>.</p></noscript>
     <div class="layout">
       <section id="output" class="plan-card" aria-label="Usage plan">
         <div id="error" role="alert" hidden></div>
@@ -60,12 +60,12 @@
             <div class="input-update"><span id="status" role="status"></span></div>
           </div>
           <p id="overuse-hint" class="plugin-hint" hidden>Overuse alert (Codex plugin only): tell Codex “turn on overuse alerts”. When you use more than the plan, it reminds you right in the conversation.</p>
-          <div class="plan-dock-footer"><p id="plugin-hint" class="plugin-hint"><span data-plugin-hint>Fill these in automatically with the Codex plugin.</span> <a href="https://github.com/ItsOdeLeo/codex4ever#use-it" target="_blank" rel="noopener">GitHub</a></p></div>
+          <div class="plan-dock-footer"><p id="plugin-hint" class="plugin-hint"><span data-plugin-hint>Fill these in automatically with the Codex plugin.</span> <a href="https://github.com/ItsOdeLeo/usage-planner#use-it" target="_blank" rel="noopener">GitHub</a></p></div>
         </div>
       </section>
       <div id="method"></div>
     </div>
-    <footer><span class="copyright">© 2026 ItsOdeLeo</span> · <span class="affiliation-notice">Unofficial visual usage planner for OpenAI Codex. Not affiliated with OpenAI.</span> · <a id="planner-guide" href="/guide/">How it works</a> · <a id="source-code" href="https://github.com/ItsOdeLeo/codex4ever" target="_blank" rel="noopener">Open source on GitHub</a> · <span data-credit-label>Thanks to</span> <a href="https://codex-resets.com" target="_blank" rel="noopener">Codex Resets</a> <span data-credit-suffix>for reset data</span> · <span data-follow-label>If you like this work:</span> <a id="creator-contact" href="https://x.com/ItsOdeLeo" target="_blank" rel="noopener noreferrer">X</a> · <a id="creator-xiaohongshu" href="https://xhslink.com/m/18bjTTf180W" target="_blank" rel="noopener noreferrer">小红书</a> · <button id="share-site" class="footer-link" type="button">Share</button></footer>
+    <footer><span class="copyright">© 2026 ItsOdeLeo</span> · <span class="affiliation-notice">Unofficial visual usage planner for OpenAI Codex. Not affiliated with OpenAI.</span> · <a id="planner-guide" href="/guide/">How it works</a> · <a id="source-code" href="https://github.com/ItsOdeLeo/usage-planner" target="_blank" rel="noopener">Open source on GitHub</a> · <span data-credit-label>Thanks to</span> <a href="https://codex-resets.com" target="_blank" rel="noopener">Codex Resets</a> <span data-credit-suffix>for reset data</span> · <span data-follow-label>If you like this work:</span> <a id="creator-contact" href="https://x.com/ItsOdeLeo" target="_blank" rel="noopener noreferrer">X</a> · <a id="creator-xiaohongshu" href="https://xhslink.com/m/18bjTTf180W" target="_blank" rel="noopener noreferrer">小红书</a> · <button id="share-site" class="footer-link" type="button">Share</button></footer>
   </main>
 </body>
 </html>

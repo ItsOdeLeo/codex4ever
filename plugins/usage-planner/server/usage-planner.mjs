@@ -21383,6 +21383,14 @@ var init_mcp_DIH4cS6P = __esm({
   }
 });
 
+// src/planner-name.js
+var plannerEnv;
+var init_planner_name = __esm({
+  "src/planner-name.js"() {
+    plannerEnv = (name, env = process.env) => env[`USAGE_PLANNER_${name}`] ?? env[`CODEX4EVER_${name}`];
+  }
+});
+
 // src/local-llm-environment.js
 var local_llm_environment_exports = {};
 __export(local_llm_environment_exports, {
@@ -21391,13 +21399,13 @@ __export(local_llm_environment_exports, {
 import { readFile as readFile3 } from "node:fs/promises";
 async function loadLocalLLMEnvironment({
   env = process.env,
-  file = env.CODEX4EVER_ENV_FILE ?? new URL("../.env.local", import.meta.url)
+  file = plannerEnv("ENV_FILE", env) ?? new URL("../.env.local", import.meta.url)
 } = {}) {
   let text;
   try {
     text = await readFile3(file, "utf8");
   } catch (error2) {
-    if (error2.code === "ENOENT" && !env.CODEX4EVER_ENV_FILE) return [];
+    if (error2.code === "ENOENT" && !plannerEnv("ENV_FILE", env)) return [];
     throw new Error("\u65E0\u6CD5\u8BFB\u53D6\u672C\u673A LLM \u914D\u7F6E\u6587\u4EF6");
   }
   const loaded = [];
@@ -21418,7 +21426,8 @@ async function loadLocalLLMEnvironment({
 var KEYS;
 var init_local_llm_environment = __esm({
   "src/local-llm-environment.js"() {
-    KEYS = /* @__PURE__ */ new Set(["CODEX4EVER_LLM_MODEL", "CODEX4EVER_LLM_BASE_URL", "CODEX4EVER_LLM_API_KEY"]);
+    init_planner_name();
+    KEYS = new Set(["LLM_MODEL", "LLM_BASE_URL", "LLM_API_KEY"].flatMap((key) => [`USAGE_PLANNER_${key}`, `CODEX4EVER_${key}`]));
   }
 });
 
@@ -22041,7 +22050,7 @@ __export(local_mcp_runtime_exports, {
 import { access } from "node:fs/promises";
 async function startLocalMcp(createServer2) {
   let root;
-  for (const relative of ["../web/", "../plugins/codex4ever/web/"]) {
+  for (const relative of ["../web/", "../plugins/usage-planner/web/"]) {
     const candidate = new URL(relative, import.meta.url);
     try {
       await access(new URL("index.html", candidate));
@@ -22501,10 +22510,15 @@ function continuousClockProbability(prediction, hours, baseProbability) {
       const before = baseProbability(a), after = baseProbability(b);
       if (before >= 1) return 0;
       if (after >= 1) return Infinity;
+      const step = Math.max(0, Math.log1p(-before) - Math.log1p(-after));
+      if (prediction.forecastWindows.some((window) => window.scheduled && window.startHours <= a && b <= window.endHours + 1e-8)) {
+        hazard2 += step;
+        continue;
+      }
       const stamp = origin + (a + b) / 2 * HOUR2, day = clockDay(stamp, clock), local = parts(stamp, clock);
       const weight = clock.quarterHourWeights[Math.floor((local.hour * 60 + local.minute) / 15)];
       const mean = day.prefix.at(-1) / (day.end - day.start);
-      hazard2 += Math.max(0, Math.log1p(-before) - Math.log1p(-after)) * weight / mean;
+      hazard2 += step * weight / mean;
     }
     return hazard2;
   };
@@ -22570,7 +22584,7 @@ function renewalModel(prediction, now, resetAt = null) {
   const first = Date.parse(firstAt), mean = prediction.evidence?.intervalModel?.meanIntervalDays;
   if (!Number.isFinite(first) || first < origin || !Number.isFinite(mean) || mean <= 0) return null;
   const sourceClock = prediction.releaseClock;
-  const enforce = prediction.enforceResetCooldown ?? prediction.model === "local-recent-intervals-v5";
+  const enforce = prediction.enforceResetCooldown ?? false;
   const learned = prediction.evidence?.intervalDistribution;
   if (!caches2.has(prediction)) caches2.set(prediction, /* @__PURE__ */ new Map());
   const models = caches2.get(prediction), key = `${origin}:${first}`;
@@ -22615,7 +22629,7 @@ function followingResetEstimate({ prediction, now, firstAt: assumedAt = null }) 
   const mean = prediction?.evidence?.intervalModel?.meanIntervalDays;
   if (!Number.isFinite(first) || !Number.isFinite(origin) || first <= origin || !Number.isFinite(mean) || mean <= 0) return null;
   const clock = prediction.releaseClock;
-  const enforce = prediction.enforceResetCooldown ?? prediction.model === "local-recent-intervals-v5";
+  const enforce = prediction.enforceResetCooldown ?? false;
   const cooldown = enforce ? resetCooldownRule({
     lastReset: first,
     now: first,
@@ -22738,6 +22752,7 @@ function normalizeResetSignalTime(post, signal) {
 // src/local-predictor.js
 var suppressWith = (factor) => (probability) => 1 - (1 - probability) ** factor;
 var DAY_MS = 864e5;
+var SCHEDULED_RESET_PROBABILITY = 0.99;
 var clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
 var oddsUpdate = (p, ratio) => {
   if (p <= 0 || p >= 1) return clamp(p, 0, 1);
@@ -22828,11 +22843,13 @@ function predictReset({
   priorDailyProbability,
   campaignTimeZone = timeZone,
   campaign = null,
-  enforceResetCooldown = true,
+  enforceResetCooldown = false,
+  enforceCampaignFeatureRule = false,
   suppressedHazardFactor = SUPPRESSED_HAZARD_FACTOR
 } = {}) {
   const nowMs = dateMs(now, "\u5F53\u524D\u65F6\u95F4");
   if (typeof enforceResetCooldown !== "boolean") throw new Error("enforceResetCooldown \u5FC5\u987B\u662F\u5E03\u5C14\u503C");
+  if (typeof enforceCampaignFeatureRule !== "boolean") throw new Error("enforceCampaignFeatureRule \u5FC5\u987B\u662F\u5E03\u5C14\u503C");
   if (!Number.isFinite(suppressedHazardFactor) || suppressedHazardFactor < 0 || suppressedHazardFactor > 1)
     throw new Error("suppressedHazardFactor \u5FC5\u987B\u5728 0\u20131 \u4E4B\u95F4");
   const suppress = suppressWith(suppressedHazardFactor);
@@ -22878,7 +22895,7 @@ function predictReset({
   });
   const cooldownRule = enforceResetCooldown ? resetCooldownRule({ lastReset: times.at(-1), now: nowMs, timeZone: forecastTimeZone }) : null;
   const cooldown = cooldownRule ? { ...cooldownRule, hazardFactor: suppressedHazardFactor } : null;
-  const feature = posts.filter((post) => campaignFeature(post) && dateMs(post.createdAt, "\u5E16\u5B50\u65F6\u95F4") <= nowMs && localDay.format(new Date(post.createdAt)) === localDay.format(new Date(nowMs))).sort((a, b) => dateMs(b.createdAt, "\u5E16\u5B50\u65F6\u95F4") - dateMs(a.createdAt, "\u5E16\u5B50\u65F6\u95F4"))[0];
+  const feature = enforceCampaignFeatureRule && posts.filter((post) => campaignFeature(post) && dateMs(post.createdAt, "\u5E16\u5B50\u65F6\u95F4") <= nowMs && localDay.format(new Date(post.createdAt)) === localDay.format(new Date(nowMs))).sort((a, b) => dateMs(b.createdAt, "\u5E16\u5B50\u65F6\u95F4") - dateMs(a.createdAt, "\u5E16\u5B50\u65F6\u95F4"))[0];
   const blockedToday = !!feature || !!cooldown;
   const rule = feature ? {
     kind: "campaign-feature-day",
@@ -22901,14 +22918,26 @@ function predictReset({
     postEffects(posts, nowMs, 0, times.at(-1)),
     postEffects(posts, nowMs, firstDays, times.at(-1))
   ];
+  const scheduledAt = posts.filter((post) => post.signal?.kind === "reset_planned" && post.signal.scheduledFor && dateMs(post.createdAt, "\u5E16\u5B50\u65F6\u95F4") <= nowMs && dateMs(post.createdAt, "\u5E16\u5B50\u65F6\u95F4") > (times.at(-1) ?? -Infinity)).map((post) => dateMs(post.signal.scheduledFor, "\u5B89\u6392\u7684 reset \u65F6\u95F4")).sort((a, b) => a - b)[0];
+  const scheduledHours = scheduledAt > nowMs && scheduledAt < nowMs + 48 * 36e5 ? (scheduledAt - nowMs) / 36e5 : null;
   const windowsEnd = Math.max(48, cooldown?.untilHours ?? 0);
-  const boundaries = [0, todayEndHours, 48, windowsEnd, ...cooldown ? [cooldown.untilHours] : [], ...posts.filter((post) => post.signal?.kind === "reset_planned").map((post) => (dateMs(post.signal.validUntil ?? new Date(dateMs(post.createdAt, "\u5E16\u5B50\u65F6\u95F4") + DAY_MS).toISOString(), "\u9884\u544A\u622A\u6B62\u65F6\u95F4") - nowMs) / 36e5).filter((hour) => hour > 0 && hour < 48)].sort((a, b) => a - b).filter((hour, index, array2) => !index || Math.abs(hour - array2[index - 1]) > 1e-7);
+  const boundaries = [0, todayEndHours, 48, windowsEnd, ...cooldown ? [cooldown.untilHours] : [], ...posts.filter((post) => post.signal?.kind === "reset_planned").map((post) => (dateMs(post.signal.validUntil ?? new Date(dateMs(post.createdAt, "\u5E16\u5B50\u65F6\u95F4") + DAY_MS).toISOString(), "\u9884\u544A\u622A\u6B62\u65F6\u95F4") - nowMs) / 36e5).filter((hour) => hour > 0 && hour < 48), ...scheduledHours !== null ? [Math.max(0, scheduledHours - 0.25), scheduledHours] : []].sort((a, b) => a - b).filter((hour, index, array2) => !index || Math.abs(hour - array2[index - 1]) > 1e-7);
   const forecastWindows = boundaries.slice(1).map((endHours, index) => {
     const startHours = boundaries[index], base = chanceFromAge(hazards, daily, currentAge + startHours / 24, (endHours - startHours) / 24, distribution);
     const effect = postEffects(posts, nowMs, startHours / 24, times.at(-1));
     const blocked = !!feature && startHours < todayEndHours || cooldown && startHours < cooldown.untilHours - 1e-8;
     return { startHours, endHours, baselineProbability: base, probability: blocked ? suppress(base) : oddsUpdate(base, effect.ratio), ...blocked ? { suppressed: true } : {} };
   });
+  if (scheduledHours !== null) {
+    let survival = 1;
+    for (const window of forecastWindows.filter((window2) => window2.endHours <= scheduledHours + 1e-8)) {
+      const last = window.endHours >= scheduledHours - 1e-8;
+      window.probability = last ? 1 - (1 - SCHEDULED_RESET_PROBABILITY) / survival : suppress(window.baselineProbability);
+      survival *= 1 - window.probability;
+      delete window.suppressed;
+      window.scheduled = true;
+    }
+  }
   const prediction = {
     model: "local-recent-intervals-v5",
     calibrated: false,
@@ -22919,7 +22948,14 @@ function predictReset({
     displayTimeZone: timeZone,
     forecastWindows,
     releaseClock: fitResetReleaseClock({ times, now: nowMs, timeZone: forecastTimeZone }),
-    evidence: { daysSinceReset: ageDays, dailyFrequency: daily, ageHazards: hazards, intervalDistribution: distribution, hardRules }
+    evidence: {
+      daysSinceReset: ageDays,
+      dailyFrequency: daily,
+      ageHazards: hazards,
+      intervalDistribution: distribution,
+      hardRules,
+      scheduledResetAt: scheduledHours === null ? null : new Date(scheduledAt).toISOString()
+    }
   };
   const todayProbability = resetProbabilityByHours(prediction, todayEndHours);
   const next48 = resetProbabilityByHours(prediction, 48);
@@ -22953,7 +22989,8 @@ function predictReset({
       intervalModel: intervalSummary,
       hardRules,
       campaignActive,
-      campaign
+      campaign,
+      scheduledResetAt: prediction.evidence.scheduledResetAt
     }
   });
   const quantile = (probability) => {
@@ -23038,6 +23075,7 @@ function baseResetProbabilityByHours(prediction, hours) {
 }
 
 // src/llm-classifier.js
+init_planner_name();
 var KINDS = /* @__PURE__ */ new Set([
   "reset_planned",
   "reset_completed",
@@ -23060,9 +23098,9 @@ function parseClassification(content) {
   }
 }
 async function classifyTiboPosts(posts, {
-  model = process.env.CODEX4EVER_LLM_MODEL,
-  baseUrl = process.env.CODEX4EVER_LLM_BASE_URL || "https://api.openai.com/v1",
-  apiKey = process.env.CODEX4EVER_LLM_API_KEY,
+  model = plannerEnv("LLM_MODEL"),
+  baseUrl = plannerEnv("LLM_BASE_URL") || "https://api.openai.com/v1",
+  apiKey = plannerEnv("LLM_API_KEY"),
   fetchImpl = fetch,
   timeoutMs = 3e4,
   maxOutputTokens = 2048
@@ -24075,20 +24113,30 @@ function searchResetPolicies({
 
 // src/reset-forecast.js
 var DAY4 = 864e5;
-function predictionFromArchive({ archive, now = /* @__PURE__ */ new Date(), timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone } = {}) {
+function predictionFromArchive({
+  archive,
+  now = /* @__PURE__ */ new Date(),
+  timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone,
+  enforceResetCooldown = false,
+  enforceCampaignFeatureRule = false
+} = {}) {
   const retrieved = Date.parse(`${archive?.retrievedAt}T00:00:00Z`);
   const age = (now.getTime() - retrieved) / DAY4;
   if (!Number.isFinite(age) || age < 0 || age > 14)
     return { available: false, reason: "\u5386\u53F2\u6570\u636E\u5DF2\u8FC7\u671F\uFF0C\u6682\u4E0D\u9884\u6D4B" };
   const resetTimes = [...new Set((archive.events ?? []).filter((event) => ["automatic", "automatic_and_banked"].includes(event.kind)).map((event) => event.at).filter((at) => Number.isFinite(Date.parse(at)) && Date.parse(at) <= now.getTime()))].sort((a, b) => Date.parse(a) - Date.parse(b));
   if (resetTimes.length < 4) return { available: false, reason: "\u5386\u53F2\u8BB0\u5F55\u4E0D\u8DB3\uFF0C\u6682\u4E0D\u9884\u6D4B" };
+  const landed = (archive.posts ?? []).filter((post) => post.signal?.kind === "reset_planned" && post.signal.scheduledFor).filter((post) => Date.parse(post.createdAt) > Date.parse(resetTimes.at(-1))).map((post) => ({ at: Date.parse(post.signal.scheduledFor), source: post.sourceUrl })).filter((item) => item.at <= now.getTime() && item.at > now.getTime() - 3 * DAY4).sort((a, b) => b.at - a.at)[0];
+  if (landed) resetTimes.push(new Date(landed.at).toISOString());
   const prediction = predictReset({
     now: now.toISOString(),
     timeZone,
     resetTimes,
     posts: archive.posts ?? [],
     campaignTimeZone: archive.campaignTimeZone ?? "America/Los_Angeles",
-    campaign: selectResetCampaign({ campaigns: archive.campaigns, now: now.getTime() })
+    campaign: selectResetCampaign({ campaigns: archive.campaigns, now: now.getTime() }),
+    enforceResetCooldown,
+    enforceCampaignFeatureRule
   });
   prediction.evidence.dataAsOf = archive.retrievedAt;
   prediction.evidence.liveCoverage = archive.coverage ?? null;
@@ -24105,8 +24153,8 @@ function predictionFromArchive({ archive, now = /* @__PURE__ */ new Date(), time
     classificationError: archive.classificationError ?? null,
     llmConfigured: archive.llmConfigured ?? false,
     latestResetMention,
-    lastResetSource: archive.lastResetSource ?? null,
-    lastResetAt: archive.lastResetAt ?? resetTimes.at(-1),
+    lastResetSource: landed ? landed.source : archive.lastResetSource ?? null,
+    lastResetAt: landed ? resetTimes.at(-1) : archive.lastResetAt ?? resetTimes.at(-1),
     daysSinceReset: (now.getTime() - Date.parse(resetTimes.at(-1))) / DAY4
   };
 }
@@ -24756,10 +24804,11 @@ function forecastCalendar(base, at, cumulative, horizon = base.normalResetInHour
 }
 
 // src/live-reset-evidence.js
+init_planner_name();
 var RESET_HISTORY_URL = "https://codex-resets.com/api/v1/resets?limit=100";
 var RESET_STATUS_URL = "https://codex-resets.com/api/v1/status";
 var HOUR13 = 36e5;
-var resetRelated = (post) => /\breset(?:s|ting)?\b|重置/i.test(post.text + " " + post.context);
+var resetRelated = (post) => !!post.signal?.scheduledFor || /\breset(?:s|ting)?\b|重置/i.test(post.text + " " + post.context);
 var tiboUrl = (value) => typeof value === "string" && /^https:\/\/(?:x|twitter)\.com\/thsottiaux\/status\/\d+(?:[?#].*)?$/.test(value);
 function normalizeResetFeed(payload, now) {
   return (Array.isArray(payload?.data) ? payload.data : []).flatMap((record2) => {
@@ -24851,7 +24900,7 @@ async function collectLiveResetEvidence({
   llm = {},
   classifyWithLLM = true,
   classificationCache = /* @__PURE__ */ new Map(),
-  xBearerToken = process.env.CODEX4EVER_X_BEARER_TOKEN
+  xBearerToken = plannerEnv("X_BEARER_TOKEN")
 } = {}) {
   const sources = [RESET_HISTORY_URL, RESET_STATUS_URL];
   const fetched = await Promise.allSettled(sources.map((url2) => getJSON(url2, fetchImpl, timeoutMs)));
@@ -24866,7 +24915,9 @@ async function collectLiveResetEvidence({
   const records = live.length >= 4 ? live : [...fallbackArchive?.events ?? [], ...live];
   const latest = normalizeResetFeed({ data: status?.data?.latest_reset ? [status.data.latest_reset] : [] }, now);
   const events = [...new Map([...records, ...latest].map((event) => [event.sourceUrl ?? event.at, event])).values()].sort((a, b) => Date.parse(a.at) - Date.parse(b.at));
-  const statusPosts = [status?.data?.scheduled_reset, status?.data?.active_watch].filter(Boolean);
+  const scheduled = status?.data?.scheduled_reset;
+  const scheduledFor = Date.parse(scheduled?.scheduled_for);
+  const statusPosts = [scheduled?.status === "scheduled" && Number.isFinite(scheduledFor) ? { ...scheduled, scheduledFor: new Date(scheduledFor).toISOString() } : scheduled, status?.data?.active_watch].filter(Boolean);
   const candidates = [...directPosts ?? [], ...statusPosts, ...live.map((event) => ({
     text: event.text,
     createdAt: event.at,
@@ -24882,6 +24933,15 @@ async function collectLiveResetEvidence({
       reason: "\u516C\u5F00 reset \u8BB0\u5F55\u7684\u7C7B\u578B\uFF1B\u4E0D\u4EE3\u8868\u4E2A\u4EBA\u8D26\u6237\u5DF2\u6062\u590D",
       ...record2.feedKind === "banked" ? {} : { resetTiming: "current", resetOccurredAt: post.createdAt }
     };
+    if (post && record2.scheduledFor) post.signal = {
+      kind: "reset_planned",
+      confidence: 1,
+      reason: "Codex Resets \u5DF2\u5B89\u6392\u7684 reset \u65F6\u95F4",
+      scheduledFor: record2.scheduledFor,
+      // Once the time passes the reset has most likely landed and only awaits
+      // a public record, so it must not show up as a fresh spike at "now".
+      validUntil: record2.scheduledFor
+    };
     if (!post) continue;
     const previous = merged.get(post.sourceUrl);
     if (previous?.context && !post.context) post.context = previous.context;
@@ -24889,7 +24949,7 @@ async function collectLiveResetEvidence({
     merged.set(post.sourceUrl, post);
   }
   const posts = [...merged.values()].sort((a, b) => (campaignDay(b) !== null ? 2 : Number(resetRelated(b))) - (campaignDay(a) !== null ? 2 : Number(resetRelated(a))) || Date.parse(b.createdAt) - Date.parse(a.createdAt)).slice(0, 8);
-  const model = classifyWithLLM ? llm.model ?? process.env.CODEX4EVER_LLM_MODEL : null;
+  const model = classifyWithLLM ? llm.model ?? plannerEnv("LLM_MODEL") : null;
   let classification = "explicit-text", classificationError = null, modelCalls = 0;
   const classified = [];
   for (const post of posts) {
@@ -24900,7 +24960,7 @@ async function collectLiveResetEvidence({
     const key = [
       RESET_CLASSIFIER_VERSION,
       model ?? "explicit-text",
-      llm.baseUrl ?? process.env.CODEX4EVER_LLM_BASE_URL,
+      llm.baseUrl ?? plannerEnv("LLM_BASE_URL"),
       post.sourceUrl,
       post.createdAt,
       post.text,
@@ -25150,8 +25210,7 @@ function renderMcpUsageAdvice(advice, { language = "en" } = {}) {
 
 // src/usage-alert-runtime.js
 import { readFile, writeFile, mkdir } from "node:fs/promises";
-import { dirname, join } from "node:path";
-import { homedir } from "node:os";
+import { dirname, join as join2 } from "node:path";
 import { execFile } from "node:child_process";
 
 // src/usage-alert.js
@@ -25256,7 +25315,22 @@ function alertMessage(facts, { timeZone = "UTC", language = "zh-CN" } = {}) {
 }
 
 // src/usage-alert-runtime.js
-var defaultAlertFile = () => process.env.CODEX4EVER_ALERT_FILE ?? join(process.env.CODEX4EVER_HOME ?? join(homedir(), ".codex4ever"), "alerts.json");
+init_planner_name();
+
+// src/planner-home.js
+init_planner_name();
+import { existsSync } from "node:fs";
+import { join } from "node:path";
+import { homedir } from "node:os";
+function plannerHome(env = process.env) {
+  const configured = plannerEnv("HOME", env);
+  if (configured) return configured;
+  const next = join(homedir(), ".usage-planner"), old = join(homedir(), ".codex4ever");
+  return !existsSync(next) && existsSync(old) ? old : next;
+}
+
+// src/usage-alert-runtime.js
+var defaultAlertFile = () => plannerEnv("ALERT_FILE") ?? join2(plannerHome(), "alerts.json");
 var appleString = (value) => `"${String(value).replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`;
 function systemNotify(title, message) {
   if (process.platform !== "darwin") return Promise.resolve(false);
@@ -25365,12 +25439,12 @@ function createUsageAlerts({
 
 // src/codex-hook-install.js
 import { readFile as readFile2, writeFile as writeFile2, mkdir as mkdir2, copyFile } from "node:fs/promises";
-import { dirname as dirname2, join as join2 } from "node:path";
+import { dirname as dirname2, join as join3 } from "node:path";
 import { homedir as homedir2 } from "node:os";
 var MARKER = "quota-check.mjs";
 var EVENTS = [["SessionStart", "startup|resume"], ["UserPromptSubmit", null]];
-var codexHome = (env = process.env) => env.CODEX_HOME ?? join2(homedir2(), ".codex");
-var stableHookScript = (env = process.env) => join2(env.CODEX4EVER_HOME ?? join2(homedir2(), ".codex4ever"), "quota-check.mjs");
+var codexHome = (env = process.env) => env.CODEX_HOME ?? join3(homedir2(), ".codex");
+var stableHookScript = (env = process.env) => join3(plannerHome(env), "quota-check.mjs");
 var ours = (handler) => typeof handler?.command === "string" && handler.command.includes(MARKER);
 async function readHooks(file) {
   try {
@@ -25381,7 +25455,7 @@ async function readHooks(file) {
   }
 }
 async function installQuotaHook({ scriptSource, env = process.env } = {}) {
-  const script = stableHookScript(env), file = join2(codexHome(env), "hooks.json");
+  const script = stableHookScript(env), file = join3(codexHome(env), "hooks.json");
   await mkdir2(dirname2(script), { recursive: true });
   await copyFile(scriptSource, script);
   const config2 = await readHooks(file);
@@ -25390,7 +25464,12 @@ async function installQuotaHook({ scriptSource, env = process.env } = {}) {
   let added = 0;
   for (const [event, matcher] of EVENTS) {
     const groups = config2.hooks[event] ??= [];
-    if (groups.some((group) => group.hooks?.some(ours))) continue;
+    const existing = groups.flatMap((group) => group.hooks ?? []).filter(ours);
+    for (const hook of existing) if (hook.command !== handler.command) {
+      hook.command = handler.command;
+      added++;
+    }
+    if (existing.length) continue;
     groups.push({ ...matcher ? { matcher } : {}, hooks: [handler] });
     added++;
   }
@@ -25401,7 +25480,7 @@ async function installQuotaHook({ scriptSource, env = process.env } = {}) {
   return { file, script, added, alreadyInstalled: !added };
 }
 async function uninstallQuotaHook({ env = process.env } = {}) {
-  const file = join2(codexHome(env), "hooks.json");
+  const file = join3(codexHome(env), "hooks.json");
   const config2 = await readHooks(file);
   let removed = 0;
   for (const [event, groups] of Object.entries(config2.hooks ?? {})) {
@@ -25419,8 +25498,9 @@ async function uninstallQuotaHook({ env = process.env } = {}) {
 }
 
 // src/codex-usage.js
+init_planner_name();
 import { spawn } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync as existsSync2 } from "node:fs";
 import { createInterface } from "node:readline";
 var HOUR_MS = 36e5;
 var finite = (value) => typeof value === "number" && Number.isFinite(value);
@@ -25436,8 +25516,8 @@ var BUNDLED_CODEX_CLI = [
   "/Applications/ChatGPT.app/Contents/Resources/codex-cli/bin/codex",
   "/Applications/Codex.app/Contents/Resources/codex"
 ];
-function defaultCodexCommand({ env = process.env, exists = existsSync } = {}) {
-  return env.CODEX4EVER_CODEX_CLI || env.CODEX_CLI_PATH || BUNDLED_CODEX_CLI.find((path) => exists(path)) || "codex";
+function defaultCodexCommand({ env = process.env, exists = existsSync2 } = {}) {
+  return plannerEnv("CODEX_CLI", env) || env.CODEX_CLI_PATH || BUNDLED_CODEX_CLI.find((path) => exists(path)) || "codex";
 }
 async function readCodexUsage({ command = defaultCodexCommand(), timeoutMs = 15e3 } = {}) {
   return new Promise((resolve, reject) => {
@@ -25481,7 +25561,7 @@ async function readCodexUsage({ command = defaultCodexCommand(), timeoutMs = 15e
       }
     });
     send({ id: 1, method: "initialize", params: {
-      clientInfo: { name: "codex4ever", title: "Codex4ever", version: "0.1.0" },
+      clientInfo: { name: "usage-planner", title: "Usage Planner", version: "0.1.0" },
       capabilities: null
     } });
   });
@@ -25549,6 +25629,7 @@ function estimateUsagePace(usage, now = /* @__PURE__ */ new Date()) {
 }
 
 // src/mcp-server.js
+init_planner_name();
 var postSchema = object({
   createdAt: string2().describe("\u5E16\u5B50\u53D1\u5E03\u65F6\u95F4\uFF0CISO 8601"),
   text: string2().min(1).max(5e3),
@@ -25644,7 +25725,7 @@ async function forecast(evidence, classifyPosts) {
     signal: post.signal
   })) };
 }
-function createCodex4everServer({
+function createUsagePlannerServer({
   collectEvidence = collectLiveResetEvidence,
   readUsage = readCodexUsage,
   clock = () => /* @__PURE__ */ new Date(),
@@ -25652,7 +25733,7 @@ function createCodex4everServer({
   alertOptions = {},
   startAlerts = plannerPage !== null
 } = {}) {
-  const server = new McpServer({ name: "codex4ever", version: "0.1.2" });
+  const server = new McpServer({ name: "usage-planner", version: "0.1.2" });
   const classificationCache = /* @__PURE__ */ new Map();
   let lastPlanArguments = null;
   const alerts = createUsageAlerts({
@@ -25705,7 +25786,7 @@ function createCodex4everServer({
     const collected = forecastEnabled ? await getResetEvidence({
       now: usageSnapshot.readAt,
       timeZone: usageSnapshot.timeZone,
-      classifyPosts: !!process.env.CODEX4EVER_LLM_MODEL
+      classifyPosts: !!plannerEnv("LLM_MODEL")
     }) : null;
     if (collected?.isError) throw new Error(collected.content[0].text);
     const evidence = collected?.structuredContent.evidence;
@@ -25974,10 +26055,10 @@ function createCodex4everServer({
   }
   server.registerTool("predict_reset", {
     title: "\u9884\u6D4B\u989D\u5916 reset",
-    description: "\u7528\u516C\u5F00\u81EA\u52A8 reset \u5386\u53F2\u548C\u53EF\u9009 Tibo \u5E16\u5B50\u4F30\u8BA1\u4ECA\u5929\u53CA\u672A\u6765 48 \u5C0F\u65F6\u53D1\u751F\u989D\u5916 reset \u7684\u6982\u7387\u3002\u672A\u6821\u51C6\uFF0C\u4E0D\u4EE3\u8868\u4E2A\u4EBA\u8D26\u6237\u4E00\u5B9A\u6062\u590D\u3002classifyPosts=true \u65F6\u53EA\u5C06\u672A\u5206\u7C7B\u5E16\u5B50\u9001\u5230 CODEX4EVER_LLM_BASE_URL \u6307\u5B9A\u7684\u6807\u51C6 Chat Completions API\u3002",
+    description: "\u7528\u516C\u5F00\u81EA\u52A8 reset \u5386\u53F2\u548C\u53EF\u9009 Tibo \u5E16\u5B50\u4F30\u8BA1\u4ECA\u5929\u53CA\u672A\u6765 48 \u5C0F\u65F6\u53D1\u751F\u989D\u5916 reset \u7684\u6982\u7387\u3002\u672A\u6821\u51C6\uFF0C\u4E0D\u4EE3\u8868\u4E2A\u4EBA\u8D26\u6237\u4E00\u5B9A\u6062\u590D\u3002classifyPosts=true \u65F6\u53EA\u5C06\u672A\u5206\u7C7B\u5E16\u5B50\u9001\u5230 USAGE_PLANNER_LLM_BASE_URL \u6307\u5B9A\u7684\u6807\u51C6 Chat Completions API\u3002",
     inputSchema: object({
       evidence: evidenceSchema,
-      classifyPosts: boolean2().optional().describe("\u662F\u5426\u7528 LLM \u5206\u7C7B\u672A\u5E26 signal \u7684\u5E16\u5B50\uFF1B\u9700\u8981 CODEX4EVER_LLM_MODEL \u73AF\u5883\u53D8\u91CF")
+      classifyPosts: boolean2().optional().describe("\u662F\u5426\u7528 LLM \u5206\u7C7B\u672A\u5E26 signal \u7684\u5E16\u5B50\uFF1B\u9700\u8981 USAGE_PLANNER_LLM_MODEL \u73AF\u5883\u53D8\u91CF")
     })
   }, async ({ evidence, classifyPosts = false }) => {
     try {
@@ -25987,7 +26068,7 @@ function createCodex4everServer({
     }
   });
   async function bundledHookScript() {
-    for (const relative of ["../hooks/quota-check.mjs", "../plugins/codex4ever/hooks/quota-check.mjs"]) {
+    for (const relative of ["../hooks/quota-check.mjs", "../plugins/usage-planner/hooks/quota-check.mjs"]) {
       const candidate = new URL(relative, import.meta.url);
       try {
         await access2(candidate);
@@ -26004,7 +26085,7 @@ function createCodex4everServer({
     const collected = await getResetEvidence({
       now: usageSnapshot.readAt,
       timeZone: usageSnapshot.timeZone,
-      classifyPosts: !!process.env.CODEX4EVER_LLM_MODEL
+      classifyPosts: !!plannerEnv("LLM_MODEL")
     });
     const response = await planUsageStrategy({
       ...lastPlanArguments,
@@ -26022,8 +26103,8 @@ function createCodex4everServer({
     if (response.isError) throw new Error(response.content[0].text);
   }
   server.registerTool("usage_alerts", {
-    title: "Quota reminders: warn when usage runs ahead of the plan",
-    description: "\u5F00\u542F\u3001\u5173\u95ED\u3001\u67E5\u770B\u6216\u7ACB\u5373\u68C0\u67E5\u989D\u5EA6\u63D0\u9192\u3002\u5F00\u542F\u65F6\u4F1A\u5728 ~/.codex/hooks.json \u6DFB\u52A0 codex4ever \u81EA\u5DF1\u7684\u4E00\u6761 hook\uFF08\u53EA\u589E\u5220\u81EA\u5DF1\u7684\u6761\u76EE\uFF0C\u5173\u95ED\u65F6\u5220\u9664\uFF09\uFF0C\u5E76\u9700\u7528\u6237\u5728 Codex \u4E2D\u6279\u51C6\u4E00\u6B21\uFF1B\u8C03\u7528\u524D\u5411\u7528\u6237\u8BF4\u660E\u8FD9\u4E00\u70B9\u3002\u5F00\u542F\u540E\uFF0C\u63D2\u4EF6\u7684 Codex hook \u5728\u7528\u6237\u53D1\u6D88\u606F\u524D\uFF08\u6700\u591A\u6BCF 10 \u5206\u949F\u4E00\u6B21\uFF09\u8BFB\u53D6\u672C\u673A\u989D\u5EA6\uFF08\u53EA\u8BFB\uFF0C\u4E0D\u6D88\u8017 Codex \u7528\u91CF\uFF09\uFF0C\u4E0E\u6700\u8FD1\u4E00\u6B21\u8BA1\u5212\u6BD4\u8F83\uFF1A\u6BD4\u8BA1\u5212\u591A\u7528\u81F3\u5C11 5% \u5468\u989D\u5EA6\uFF0C\u6216\u6309\u5F53\u524D\u901F\u5EA6\u4F1A\u6BD4\u8BA1\u5212\u63D0\u524D 20% \u4EE5\u4E0A\u7528\u5B8C\u65F6\uFF0C\u76F4\u63A5\u5728 Codex \u4E2D\u663E\u793A\u63D0\u9192\u5E76\u7ED9\u51FA\u56DE\u5230\u8BA1\u5212\u6240\u9700\u7684\u65E5\u5747\u7528\u91CF\uFF1BsystemNotifications=true \u65F6\u53E6\u6309\u95F4\u9694\u5F39\u51FA\u7CFB\u7EDF\u901A\u77E5\u3002\u53D1\u751F\u8865\u6EE1\u65F6\u81EA\u52A8\u6309\u540C\u4E00\u89C4\u5219\u91CD\u65B0\u89C4\u5212\u3002\u7528\u6237\u8BF4\u201C\u6253\u5F00\u989D\u5EA6\u63D0\u9192\u201D\u201C\u5173\u6389\u63D0\u9192\u201D\u201C\u73B0\u5728\u68C0\u67E5\u4E00\u4E0B\u201D\u65F6\u8C03\u7528\u3002",
+    title: "Overuse alerts: warn when usage runs ahead of the plan",
+    description: "\u5F00\u542F\u3001\u5173\u95ED\u3001\u67E5\u770B\u6216\u7ACB\u5373\u68C0\u67E5\u989D\u5EA6\u63D0\u9192\u3002\u5F00\u542F\u65F6\u4F1A\u5728 ~/.codex/hooks.json \u6DFB\u52A0 usage-planner \u81EA\u5DF1\u7684\u4E00\u6761 hook\uFF08\u53EA\u589E\u5220\u81EA\u5DF1\u7684\u6761\u76EE\uFF0C\u5173\u95ED\u65F6\u5220\u9664\uFF09\uFF0C\u5E76\u9700\u7528\u6237\u5728 Codex \u4E2D\u6279\u51C6\u4E00\u6B21\uFF1B\u8C03\u7528\u524D\u5411\u7528\u6237\u8BF4\u660E\u8FD9\u4E00\u70B9\u3002\u5F00\u542F\u540E\uFF0C\u63D2\u4EF6\u7684 Codex hook \u5728\u7528\u6237\u53D1\u6D88\u606F\u524D\uFF08\u6700\u591A\u6BCF 10 \u5206\u949F\u4E00\u6B21\uFF09\u8BFB\u53D6\u672C\u673A\u989D\u5EA6\uFF08\u53EA\u8BFB\uFF0C\u4E0D\u6D88\u8017 Codex \u7528\u91CF\uFF09\uFF0C\u4E0E\u6700\u8FD1\u4E00\u6B21\u8BA1\u5212\u6BD4\u8F83\uFF1A\u6BD4\u8BA1\u5212\u591A\u7528\u81F3\u5C11 5% \u5468\u989D\u5EA6\uFF0C\u6216\u6309\u5F53\u524D\u901F\u5EA6\u4F1A\u6BD4\u8BA1\u5212\u63D0\u524D 20% \u4EE5\u4E0A\u7528\u5B8C\u65F6\uFF0C\u76F4\u63A5\u5728 Codex \u4E2D\u663E\u793A\u63D0\u9192\u5E76\u7ED9\u51FA\u56DE\u5230\u8BA1\u5212\u6240\u9700\u7684\u65E5\u5747\u7528\u91CF\uFF1BsystemNotifications=true \u65F6\u53E6\u6309\u95F4\u9694\u5F39\u51FA\u7CFB\u7EDF\u901A\u77E5\u3002\u53D1\u751F\u8865\u6EE1\u65F6\u81EA\u52A8\u6309\u540C\u4E00\u89C4\u5219\u91CD\u65B0\u89C4\u5212\u3002\u7528\u6237\u8BF4\u201C\u6253\u5F00\u7528\u91CF\u8FC7\u5EA6\u63D0\u9192\u201D\u201C\u6253\u5F00\u989D\u5EA6\u63D0\u9192\u201D\u201Cturn on overuse alerts\u201D\u201C\u5173\u6389\u63D0\u9192\u201D\u201C\u73B0\u5728\u68C0\u67E5\u4E00\u4E0B\u201D\u65F6\u8C03\u7528\u3002",
     annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: true },
     inputSchema: object({
       action: _enum(["enable", "disable", "status", "check"]),
@@ -26039,7 +26120,7 @@ function createCodex4everServer({
         const hook = await installQuotaHook({ scriptSource: await bundledHookScript() });
         return reply({ enabled: true, check, status: await alerts.status(), codexHook: {
           ...hook,
-          nextStep: "Codex \u9700\u8981\u7528\u6237\u6279\u51C6\u4E00\u6B21\u8FD9\u4E2A hook\uFF1A\u82E5\u6CA1\u6709\u81EA\u52A8\u63D0\u793A\uFF0C\u8BF7\u5728 Codex \u4E2D\u6253\u5F00 /hooks\uFF0C\u628A codex4ever \u7684\u989D\u5EA6\u63D0\u9192\u8BBE\u4E3A\u4FE1\u4EFB\u3002\u4E4B\u540E\u63D0\u9192\u4F1A\u76F4\u63A5\u663E\u793A\u5728 Codex \u91CC\u3002"
+          nextStep: "Codex \u9700\u8981\u7528\u6237\u6279\u51C6\u4E00\u6B21\u8FD9\u4E2A hook\uFF1A\u82E5\u6CA1\u6709\u81EA\u52A8\u63D0\u793A\uFF0C\u8BF7\u5728 Codex \u4E2D\u6253\u5F00 /hooks\uFF0C\u628A usage-planner \u7684\u989D\u5EA6\u63D0\u9192\u8BBE\u4E3A\u4FE1\u4EFB\u3002\u4E4B\u540E\u63D0\u9192\u4F1A\u76F4\u63A5\u663E\u793A\u5728 Codex \u91CC\u3002"
         } });
       }
       if (action === "disable") {
@@ -26058,9 +26139,9 @@ if (process.argv[1] && import.meta.url === pathToFileURL(await realpath(process.
   const { loadLocalLLMEnvironment: loadLocalLLMEnvironment2 } = await Promise.resolve().then(() => (init_local_llm_environment(), local_llm_environment_exports));
   await loadLocalLLMEnvironment2();
   const { startLocalMcp: startLocalMcp2 } = await Promise.resolve().then(() => (init_local_mcp_runtime(), local_mcp_runtime_exports));
-  await startLocalMcp2(createCodex4everServer);
+  await startLocalMcp2(createUsagePlannerServer);
 }
 export {
-  createCodex4everServer
+  createUsagePlannerServer
 };
-/*! For license information please see codex4ever.mjs.LEGAL.txt */
+/*! For license information please see usage-planner.mjs.LEGAL.txt */

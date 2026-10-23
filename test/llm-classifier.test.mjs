@@ -71,7 +71,7 @@ test('未来完成时间、无时区时间和无效时间不能通过分类字�
 });
 
 test('本机配置只加载服务端LLM字段，不覆盖进程设置，不执行文件中的表达式',async()=>{
-  const dir=await mkdtemp(join(tmpdir(),'codex4ever-env-'));
+  const dir=await mkdtemp(join(tmpdir(),'usage-planner-env-'));
   const file=join(dir,'.env.local');
   try {
     await writeFile(file,'CODEX4EVER_LLM_MODEL=claude-haiku-5-5\nCODEX4EVER_LLM_BASE_URL="https://api.anthropic.com/v1"\nCODEX4EVER_LLM_API_KEY=local-test-key\nPATH=do-not-load\nOTHER=$(do-not-execute)\n');

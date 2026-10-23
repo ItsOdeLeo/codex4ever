@@ -120,7 +120,7 @@ test('网页、插件页面与 MCP 共用同一个默认规则，不按入口另
   assert.equal(imported.snapshot.recommendationMode,DEFAULT_RECOMMENDATION_MODE,'导入的插件计划默认同一规则');
   const server=await readFile(new URL('../src/mcp-server.js',import.meta.url),'utf8');
   assert.doesNotMatch(server,/recommendationMode\s*[:=]\s*'(feedback|forecast-preview)'/,'MCP 不能写死另一套默认');
-  const skill=await readFile(new URL('../plugins/codex4ever/skills/codex-usage/SKILL.md',import.meta.url),'utf8');
+  const skill=await readFile(new URL('../plugins/usage-planner/skills/codex-usage/SKILL.md',import.meta.url),'utf8');
   assert.doesNotMatch(skill,/recommendationMode:"feedback"/,'Skill 不能要求插件改用另一套规则');
 });
 

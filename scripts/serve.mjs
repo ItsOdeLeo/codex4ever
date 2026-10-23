@@ -5,6 +5,7 @@ import { resolve, extname, sep } from 'node:path';
 import { collectLiveResetEvidence } from '../src/live-reset-evidence.js';
 import { publicSiteOrigin,seoResponse } from '../src/site-seo.js';
 import { loadLocalLLMEnvironment } from '../src/local-llm-environment.js';
+import { plannerEnv } from '../src/planner-name.js';
 
 await loadLocalLLMEnvironment();
 
@@ -14,7 +15,7 @@ const siteUrl=publicSiteOrigin(process.env.PUBLIC_SITE_URL);
 const types = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript', '.ttf': 'font/ttf', '.png':'image/png', '.svg':'image/svg+xml' };
 const classificationCache = new Map();
 // Reuse one crawl for a while so repeated page loads cannot hammer upstream sources.
-const evidenceTtlMs=Number(process.env.CODEX4EVER_EVIDENCE_TTL_MINUTES || 30)*60_000;
+const evidenceTtlMs=Number(plannerEnv('EVIDENCE_TTL_MINUTES') || 30)*60_000;
 let refreshInFlight,cachedSnapshot,cachedAt=0;
 async function evidence() {
   if(cachedSnapshot && Date.now()-cachedAt<evidenceTtlMs)return cachedSnapshot;
@@ -66,4 +67,4 @@ const server=http.createServer(async (req, res) => {
     res.writeHead(404).end('Not found');
   }
 });
-server.listen(port,'127.0.0.1',()=>console.log(`Codex4ever local test page: http://127.0.0.1:${server.address().port}`));
+server.listen(port,'127.0.0.1',()=>console.log(`Usage Planner local test page: http://127.0.0.1:${server.address().port}`));

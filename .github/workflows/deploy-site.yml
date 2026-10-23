@@ -36,11 +36,11 @@ jobs:
           restore-keys: classifications-
       - run: npm run site:build
         env:
-          PUBLIC_SITE_URL: https://codex4ever.com
-          CODEX4EVER_LLM_MODEL: ${{ vars.CODEX4EVER_LLM_MODEL }}
-          CODEX4EVER_LLM_BASE_URL: ${{ vars.CODEX4EVER_LLM_BASE_URL }}
-          CODEX4EVER_LLM_API_KEY: ${{ secrets.CODEX4EVER_LLM_API_KEY }}
-          CODEX4EVER_X_BEARER_TOKEN: ${{ secrets.CODEX4EVER_X_BEARER_TOKEN }}
+          PUBLIC_SITE_URL: https://usageplanner.com
+          USAGE_PLANNER_LLM_MODEL: ${{ vars.USAGE_PLANNER_LLM_MODEL }}
+          USAGE_PLANNER_LLM_BASE_URL: ${{ vars.USAGE_PLANNER_LLM_BASE_URL }}
+          USAGE_PLANNER_LLM_API_KEY: ${{ secrets.USAGE_PLANNER_LLM_API_KEY }}
+          USAGE_PLANNER_X_BEARER_TOKEN: ${{ secrets.USAGE_PLANNER_X_BEARER_TOKEN }}
       - uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}

@@ -11,7 +11,7 @@ import { mcpUsageAdvice,renderMcpUsageAdvice } from './mcp-usage-advice.js';
 const args = process.argv.slice(2);
 const example = { weeklyRemaining: 62, weeklyResetDays: 4, weeklyResetHours: 6,
   resetDates: [], credits: 0, usageStrategy: 'balanced' };
-const usage = `Codex4ever — Codex 用量规划（与网页、插件页面和 MCP 相同的算法；不启动 Web 服务）
+const usage = `Usage Planner — Codex 用量规划（与网页、插件页面和 MCP 相同的算法；不启动 Web 服务）
 
   npm start -- --input input.json      规划手动输入的额度状态
   npm start -- --example               输出示例输入 JSON
@@ -24,7 +24,7 @@ const usage = `Codex4ever — Codex 用量规划（与网页、插件页面和 M
 可选 usageStrategy（balanced、keep-available、maximize、weekdays、weekend-focus）、averagePercentPerDay、paceMultiplier。
 默认使用随附的公开 reset 记录预测；可选：--now ISO 时间、--time-zone IANA 时区、--language en|zh-CN、
 --llm-base-url API 前缀（默认 https://api.openai.com/v1）、--help。
-API Key 通过 CODEX4EVER_LLM_API_KEY 环境变量传入；本机兼容服务可以不设。`;
+API Key 通过 USAGE_PLANNER_LLM_API_KEY 环境变量传入；本机兼容服务可以不设。`;
 
 async function main() {
   if (args.includes('--help')) { console.log(usage); return; }

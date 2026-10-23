@@ -8,13 +8,13 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { request as httpRequest } from 'node:http';
 
-const plugin=new URL('../plugins/codex4ever/',import.meta.url);
+const plugin=new URL('../plugins/usage-planner/',import.meta.url);
 const manifest=JSON.parse(await readFile(new URL('plugin.json',plugin),'utf8'));
 
 function clientAt(entry,env={}) {
   const child=spawn(process.execPath,[entry],{cwd:tmpdir(),
-    env:{...process.env,CODEX4EVER_HOME:join(tmpdir(),`codex4ever-home-test-${process.pid}-${Math.random()}`),
-      CODEX4EVER_ALERT_FILE:join(tmpdir(),`codex4ever-alerts-test-${process.pid}-${Math.random()}.json`),...env},stdio:['pipe','pipe','pipe']});
+    env:{...process.env,USAGE_PLANNER_HOME:join(tmpdir(),`usage-planner-home-test-${process.pid}-${Math.random()}`),
+      USAGE_PLANNER_ALERT_FILE:join(tmpdir(),`usage-planner-alerts-test-${process.pid}-${Math.random()}.json`),...env},stdio:['pipe','pipe','pipe']});
   child.stderr.resume();
   const pending=new Map();let id=0;
   createInterface({input:child.stdout}).on('line',line=>{
@@ -37,15 +37,15 @@ function clientAt(entry,env={}) {
 test('插件身份、启动配置、兼容清单和发行 ZIP 相互一致，不依赖开发机绝对路径',async()=>{
   const mcp=JSON.parse(await readFile(new URL('mcp.json',plugin),'utf8'));
   const legacy=JSON.parse(await readFile(new URL('.codex-plugin/plugin.json',plugin),'utf8'));
-  assert.equal(manifest.name,'codex4ever');assert.equal(legacy.name,manifest.name);
+  assert.equal(manifest.name,'usage-planner');assert.equal(legacy.name,manifest.name);
   assert.equal(legacy.version,manifest.version);
-  assert.equal(manifest.homepage,'https://codex4ever.com');
+  assert.equal(manifest.homepage,'https://usageplanner.com');
   assert.equal(manifest.author.url,'https://x.com/ItsOdeLeo');
-  assert.equal(mcp.mcpServers.codex4ever.args[0],'${PLUGIN_ROOT}/server/codex4ever.mjs');
-  const bundle=await readFile(new URL('server/codex4ever.mjs',plugin),'utf8');
+  assert.equal(mcp.mcpServers['usage-planner'].args[0],'${PLUGIN_ROOT}/server/usage-planner.mjs');
+  const bundle=await readFile(new URL('server/usage-planner.mjs',plugin),'utf8');
   assert.doesNotMatch(bundle,/\/Users\/[^/\n]+\/Documents\/ChatGPT\//);
-  const entries=execFileSync('unzip',['-Z1',new URL(`../output/codex4ever-plugin-${manifest.version}.zip`,import.meta.url).pathname],{encoding:'utf8'}).trim().split('\n');
-  assert.ok(entries.includes('server/codex4ever.mjs'));
+  const entries=execFileSync('unzip',['-Z1',new URL(`../output/usage-planner-plugin-${manifest.version}.zip`,import.meta.url).pathname],{encoding:'utf8'}).trim().split('\n');
+  assert.ok(entries.includes('server/usage-planner.mjs'));
   assert.ok(entries.includes('skills/codex-usage/SKILL.md'));
   assert.ok(entries.includes('THIRD_PARTY_NOTICES.txt'));
   assert.ok(entries.includes('experiments/public-reset-events.json'));
@@ -55,7 +55,7 @@ test('插件身份、启动配置、兼容清单和发行 ZIP 相互一致，不
 });
 
 test('干净安装副本可直接读取账户并用精确快照规划，无 session／Fast／独立模型 API',async()=>{
-  const temp=await mkdtemp(join(tmpdir(),'codex4ever-plugin-'));
+  const temp=await mkdtemp(join(tmpdir(),'usage-planner-plugin-'));
   await cp(plugin,join(temp,'installed'),{recursive:true});
   const command=join(temp,'codex-mock.mjs');
   const at=hours=>Math.floor((Date.now()+hours*3600000)/1000);
@@ -66,7 +66,7 @@ test('干净安装副本可直接读取账户并用精确快照规划，无 sess
     rateLimitResetCredits:{availableCount:1,credits:[{id:'private-reset-id',status:'available',resetType:'codexRateLimits',expiresAt:expiry}]}};
   await writeFile(command,`#!${process.execPath}\nimport{createInterface}from'node:readline';createInterface({input:process.stdin}).on('line',line=>{const q=JSON.parse(line);if(q.id===1)console.log(JSON.stringify({id:1,result:{}}));if(q.id===2)console.log(JSON.stringify({id:2,result:${JSON.stringify(raw)}}));});\n`);
   await chmod(command,0o755);
-  const client=clientAt(join(temp,'installed/server/codex4ever.mjs'),{CODEX4EVER_CODEX_CLI:command,CODEX4EVER_LLM_MODEL:''});
+  const client=clientAt(join(temp,'installed/server/usage-planner.mjs'),{USAGE_PLANNER_CODEX_CLI:command,USAGE_PLANNER_LLM_MODEL:''});
   try {
     await client.initialize();
     const tools=(await client.request('tools/list')).result.tools;
@@ -131,7 +131,7 @@ test('干净安装副本可直接读取账户并用精确快照规划，无 sess
       });req.on('error',reject);req.end();
     });
     assert.equal(wrongHost,403);
-    for(const path of ['/src/mcp-server.js','/output/mcp-live-demo.json','/.env','/server/codex4ever.mjs','/api/reset-evidence'])
+    for(const path of ['/src/mcp-server.js','/output/mcp-live-demo.json','/.env','/server/usage-planner.mjs','/api/reset-evidence'])
       assert.equal((await fetch(new URL(path,url),{headers})).status,404,path);
     const compact=await client.call('plan_usage_strategy',{usageSnapshot,evidence,includeDetails:false,language:'zh-CN'});
     const synced=await (await fetch(new URL('/api/session',url),{headers})).json();
@@ -159,7 +159,7 @@ test('干净安装副本可直接读取账户并用精确快照规划，无 sess
 });
 
 test('无法读取本机 Codex 时返回错误，不以示例账户冒充真实库存',async()=>{
-  const client=clientAt(new URL('server/codex4ever.mjs',plugin).pathname,{CODEX4EVER_CODEX_CLI:'/nonexistent-codex-cli'});
+  const client=clientAt(new URL('server/usage-planner.mjs',plugin).pathname,{USAGE_PLANNER_CODEX_CLI:'/nonexistent-codex-cli'});
   try {
     await client.initialize();
     const response=await client.call('get_usage_snapshot');

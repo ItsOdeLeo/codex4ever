@@ -2,6 +2,7 @@ import { readFile,writeFile,mkdir } from 'node:fs/promises';
 import { realpath } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
 import { classifyTiboPosts } from '../src/llm-classifier.js';
+import { plannerEnv } from '../src/planner-name.js';
 
 export function scoreTiboCase(item,signal) {
   const expected=item.expected,errors=[];
@@ -62,10 +63,10 @@ async function main() {
   if(args.includes('--help')) {
     console.log('node scripts/eval-tibo-models.mjs --models model-a,model-b [--base-url https://.../v1] [--limit 22] [--max-output-tokens 2048]\nCredentials: CODEX4EVER_LLM_API_KEY or OPENAI_API_KEY. Local compatible HTTP APIs may omit a key.\nThis makes paid API requests; output is per post, not per hourly batch.');return;
   }
-  const models=(args.includes('--models') ? value('--models') : process.env.CODEX4EVER_LLM_MODEL)?.split(',').filter(Boolean)??[];
+  const models=(args.includes('--models') ? value('--models') : plannerEnv('LLM_MODEL'))?.split(',').filter(Boolean)??[];
   if(!models.length)throw new Error('Specify --models from the configured provider’s available model IDs.');
-  const baseUrl=args.includes('--base-url') ? value('--base-url') : process.env.CODEX4EVER_LLM_BASE_URL??'https://api.openai.com/v1';
-  const apiKey=process.env.CODEX4EVER_LLM_API_KEY??process.env.OPENAI_API_KEY;
+  const baseUrl=args.includes('--base-url') ? value('--base-url') : plannerEnv('LLM_BASE_URL')??'https://api.openai.com/v1';
+  const apiKey=plannerEnv('LLM_API_KEY')??process.env.OPENAI_API_KEY;
   const url=new URL(baseUrl),local=['localhost','127.0.0.1','[::1]'].includes(url.hostname);
   if(!apiKey&&!local)throw new Error('No API credential configured; no model calls were made. Set a local environment variable, never commit the key.');
   const dataset=JSON.parse(await readFile(new URL('../experiments/tibo-classifier-eval.json',import.meta.url),'utf8'));

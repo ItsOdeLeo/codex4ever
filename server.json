@@ -1,17 +1,17 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.ItsOdeLeo/codex4ever",
+  "name": "io.github.ItsOdeLeo/usage-planner",
   "description": "Plan OpenAI Codex usage from local quota, banked resets and extra-reset forecasts.",
   "repository": {
-    "url": "https://github.com/ItsOdeLeo/codex4ever",
+    "url": "https://github.com/ItsOdeLeo/usage-planner",
     "source": "github"
   },
-  "websiteUrl": "https://codex4ever.com",
+  "websiteUrl": "https://usageplanner.com",
   "version": "0.1.3",
   "packages": [
     {
       "registryType": "npm",
-      "identifier": "codex4ever",
+      "identifier": "usage-planner",
       "version": "0.1.3",
       "transport": {
         "type": "stdio"

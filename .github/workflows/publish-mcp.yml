@@ -21,6 +21,6 @@ jobs:
       - name: Check the npm version is live
         run: |
           version=$(node -p "require('./server.json').version")
-          test "$(npm view "codex4ever@$version" version)" = "$version"
+          test "$(npm view "usage-planner@$version" version)" = "$version"
       - run: ./mcp-publisher login github-oidc
       - run: ./mcp-publisher publish

@@ -18,8 +18,8 @@ test('真实页面策略按钮驱动统一规划，切换不抓取证据、不�
   };
   globalThis.document={querySelector:element};
   let saved={weeklyRemaining:80,weeklyResetDays:6,weeklyResetHours:0,resetDates:['2026-11-07']};
-  globalThis.localStorage={getItem:key=>key==='codex4ever-language' ? 'en' : JSON.stringify(saved),
-    setItem(key,value){if(key!=='codex4ever-language')saved=JSON.parse(value);}};
+  globalThis.localStorage={getItem:key=>key==='usage-planner-language' ? 'en' : JSON.stringify(saved),
+    setItem(key,value){if(key!=='usage-planner-language')saved=JSON.parse(value);}};
   const archive=JSON.parse(await readFile(new URL('./fixtures/reset-events-2026-10-13.json',import.meta.url),'utf8'));
   let fetches=0;
   globalThis.fetch=async()=>{fetches++;return {ok:true,json:async()=>archive};};

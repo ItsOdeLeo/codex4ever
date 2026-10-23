@@ -105,7 +105,7 @@ test('真实网页刷新默认纳入两次假设、按当前用量规划且保�
   };
   globalThis.document={querySelector:element};
   globalThis.ResizeObserver=undefined;
-  globalThis.localStorage={getItem:key=>key==='codex4ever-language' ? 'en'
+  globalThis.localStorage={getItem:key=>key==='usage-planner-language' ? 'en'
     : JSON.stringify({...input,currentPhasePace:1}),setItem(){}};
   let fetches=0;
   globalThis.fetch=async()=>{fetches++;return {ok:true,json:async()=>structuredClone(archive)};};

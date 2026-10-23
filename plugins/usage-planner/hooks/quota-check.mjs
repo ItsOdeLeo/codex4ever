@@ -1,11 +1,16 @@
 // src/usage-alert-hook.js
 import { readFile, writeFile, mkdir } from "node:fs/promises";
-import { dirname as dirname2, join as join2 } from "node:path";
+import { dirname as dirname2, join as join3 } from "node:path";
 
 // src/codex-usage.js
 import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
 import { createInterface } from "node:readline";
+
+// src/planner-name.js
+var plannerEnv = (name, env = process.env) => env[`USAGE_PLANNER_${name}`] ?? env[`CODEX4EVER_${name}`];
+
+// src/codex-usage.js
 var HOUR_MS = 36e5;
 var finite = (value) => typeof value === "number" && Number.isFinite(value);
 var remaining = (window) => {
@@ -21,7 +26,7 @@ var BUNDLED_CODEX_CLI = [
   "/Applications/Codex.app/Contents/Resources/codex"
 ];
 function defaultCodexCommand({ env = process.env, exists = existsSync } = {}) {
-  return env.CODEX4EVER_CODEX_CLI || env.CODEX_CLI_PATH || BUNDLED_CODEX_CLI.find((path) => exists(path)) || "codex";
+  return plannerEnv("CODEX_CLI", env) || env.CODEX_CLI_PATH || BUNDLED_CODEX_CLI.find((path) => exists(path)) || "codex";
 }
 async function readCodexUsage({ command = defaultCodexCommand(), timeoutMs = 15e3 } = {}) {
   return new Promise((resolve, reject) => {
@@ -65,7 +70,7 @@ async function readCodexUsage({ command = defaultCodexCommand(), timeoutMs = 15e
       }
     });
     send({ id: 1, method: "initialize", params: {
-      clientInfo: { name: "codex4ever", title: "Codex4ever", version: "0.1.0" },
+      clientInfo: { name: "usage-planner", title: "Usage Planner", version: "0.1.0" },
       capabilities: null
     } });
   });
@@ -180,9 +185,21 @@ function alertMessage(facts, { timeZone = "UTC", language = "zh-CN" } = {}) {
 }
 
 // src/usage-alert-runtime.js
-import { dirname, join } from "node:path";
+import { dirname, join as join2 } from "node:path";
+
+// src/planner-home.js
+import { existsSync as existsSync2 } from "node:fs";
+import { join } from "node:path";
 import { homedir } from "node:os";
-var defaultAlertFile = () => process.env.CODEX4EVER_ALERT_FILE ?? join(process.env.CODEX4EVER_HOME ?? join(homedir(), ".codex4ever"), "alerts.json");
+function plannerHome(env = process.env) {
+  const configured = plannerEnv("HOME", env);
+  if (configured) return configured;
+  const next = join(homedir(), ".usage-planner"), old = join(homedir(), ".codex4ever");
+  return !existsSync2(next) && existsSync2(old) ? old : next;
+}
+
+// src/usage-alert-runtime.js
+var defaultAlertFile = () => plannerEnv("ALERT_FILE") ?? join2(plannerHome(), "alerts.json");
 
 // src/usage-alert-hook.js
 var HOOK_CHECK_INTERVAL_MINUTES = 10;
@@ -201,7 +218,7 @@ async function runQuotaHook({
 } = {}) {
   const settings = await readJson(file);
   if (!settings?.enabled || !settings.baseline) return null;
-  const stateFile = join2(dirname2(file), "alerts-hook.json");
+  const stateFile = join3(dirname2(file), "alerts-hook.json");
   const state = await readJson(stateFile) ?? {};
   const time = now();
   if (state.lastCheckAt && time - Date.parse(state.lastCheckAt) < HOOK_CHECK_INTERVAL_MINUTES * 6e4) return null;
@@ -220,10 +237,10 @@ async function runQuotaHook({
     if (result.status === "over-plan") {
       key = [settings.baseline.createdAt, Math.floor(Math.max(0, result.overPercent) / 5), result.earlierHours !== null].join(":");
       notice = `${zh ? "Codex \u989D\u5EA6\u63D0\u9192" : "Codex quota reminder"}\uFF1A${result.message}`;
-      context = `Codex4ever quota reminder for the user (from their local quota, compared with their plan): ${result.message} Mention it in one short sentence at the start of your reply, in the user's language, then continue with their request.`;
+      context = `Usage Planner quota reminder for the user (from their local quota, compared with their plan): ${result.message} Mention it in one short sentence at the start of your reply, in the user's language, then continue with their request.`;
     } else if (["refilled", "stale"].includes(result.status)) {
       key = `${settings.baseline.createdAt}:${result.status}`;
-      context = `Codex4ever: the user's quota changed since their last plan (refill or plan ended), so quota reminders are paused. If convenient, call the codex4ever usage_alerts tool with action "check" once to replan; do not mention this otherwise.`;
+      context = `Usage Planner: the user's quota changed since their last plan (refill or plan ended), so quota reminders are paused. If convenient, call the usage-planner usage_alerts tool with action "check" once to replan; do not mention this otherwise.`;
     }
     if (key && key !== state.lastKey) {
       state.lastKey = key;

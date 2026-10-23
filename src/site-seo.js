@@ -6,14 +6,14 @@ const json=value=>JSON.stringify(value).replace(/</g,'\\u003c');
 // codex-resets.com asks for a linked credit wherever its data is shown.
 // Public by design: IndexNow verifies site ownership by fetching /<key>.txt.
 export const INDEXNOW_KEY='98f3b4121e21dd55fee643d8af3a1002';
-export const SOURCE_URL='https://github.com/ItsOdeLeo/codex4ever';
+export const SOURCE_URL='https://github.com/ItsOdeLeo/usage-planner';
 export const CREATOR_URL='https://x.com/ItsOdeLeo';
 export const DATA_SOURCES=[['Codex Resets','https://codex-resets.com']];
 const guides={
-  en:{path:'/guide/',title:'Codex Usage, Quota & Reset Planning Guide | Codex4ever',
-    description:'Learn how Codex4ever estimates quota depletion, compares banked and extra resets, and plans daily Codex usage with a local MCP interface.',
+  en:{path:'/guide/',title:'Codex Usage, Quota & Reset Planning Guide | Usage Planner',
+    description:'Learn how Usage Planner estimates quota depletion, compares banked and extra resets, and plans daily Codex usage with a local MCP interface.',
     heading:'Plan your Codex usage',back:'Open the planner',
-    intro:'Codex4ever is an unofficial usage planner for OpenAI Codex. It compares how long your remaining quota can last, when a banked reset may help, and how possible extra resets affect your plan.',
+    intro:'Usage Planner is an unofficial usage planner for OpenAI Codex. It compares how long your remaining quota can last, when a banked reset may help, and how possible extra resets affect your plan.',
     sections:[
       ['Start with your current quota','Enter your weekly quota remaining, the time until your normal refresh, and the expiry dates of any banked resets. The planner estimates daily consumption from the quota used and elapsed time in the seven-day window. You can adjust usage and compare when it would run out.'],
       ['Compare usage strategies','Keep your current pace, use it all before the next refill, work on weekdays only, or focus on the weekend. The timeline shows remaining quota, actual projected depletion, waiting periods and planned refills. A forecast that can cover usage takes priority over spending a banked reset; limited banked resets retain value as a fallback.'],
@@ -26,17 +26,17 @@ const guides={
     credit:'Thanks to',creditSuffix:'for reset data',
     faqHeading:'Frequently asked questions',
     faq:[
-      ['Is Codex4ever affiliated with OpenAI?','No. Codex4ever is an unofficial, MIT-licensed planner built by an independent developer. It is not affiliated with or endorsed by OpenAI.'],
+      ['Is Usage Planner affiliated with OpenAI?','No. Usage Planner is an unofficial, MIT-licensed planner built by an independent developer. It is not affiliated with or endorsed by OpenAI.'],
       ['Does the website send my quota to a server?','No. The website calculates your plan in your browser. It only downloads public reset evidence, and your quota inputs never leave the page.'],
-      ['Does Codex4ever redeem banked resets or spend credits?','No. It only recommends a daily usage rate and shows when a banked reset could help. You decide whether to redeem anything in Codex.'],
+      ['Does Usage Planner redeem banked resets or spend credits?','No. It only recommends a daily usage rate and shows when a banked reset could help. You decide whether to redeem anything in Codex.'],
       ['How are extra resets forecast?','The forecast uses public historical reset announcements, the current reset campaign and public posts by Tibo of the OpenAI Codex team. Its probabilities are experimental estimates, not guarantees that your account will refresh.'],
-      ['How do I use Codex4ever inside Codex?','Install the plugin with: codex plugin marketplace add ItsOdeLeo/codex4ever, then codex plugin add codex4ever@codex4ever. Start a new chat and ask Codex to plan your usage from your current quota. It reads your local, signed-in quota and needs no separate API key.']
+      ['How do I use Usage Planner inside Codex?','Install the plugin with: codex plugin marketplace add ItsOdeLeo/usage-planner, then codex plugin add usage-planner@usage-planner. Start a new chat and ask Codex to plan your usage from your current quota. It reads your local, signed-in quota and needs no separate API key.']
     ],
     notice:'Unofficial visual usage planner for OpenAI Codex. Not affiliated with OpenAI.'},
-  'zh-CN':{path:'/zh/guide/',title:'Codex 用量、额度与 Reset 规划指南 | Codex4ever',
-    description:'了解 Codex4ever 如何估算额度耗尽时间、比较备用与额外 reset，并通过本地 MCP 规划日均 Codex 用量。',
+  'zh-CN':{path:'/zh/guide/',title:'Codex 用量、额度与 Reset 规划指南 | Usage Planner',
+    description:'了解 Usage Planner 如何估算额度耗尽时间、比较备用与额外 reset，并通过本地 MCP 规划日均 Codex 用量。',
     heading:'规划你的 Codex 用量',back:'打开规划器',
-    intro:'Codex4ever 是 OpenAI Codex 的非官方用量规划器。它比较当前额度还能用多久、何时可能需要备用 reset，以及额外重置预测对用量安排的影响。',
+    intro:'Usage Planner 是 OpenAI Codex 的非官方用量规划器。它比较当前额度还能用多久、何时可能需要备用 reset，以及额外重置预测对用量安排的影响。',
     sections:[
       ['从当前额度开始','填写本周剩余额度、距离正常刷新的时间，以及备用 reset 的到期日期。规划器根据七天窗口中已消耗的额度和已经过去的时间估算日均消耗。你可以调整用量，比较预计在哪个时间耗尽。'],
       ['比较使用策略','支持保持当前用量、不浪费额度（在下次补满前用完）、仅工作日使用和周末集中使用。时间轴展示剩余额度、实际预计耗尽点、停用空档和规划中的补充。预测额外重置能够覆盖用量时优先考虑该补充，保留有限的备用 reset 作为后路。'],
@@ -49,11 +49,11 @@ const guides={
     credit:'感谢',creditSuffix:'提供 reset 数据',
     faqHeading:'常见问题',
     faq:[
-      ['Codex4ever 是 OpenAI 官方的吗？','不是。Codex4ever 是独立开发者制作的非官方规划器，以 MIT 协议开源，与 OpenAI 无隶属或背书关系。'],
+      ['Usage Planner 是 OpenAI 官方的吗？','不是。Usage Planner 是独立开发者制作的非官方规划器，以 MIT 协议开源，与 OpenAI 无隶属或背书关系。'],
       ['网页会把我的额度发送到服务器吗？','不会。网页在浏览器内计算计划，只下载公开的 reset 证据，你填写的额度不会离开页面。'],
-      ['Codex4ever 会自动兑换备用 reset 或消耗 credits 吗？','不会。它只建议日均用量，并显示备用 reset 何时可能有用。是否兑换由你在 Codex 中决定。'],
+      ['Usage Planner 会自动兑换备用 reset 或消耗 credits 吗？','不会。它只建议日均用量，并显示备用 reset 何时可能有用。是否兑换由你在 Codex 中决定。'],
       ['额外 reset 是怎么预测的？','预测依据公开的历史 reset 公告、当前 reset 活动，以及 OpenAI Codex 团队 Tibo 的公开帖子。概率是实验性估计，不保证个人账户一定刷新。'],
-      ['怎样在 Codex 里使用 Codex4ever？','运行 codex plugin marketplace add ItsOdeLeo/codex4ever，再运行 codex plugin add codex4ever@codex4ever 安装插件。新开对话，让 Codex 根据当前额度规划用量即可。它读取本机已登录账户的额度，不需要另外的 API key。']
+      ['怎样在 Codex 里使用 Usage Planner？','运行 codex plugin marketplace add ItsOdeLeo/usage-planner，再运行 codex plugin add usage-planner@usage-planner 安装插件。新开对话，让 Codex 根据当前额度规划用量即可。它读取本机已登录账户的额度，不需要另外的 API key。']
     ],
     notice:'OpenAI Codex 的非官方可视化用量规划工具。与 OpenAI 无隶属关系。'}
 };
@@ -78,10 +78,10 @@ export function renderSeoHead({siteUrl=null,page='planner',language='en'}={}) {
   const url=origin ? origin+path : null;
   const schema=page==='guide' ? {
     '@context':'https://schema.org','@type':'TechArticle',headline:meta.heading,
-    description:meta.description,inLanguage:language,about:{'@type':'WebApplication',name:'Codex4ever'},
+    description:meta.description,inLanguage:language,about:{'@type':'WebApplication',name:'Usage Planner'},
     ...(url ? {url,mainEntityOfPage:url} : {})
   } : {
-    '@context':'https://schema.org','@type':'WebApplication',name:'Codex4ever',
+    '@context':'https://schema.org','@type':'WebApplication',name:'Usage Planner',
     description:meta.description,applicationCategory:'DeveloperApplication',operatingSystem:'Web',
     inLanguage:['en','zh-CN'],isAccessibleForFree:true,license:'https://opensource.org/licenses/MIT',
     author:{'@type':'Person',name:'ItsOdeLeo',url:CREATOR_URL},
@@ -90,7 +90,7 @@ export function renderSeoHead({siteUrl=null,page='planner',language='en'}={}) {
   return `<title>${escape(meta.title)}</title>
   <meta name="description" content="${escape(meta.description)}">
   <meta name="robots" content="${origin ? 'index, follow, max-image-preview:large' : 'noindex, follow'}">
-  <meta property="og:site_name" content="Codex4ever">
+  <meta property="og:site_name" content="Usage Planner">
   <meta property="og:type" content="${page==='guide' ? 'article' : 'website'}">
   <meta property="og:title" content="${escape(meta.title)}">
   <meta property="og:description" content="${escape(meta.description)}">
@@ -100,12 +100,12 @@ export function renderSeoHead({siteUrl=null,page='planner',language='en'}={}) {
   <meta name="twitter:description" content="${escape(meta.description)}">
   ${url ? `<link rel="canonical" href="${escape(url)}">
   <meta property="og:url" content="${escape(url)}">
-  <meta property="og:image" content="${escape(origin)}/public/social-card.png?v=3">
+  <meta property="og:image" content="${escape(origin)}/public/social-card.png?v=4">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Codex4ever — Codex quota and reset planner">
-  <meta name="twitter:image" content="${escape(origin)}/public/social-card.png?v=3">
-  <meta name="twitter:image:alt" content="Codex4ever — Codex quota and reset planner">
+  <meta property="og:image:alt" content="Usage Planner — Codex quota and reset planner">
+  <meta name="twitter:image" content="${escape(origin)}/public/social-card.png?v=4">
+  <meta name="twitter:image:alt" content="Usage Planner — Codex quota and reset planner">
   ${page==='guide' ? Object.entries(guides).map(([lang,entry])=>`<link rel="alternate" hreflang="${lang}" href="${escape(origin+entry.path)}">`).join('\n  ')+`\n  <link rel="alternate" hreflang="x-default" href="${escape(origin+guides.en.path)}">` : ''}` : ''}
   <script type="application/ld+json">${json(schema)}</script>${page==='guide' ? `
   <script type="application/ld+json">${json({'@context':'https://schema.org','@type':'FAQPage',inLanguage:language,
@@ -119,7 +119,7 @@ function renderGuide({language,siteUrl}) {
 ${renderSeoHead({siteUrl,page:'guide',language})}
 <meta name="theme-color" content="#F7D5D5"><link rel="stylesheet" href="/src/styles/guide.css"></head>
 <body class="guide-page"><main>
-<header class="site-header"><div class="brand"><span class="brand-mark" aria-hidden="true">${BRAND_MARK_SVG}</span><div><a href="/">Codex4ever</a></div></div>
+<header class="site-header"><div class="brand"><span class="brand-mark" aria-hidden="true">${BRAND_MARK_SVG}</span><div><a href="/">Usage Planner</a></div></div>
 <nav aria-label="${language==='en' ? 'Language' : '语言'}"><a href="/guide/" lang="en" hreflang="en"${language==='en' ? ' aria-current="page"' : ''}>English</a> · <a href="/zh/guide/" lang="zh-CN" hreflang="zh-CN"${language==='zh-CN' ? ' aria-current="page"' : ''}>中文</a></nav></header>
 <article><h1>${escape(guide.heading)}</h1><p>${escape(guide.intro)}</p>
 ${guide.sections.map(([heading,text])=>`<section><h2>${escape(heading)}</h2><p>${escape(text)}</p></section>`).join('\n')}
@@ -132,11 +132,11 @@ ${guide.faq.map(([question,answer])=>`<h3>${escape(question)}</h3><p>${escape(an
 /** A plain-text site summary for AI assistants and answer engines (llmstxt.org). */
 function renderLlmsText(origin) {
   const link=path=>(origin??'')+path;
-  return `# Codex4ever
+  return `# Usage Planner
 
 > ${PLANNER_METADATA.en.description} Unofficial; not affiliated with OpenAI. MIT licensed.
 
-Codex4ever estimates when your remaining OpenAI Codex quota runs out, when a banked reset could help, and how possible extra resets change a daily usage plan. The website calculates in the browser; the Codex plugin reads a locally signed-in quota. Neither redeems resets or spends credits.
+Usage Planner estimates when your remaining OpenAI Codex quota runs out, when a banked reset could help, and how possible extra resets change a daily usage plan. The website calculates in the browser; the Codex plugin reads a locally signed-in quota. Neither redeems resets or spends credits.
 
 ## Pages
 
@@ -146,7 +146,7 @@ Codex4ever estimates when your remaining OpenAI Codex quota runs out, when a ban
 
 ## Codex plugin
 
-- Install: \`codex plugin marketplace add ItsOdeLeo/codex4ever\` then \`codex plugin add codex4ever@codex4ever\`
+- Install: \`codex plugin marketplace add ItsOdeLeo/usage-planner\` then \`codex plugin add usage-planner@usage-planner\`
 - [Source code](${SOURCE_URL}) (MIT)
 
 ## Data sources

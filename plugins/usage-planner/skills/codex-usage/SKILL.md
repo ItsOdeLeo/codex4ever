@@ -108,7 +108,7 @@ credits, or establish background monitoring.
 When the user asks to turn quota reminders on or off, or to check usage
 against the plan now, call `usage_alerts` with `action` `enable`, `disable`,
 `check` or `status` (and `language` matching the user). Before `enable`, say in
-one sentence that it adds codex4ever's own entry to `~/.codex/hooks.json`
+one sentence that it adds usage-planner's own entry to `~/.codex/hooks.json`
 (removed again by `disable`); afterwards relay `codexHook.nextStep`: Codex asks
 the user to trust the hook once, or they trust it under `/hooks`. While Codex keeps this
 plugin running, it reads local quota on an interval (no Codex usage) and shows a

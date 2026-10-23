@@ -1,4 +1,4 @@
-import { chooseLanguage,supportedLanguage,LANGUAGE_STORAGE_KEY,translate,uiLocale,diagnosticText } from './ui-language.js';
+import { chooseLanguage,supportedLanguage,LANGUAGE_STORAGE_KEY,LEGACY_LANGUAGE_STORAGE_KEY,translate,uiLocale,diagnosticText } from './ui-language.js';
 import { renderForecastMethod } from './forecast-method-view.js';
 import { predictionFromArchive } from './reset-forecast.js';
 import { renderResetForecastSummary } from './reset-forecast-summary.js';
@@ -10,12 +10,14 @@ import { workspaceLayout } from './workspace-layout.js';
 import { syncPlannerMetadata } from './page-metadata.js';
 import { pluginPageClient } from './plugin-page-client.js';
 import { BRAND_MARK_SVG } from './brand-mark.js';
+import { PRODUCT_DOMAIN } from './planner-name.js';
 
 const $ = selector => document.querySelector(selector);
 const escape = value => String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
-const STORAGE_KEY = 'codex4ever-intensity-v1';
+const STORAGE_KEY = 'usage-planner-intensity-v1';
+const LEGACY_STORAGE_KEYS = ['codex4ever-intensity-v1','pace-simple-input-v4'];
 let savedLanguage;
-try {savedLanguage=localStorage.getItem(LANGUAGE_STORAGE_KEY);}catch {/* Optional storage. */}
+try {savedLanguage=localStorage.getItem(LANGUAGE_STORAGE_KEY)??localStorage.getItem(LEGACY_LANGUAGE_STORAGE_KEY);}catch {/* Optional storage. */}
 let language=chooseLanguage({saved:savedLanguage,
   browserLanguages:typeof navigator==='undefined' ? [] : navigator.languages,
   browserLanguage:typeof navigator==='undefined' ? undefined : navigator.language});
@@ -56,7 +58,7 @@ let visibleMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
 let calendarOpen = false;
 let savedPlannerPreferences;
 try {
-  const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || localStorage.getItem('pace-simple-input-v4'));
+  const saved = JSON.parse([STORAGE_KEY,...LEGACY_STORAGE_KEYS].map(key=>localStorage.getItem(key)).find(Boolean)??'null');
   if (saved) for (const key of Object.keys(input)) if (key in saved) input[key] = saved[key];
   savedPlannerPreferences=saved;
 } catch { /* Corrupt local storage falls back to example values. */ }
@@ -143,7 +145,8 @@ function saveInput() {
 const round = value => Number(value.toFixed(1));
 const MOBILE_TIMELINE_WIDTH=640;
 // The name rides with the forecast at the top, inside any screenshot.
-const BRAND_STAMP=`<div class="brand-stamp" aria-hidden="true"><span>${BRAND_MARK_SVG}</span> Codex4ever</div>`;
+// The domain, not just the name, so a screenshot tells people where to go.
+const BRAND_STAMP=`<div class="brand-stamp" aria-hidden="true"><span>${BRAND_MARK_SVG}</span> ${PRODUCT_DOMAIN}</div>`;
 
 function renderForecastCard(graph=null) {
   const planningPrediction=activePlannerPrediction(planner),planningNow=new Date(planner.snapshot.now);
@@ -328,9 +331,9 @@ $('#inputs').addEventListener('click', event => {
 $('#calculate').addEventListener('click', calculate);
 // Share: the system sheet where there is one, otherwise copy the link.
 $('#share-site')?.addEventListener?.('click',async()=>{
-  const url=globalThis.location?.origin ? `${location.origin}/` : 'https://codex4ever.com/';
+  const url=globalThis.location?.origin ? `${location.origin}/` : 'https://usageplanner.com/';
   try {
-    if(navigator.share)await navigator.share({title:'Codex4ever',url});
+    if(navigator.share)await navigator.share({title:'Usage Planner',url});
     else {await navigator.clipboard.writeText(url);$('#share-site').textContent=t('已复制链接');
       setTimeout(()=>{$('#share-site').textContent=t('分享');},2000);}
   } catch { /* Dismissed share sheet or blocked clipboard: nothing to do. */ }

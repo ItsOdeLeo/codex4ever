@@ -5,9 +5,9 @@ import { join } from 'node:path';
 import { mkdtemp,writeFile,readFile,mkdir } from 'node:fs/promises';
 import { installQuotaHook,uninstallQuotaHook } from '../src/codex-hook-install.js';
 
-test('开启提醒只添加 codex4ever 自己的 hook，保留用户原有 hook；关闭只删除自己的；重复开启不重复添加',async()=>{
-  const root=await mkdtemp(join(tmpdir(),'codex4ever-install-'));
-  const env={CODEX_HOME:join(root,'codex'),CODEX4EVER_HOME:join(root,'c4e')};
+test('开启提醒只添加 usage-planner 自己的 hook，保留用户原有 hook；关闭只删除自己的；重复开启不重复添加',async()=>{
+  const root=await mkdtemp(join(tmpdir(),'usage-planner-install-'));
+  const env={CODEX_HOME:join(root,'codex'),USAGE_PLANNER_HOME:join(root,'c4e')};
   const source=join(root,'bundled.mjs');
   await writeFile(source,'// hook');
   await mkdir(env.CODEX_HOME,{recursive:true});

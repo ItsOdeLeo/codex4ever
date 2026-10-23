@@ -6,13 +6,13 @@ import { execFileSync } from 'node:child_process';
 import { buildStaticSite } from './static-site.mjs';
 
 const root=resolve(fileURLToPath(new URL('../',import.meta.url)));
-const plugin=resolve(root,'plugins/codex4ever');
+const plugin=resolve(root,'plugins/usage-planner');
 const manifest=JSON.parse(await readFile(resolve(plugin,'plugin.json'),'utf8'));
 const pkg=JSON.parse(await readFile(resolve(root,'package.json'),'utf8'));
 if(manifest.version!==pkg.version)throw new Error('Plugin and package versions must match');
 await mkdir(resolve(plugin,'server'),{recursive:true});
 await build({absWorkingDir:root,entryPoints:['src/mcp-server.js'],bundle:true,platform:'node',target:'node20',
-  format:'esm',outfile:resolve(plugin,'server/codex4ever.mjs'),legalComments:'linked',
+  format:'esm',outfile:resolve(plugin,'server/usage-planner.mjs'),legalComments:'linked',
   banner:{js:'import { createRequire as __nodeCreateRequire } from "node:module"; const require = __nodeCreateRequire(import.meta.url);'}});
 // In-conversation quota reminders: a Codex hook bundled with the plugin. It
 // stays silent unless the user turned reminders on (usage_alerts enable).
@@ -48,7 +48,7 @@ const portable=JSON.parse(await readFile(resolve(plugin,'mcp.json'),'utf8'));
 await writeFile(resolve(plugin,'.mcp.json'),JSON.stringify({mcpServers:portable.mcpServers},null,2)+'\n');
 const allowed=new Set(['plugin.json','mcp.json','.codex-plugin','.mcp.json','skills','assets','server','web','hooks','experiments','LICENSE','THIRD_PARTY_NOTICES.txt']);
 for(const name of await readdir(plugin))if(!allowed.has(name))throw new Error(`Unexpected plugin package entry: ${name}`);
-const archive=resolve(root,`output/codex4ever-plugin-${manifest.version}.zip`);
+const archive=resolve(root,`output/usage-planner-plugin-${manifest.version}.zip`);
 await mkdir(dirname(archive),{recursive:true});
 await rm(archive,{force:true});
 execFileSync('zip',['-q','-r',archive,'.'],{cwd:plugin});

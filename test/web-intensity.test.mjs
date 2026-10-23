@@ -22,7 +22,7 @@ test('反复切换双假设及备用，仅使用建议有日期节点；正常�
   globalThis.document={querySelector:element};
   let saved={weeklyRemaining:40,weeklyResetDays:6,weeklyResetHours:10,
     resetDates:['2026-10-18','2026-10-23'],currentPhasePace:1,timelineOrientation:'vertical',presentationVersion:3};
-  globalThis.localStorage={getItem:key=>key==='codex4ever-language' ? 'zh-CN' : JSON.stringify(saved),setItem(key,value){saved=JSON.parse(value);}};
+  globalThis.localStorage={getItem:key=>key==='usage-planner-language' ? 'zh-CN' : JSON.stringify(saved),setItem(key,value){saved=JSON.parse(value);}};
   const archive=JSON.parse(await readFile(new URL('./fixtures/reset-events-2026-10-13.json',import.meta.url),'utf8'));
   let fetches=0,resized;
   globalThis.fetch=async()=>{fetches++;return {ok:true,json:async()=>archive};};
@@ -164,7 +164,7 @@ test('实时证据、条件用量、备用切换和精简累计概率；保持�
   };
   globalThis.document={querySelector:element};
   let saved;
-  globalThis.localStorage={getItem:key=>key==='codex4ever-language' ? 'zh-CN' : JSON.stringify(saved??{credits:900,allowCredits:true,timelineOrientation:'vertical',presentationVersion:2}),
+  globalThis.localStorage={getItem:key=>key==='usage-planner-language' ? 'zh-CN' : JSON.stringify(saved??{credits:900,allowCredits:true,timelineOrientation:'vertical',presentationVersion:2}),
     setItem(key,value){saved=JSON.parse(value);}};
   const archive=JSON.parse(await readFile(new URL('./fixtures/reset-events-2026-10-13.json',import.meta.url),'utf8'));
   const latestResetMention={sourceUrl:'https://x.com/thsottiaux/status/123',createdAt:'2026-10-14T11:00:00Z',
@@ -435,7 +435,7 @@ test('截图交互回归：旧自动设置、备用反复切换、预测开关�
   globalThis.document = { querySelector: element };
   let saved = { weeklyRemaining: 40, weeklyResetDays: 6, weeklyResetHours: 10,
     resetDates: ['2026-10-16', '2026-10-23'], currentPhasePace: null };
-  globalThis.localStorage = { getItem: key => key==='codex4ever-language' ? 'zh-CN' : JSON.stringify(saved),
+  globalThis.localStorage = { getItem: key => key==='usage-planner-language' ? 'zh-CN' : JSON.stringify(saved),
     setItem(key, value) { saved = JSON.parse(value); } };
   const archive = JSON.parse(await readFile(new URL('./fixtures/reset-events-2026-10-13.json', import.meta.url), 'utf8'));
   globalThis.fetch = async () => ({ ok: true, json: async () => archive });

@@ -1,14 +1,14 @@
-# Codex4ever — Codex quota & reset planner
+# Usage Planner — Codex quota & reset planner
 
 <p align="center">
-  <img src="docs/images/ask.gif" alt="Typing “open quota planning” in Codex opens the Codex4ever planner in the side browser" width="1280" />
+  <img src="docs/images/ask.gif" alt="Typing “open quota planning” in Codex opens Usage Planner in the side browser" width="1280" />
 </p>
 
 <p align="center"><strong>Know how much Codex to use today.</strong></p>
 
 <p align="center">If you find it useful, a ⭐ star helps more people find it.</p>
 
-<p align="center"><a href="https://codex4ever.com"><img src="docs/assets/badges/try-it.svg" alt="Try it at codex4ever.com" /></a><br />
+<p align="center"><a href="https://usageplanner.com"><img src="docs/assets/badges/try-it.svg" alt="Try it at usageplanner.com" /></a><br />
 <sub>Runs in your browser · no sign-in · or ask Codex with the plugin</sub></p>
 
 <p align="center">
@@ -19,7 +19,7 @@
 
 <p align="center"><strong>English</strong> · <a href="#中文简介">中文简介</a></p>
 
-Codex4ever is a planner for your OpenAI Codex weekly quota. It shows when your quota runs out at your current pace, whether a predicted extra reset is likely to arrive first, and when a banked reset is worth redeeming.
+Usage Planner (formerly Codex4ever) is a planner for your OpenAI Codex weekly quota. It shows when your quota runs out at your current pace, whether a predicted extra reset is likely to arrive first, and when a banked reset is worth redeeming.
 
 Unofficial; not affiliated with OpenAI. MIT licensed.
 
@@ -43,28 +43,28 @@ Ask once in Codex and the planner opens beside the chat. Pick a strategy and the
 - **Banked resets:** extras cover outages, earliest expiry first; the **last one is kept** for a real outage (24 h or more), and a bank about to expire can be used rather than wasted.
 - **One rule everywhere:** the website, the plugin page and the plugin's MCP tools always give the same plan for the same inputs.
 
-The forecast is an uncalibrated model estimate, not a promise. Codex4ever never redeems a reset or spends credits for you.
+The forecast is an uncalibrated model estimate, not a promise. Usage Planner never redeems a reset or spends credits for you.
 
 ## Use it
 
 **Codex plugin** (Node.js 20+ and a signed-in Codex app or CLI):
 
 ```sh
-codex plugin marketplace add ItsOdeLeo/codex4ever
-codex plugin add codex4ever@codex4ever
+codex plugin marketplace add ItsOdeLeo/usage-planner
+codex plugin add usage-planner@usage-planner
 ```
 
 Start a new Codex chat and ask: *"Open quota planning."* Reading your quota is local and read-only; no separate API key is needed.
 
-**Other MCP clients** (Claude Code, Claude Desktop, Cursor and others): the same server is on npm as [`codex4ever`](https://www.npmjs.com/package/codex4ever) and in the [MCP Registry](https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.ItsOdeLeo/codex4ever) as `io.github.ItsOdeLeo/codex4ever`. Reading your quota still needs a signed-in Codex CLI on the same machine.
+**Other MCP clients** (Claude Code, Claude Desktop, Cursor and others): the same server is on npm as [`usage-planner`](https://www.npmjs.com/package/usage-planner) and in the [MCP Registry](https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.ItsOdeLeo/usage-planner) as `io.github.ItsOdeLeo/usage-planner`. Reading your quota still needs a signed-in Codex CLI on the same machine.
 
 ```json
-{ "mcpServers": { "codex4ever": { "command": "npx", "args": ["-y", "codex4ever"] } } }
+{ "mcpServers": { "usage-planner": { "command": "npx", "args": ["-y", "usage-planner"] } } }
 ```
 
-**Website:** [codex4ever.com](https://codex4ever.com), no install. Enter your quota by hand; everything is calculated in your browser and your inputs are not sent anywhere.
+**Website:** [usageplanner.com](https://usageplanner.com), no install. Enter your quota by hand; everything is calculated in your browser and your inputs are not sent anywhere.
 
-<p align="center"><a href="https://codex4ever.com"><img src="docs/images/planner.png" alt="The Codex4ever timeline: daily usage, predicted resets and remaining quota" width="720" /></a></p>
+<p align="center"><a href="https://usageplanner.com"><img src="docs/images/planner.png" alt="The Usage Planner timeline: daily usage, predicted resets and remaining quota" width="720" /></a></p>
 
 **Run locally:**
 
@@ -84,7 +84,7 @@ Public reset data comes from [Codex Resets](https://codex-resets.com), including
 |---|---|
 | `npm run web` | Local site with live reset evidence (cached 30 minutes) |
 | `npm run site:build` | Static site in `dist/`, evidence collected at build time |
-| `npm run plugin:build` | Self-contained Codex plugin in `plugins/codex4ever/` |
+| `npm run plugin:build` | Self-contained Codex plugin in `plugins/usage-planner/` |
 | `npm run mcp` | MCP server from source |
 | `npm run backtest:public` | Day-by-day replay of the forecast against public history |
 
@@ -94,8 +94,8 @@ Design and algorithm details: [docs/technical-notes.zh.md](docs/technical-notes.
 
 ## 中文简介
 
-Codex4ever 是 OpenAI Codex 每周额度的本地规划器：按你当前的速度显示额度什么时候用完、额外 reset 是否可能先到，以及备用 reset 什么时候值得用。预测的 reset 只在“正常刷新前发生的概率 ≥ 60%”时计入，并放在保守时刻；任何一次补满都会重新开始 7 天周期；备用默认至少保留一个。网页、插件页面和插件的 MCP 工具始终使用同一套规则。非官方工具，与 OpenAI 无隶属关系。详细设计见 [技术说明](docs/technical-notes.zh.md)。
+Usage Planner（原名 Codex4ever）是 OpenAI Codex 每周额度的本地规划器：按你当前的速度显示额度什么时候用完、额外 reset 是否可能先到，以及备用 reset 什么时候值得用。预测的 reset 只在“正常刷新前发生的概率 ≥ 60%”时计入，并放在保守时刻；任何一次补满都会重新开始 7 天周期；备用默认至少保留一个。网页、插件页面和插件的 MCP 工具始终使用同一套规则。非官方工具，与 OpenAI 无隶属关系。详细设计见 [技术说明](docs/technical-notes.zh.md)。
 
 ## Author
 
-Built by 欧的Leo — [@ItsOdeLeo on X](https://x.com/ItsOdeLeo) · [小红书 ItsOdeLeo](https://xhslink.com/m/18bjTTf180W). Feedback and ideas are welcome there or in [GitHub issues](https://github.com/ItsOdeLeo/codex4ever/issues).
+Built by 欧的Leo — [@ItsOdeLeo on X](https://x.com/ItsOdeLeo) · [小红书 ItsOdeLeo](https://xhslink.com/m/18bjTTf180W). Feedback and ideas are welcome there or in [GitHub issues](https://github.com/ItsOdeLeo/usage-planner/issues).

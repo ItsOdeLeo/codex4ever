@@ -1,5 +1,7 @@
 /** UI-only translations. Forecast and resource state never depend on language. */
-export const LANGUAGE_STORAGE_KEY='codex4ever-language';
+export const LANGUAGE_STORAGE_KEY='usage-planner-language';
+// Read once from before the rename; new choices go under the key above.
+export const LEGACY_LANGUAGE_STORAGE_KEY='codex4ever-language';
 export const DEFAULT_LANGUAGE='en';
 
 export function supportedLanguage(value) {
@@ -30,7 +32,7 @@ const english={
   '保持所选用量':'Keep selected usage',
   '同一批重置情景；综合完成用量、停用、偏离目标和剩余资源。预测未校准。':'Same reset scenarios; balances completed usage, pauses, deviation and remaining resources. Forecast uncalibrated.',
   '若始终没有额外重置':'If no extra reset occurs',
-  'Codex4ever · 用量策略建议':'Codex4ever · Usage planner',
+  'Usage Planner · 用量策略建议':'Usage Planner · Usage planner',
   '规划接下来怎么用，什么时候补给。':'Plan your usage and your next reset.',
   'OpenAI Codex 的非官方可视化用量规划工具。与 OpenAI 无隶属关系。':'Unofficial visual usage planner for OpenAI Codex. Not affiliated with OpenAI.',
   '在 X 关注我':'Follow on X',

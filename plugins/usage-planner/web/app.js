@@ -1,5 +1,6 @@
 // src/ui-language.js
-var LANGUAGE_STORAGE_KEY = "codex4ever-language";
+var LANGUAGE_STORAGE_KEY = "usage-planner-language";
+var LEGACY_LANGUAGE_STORAGE_KEY = "codex4ever-language";
 var DEFAULT_LANGUAGE = "en";
 function supportedLanguage(value) {
   if (typeof value !== "string") return null;
@@ -29,10 +30,9 @@ var english = {
   "\u4FDD\u6301\u6240\u9009\u7528\u91CF": "Keep selected usage",
   "\u540C\u4E00\u6279\u91CD\u7F6E\u60C5\u666F\uFF1B\u7EFC\u5408\u5B8C\u6210\u7528\u91CF\u3001\u505C\u7528\u3001\u504F\u79BB\u76EE\u6807\u548C\u5269\u4F59\u8D44\u6E90\u3002\u9884\u6D4B\u672A\u6821\u51C6\u3002": "Same reset scenarios; balances completed usage, pauses, deviation and remaining resources. Forecast uncalibrated.",
   "\u82E5\u59CB\u7EC8\u6CA1\u6709\u989D\u5916\u91CD\u7F6E": "If no extra reset occurs",
-  "Codex4ever \xB7 \u7528\u91CF\u7B56\u7565\u5EFA\u8BAE": "Codex4ever \xB7 Usage planner",
+  "Usage Planner \xB7 \u7528\u91CF\u7B56\u7565\u5EFA\u8BAE": "Usage Planner \xB7 Usage planner",
   "\u89C4\u5212\u63A5\u4E0B\u6765\u600E\u4E48\u7528\uFF0C\u4EC0\u4E48\u65F6\u5019\u8865\u7ED9\u3002": "Plan your usage and your next reset.",
   "OpenAI Codex \u7684\u975E\u5B98\u65B9\u53EF\u89C6\u5316\u7528\u91CF\u89C4\u5212\u5DE5\u5177\u3002\u4E0E OpenAI \u65E0\u96B6\u5C5E\u5173\u7CFB\u3002": "Unofficial visual usage planner for OpenAI Codex. Not affiliated with OpenAI.",
-  "\u2605 \u5728 GitHub \u70B9\u4E2A Star": "\u2605 Star on GitHub",
   "\u5728 X \u5173\u6CE8\u6211": "Follow on X",
   "\u72B6\u6001\u4E0E\u9884\u6D4B": "State and forecast",
   "\u7B97\u6CD5\u8F93\u5165": "Usage inputs",
@@ -48,6 +48,23 @@ var english = {
   "\u5982\u679C\u4F60\u559C\u6B22\u8FD9\u4E2A\u4F5C\u54C1\uFF0C\u6B22\u8FCE\u5728 X \u4E0A\u5173\u6CE8\u6211": "If you like this work, follow me on X",
   "GitHub \u5F00\u6E90": "Open source on GitHub",
   "Reset \u6982\u7387": "Reset probability",
+  "\u5047\u8BBE\u6CA1\u6709 reset": "Assume no reset",
+  "\u611F\u8C22": "Thanks to",
+  "\u63D0\u4F9B reset \u6570\u636E": "for reset data",
+  "\u5982\u679C\u4F60\u559C\u6B22\u8FD9\u4E2A\u4F5C\u54C1\uFF1A": "If you like this work:",
+  "\u5C0F\u7EA2\u4E66": "Xiaohongshu",
+  "\u5206\u4EAB": "Share",
+  "\u5DF2\u590D\u5236\u94FE\u63A5": "Link copied",
+  "\u21BB \u66F4\u65B0\u8BA1\u5212": "\u21BB Update plan",
+  "{time} \u524D": "By {time}",
+  "\u672C\u5468\u989D\u5EA6\u8FD8\u5269": "Weekly quota left",
+  "{hours} \u5C0F\u65F6\u5185 reset": "Reset within {hours}h",
+  "\u7528\u91CF\u8FC7\u5EA6\u63D0\u9192\uFF08\u4EC5 Codex \u63D2\u4EF6\uFF09\uFF1A\u5728 Codex \u91CC\u8BF4\u201C\u6253\u5F00\u7528\u91CF\u8FC7\u5EA6\u63D0\u9192\u201D\u3002\u4E4B\u540E\u4F60\u7528\u5F97\u6BD4\u8BA1\u5212\u5FEB\u65F6\uFF0C\u4F1A\u76F4\u63A5\u5728\u5BF9\u8BDD\u91CC\u63D0\u9192\u4F60\u3002": "Overuse alert (Codex plugin only): tell Codex \u201Cturn on overuse alerts\u201D. When you use more than the plan, it reminds you right in the conversation.",
+  "\u88C5\u6210 Codex \u63D2\u4EF6\u53EF\u81EA\u52A8\u8BFB\u53D6\u3002": "Fill these in automatically with the Codex plugin.",
+  "\u6309\u4E0B\u540E\u9690\u85CF\u9884\u6D4B\u7684 reset\uFF0C\u6240\u6709\u7B56\u7565\u90FD\u6309\u6CA1\u6709\u989D\u5916 reset \u6765\u89C4\u5212\u3002": "Hides the predicted resets and plans every strategy as if no extra reset comes.",
+  "\u5DF2\u5BA3\u5E03\u7684 reset": "Announced reset",
+  "\u5DF2\u5BA3\u5E03": "Announced",
+  "Tibo \u5DF2\u5BA3\u5E03\u8FD9\u6B21 reset \u7684\u65F6\u95F4": "Tibo announced the time of this reset",
   "\u672A\u6765 reset \u6982\u7387": "Chance of a reset in the next",
   "{hours} \u5C0F\u65F6": "{hours}h",
   "\u7B2C\u4E8C\u6B21 reset \u6982\u7387": "Second reset probability",
@@ -144,7 +161,6 @@ var english = {
   "\u68C0\u67E5\u65F6\u63D0\u9192\uFF1A\u5173\u95ED": "Alerts on checks: Off",
   "\u6309\u5F53\u524D\u7528\u91CF\uFF0C{time} \u8017\u5C3D\u3002": "At current usage, depletion at {time}.",
   "\u5F53\u524D\u7528\u91CF\u65E0\u6CD5\u4FDD\u7559\u76EE\u6807\u4F59\u91CF\u3002": "Current usage would use the reserved margin.",
-  "\u82E5 {time} \u4ECD\u672A reset\uFF1A\u6539\u4E3A {daily}% / \u5929\u3002": "If no reset by {time}: use {daily}% / day.",
   "\u82E5\u4ECD\u672A\u989D\u5916 reset": "If still no extra reset",
   "\u5468\u672B\u4E0D\u4F7F\u7528": "Weekdays only",
   "\u5468\u672B\u96C6\u4E2D\u4F7F\u7528": "Weekend focus",
@@ -222,7 +238,6 @@ var english = {
   "\u9996\u6B21\u53D1\u751F\u540E": "after the first",
   "\u7B2C\u4E8C\u6B21\uFF08\u5047\u8BBE\u9996\u6B21\u53D1\u751F\uFF09": "Second (assuming the first)",
   "\u9996\u6B21\u989D\u5916reset\u7684\u6982\u7387\u5206\u5E03\u3002": "First extra reset distribution. ",
-  "\u4EE5\u9996\u6B21\u5728\u6807\u8BB0\u65F6\u523B\u53D1\u751F\u4E3A\u6761\u4EF6\u3002": "Conditional on the first reset at its marker. ",
   "\u6807\u7EBF\u5BF9\u5E94\u672C\u6761\u5206\u5E03\u6700\u9AD8\u5CF0\u3002": "The marker is at this distribution\u2019s highest-density hourly window. ",
   "\u7B2C\u4E8C\u6B21\u4EE5\u9996\u6B21\u5728\u9884\u6D4B\u70B9\u53D1\u751F\u4E3A\u524D\u63D0\u3002": "The second assumes the first happens at its marker.",
   "\u6807\u7EBF\u5BF9\u5E94\u6982\u7387\u5206\u5E03\u7684\u6700\u9AD8\u5CF0\u3002": "The marker is at the distribution\u2019s highest-density hourly window. ",
@@ -312,6 +327,7 @@ var english = {
   "\u4E0B\u6B21 {coverage}% \u9884\u6D4B\u7A97\u53E3": "Next reset \xB7 {coverage}% prediction window",
   "Day {day} \u529F\u80FD\u5E16": "Day {day} feature post",
   "reset \u6B21\u65E5\u51B7\u5374\u671F": "Day-after-reset cooldown",
+  "\u5DF2\u5B89\u6392 \xB7 {time} \u524D": "Scheduled \xB7 by {time}",
   "\u6D3B\u52A8\u65E5\u5185\u5DF2 reset": "Reset already occurred on this campaign day",
   "\u5F53\u524D\u9884\u6D4B\u7EA6\u675F": "Active forecast constraint",
   "\u622A\u81F3 {time}{rule}": "Until {time}{rule}",
@@ -330,7 +346,6 @@ var english = {
   "\u6A21\u578B\u672A\u6821\u51C6": "Uncalibrated model",
   "\u66F4\u591A\u6570\u636E": "More data",
   "\u964D\u5230\u5E73\u65F6\u7684 {percent}%": "{percent}% of usual",
-  "\u672A\u6765 48 \u5C0F\u65F6": "Next 48h",
   "\u53EF\u80FD\u7A97\u53E3": "Likely window",
   "\u4E0A\u6B21 reset": "Last reset",
   "\u6D3B\u52A8": "Campaign",
@@ -349,7 +364,7 @@ var english = {
   "\u5E73\u5747 {days} \u5929": "Mean {days} days",
   "\u81EA {time} \u8D77\uFF0C\u5DF2\u8FC7 {days} \u5929": "{days} days since {time}",
   "\u53D1\u5E03\u949F\u70B9\u4F7F\u7528\u5168\u90E8\u5386\u53F2\u81EA\u52A8\u91CD\u7F6E\u65E5\uFF1B\u91CD\u7F6E\u95F4\u9694\u4F18\u5148\u4F7F\u7528\u5F53\u524D\u6D3B\u52A8\u5185\u7684\u5B8C\u6574\u95F4\u9694\uFF0C\u6837\u672C\u4E0D\u8DB3\u65F6\u56DE\u9000\u5230\u8FD1\u671F\u6216\u5386\u53F2\u3002": "Posting time uses all recorded automatic-reset days. Reset intervals use complete intervals within the active campaign, falling back to recent or historical data when needed.",
-  "\u57FA\u7840\u98CE\u9669\u7ED3\u5408\u8DDD\u4E0A\u6B21\u91CD\u7F6E\u7684\u65F6\u95F4\u3001\u6240\u9009\u95F4\u9694\u5206\u5E03\u3001\u5E16\u5B50\u4FE1\u53F7\u548C\u51B7\u5374\u89C4\u5219\uFF0C\u518D\u7528\u5386\u53F2\u53D1\u5E03\u949F\u70B9\u52A0\u6743\u3002": "Base risk combines time since the last reset, the selected interval distribution, post signals and cooldown rules. Historical posting times then weight that risk.",
+  "\u57FA\u7840\u98CE\u9669\u7ED3\u5408\u8DDD\u4E0A\u6B21\u91CD\u7F6E\u7684\u65F6\u95F4\u3001\u6240\u9009\u95F4\u9694\u5206\u5E03\u548C\u5E16\u5B50\u4FE1\u53F7\uFF0C\u518D\u7528\u5386\u53F2\u53D1\u5E03\u949F\u70B9\u52A0\u6743\u3002": "Base risk combines time since the last reset, the selected interval distribution and post signals, then weights it by historical release times.",
   "\u65F6\u6BB5\u98CE\u9669 = \u57FA\u7840\u98CE\u9669 \xD7 \u5386\u53F2\u949F\u70B9\u6743\u91CD \xF7 \u5F53\u65E5\u5E73\u5747\u6743\u91CD": "Time-slot risk = base risk \xD7 historical clock weight \xF7 that day\u2019s mean weight",
   "F\u2080\uFF1A\u57FA\u7840\u7D2F\u8BA1\u6982\u7387\uFF1Bw\uFF1A\u5168\u5386\u53F2\u949F\u70B9\u6743\u91CD\uFF1Bt*\uFF1A\u6700\u53EF\u80FD\u7684\u5C0F\u65F6\u7A97\u53E3\u3002": "F\u2080: base cumulative probability; w: all-history clock weight; t*: most likely hourly window.",
   "\u7D2F\u8BA1\u6982\u7387\u7531\u52A0\u6743\u98CE\u9669\u7D2F\u79EF\u5F97\u5230\uFF1B\u6700\u53EF\u80FD\u65F6\u95F4\u53D6\u5B9E\u9645\u5206\u5E03\u4E2D\u6982\u7387\u5BC6\u5EA6\u6700\u9AD8\u7684\u5C0F\u65F6\u7A97\u53E3\uFF0C\u4E0D\u662F\u7B80\u5355\u628A\u5E73\u5747\u5929\u6570\u52A0\u5230\u4E0A\u6B21\u65F6\u95F4\u3002": "Cumulative probability comes from the weighted risk. The most likely time is the highest-density hourly window of the resulting distribution, rather than simply the last reset plus the mean interval.",
@@ -417,7 +432,7 @@ function renderForecastMethod({ source, prediction, result, timeZone: timeZone2,
   const second = scenario?.following?.selected ? date(Number.isFinite(scenario.following.hours) ? new Date(Date.parse(result.now) + scenario.following.hours * 36e5).toISOString() : scenario.following.at ?? scenario.following.pointAt) : null;
   const assumptions = first ? second ? t2("\u9996\u6B21 {first} \xB7 \u7B2C\u4E8C\u6B21 {second}", { first, second }) : t2("\u9996\u6B21 {first}", { first }) : t2("\u672A\u5047\u8BBE\u989D\u5916\u91CD\u7F6E");
   const formula = prediction?.model === "local-recent-intervals-v5" ? `<div class="forecast-formula" data-forecast-formula><p>${escape3(t2("\u65F6\u6BB5\u98CE\u9669 = \u57FA\u7840\u98CE\u9669 \xD7 \u5386\u53F2\u949F\u70B9\u6743\u91CD \xF7 \u5F53\u65E5\u5E73\u5747\u6743\u91CD"))}</p><code>\u0394H\u1D62 = log[(1 \u2212 F\u2080(t\u1D62\u208B\u2081)) / (1 \u2212 F\u2080(t\u1D62))] \xD7 w\u1D62 / w\u0304(day\u1D62)</code><code>F(t) = 1 \u2212 exp(\u2212\u03A3 \u0394H\u1D62) \xB7 t* = argmax(\u0394F\u1D62 / \u0394t\u1D62)</code><small>${t2("F\u2080\uFF1A\u57FA\u7840\u7D2F\u8BA1\u6982\u7387\uFF1Bw\uFF1A\u5168\u5386\u53F2\u949F\u70B9\u6743\u91CD\uFF1Bt*\uFF1A\u6700\u53EF\u80FD\u7684\u5C0F\u65F6\u7A97\u53E3\u3002")}</small></div>` : "";
-  return `<section class="forecast-method" data-forecast-method aria-label="${t2("\u9884\u6D4B\u600E\u4E48\u7B97")}"><details><summary><h3>${t2("\u9884\u6D4B\u600E\u4E48\u7B97")}</h3></summary><dl>${rows.join("")}</dl><p>${t2("\u53D1\u5E03\u949F\u70B9\u4F7F\u7528\u5168\u90E8\u5386\u53F2\u81EA\u52A8\u91CD\u7F6E\u65E5\uFF1B\u91CD\u7F6E\u95F4\u9694\u4F18\u5148\u4F7F\u7528\u5F53\u524D\u6D3B\u52A8\u5185\u7684\u5B8C\u6574\u95F4\u9694\uFF0C\u6837\u672C\u4E0D\u8DB3\u65F6\u56DE\u9000\u5230\u8FD1\u671F\u6216\u5386\u53F2\u3002")}</p>${prediction ? `<p>${t2("\u57FA\u7840\u98CE\u9669\u7ED3\u5408\u8DDD\u4E0A\u6B21\u91CD\u7F6E\u7684\u65F6\u95F4\u3001\u6240\u9009\u95F4\u9694\u5206\u5E03\u3001\u5E16\u5B50\u4FE1\u53F7\u548C\u51B7\u5374\u89C4\u5219\uFF0C\u518D\u7528\u5386\u53F2\u53D1\u5E03\u949F\u70B9\u52A0\u6743\u3002")}</p>${formula}<p>${t2("\u7D2F\u8BA1\u6982\u7387\u7531\u52A0\u6743\u98CE\u9669\u7D2F\u79EF\u5F97\u5230\uFF1B\u6700\u53EF\u80FD\u65F6\u95F4\u53D6\u5B9E\u9645\u5206\u5E03\u4E2D\u6982\u7387\u5BC6\u5EA6\u6700\u9AD8\u7684\u5C0F\u65F6\u7A97\u53E3\uFF0C\u4E0D\u662F\u7B80\u5355\u628A\u5E73\u5747\u5929\u6570\u52A0\u5230\u4E0A\u6B21\u65F6\u95F4\u3002")}</p><p class="forecast-conditional-note">${t2("\u7B2C\u4E8C\u6761\u66F2\u7EBF\u4EE5\u9996\u6B21\u5728\u6807\u8BB0\u65F6\u95F4\u53D1\u751F\u4E3A\u524D\u63D0\uFF0C\u4ECE\u8BE5\u70B9\u91CD\u65B0\u8BA1\u65F6\uFF1B\u5176\u7D2F\u8BA1\u503C\u4E5F\u4EE5\u8FD9\u4E2A\u524D\u63D0\u4E3A\u6761\u4EF6\u3002")}</p>` : `<p>${t2("\u9884\u6D4B\u5DF2\u5173\u95ED\uFF0C\u5386\u53F2\u7EDF\u8BA1\u4ECD\u4FDD\u7559\u3002")}</p>`}<p class="forecast-assumptions"><strong>${t2("\u5F53\u524D\u5047\u8BBE")}:</strong> ${escape3(assumptions)}</p><p>${t2("\u8BA1\u5212\u4E2D\u7684\u5907\u7528\u3001\u6B63\u5E38\u548C\u5047\u8BBE\u91CD\u7F6E\u90FD\u4ECE\u8BE5\u65F6\u523B\u91CD\u65B0\u5F00\u59CB7\u5929\u5468\u671F\uFF1B\u53EA\u6709\u9009\u4E2D\u7684\u5047\u8BBE\u624D\u4F1A\u8865\u6EE1\u9884\u6D4B\u989D\u5EA6\u3002")}</p><small>${t2("\u672C\u5730\u4F30\u8BA1\uFF0C\u6A21\u578B\u5C1A\u672A\u6821\u51C6\u3002")}</small></details></section>`;
+  return `<section class="forecast-method" data-forecast-method aria-label="${t2("\u9884\u6D4B\u600E\u4E48\u7B97")}"><details><summary><h3>${t2("\u9884\u6D4B\u600E\u4E48\u7B97")}</h3></summary><dl>${rows.join("")}</dl><p>${t2("\u53D1\u5E03\u949F\u70B9\u4F7F\u7528\u5168\u90E8\u5386\u53F2\u81EA\u52A8\u91CD\u7F6E\u65E5\uFF1B\u91CD\u7F6E\u95F4\u9694\u4F18\u5148\u4F7F\u7528\u5F53\u524D\u6D3B\u52A8\u5185\u7684\u5B8C\u6574\u95F4\u9694\uFF0C\u6837\u672C\u4E0D\u8DB3\u65F6\u56DE\u9000\u5230\u8FD1\u671F\u6216\u5386\u53F2\u3002")}</p>${prediction ? `<p>${t2("\u57FA\u7840\u98CE\u9669\u7ED3\u5408\u8DDD\u4E0A\u6B21\u91CD\u7F6E\u7684\u65F6\u95F4\u3001\u6240\u9009\u95F4\u9694\u5206\u5E03\u548C\u5E16\u5B50\u4FE1\u53F7\uFF0C\u518D\u7528\u5386\u53F2\u53D1\u5E03\u949F\u70B9\u52A0\u6743\u3002")}</p>${formula}<p>${t2("\u7D2F\u8BA1\u6982\u7387\u7531\u52A0\u6743\u98CE\u9669\u7D2F\u79EF\u5F97\u5230\uFF1B\u6700\u53EF\u80FD\u65F6\u95F4\u53D6\u5B9E\u9645\u5206\u5E03\u4E2D\u6982\u7387\u5BC6\u5EA6\u6700\u9AD8\u7684\u5C0F\u65F6\u7A97\u53E3\uFF0C\u4E0D\u662F\u7B80\u5355\u628A\u5E73\u5747\u5929\u6570\u52A0\u5230\u4E0A\u6B21\u65F6\u95F4\u3002")}</p><p class="forecast-conditional-note">${t2("\u7B2C\u4E8C\u6761\u66F2\u7EBF\u4EE5\u9996\u6B21\u5728\u6807\u8BB0\u65F6\u95F4\u53D1\u751F\u4E3A\u524D\u63D0\uFF0C\u4ECE\u8BE5\u70B9\u91CD\u65B0\u8BA1\u65F6\uFF1B\u5176\u7D2F\u8BA1\u503C\u4E5F\u4EE5\u8FD9\u4E2A\u524D\u63D0\u4E3A\u6761\u4EF6\u3002")}</p>` : `<p>${t2("\u9884\u6D4B\u5DF2\u5173\u95ED\uFF0C\u5386\u53F2\u7EDF\u8BA1\u4ECD\u4FDD\u7559\u3002")}</p>`}<p class="forecast-assumptions"><strong>${t2("\u5F53\u524D\u5047\u8BBE")}:</strong> ${escape3(assumptions)}</p><p>${t2("\u8BA1\u5212\u4E2D\u7684\u5907\u7528\u3001\u6B63\u5E38\u548C\u5047\u8BBE\u91CD\u7F6E\u90FD\u4ECE\u8BE5\u65F6\u523B\u91CD\u65B0\u5F00\u59CB7\u5929\u5468\u671F\uFF1B\u53EA\u6709\u9009\u4E2D\u7684\u5047\u8BBE\u624D\u4F1A\u8865\u6EE1\u9884\u6D4B\u989D\u5EA6\u3002")}</p><small>${t2("\u672C\u5730\u4F30\u8BA1\uFF0C\u6A21\u578B\u5C1A\u672A\u6821\u51C6\u3002")}</small></details></section>`;
 }
 
 // src/reset-interval-model.js
@@ -831,10 +846,15 @@ function continuousClockProbability(prediction, hours, baseProbability) {
       const before = baseProbability(a), after = baseProbability(b);
       if (before >= 1) return 0;
       if (after >= 1) return Infinity;
+      const step = Math.max(0, Math.log1p(-before) - Math.log1p(-after));
+      if (prediction.forecastWindows.some((window2) => window2.scheduled && window2.startHours <= a && b <= window2.endHours + 1e-8)) {
+        hazard2 += step;
+        continue;
+      }
       const stamp = origin + (a + b) / 2 * HOUR2, day = clockDay(stamp, clock), local = parts(stamp, clock);
       const weight = clock.quarterHourWeights[Math.floor((local.hour * 60 + local.minute) / 15)];
       const mean = day.prefix.at(-1) / (day.end - day.start);
-      hazard2 += Math.max(0, Math.log1p(-before) - Math.log1p(-after)) * weight / mean;
+      hazard2 += step * weight / mean;
     }
     return hazard2;
   };
@@ -900,7 +920,7 @@ function renewalModel(prediction, now, resetAt = null) {
   const first = Date.parse(firstAt), mean = prediction.evidence?.intervalModel?.meanIntervalDays;
   if (!Number.isFinite(first) || first < origin || !Number.isFinite(mean) || mean <= 0) return null;
   const sourceClock = prediction.releaseClock;
-  const enforce = prediction.enforceResetCooldown ?? prediction.model === "local-recent-intervals-v5";
+  const enforce = prediction.enforceResetCooldown ?? false;
   const learned = prediction.evidence?.intervalDistribution;
   if (!caches2.has(prediction)) caches2.set(prediction, /* @__PURE__ */ new Map());
   const models = caches2.get(prediction), key = `${origin}:${first}`;
@@ -949,7 +969,7 @@ function followingResetEstimate({ prediction, now, firstAt: assumedAt = null }) 
   const mean = prediction?.evidence?.intervalModel?.meanIntervalDays;
   if (!Number.isFinite(first) || !Number.isFinite(origin) || first <= origin || !Number.isFinite(mean) || mean <= 0) return null;
   const clock = prediction.releaseClock;
-  const enforce = prediction.enforceResetCooldown ?? prediction.model === "local-recent-intervals-v5";
+  const enforce = prediction.enforceResetCooldown ?? false;
   const cooldown = enforce ? resetCooldownRule({
     lastReset: first,
     now: first,
@@ -1051,6 +1071,7 @@ function completedResetEvent(post, now = Infinity) {
 // src/local-predictor.js
 var suppressWith = (factor) => (probability2) => 1 - (1 - probability2) ** factor;
 var DAY_MS = 864e5;
+var SCHEDULED_RESET_PROBABILITY = 0.99;
 var clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
 var oddsUpdate = (p, ratio) => {
   if (p <= 0 || p >= 1) return clamp(p, 0, 1);
@@ -1141,11 +1162,13 @@ function predictReset({
   priorDailyProbability,
   campaignTimeZone = timeZone2,
   campaign = null,
-  enforceResetCooldown = true,
+  enforceResetCooldown = false,
+  enforceCampaignFeatureRule = false,
   suppressedHazardFactor = SUPPRESSED_HAZARD_FACTOR
 } = {}) {
   const nowMs = dateMs(now, "\u5F53\u524D\u65F6\u95F4");
   if (typeof enforceResetCooldown !== "boolean") throw new Error("enforceResetCooldown \u5FC5\u987B\u662F\u5E03\u5C14\u503C");
+  if (typeof enforceCampaignFeatureRule !== "boolean") throw new Error("enforceCampaignFeatureRule \u5FC5\u987B\u662F\u5E03\u5C14\u503C");
   if (!Number.isFinite(suppressedHazardFactor) || suppressedHazardFactor < 0 || suppressedHazardFactor > 1)
     throw new Error("suppressedHazardFactor \u5FC5\u987B\u5728 0\u20131 \u4E4B\u95F4");
   const suppress = suppressWith(suppressedHazardFactor);
@@ -1191,7 +1214,7 @@ function predictReset({
   });
   const cooldownRule = enforceResetCooldown ? resetCooldownRule({ lastReset: times.at(-1), now: nowMs, timeZone: forecastTimeZone }) : null;
   const cooldown = cooldownRule ? { ...cooldownRule, hazardFactor: suppressedHazardFactor } : null;
-  const feature = posts.filter((post) => campaignFeature(post) && dateMs(post.createdAt, "\u5E16\u5B50\u65F6\u95F4") <= nowMs && localDay.format(new Date(post.createdAt)) === localDay.format(new Date(nowMs))).sort((a, b) => dateMs(b.createdAt, "\u5E16\u5B50\u65F6\u95F4") - dateMs(a.createdAt, "\u5E16\u5B50\u65F6\u95F4"))[0];
+  const feature = enforceCampaignFeatureRule && posts.filter((post) => campaignFeature(post) && dateMs(post.createdAt, "\u5E16\u5B50\u65F6\u95F4") <= nowMs && localDay.format(new Date(post.createdAt)) === localDay.format(new Date(nowMs))).sort((a, b) => dateMs(b.createdAt, "\u5E16\u5B50\u65F6\u95F4") - dateMs(a.createdAt, "\u5E16\u5B50\u65F6\u95F4"))[0];
   const blockedToday = !!feature || !!cooldown;
   const rule = feature ? {
     kind: "campaign-feature-day",
@@ -1214,14 +1237,26 @@ function predictReset({
     postEffects(posts, nowMs, 0, times.at(-1)),
     postEffects(posts, nowMs, firstDays, times.at(-1))
   ];
+  const scheduledAt = posts.filter((post) => post.signal?.kind === "reset_planned" && post.signal.scheduledFor && dateMs(post.createdAt, "\u5E16\u5B50\u65F6\u95F4") <= nowMs && dateMs(post.createdAt, "\u5E16\u5B50\u65F6\u95F4") > (times.at(-1) ?? -Infinity)).map((post) => dateMs(post.signal.scheduledFor, "\u5B89\u6392\u7684 reset \u65F6\u95F4")).sort((a, b) => a - b)[0];
+  const scheduledHours = scheduledAt > nowMs && scheduledAt < nowMs + 48 * 36e5 ? (scheduledAt - nowMs) / 36e5 : null;
   const windowsEnd = Math.max(48, cooldown?.untilHours ?? 0);
-  const boundaries = [0, todayEndHours, 48, windowsEnd, ...cooldown ? [cooldown.untilHours] : [], ...posts.filter((post) => post.signal?.kind === "reset_planned").map((post) => (dateMs(post.signal.validUntil ?? new Date(dateMs(post.createdAt, "\u5E16\u5B50\u65F6\u95F4") + DAY_MS).toISOString(), "\u9884\u544A\u622A\u6B62\u65F6\u95F4") - nowMs) / 36e5).filter((hour) => hour > 0 && hour < 48)].sort((a, b) => a - b).filter((hour, index, array) => !index || Math.abs(hour - array[index - 1]) > 1e-7);
+  const boundaries = [0, todayEndHours, 48, windowsEnd, ...cooldown ? [cooldown.untilHours] : [], ...posts.filter((post) => post.signal?.kind === "reset_planned").map((post) => (dateMs(post.signal.validUntil ?? new Date(dateMs(post.createdAt, "\u5E16\u5B50\u65F6\u95F4") + DAY_MS).toISOString(), "\u9884\u544A\u622A\u6B62\u65F6\u95F4") - nowMs) / 36e5).filter((hour) => hour > 0 && hour < 48), ...scheduledHours !== null ? [Math.max(0, scheduledHours - 0.25), scheduledHours] : []].sort((a, b) => a - b).filter((hour, index, array) => !index || Math.abs(hour - array[index - 1]) > 1e-7);
   const forecastWindows = boundaries.slice(1).map((endHours, index) => {
     const startHours = boundaries[index], base = chanceFromAge(hazards, daily, currentAge + startHours / 24, (endHours - startHours) / 24, distribution);
     const effect = postEffects(posts, nowMs, startHours / 24, times.at(-1));
     const blocked = !!feature && startHours < todayEndHours || cooldown && startHours < cooldown.untilHours - 1e-8;
     return { startHours, endHours, baselineProbability: base, probability: blocked ? suppress(base) : oddsUpdate(base, effect.ratio), ...blocked ? { suppressed: true } : {} };
   });
+  if (scheduledHours !== null) {
+    let survival = 1;
+    for (const window2 of forecastWindows.filter((window3) => window3.endHours <= scheduledHours + 1e-8)) {
+      const last = window2.endHours >= scheduledHours - 1e-8;
+      window2.probability = last ? 1 - (1 - SCHEDULED_RESET_PROBABILITY) / survival : suppress(window2.baselineProbability);
+      survival *= 1 - window2.probability;
+      delete window2.suppressed;
+      window2.scheduled = true;
+    }
+  }
   const prediction = {
     model: "local-recent-intervals-v5",
     calibrated: false,
@@ -1232,7 +1267,14 @@ function predictReset({
     displayTimeZone: timeZone2,
     forecastWindows,
     releaseClock: fitResetReleaseClock({ times, now: nowMs, timeZone: forecastTimeZone }),
-    evidence: { daysSinceReset: ageDays, dailyFrequency: daily, ageHazards: hazards, intervalDistribution: distribution, hardRules }
+    evidence: {
+      daysSinceReset: ageDays,
+      dailyFrequency: daily,
+      ageHazards: hazards,
+      intervalDistribution: distribution,
+      hardRules,
+      scheduledResetAt: scheduledHours === null ? null : new Date(scheduledAt).toISOString()
+    }
   };
   const todayProbability = resetProbabilityByHours(prediction, todayEndHours);
   const next48 = resetProbabilityByHours(prediction, 48);
@@ -1266,7 +1308,8 @@ function predictReset({
       intervalModel: intervalSummary,
       hardRules,
       campaignActive,
-      campaign
+      campaign,
+      scheduledResetAt: prediction.evidence.scheduledResetAt
     }
   });
   const quantile = (probability2) => {
@@ -2106,20 +2149,30 @@ function searchResetPolicies({
 
 // src/reset-forecast.js
 var DAY4 = 864e5;
-function predictionFromArchive({ archive, now = /* @__PURE__ */ new Date(), timeZone: timeZone2 = Intl.DateTimeFormat().resolvedOptions().timeZone } = {}) {
+function predictionFromArchive({
+  archive,
+  now = /* @__PURE__ */ new Date(),
+  timeZone: timeZone2 = Intl.DateTimeFormat().resolvedOptions().timeZone,
+  enforceResetCooldown = false,
+  enforceCampaignFeatureRule = false
+} = {}) {
   const retrieved = Date.parse(`${archive?.retrievedAt}T00:00:00Z`);
   const age = (now.getTime() - retrieved) / DAY4;
   if (!Number.isFinite(age) || age < 0 || age > 14)
     return { available: false, reason: "\u5386\u53F2\u6570\u636E\u5DF2\u8FC7\u671F\uFF0C\u6682\u4E0D\u9884\u6D4B" };
   const resetTimes = [...new Set((archive.events ?? []).filter((event) => ["automatic", "automatic_and_banked"].includes(event.kind)).map((event) => event.at).filter((at) => Number.isFinite(Date.parse(at)) && Date.parse(at) <= now.getTime()))].sort((a, b) => Date.parse(a) - Date.parse(b));
   if (resetTimes.length < 4) return { available: false, reason: "\u5386\u53F2\u8BB0\u5F55\u4E0D\u8DB3\uFF0C\u6682\u4E0D\u9884\u6D4B" };
+  const landed = (archive.posts ?? []).filter((post) => post.signal?.kind === "reset_planned" && post.signal.scheduledFor).filter((post) => Date.parse(post.createdAt) > Date.parse(resetTimes.at(-1))).map((post) => ({ at: Date.parse(post.signal.scheduledFor), source: post.sourceUrl })).filter((item) => item.at <= now.getTime() && item.at > now.getTime() - 3 * DAY4).sort((a, b) => b.at - a.at)[0];
+  if (landed) resetTimes.push(new Date(landed.at).toISOString());
   const prediction = predictReset({
     now: now.toISOString(),
     timeZone: timeZone2,
     resetTimes,
     posts: archive.posts ?? [],
     campaignTimeZone: archive.campaignTimeZone ?? "America/Los_Angeles",
-    campaign: selectResetCampaign({ campaigns: archive.campaigns, now: now.getTime() })
+    campaign: selectResetCampaign({ campaigns: archive.campaigns, now: now.getTime() }),
+    enforceResetCooldown,
+    enforceCampaignFeatureRule
   });
   prediction.evidence.dataAsOf = archive.retrievedAt;
   prediction.evidence.liveCoverage = archive.coverage ?? null;
@@ -2136,8 +2189,8 @@ function predictionFromArchive({ archive, now = /* @__PURE__ */ new Date(), time
     classificationError: archive.classificationError ?? null,
     llmConfigured: archive.llmConfigured ?? false,
     latestResetMention,
-    lastResetSource: archive.lastResetSource ?? null,
-    lastResetAt: archive.lastResetAt ?? resetTimes.at(-1),
+    lastResetSource: landed ? landed.source : archive.lastResetSource ?? null,
+    lastResetAt: landed ? resetTimes.at(-1) : archive.lastResetAt ?? resetTimes.at(-1),
     daysSinceReset: (now.getTime() - Date.parse(resetTimes.at(-1))) / DAY4
   };
 }
@@ -2178,15 +2231,15 @@ function strategyResetForecast(result, prediction) {
   };
 }
 function forecastAssumptionCards(result, prediction) {
-  const HOUR16 = 36e5, EPS9 = 1e-7;
+  const HOUR15 = 36e5, EPS9 = 1e-7;
   const conservative = conservativeResetTimes(result, prediction);
   const mode = conservative[0] ? { ...prediction.resetTimeMode, pointAt: conservative[0] } : prediction?.resetTimeMode;
-  const origin = Date.parse(result.now), hours = (Date.parse(mode?.pointAt) - origin) / HOUR16;
+  const origin = Date.parse(result.now), hours = (Date.parse(mode?.pointAt) - origin) / HOUR15;
   if (!result.available || !mode || !Number.isFinite(hours) || hours <= EPS9 || hours > 336)
     return { available: false, selected: false, reason: "\u6682\u65E0\u53EF\u7528\u4E8E\u5047\u8BBE\u89C4\u5212\u7684\u6700\u53EF\u80FD reset \u65F6\u95F4" };
   const cumulative = (hour) => resetProbabilityByHours(prediction, hour) ?? 0;
   const following = result.resetForecast?.followingReset;
-  const secondHours = (Date.parse(conservative[1] ?? following?.pointAt) - origin) / HOUR16;
+  const secondHours = (Date.parse(conservative[1] ?? following?.pointAt) - origin) / HOUR15;
   const first = { sequence: 1, at: mode.pointAt, hours, probability: mode.probability, cumulativeProbability: cumulative(hours) };
   return {
     available: true,
@@ -2330,7 +2383,10 @@ function renderResetForecastSummary({
   const glance = [];
   const glanceRow = (key, label, value) => glance.push(`<div data-forecast-glance="${key}"><dt>${escape(t2(label))}</dt><dd>${value}</dd></div>`);
   const horizons = [[12, prediction?.next12Probability], [24, prediction?.next24Probability], [48, prediction?.next48Probability]].filter(([, value]) => Number.isFinite(value));
-  if (horizons.length) glance.push(`<div data-forecast-glance="next-hours"><dt>${escape(t2("\u672A\u6765 reset \u6982\u7387"))}</dt><dd class="forecast-horizons">${horizons.map(([hours, value]) => `<span data-forecast-horizon="${hours}"><small>${escape(t2("{hours} \u5C0F\u65F6", { hours }))}</small><b>${Number((value * 100).toFixed(1))}%</b></span>`).join("")}</dd></div>`);
+  const announcedAt = prediction?.evidence?.scheduledResetAt;
+  if (announcedAt && Date.parse(announcedAt) > now.getTime() && format(announcedAt))
+    glance.push(`<div data-forecast-glance="next-hours"><dt>${escape(t2("\u5DF2\u5BA3\u5E03\u7684 reset"))}</dt><dd class="forecast-horizons"><span data-forecast-horizon="announced"><small>${escape(t2("\u5DF2\u5BA3\u5E03\u7684 reset"))}</small><b>${escape(t2("{time} \u524D", { time: format(announcedAt) }))}</b></span></dd></div>`);
+  else if (horizons.length) glance.push(`<div data-forecast-glance="next-hours"><dt>${escape(t2("\u672A\u6765 reset \u6982\u7387"))}</dt><dd class="forecast-horizons">${horizons.map(([hours, value]) => `<span data-forecast-horizon="${hours}"><small><span class="horizon-long">${escape(t2("{hours} \u5C0F\u65F6\u5185 reset", { hours }))}</span><span class="horizon-short">${escape(t2("{hours} \u5C0F\u65F6", { hours }))}</span></small><b>${Number((value * 100).toFixed(1))}%</b></span>`).join("")}</dd></div>`);
   const windowFrom = dayFormat(prediction?.nextResetWindow?.from), windowTo = dayFormat(prediction?.nextResetWindow?.to);
   if (windowFrom && windowTo) glanceRow("window", "\u53EF\u80FD\u7A97\u53E3", escape(windowFrom === windowTo ? windowFrom : `${windowFrom} \u2013 ${windowTo}`));
   if (last) {
@@ -2345,7 +2401,7 @@ function renderResetForecastSummary({
     glanceRow("campaign", "\u6D3B\u52A8", escape(t2("\u7B2C {day} / {total} \u5929 \xB7 {end} \u7ED3\u675F", { day, total, end: dayFormat(campaign.endsAt) })));
   }
   if (mention && format(mention.createdAt) && postUrl(mention.sourceUrl))
-    glanceRow("tibo", "Tibo", `<a href="${escape(mention.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escape(t2(postLabels[mention.signal?.kind] ?? "\u6682\u672A\u8BC6\u522B"))} \xB7 ${escape(dayFormat(mention.createdAt))}</a>`);
+    glanceRow("tibo", "Tibo", `<a href="${escape(mention.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escape(mention.signal?.scheduledFor && format(mention.signal.scheduledFor) ? t2("\u5DF2\u5B89\u6392 \xB7 {time} \u524D", { time: format(mention.signal.scheduledFor) }) : `${t2(postLabels[mention.signal?.kind] ?? "\u6682\u672A\u8BC6\u522B")} \xB7 ${dayFormat(mention.createdAt)}`)}</a>`);
   const statusLine = `<p>${escape(`${status}${updated ? t2(" \xB7 \u66F4\u65B0 {time}", { time: updated }) : ""} \xB7 ${t2("\u4F60\u7684\u65F6\u95F4\uFF08{zone}\uFF09", { zone: timeZone2 })}`)}${prediction ? ` \xB7 ${t2(prediction.calibrated === true ? "\u6A21\u578B\u9884\u6D4B" : "\u6A21\u578B\u672A\u6821\u51C6")}` : ""}</p>`;
   return `<section class="forecast-summary" data-forecast-summary aria-label="${t2("\u989D\u5916 reset \u9884\u6D4B\u5173\u952E\u6570\u636E")}">${glance.length ? `<dl class="forecast-glance">${glance.join("")}</dl>` : ""}<details class="forecast-more"><summary>${t2("\u66F4\u591A\u6570\u636E")}</summary><dl>${rows.join("")}</dl>${statusLine}</details></section>`;
 }
@@ -2356,52 +2412,8 @@ function renderUsageStrategies({ selected = "balanced", locale = "en", disabled 
   return `<div class="usage-strategies" role="group" aria-label="${t2("\u7528\u91CF\u7B56\u7565")}">${usageStrategies.map((strategy) => `<button type="button" data-usage-strategy="${strategy.id}" aria-pressed="${selected === strategy.id}" title="${escape3(t2(strategy.description))}"${disabled ? " disabled" : ""}><strong>${escape3(t2(strategy.label))}</strong></button>${after[strategy.id] ?? ""}`).join("")}</div>`;
 }
 
-// src/components/availability-controls.js
-function renderAvailabilityControls(availability, { locale = "en", mode = "optimistic", alertsEnabled = false, disabled = false } = {}, escape3 = String) {
-  const t2 = translator(locale), date = (value) => new Intl.DateTimeFormat(uiLocale(locale), {
-    timeZone: availability?.timeZone,
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    hourCycle: "h23"
-  }).format(new Date(value));
-  const n = (value) => Number(value.toFixed(1));
-  return `<div class="availability-controls" data-availability-mode="${mode}">
-    <div class="usage-strategies" role="group" aria-label="${t2("\u89C4\u5212\u503E\u5411")}">${[["cautious", "\u7A33\u59A5"], ["optimistic", "\u4E50\u89C2"]].map(([id, label]) => `<button type="button" data-availability-mode="${id}" aria-pressed="${mode === id}"${disabled ? " disabled" : ""}>${escape3(t2(label))}</button>`).join("")}</div>
-    <small>${escape3(t2("\u4E50\u89C2\u8BA1\u5165\u9884\u6D4B\u7684 reset\uFF0C\u7A33\u59A5\u4E0D\u8BA1\u5165\uFF1B\u90FD\u9884\u7559\u7EA6 {buffer}%\u3002", { buffer: availability?.bufferPercent ?? 5 }))}</small>
-    <button type="button" data-toggle-pace-alerts aria-pressed="${alertsEnabled}"${disabled ? " disabled" : ""}>${escape3(t2(alertsEnabled ? "\u68C0\u67E5\u65F6\u63D0\u9192\uFF1A\u5F00\u542F" : "\u68C0\u67E5\u65F6\u63D0\u9192\uFF1A\u5173\u95ED"))}</button>
-    ${availability?.notification.shouldNotify ? `<p class="availability-alert" role="status">${escape3(availability.currentPaceDepletionAt ? t2("\u6309\u5F53\u524D\u7528\u91CF\uFF0C{time} \u8017\u5C3D\u3002", { time: date(availability.currentPaceDepletionAt) }) : t2("\u5F53\u524D\u7528\u91CF\u65E0\u6CD5\u4FDD\u7559\u76EE\u6807\u4F59\u91CF\u3002"))}</p>` : ""}
-    ${availability?.ifNoReset?.dailyPercent !== null && availability?.ifNoReset ? `<p>${escape3(t2("\u82E5 {time} \u4ECD\u672A reset\uFF1A\u6539\u4E3A {daily}% / \u5929\u3002", {
-    time: date(availability.ifNoReset.at),
-    daily: n(availability.ifNoReset.dailyPercent)
-  }))}</p>` : ""}
-  </div>`;
-}
-
-// src/usage-consumption-summary.js
-var HOUR8 = 36e5;
-var round2 = (value) => Number(value.toFixed(2));
-function usageConsumptionSummary(result, { locale = "zh-CN" } = {}) {
-  const t2 = translator(locale);
-  const refreshHours = (Date.parse(result.originalNormalResetAt ?? result.normalResetAt) - Date.parse(result.now)) / HOUR8;
-  const elapsedHours = 168 - refreshHours, usedPercent = 100 - result.remainingPercent;
-  const snapshotDaily = elapsedHours > 0 && usedPercent > 0 ? usedPercent * 24 / elapsedHours : null;
-  const fromSnapshot = snapshotDaily !== null && Math.abs(snapshotDaily - result.averagePercentPerDay) < 1e-6;
-  return {
-    dailyPercent: result.averagePercentPerDay,
-    remainingPercent: result.remainingPercent,
-    refreshHours,
-    elapsedHours,
-    usedPercent,
-    source: fromSnapshot ? "weekly-window-average" : "previous-observation",
-    refreshLabel: t2("{days}\u5929 {hours}\u5C0F\u65F6", { days: Math.floor(refreshHours / 24), hours: round2(refreshHours % 24) }),
-    calculationLabel: fromSnapshot ? t2("{used}% \xF7 {elapsed}\u5C0F\u65F6 \xD7 24", { used: round2(usedPercent), elapsed: round2(elapsedHours) }) : t2("\u6CBF\u7528\u4E0A\u6B21\u89C2\u6D4B\uFF0C\u672C\u8F6E\u6682\u4E0D\u8DB3\u4EE5\u4F30\u7B97")
-  };
-}
-
 // src/intensity-plan.js
-var HOUR9 = 36e5;
+var HOUR8 = 36e5;
 var EPS4 = 1e-8;
 var intensityChoices = [
   { id: "steady", label: "\u4FDD\u6301\u5F53\u524D\u5F3A\u5EA6", multiplier: 1 },
@@ -2465,11 +2477,11 @@ function planIntensityUsage({
     return {
       expiresOn,
       expiresAt: new Date(expiresAt).toISOString(),
-      expiresInHours: (expiresAt - now.getTime()) / HOUR9
+      expiresInHours: (expiresAt - now.getTime()) / HOUR8
     };
   }).sort((a, b) => a.expiresInHours - b.expiresInHours);
   const at = (offset) => {
-    const date = new Date(now.getTime() + offset * HOUR9);
+    const date = new Date(now.getTime() + offset * HOUR8);
     return Number.isFinite(date.getTime()) ? date.toISOString() : null;
   };
   const elapsedDays = (168 - horizon) / 24;
@@ -2592,14 +2604,14 @@ function planIntensityUsage({
 }
 
 // src/phase-reset-opportunities.js
-var HOUR10 = 36e5;
+var HOUR9 = 36e5;
 var EPS5 = 1e-7;
 function phaseResetOpportunities(result, prediction) {
   if (!result.available || !prediction || !result.phasePlans) return result;
   const points = result.milestones.points, events = points.flatMap((point) => point.events);
   const extra = events.filter((event) => event.kind === "assumed-extra-reset");
   const banks = events.filter((event) => event.kind === "backup");
-  const at = (hours) => new Date(Math.round(Date.parse(result.now) + hours * HOUR10)).toISOString();
+  const at = (hours) => new Date(Math.round(Date.parse(result.now) + hours * HOUR9)).toISOString();
   const phasePlans = result.phasePlans.map((phase) => {
     const start = phase.startHours;
     const state2 = points.find((point) => Math.abs(point.hours - start) < EPS5)?.stateAfter;
@@ -2655,7 +2667,7 @@ var paceChoices = [0, 10, 20, 30, 50, 100].map((increasePercent) => ({
 }));
 
 // src/strategy-milestones.js
-var HOUR11 = 36e5;
+var HOUR10 = 36e5;
 var EPS6 = 1e-6;
 function policyMilestones(result, cumulativeProbability) {
   const levels = result.decisionTree.levels;
@@ -2663,7 +2675,7 @@ function policyMilestones(result, cumulativeProbability) {
   const steps = selected.map((action) => action.outcome);
   const endHours = steps.at(-1).endHours;
   const endKind = result.planningEndKind ?? (levels.at(-1).resetProbability >= 1 - EPS6 ? "extra-reset" : "normal-refresh");
-  const at = (hour) => new Date(Math.round(Date.parse(result.now) + hour * HOUR11)).toISOString();
+  const at = (hour) => new Date(Math.round(Date.parse(result.now) + hour * HOUR10)).toISOString();
   const key = (hour) => Number(hour.toFixed(7));
   const entries = /* @__PURE__ */ new Map();
   const point = (hour) => {
@@ -2766,7 +2778,7 @@ function policyMilestones(result, cumulativeProbability) {
 
 // src/recommended-usage-path.js
 var EPS7 = 1e-7;
-var HOUR12 = 36e5;
+var HOUR11 = 36e5;
 var DEFAULT_RECOMMENDATION_MODE = "forecast-preview";
 function recommendedUsagePath(base, prediction, {
   targetDailyPercent,
@@ -2785,7 +2797,7 @@ function recommendedUsagePath(base, prediction, {
   const initial = {
     ...base,
     normalResetAt: originalNormal,
-    normalResetInHours: (Date.parse(originalNormal) - Date.parse(base.now)) / HOUR12
+    normalResetInHours: (Date.parse(originalNormal) - Date.parse(base.now)) / HOUR11
   };
   const recommendation = searchResetPolicies({
     base: initial,
@@ -2818,7 +2830,7 @@ function recommendedUsagePath(base, prediction, {
     recommendation.firstAction = primary.firstAction;
     recommendation.fallback = primary.fallback;
   }
-  const trace = primary?.trace ?? recommendation.fallback, at = (hour) => new Date(Date.parse(base.now) + hour * HOUR12).toISOString();
+  const trace = primary?.trace ?? recommendation.fallback, at = (hour) => new Date(Date.parse(base.now) + hour * HOUR11).toISOString();
   const banks = trace.events.filter((event) => event.kind === "backup");
   const supplies = trace.events.filter((event) => event.kind !== "expiry");
   const levels = trace.segments.map((segment, index) => {
@@ -3020,7 +3032,7 @@ function accountResourceState(snapshot, { now, timeZone: timeZone2, prediction =
 }
 
 // src/usage-path-planner.js
-var HOUR13 = 36e5;
+var HOUR12 = 36e5;
 var EPS8 = 1e-7;
 var REMOVED_OPTIONS = [
   "adaptivePace",
@@ -3083,7 +3095,7 @@ function planUsagePath({
   const resets = base.resets;
   if (!Array.isArray(heldResetIndices) || heldResetIndices.some((index) => !Number.isInteger(index) || index < 0 || index >= resets.length)) throw new Error("\u4FDD\u7559\u7684\u5907\u7528 reset \u7D22\u5F15\u65E0\u6548");
   if (!Array.isArray(requiredResetIndices) || requiredResetIndices.some((index) => !Number.isInteger(index) || index < 0 || index >= resets.length || heldResetIndices.includes(index))) throw new Error("\u5FC5\u987B\u4F7F\u7528\u7684\u5907\u7528\u7D22\u5F15\u65E0\u6548\u6216\u540C\u65F6\u9009\u62E9\u4E86\u4FDD\u7559");
-  const at = (hour) => new Date(Math.round(now.getTime() + hour * HOUR13)).toISOString();
+  const at = (hour) => new Date(Math.round(now.getTime() + hour * HOUR12)).toISOString();
   const cumulative = (hour) => prediction ? resetProbabilityByHours(prediction, hour) ?? 0 : 0;
   const calendar2 = prediction ? forecastCalendar(base, at, cumulative, 336) : [];
   const targetDailyPercent = rate * paceMultiplier;
@@ -3120,7 +3132,7 @@ function planUsagePath({
     selected: assumptions.length > 0,
     secondSelected: assumptions.length > 1,
     at: firstAt,
-    hours: (Date.parse(firstAt) - Date.parse(result.now)) / HOUR13,
+    hours: (Date.parse(firstAt) - Date.parse(result.now)) / HOUR12,
     assumptionRule: primary.assumption,
     currentDailyPercent: result.startingPoint.dailyPercent,
     recommendedDailyPercent: primary.firstAction.dailyPercent,
@@ -3130,7 +3142,7 @@ function planUsagePath({
       ...following,
       available: !!following,
       selected: assumptions.length > 1,
-      hours: (Date.parse(assumptions[1]?.at ?? conservative[1] ?? following?.pointAt) - Date.parse(result.now)) / HOUR13
+      hours: (Date.parse(assumptions[1]?.at ?? conservative[1] ?? following?.pointAt) - Date.parse(result.now)) / HOUR12
     },
     plannedResetIndices: primary.trace.events.filter((event) => event.kind === "backup").map((event) => event.resetIndex),
     onObservedReset: "replan-from-actual-account"
@@ -3166,7 +3178,7 @@ function forecastCalendar(base, at, cumulative, horizon = base.normalResetInHour
       if (corrected === instant) break;
       instant = corrected;
     }
-    const hour = (instant - Date.parse(base.now)) / HOUR13;
+    const hour = (instant - Date.parse(base.now)) / HOUR12;
     if (hour >= horizon - EPS8) break;
     points.push(hour);
   }
@@ -3175,12 +3187,12 @@ function forecastCalendar(base, at, cumulative, horizon = base.normalResetInHour
 }
 
 // src/strategy-time-range.js
-var HOUR14 = 36e5;
+var HOUR13 = 36e5;
 var WEEK2 = 168;
 var SLOWEST_COVERED_PACE = 0.5;
 function strategyTimeRange(result, { prediction = null, forecastEndHours = 0 } = {}) {
   const origin = Date.parse(result.now);
-  const hours = (stamp) => (Date.parse(stamp) - origin) / HOUR14;
+  const hours = (stamp) => (Date.parse(stamp) - origin) / HOUR13;
   const original = hours(result.originalNormalResetAt ?? result.normalResetAt);
   const normal = Number.isFinite(original) ? original : result.normalResetInHours;
   let states = [{ time: 0, quota: result.remainingPercent, normal }];
@@ -3402,7 +3414,7 @@ function updateUsagePlanner(planner2, action) {
 
 // src/strategy-tree-view.js
 function strategyTreeView(result) {
-  const round8 = (value) => Number(value.toFixed(1));
+  const round6 = (value) => Number(value.toFixed(1));
   const date = (value) => new Intl.DateTimeFormat("zh-CN", {
     timeZone: result.timeZone,
     month: "long",
@@ -3415,22 +3427,22 @@ function strategyTreeView(result) {
     if (!action.multiplier) return "\u8FD9\u4E00\u6B65\u5148\u4E0D\u7528";
     const relative = action.multiplier / result.startingPoint.multiplier;
     if (Math.abs(relative - 1) < 1e-6) return "\u6309\u4F60\u7684\u8D77\u70B9\u7528";
-    if (action.id.startsWith("use-before-")) return `\u63D0\u524D\u7528\u5B8C\u5F53\u524D\u989D\u5EA6 \xB7 \u8D77\u70B9\u7684 ${round8(relative)} \u500D`;
-    return relative < 1 ? `\u964D\u5230\u8D77\u70B9\u7684 ${round8(relative * 100)}%` : `\u63D0\u9AD8\u5230\u8D77\u70B9\u7684 ${round8(relative * 100)}%`;
+    if (action.id.startsWith("use-before-")) return `\u63D0\u524D\u7528\u5B8C\u5F53\u524D\u989D\u5EA6 \xB7 \u8D77\u70B9\u7684 ${round6(relative)} \u500D`;
+    return relative < 1 ? `\u964D\u5230\u8D77\u70B9\u7684 ${round6(relative * 100)}%` : `\u63D0\u9AD8\u5230\u8D77\u70B9\u7684 ${round6(relative * 100)}%`;
   };
   return result.decisionTree.levels.map((level) => {
     const actions = level.actions.map((item) => {
       const step = item.outcome;
       const bank = step.events.find((event) => event.kind === "backup");
       const supply = !item.action.multiplier ? "\u4FDD\u7559\u73B0\u6709\u8D44\u6E90" : bank ? `${bank.atHours <= step.startHours + 1e-7 ? "\u73B0\u5728" : date(bank.at)}\u7528\u5907\u7528 reset` : level.state.resets ? "\u8FD9\u4E00\u6B65\u4E0D\u7528\u5907\u7528 reset" : "\u4F7F\u7528\u73B0\u6709\u989D\u5EA6";
-      const effects = [`\u989D\u5EA6 ${round8(level.state.quota)}% \u2192 ${round8(step.remainingAfter)}%`];
+      const effects = [`\u989D\u5EA6 ${round6(level.state.quota)}% \u2192 ${round6(step.remainingAfter)}%`];
       if (step.resetIndicesUsed.length) effects.push(`\u7528 ${step.resetIndicesUsed.length} \u4E2A\u5907\u7528`);
       if (step.resetIndicesExpired.length) effects.push(`${step.resetIndicesExpired.length} \u4E2A\u5907\u7528\u5C06\u8FC7\u671F`);
-      if (step.pauseHours > 1e-7) effects.push(`\u505C\u7528 ${round8(step.pauseHours)} \u5C0F\u65F6`);
+      if (step.pauseHours > 1e-7) effects.push(`\u505C\u7528 ${round6(step.pauseHours)} \u5C0F\u65F6`);
       const fallback = [];
       fallback.push(item.fallback.firstPauseAt ? `${date(item.fallback.firstPauseAt)}\u987B\u6682\u505C` : "\u53EF\u63A5\u6B63\u5E38\u5237\u65B0");
       if (item.fallback.expiredResets) fallback.push(`${item.fallback.expiredResets} \u4E2A\u5907\u7528\u4F1A\u8FC7\u671F`);
-      const events = step.events.filter((event) => event.kind === "backup").map((event) => `${date(event.at)}\u7528 ${event.expiresOn} \u5230\u671F\u7684\u5907\u7528\uFF1B\u8986\u76D6 ${round8(event.overwrittenPercent)}% \u5F53\u524D\u989D\u5EA6`);
+      const events = step.events.filter((event) => event.kind === "backup").map((event) => `${date(event.at)}\u7528 ${event.expiresOn} \u5230\u671F\u7684\u5907\u7528\uFF1B\u8986\u76D6 ${round6(event.overwrittenPercent)}% \u5F53\u524D\u989D\u5EA6`);
       return {
         ...item,
         title: pace(item.action),
@@ -3438,7 +3450,7 @@ function strategyTreeView(result) {
         effects: effects.join(" \xB7 "),
         fallbackText: fallback.join(" \xB7 "),
         events,
-        dailyPercent: round8(result.averagePercentPerDay * item.action.multiplier),
+        dailyPercent: round6(result.averagePercentPerDay * item.action.multiplier),
         // Each action category remains reachable even when several have the
         // same intensity: immediate redemption, waiting, bridging and rest.
         category: item.action.multiplier === 0 ? "pause" : item.action.id.startsWith("use-before-") ? "deadline" : bank ? item.action.bankMode === "now" ? "bank-now" : "bank-later" : "hold"
@@ -3621,7 +3633,7 @@ function quotaFunnelGeometry(milestones, {
 }
 
 // src/strategy-time-axis.js
-var HOUR15 = 36e5;
+var HOUR14 = 36e5;
 function strategyTimeAxis({ now, timeZone: timeZone2, endHours, dayWidth = 180, padding = 40, leftPadding = padding }) {
   const start = Date.parse(now);
   const formatter = new Intl.DateTimeFormat("en-CA", {
@@ -3656,11 +3668,11 @@ function strategyTimeAxis({ now, timeZone: timeZone2, endHours, dayWidth = 180, 
       width: dayWidth,
       startAt: new Date(from).toISOString(),
       endAt: new Date(to).toISOString(),
-      startHours: (from - start) / HOUR15,
-      endHours: (to - start) / HOUR15,
-      label: label.format(from + HOUR15)
+      startHours: (from - start) / HOUR14,
+      endHours: (to - start) / HOUR14,
+      label: label.format(from + HOUR14)
     });
-    if (to >= start + endHours * HOUR15) break;
+    if (to >= start + endHours * HOUR14) break;
   }
   const xAtHours = (hours) => {
     const day = days.find((day2) => hours >= day2.startHours && hours < day2.endHours) ?? days.at(-1);
@@ -3766,8 +3778,8 @@ function renderTimelineLaneLabel({ id, x, y, width, height = 52, title, detail, 
 }
 
 // src/components/reset-element.js
-var round3 = (value) => Number(value.toFixed(1));
-var probability = (value) => value > 0 && value < 1e-4 ? "&lt;0.01" : round3(value * 100);
+var round2 = (value) => Number(value.toFixed(1));
+var probability = (value) => value > 0 && value < 1e-4 ? "&lt;0.01" : round2(value * 100);
 var name = (sequence, locale) => translator(locale)(sequence === 1 ? "\u9996\u6B21" : "\u7B2C\u4E8C\u6B21");
 var position = ({ left, x, y, width, height, viewportWidth }) => `data-reset-position style="--reset-left:${viewportWidth ? `${(left ?? x) / viewportWidth * 100}%` : `${left ?? x}px`};--reset-top:${y}px;--reset-width:${viewportWidth ? `${width / viewportWidth * 100}%` : `${width}px`};--reset-height:${height ?? 0}px"`;
 function resetOpportunityLayout(width = Infinity) {
@@ -3818,8 +3830,9 @@ function renderMode({ sequence, focus, plot, vertical = false, escape: escape3, 
   const data = sequence === 1 ? `data-reset-estimate="${escape3(focus.pointAt)}" data-estimate-cdf="${focus.cumulativeProbability}" data-estimate-probability="${focus.probability}"` : `data-reset-sequence="2" data-reset-at="${escape3(focus.pointAt)}" data-conditional-on="${escape3(focus.conditionalOn)}"`;
   if (!plot && sequence === 1 && !vertical) {
     const mode = ["maximum-hour-window-mass", "maximum-hour-window-density"].includes(focus.method);
-    return `<div class="forecast-mode" ${data} ${position(focus)} title="${t2(mode ? "\u6807\u7EBF\u5BF9\u5E94\u6982\u7387\u5206\u5E03\u7684\u6700\u9AD8\u5CF0\u3002" : "\u4E0A\u6B21reset\u52A0\u8FD1\u671F\u5E73\u5747\u95F4\u9694\uFF0C\u518D\u6821\u51C6\u5230\u5E38\u89C1\u53D1\u5E03\u949F\u70B9\u7684\u53C2\u8003\u65F6\u95F4\u3002")}${t2("\u5DE6\u53F3\u4E3A\u4F30\u8BA1\u8303\u56F4\u4E4B\u5916\u7684\u6982\u7387\u3002")}"><span data-estimate-earlier="${focus.earlierProbability}">${t2("\u2190 \u66F4\u65E9 {percent}%", { percent: round3(focus.earlierProbability * 100) })}</span><strong>${t2(mode ? "\u6700\u53EF\u80FD\u989D\u5916 reset" : "\u9884\u8BA1\u989D\u5916 reset")}<small>${escape3(focus.label)}</small></strong><span data-estimate-later="${focus.laterProbability}">${t2("\u66F4\u665A {percent}% \u2192", { percent: round3(focus.laterProbability * 100) })}</span></div>`;
+    return `<div class="forecast-mode" ${data} ${position(focus)} title="${t2(mode ? "\u6807\u7EBF\u5BF9\u5E94\u6982\u7387\u5206\u5E03\u7684\u6700\u9AD8\u5CF0\u3002" : "\u4E0A\u6B21reset\u52A0\u8FD1\u671F\u5E73\u5747\u95F4\u9694\uFF0C\u518D\u6821\u51C6\u5230\u5E38\u89C1\u53D1\u5E03\u949F\u70B9\u7684\u53C2\u8003\u65F6\u95F4\u3002")}${t2("\u5DE6\u53F3\u4E3A\u4F30\u8BA1\u8303\u56F4\u4E4B\u5916\u7684\u6982\u7387\u3002")}"><span data-estimate-earlier="${focus.earlierProbability}">${t2("\u2190 \u66F4\u65E9 {percent}%", { percent: round2(focus.earlierProbability * 100) })}</span><strong>${t2(mode ? "\u6700\u53EF\u80FD\u989D\u5916 reset" : "\u9884\u8BA1\u989D\u5916 reset")}<small>${escape3(focus.label)}</small></strong><span data-estimate-later="${focus.laterProbability}">${t2("\u66F4\u665A {percent}% \u2192", { percent: round2(focus.laterProbability * 100) })}</span></div>`;
   }
+  if (focus.announced) return `<div class="forecast-mode forecast-mode-on-plot" ${data} data-reset-announced data-reset-marker ${position(focus)} aria-label="${t2("\u5DF2\u5BA3\u5E03\u7684 reset")} \xB7 ${escape3(focus.label)}"><strong>${escape3(focus.label)}<small>${t2("\u5DF2\u5BA3\u5E03")}</small></strong></div>`;
   const className = sequence === 1 ? "forecast-mode forecast-mode-on-plot" : "forecast-following";
   return `<div class="${className}" ${data} data-reset-marker ${position(focus)} aria-label="${name(sequence, locale)} ${t2(focus.planned ? "\u89C4\u5212\u65F6\u523B" : "\u6700\u53EF\u80FD")} reset \xB7 ${escape3(focus.label)}" title="${t2(focus.planned ? "\u6807\u7EBF\u662F\u89C4\u5212\u8BA1\u5165\u8FD9\u6B21 reset \u7684\u4FDD\u5B88\u65F6\u523B\uFF1A\u6B63\u5E38\u5237\u65B0\u524D\u53EF\u80FD\u53D1\u751F\u7684\u90E8\u5206\uFF0C\u6709 75% \u5728\u6B64\u4E4B\u524D\u3002" : "\u6807\u7EBF\u5BF9\u5E94\u672C\u6761\u5206\u5E03\u6700\u9AD8\u5CF0\u3002")}${sequence === 2 ? t2("\u7B2C\u4E8C\u6B21\u4EE5\u9996\u6B21\u5728\u9884\u6D4B\u70B9\u53D1\u751F\u4E3A\u524D\u63D0\u3002") : ""}"><strong>${escape3(focus.planned ? focus.label : `${t2("\u6700\u53EF\u80FD")} ${focus.clockLabel ?? focus.label}`)}<small>${t2("\u7D2F\u8BA1")} ${probability(focus.cumulativeProbability)}%</small></strong></div>`;
 }
@@ -3848,10 +3861,10 @@ function renderResetElement({
   const t2 = translator(locale);
   const vertical = orientation === "vertical";
   const date = new Intl.DateTimeFormat(uiLocale(locale), { timeZone: timeZone2, month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
-  const plotSvg = plot ? `<g class="reset-density-series" data-density-sequence="${sequence}" data-reset-density-plot data-cumulative-probability="${plot.cumulativeProbability}" data-tail-probability="${plot.tailProbability}"><path class="reset-density-baseline" d="M ${plot.startX} ${plot.bottomY} H ${plot.endX}"/><path class="reset-density-area" d="${plot.areaPath}"/><path class="reset-density-line" d="${plot.densityPath}"/>${plot.bins.map((bin) => `<rect class="reset-density-hit" x="${bin.x1}" y="${plot.topY}" width="${bin.x2 - bin.x1}" height="${plot.height}" data-bin-probability="${bin.probability}" data-bin-cdf="${bin.cumulativeProbability}"><title>${t2(sequence === 2 ? "\u7B2C\u4E8C\u6B21\uFF08\u5047\u8BBE\u9996\u6B21\u53D1\u751F\uFF09" : "\u9996\u6B21")} reset \xB7 ${escape3(date.format(new Date(bin.endAt)))} \xB7 ${t2("\u7D2F\u8BA1")} ${probability(bin.cumulativeProbability)}%</title></rect>`).join("")}</g>` : "";
+  const plotSvg = plot && !plot.announced ? `<g class="reset-density-series" data-density-sequence="${sequence}" data-reset-density-plot data-cumulative-probability="${plot.cumulativeProbability}" data-tail-probability="${plot.tailProbability}"><path class="reset-density-baseline" d="M ${plot.startX} ${plot.bottomY} H ${plot.endX}"/><path class="reset-density-area" d="${plot.areaPath}"/><path class="reset-density-line" d="${plot.densityPath}"/>${plot.bins.map((bin) => `<rect class="reset-density-hit" x="${bin.x1}" y="${plot.topY}" width="${bin.x2 - bin.x1}" height="${plot.height}" data-bin-probability="${bin.probability}" data-bin-cdf="${bin.cumulativeProbability}"><title>${t2(sequence === 2 ? "\u7B2C\u4E8C\u6B21\uFF08\u5047\u8BBE\u9996\u6B21\u53D1\u751F\uFF09" : "\u9996\u6B21")} reset \xB7 ${escape3(date.format(new Date(bin.endAt)))} \xB7 ${t2("\u7D2F\u8BA1")} ${probability(bin.cumulativeProbability)}%</title></rect>`).join("")}</g>` : "";
   const peakSvg = peaks.map((peak) => vertical ? `<path class="reset-peak-leader" d="M ${peak.curveX + 4} ${peak.timeY} H ${peak.left - 2}"/><circle class="reset-peak-point" cx="${peak.curveX}" cy="${peak.timeY}" r="2.5"/>` : `<path class="reset-peak-leader" d="M ${peak.x} ${peak.curveY - 4} V ${peak.y + peak.height}"/><circle class="reset-peak-point" cx="${peak.x}" cy="${peak.curveY}" r="2.5"/>`).join("");
   const guide = focus ? vertical ? `<path class="${sequence === 1 ? "forecast-mode-guide" : "forecast-following-guide"}" d="M ${guideStartX} ${focus.x} H ${plot?.bottomY ?? guideStartX}"/><circle class="${sequence === 1 ? "forecast-mode-point" : "forecast-following-point"}" cx="${plot?.topY ?? guideStartX}" cy="${focus.x}" r="3.5"/>` : plot || sequence === 2 ? `<path class="${sequence === 1 ? "forecast-mode-guide" : "forecast-following-guide"}" d="M ${focus.x} ${plot ? plot.topY - 4 : focus.y + 38} V ${guideEndY}"/><circle class="${sequence === 1 ? "forecast-mode-point" : "forecast-following-point"}" cx="${focus.x}" cy="${plot ? plot.topY : focus.y + 38}" r="3.5"/>` : `<path class="forecast-mode-range" d="M ${focus.fromX} ${focus.y + 66} H ${focus.toX}"/><path class="forecast-mode-guide" d="M ${focus.left + focus.width / 2} ${focus.y + 61} L ${focus.x} ${focus.y + 74} V ${guideEndY}"/>` : "";
-  const tailLabel = plot && plot.tailProbability >= 0.01 ? t2("\u8303\u56F4\u5916 {percent}%", { percent: probability(plot.tailProbability) }) : "";
+  const tailLabel = plot && !plot.announced && plot.tailProbability >= 0.01 ? t2("\u8303\u56F4\u5916 {percent}%", { percent: probability(plot.tailProbability) }) : "";
   const caption = laneLabel ? renderTimelineLaneLabel({
     ...laneLabel,
     tooltip: [laneLabel.tooltip, t2(sequence === 2 ? "\u4EE5\u9996\u6B21\u5728\u6807\u8BB0\u65F6\u523B\u53D1\u751F\u4E3A\u6761\u4EF6\u3002" : "\u9996\u6B21\u989D\u5916reset\u7684\u6982\u7387\u5206\u5E03\u3002"), tailLabel].filter(Boolean).join(" ")
@@ -3883,7 +3896,7 @@ function timelineUsagePhases(phases, xAtHours) {
 }
 
 // src/strategy-time-layout.js
-var round4 = (value) => Number(value.toFixed(1));
+var round3 = (value) => Number(value.toFixed(1));
 var COMPACT_TIMELINE_WIDTH = 480;
 var COMPACT_CARD_WIDTH = 112;
 var titleWidth = (text, size) => Math.ceil([...String(text)].reduce((sum, char) => sum + (/[\u2E80-\u9FFF\uFF00-\uFFEF]/.test(char) ? size : size * 0.62), 0)) + 22;
@@ -4016,6 +4029,17 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
     forecastFocus.y = probabilityPlot.topY - 38;
     forecastFocus.cumulativeProbability = resetProbabilityByHours(prediction, firstMarker.pointHours);
   }
+  const announcedAt = Date.parse(prediction?.evidence?.scheduledResetAt);
+  const announced = Number.isFinite(announcedAt) && announcedAt > Date.parse(result.now);
+  if (announced && probabilityPlot) {
+    probabilityPlot.announced = true;
+    if (forecastFocus) Object.assign(forecastFocus, {
+      announced: true,
+      label: time(announcedAt),
+      clockLabel: clock(announcedAt),
+      pointAt: new Date(announcedAt).toISOString()
+    });
+  }
   const forecastFollowing = secondMarker ? {
     ...secondMarker,
     x: axis.xAtHours(secondMarker.pointHours),
@@ -4026,7 +4050,7 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
     clockLabel: clock(secondMarker.pointAt)
   } : null;
   if (forecastFollowing?.planned) forecastFollowing.cumulativeProbability = followingResetProbabilityByHours(prediction, result.now, secondMarker.pointHours, secondCondition) ?? forecastFollowing.cumulativeProbability;
-  const forecastPeaks = compact ? [] : layoutResetProbabilityPeaks({
+  const forecastPeaks = compact || announced ? [] : layoutResetProbabilityPeaks({
     plot: probabilityPlot,
     timeZone: result.timeZone,
     focus: forecastFocus,
@@ -4134,11 +4158,11 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
   for (const point of points) {
     const forecast = forecastMilestones.find((item) => Math.abs(item.hours - point.hours) < 1e-6);
     const afterAssumedReset = scenario?.selected && point.hours > scenario.hours + 1e-6;
-    const riskLine = forecast && !afterAssumedReset ? t2(result.flexibleSchedule ? "\u672A\u989D\u5916\u91CD\u7F6E\uFF1A{percent}%" : "\u6B64\u65F6\u4ECD\u672A\u989D\u5916\u91CD\u7F6E\uFF1A{percent}%", { percent: round4(forecast.noResetProbability * 100) }) : null;
+    const riskLine = forecast && !afterAssumedReset ? t2(result.flexibleSchedule ? "\u672A\u989D\u5916\u91CD\u7F6E\uFF1A{percent}%" : "\u6B64\u65F6\u4ECD\u672A\u989D\u5916\u91CD\u7F6E\uFF1A{percent}%", { percent: round3(forecast.noResetProbability * 100) }) : null;
     const banks = point.events.filter((event) => event.kind === "backup");
     for (const event of banks) {
       const condition = result.backupChoices.find((choice) => choice.index === event.resetIndex)?.usageCondition;
-      const bankRisk = condition ? Number.isFinite(condition.probability) ? t2("\u672A\u518D reset\uFF1A{percent}%", { percent: round4(condition.probability * 100) }) : null : riskLine;
+      const bankRisk = condition ? Number.isFinite(condition.probability) ? t2("\u672A\u518D reset\uFF1A{percent}%", { percent: round3(condition.probability * 100) }) : null : riskLine;
       card(point.hours, {
         id: `backup:${event.resetIndex}`,
         type: "backup",
@@ -4149,7 +4173,7 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
         lines: [
           time(event.at),
           event.deadlineDriven ? expires(event) : t2("{date}\u5230\u671F", { date: event.expiresOn.slice(5).replace("-", "/") }),
-          ...event.overwrittenPercent > 1e-6 ? [t2("\u63D0\u524D\u5151\u6362\u5C06\u8986\u76D6 {percent}%", { percent: round4(event.overwrittenPercent) })] : [],
+          ...event.overwrittenPercent > 1e-6 ? [t2("\u63D0\u524D\u5151\u6362\u5C06\u8986\u76D6 {percent}%", { percent: round3(event.overwrittenPercent) })] : [],
           ...bankRisk ? [bankRisk] : []
         ],
         lineTones: [
@@ -4247,9 +4271,9 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
     id: `reset-${index + 1}`,
     ...compact ? { x: axis.leftPadding, y: plot.topY - 62, width: plotLabelWidth, height: 18 } : { x: 0, y: plot.topY + plot.height / 2 - 10, width: gutterWidth, height: 20 },
     inline: true,
-    title: t2(index === 0 ? "Reset \u6982\u7387" : "\u7B2C\u4E8C\u6B21 reset \u6982\u7387"),
+    title: t2(index === 0 ? plot.announced ? "\u5DF2\u5BA3\u5E03\u7684 reset" : "Reset \u6982\u7387" : "\u7B2C\u4E8C\u6B21 reset \u6982\u7387"),
     detail: "",
-    tooltip: [
+    tooltip: plot.announced ? t2("Tibo \u5DF2\u5BA3\u5E03\u8FD9\u6B21 reset \u7684\u65F6\u95F4") : [
       t2(index === 0 ? "\u9996\u6B21\u989D\u5916\u91CD\u7F6E\u9884\u6D4B" : "\u7B2C\u4E8C\u6B21\u989D\u5916\u91CD\u7F6E\u9884\u6D4B"),
       t2("\u6982\u7387\u5BC6\u5EA6"),
       index === 1 ? t2("\u4EE5\u9996\u6B21\u53D1\u751F\u4E3A\u524D\u63D0") : ""
@@ -4343,14 +4367,14 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
 }
 
 // src/usage-rate-label.js
-var round5 = (value) => Number(value.toFixed(1));
+var round4 = (value) => Number(value.toFixed(1));
 function usageRateAdvice(baselineDailyPercent, dailyPercent, locale = "zh-CN") {
   if (!Number.isFinite(baselineDailyPercent) || baselineDailyPercent <= 0 || !Number.isFinite(dailyPercent) || dailyPercent <= 0) return "";
   if (Math.abs(dailyPercent - baselineDailyPercent) < 1e-5) return "";
-  return translator(locale)("\u5EFA\u8BAE {daily}% / \u5929", { daily: round5(dailyPercent) });
+  return translator(locale)("\u5EFA\u8BAE {daily}% / \u5929", { daily: round4(dailyPercent) });
 }
 function usageRateDetail(baselineDailyPercent, dailyPercent, locale = "zh-CN") {
-  return translator(locale)("{daily}% / \u5929", { daily: round5(dailyPercent) });
+  return translator(locale)("{daily}% / \u5929", { daily: round4(dailyPercent) });
 }
 
 // src/components/strategy-annotations.js
@@ -4383,7 +4407,7 @@ function renderStrategyNode(node, escape3, locale = "zh-CN") {
 // src/strategy-tree-layout.js
 var STAGE = 405;
 var MID = 216;
-var round6 = (value) => Number(value.toFixed(1));
+var round5 = (value) => Number(value.toFixed(1));
 function layoutStrategyTree(result, { expandedLevel = 0, showAll = false, prediction = null, viewportWidth, displayEndHours, locale = "zh-CN" } = {}) {
   if (result.paceChoices) return layoutTimeStrategy(result, { prediction, viewportWidth, displayEndHours, locale });
   const levels = strategyTreeView(result);
@@ -4401,11 +4425,11 @@ function layoutStrategyTree(result, { expandedLevel = 0, showAll = false, predic
   let height = 300;
   const actionNode = (item, level, x, y, selected) => {
     const direction = item.action.multiplier === 0 ? "\u6682\u505C" : item.action.multiplier < result.startingPoint.multiplier - 1e-6 ? "\u5C11\u7528" : item.action.multiplier > result.startingPoint.multiplier + 1e-6 ? "\u591A\u7528" : "\u6309\u8D77\u70B9\u7528";
-    const usedPercent = round6(item.outcome.usedDays * result.averagePercentPerDay);
-    const title = item.action.id.startsWith("use-before-") ? `\u5148\u7528\u5B8C\u5F53\u524D ${round6(level.state.quota)}% \u989D\u5EA6` : `${direction}${item.action.multiplier ? ` \xB7 \u65E5\u5747\u7EA6 ${item.dailyPercent}% \u989D\u5EA6` : ""}`;
+    const usedPercent = round5(item.outcome.usedDays * result.averagePercentPerDay);
+    const title = item.action.id.startsWith("use-before-") ? `\u5148\u7528\u5B8C\u5F53\u524D ${round5(level.state.quota)}% \u989D\u5EA6` : `${direction}${item.action.multiplier ? ` \xB7 \u65E5\u5747\u7EA6 ${item.dailyPercent}% \u989D\u5EA6` : ""}`;
     const lines = [
-      item.action.id.startsWith("use-before-") ? `${level.until}\u524D\u5B8C\u6210 \xB7 \u5269 ${round6(item.outcome.remainingAfter)}%` : `\u8FD9\u6BB5\u7528\u7EA6 ${usedPercent}% \xB7 \u5269 ${round6(item.outcome.remainingAfter)}%`,
-      selected ? item.outcome.pauseHours > 1e-6 ? `\u8FD9\u6BB5\u9700\u505C\u7528 ${round6(item.outcome.pauseHours)} \u5C0F\u65F6` : `\u5907\u7528 ${item.outcome.resetsRemaining} \xB7 Credits ${round6(item.outcome.creditsRemaining)}` : item.fallbackText
+      item.action.id.startsWith("use-before-") ? `${level.until}\u524D\u5B8C\u6210 \xB7 \u5269 ${round5(item.outcome.remainingAfter)}%` : `\u8FD9\u6BB5\u7528\u7EA6 ${usedPercent}% \xB7 \u5269 ${round5(item.outcome.remainingAfter)}%`,
+      selected ? item.outcome.pauseHours > 1e-6 ? `\u8FD9\u6BB5\u9700\u505C\u7528 ${round5(item.outcome.pauseHours)} \u5C0F\u65F6` : `\u5907\u7528 ${item.outcome.resetsRemaining} \xB7 Credits ${round5(item.outcome.creditsRemaining)}` : item.fallbackText
     ];
     if (selected && item.outcome.pauseHours < 1e-6) lines[1] = level.endDescription;
     if (selected && result.paceChoices) {
@@ -4437,7 +4461,7 @@ function layoutStrategyTree(result, { expandedLevel = 0, showAll = false, predic
       x: x + 45,
       y: 80,
       date: level.date,
-      state: `\u989D\u5EA6 ${round6(level.state.quota)}% \xB7 \u5907\u7528 ${level.state.resets}`,
+      state: `\u989D\u5EA6 ${round5(level.state.quota)}% \xB7 \u5907\u7528 ${level.state.resets}`,
       until: level.until
     });
     link(decision.id, action.id, "selected");
@@ -4450,7 +4474,7 @@ function layoutStrategyTree(result, { expandedLevel = 0, showAll = false, predic
         y: 9,
         width: 170,
         height: 64,
-        title: `\u6B64\u524D\u989D\u5916\u91CD\u7F6E\u6982\u7387 ${round6(level.cumulativeResetProbability * 100)}%`,
+        title: `\u6B64\u524D\u989D\u5916\u91CD\u7F6E\u6982\u7387 ${round5(level.cumulativeResetProbability * 100)}%`,
         probabilityKind: "cumulative-from-plan-start",
         probability: level.cumulativeResetProbability,
         lines: [level.until, "\u4ECE\u73B0\u5728\u7D2F\u8BA1\uFF1B\u53D1\u751F\u5C31\u91CD\u7B97"]
@@ -4505,7 +4529,7 @@ function layoutStrategyTree(result, { expandedLevel = 0, showAll = false, predic
         lines: [
           time(event.at),
           `${event.expiresOn.slice(5).replace("-", "/")}\u5230\u671F`,
-          ...event.overwrittenPercent > 1e-6 ? [`\u63D0\u524D\u5151\u6362\u5C06\u8986\u76D6 ${round6(event.overwrittenPercent)}%`] : []
+          ...event.overwrittenPercent > 1e-6 ? [`\u63D0\u524D\u5151\u6362\u5C06\u8986\u76D6 ${round5(event.overwrittenPercent)}%`] : []
         ]
       };
       nodes.push(backup);
@@ -4624,7 +4648,7 @@ function renderStrategyTree(graph, escape3) {
   const resetActionIds = new Set(graph.nodes.filter((node) => node.type === "forecast-assumption").map((node) => node.id));
   const shownQuotaLabels = /* @__PURE__ */ new Set();
   let lastRight = -Infinity;
-  for (const label of graph.funnel.bands.flatMap((band) => band.labels.filter((label2, index) => !graph.dayAxis || index === 0 || band.x2 - band.x1 >= 70).map((label2) => ({ label: label2, width: `${round6(label2.quota)}%`.length * 7 + 4 }))).sort((a, b) => (a.label.anchor === "end" ? a.label.x - a.width : a.label.x) - (b.label.anchor === "end" ? b.label.x - b.width : b.label.x))) {
+  for (const label of graph.funnel.bands.flatMap((band) => band.labels.filter((label2, index) => !graph.dayAxis || index === 0 || band.x2 - band.x1 >= 70).map((label2) => ({ label: label2, width: `${round5(label2.quota)}%`.length * 7 + 4 }))).sort((a, b) => (a.label.anchor === "end" ? a.label.x - a.width : a.label.x) - (b.label.anchor === "end" ? b.label.x - b.width : b.label.x))) {
     const left = label.label.anchor === "end" ? label.label.x - label.width : label.label.x;
     if (left < lastRight + 4) continue;
     shownQuotaLabels.add(label.label);
@@ -4654,7 +4678,7 @@ function renderStrategyTree(graph, escape3) {
     ${graph.funnel.bands.map((band) => `<g class="quota-phase${band.kind === "assumed-refresh" ? " quota-phase-assumed" : ""}"${band.kind === "rest" ? " data-quota-rest" : ""} data-start-quota="${band.startQuota}" data-end-quota="${band.endQuota}">
       <path class="quota-baseline${band.kind === "pause" ? " quota-paused-line" : band.kind === "rest" ? " quota-rest-line" : ""}" d="${band.baseline}"/>
       ${band.kind === "rest" ? "" : `<path class="quota-band quota-${band.kind}" d="${band.path}"/>`}
-      ${band.labels.filter((label) => shownQuotaLabels.has(label)).map((label) => `<text class="quota-label" x="${label.x}" y="${label.y}" text-anchor="${label.anchor}">${round6(label.quota)}%</text>`).join("")}
+      ${band.labels.filter((label) => shownQuotaLabels.has(label)).map((label) => `<text class="quota-label" x="${label.x}" y="${label.y}" text-anchor="${label.anchor}">${round5(label.quota)}%</text>`).join("")}
     </g>`).join("")}
     ${graph.edges.filter((edge) => !["selected", "continue"].includes(edge.kind) && !resetActionIds.has(edge.to)).map((edge) => `<path class="edge-${edge.kind}" d="${edge.path}"/>`).join("")}
     ${graph.funnel.refills.filter((refill) => refill.kind !== "assumed-extra").map((refill) => `<path class="quota-refill quota-refill-${refill.kind}" data-refill-sequence="${refill.sequence ?? 0}" d="${refill.path}"/>`).join("")}
@@ -4663,7 +4687,7 @@ function renderStrategyTree(graph, escape3) {
   </svg>`;
   const headings = graph.headings.map((item) => ["consumption", "usage", "opportunity"].includes(item.kind) ? renderTimelineLaneLabel({ ...item, id: item.kind, title: item.date, detail: item.state, note: item.unit }, escape3) : `<div class="graph-day" style="left:${item.x}px;top:${item.y}px;width:${item.width ?? 254}px"><strong>${escape3(item.date)}</strong>${item.state ? `<span>${escape3(item.state)}</span>` : ""}</div>`).join("");
   const days = graph.dayAxis ? (graph.dayAxis.labels ?? graph.dayAxis.days).map((day) => `<div class="time-day" style="left:${day.x}px;width:${day.width}px">${escape3(uiLocale(locale) === "zh-CN" ? day.label : new Intl.DateTimeFormat(uiLocale(locale), { timeZone: graph.timeZone, month: "short", day: "numeric" }).format(new Date(Date.parse(day.startAt) + 36e5)))}</div>`).join("") : "";
-  const alignedForecast = graph.forecastLayout?.length ? `<div class="forecast-calendar forecast-aligned" aria-label="${t2("\u56FA\u5B9A\u65E5\u671F\u4E4B\u524D\u81F3\u5C11\u53D1\u751F\u4E00\u6B21\u989D\u5916\u91CD\u7F6E\u7684\u7D2F\u8BA1\u6982\u7387")}">${graph.forecastLayout.map((point) => `<span ${point.calendar ? "data-forecast-at" : "data-event-forecast-at"}="${escape3(point.at)}" data-probability="${point.probability}" title="${escape3(t2("\u622A\u81F3 {time} \u81F3\u5C11\u53D1\u751F\u4E00\u6B21\u989D\u5916 reset", { time: point.at }))}" style="left:${point.left}px;top:${point.y}px;width:${point.width}px">${graph.probabilityPlot ? "" : `<small>${escape3(point.label)}</small>`}<strong>${graph.probabilityPlot ? t2("\u7D2F\u8BA1") + " " : graph.compactForecast ? t2("\u989D\u5916\u91CD\u7F6E") + " " : ""}${round6(point.probability * 100)}%</strong></span>`).join("")}</div>` : "";
+  const alignedForecast = graph.forecastLayout?.length ? `<div class="forecast-calendar forecast-aligned" aria-label="${t2("\u56FA\u5B9A\u65E5\u671F\u4E4B\u524D\u81F3\u5C11\u53D1\u751F\u4E00\u6B21\u989D\u5916\u91CD\u7F6E\u7684\u7D2F\u8BA1\u6982\u7387")}">${graph.forecastLayout.map((point) => `<span ${point.calendar ? "data-forecast-at" : "data-event-forecast-at"}="${escape3(point.at)}" data-probability="${point.probability}" title="${escape3(t2("\u622A\u81F3 {time} \u81F3\u5C11\u53D1\u751F\u4E00\u6B21\u989D\u5916 reset", { time: point.at }))}" style="left:${point.left}px;top:${point.y}px;width:${point.width}px">${graph.probabilityPlot ? "" : `<small>${escape3(point.label)}</small>`}<strong>${graph.probabilityPlot ? t2("\u7D2F\u8BA1") + " " : graph.compactForecast ? t2("\u989D\u5916\u91CD\u7F6E") + " " : ""}${round5(point.probability * 100)}%</strong></span>`).join("")}</div>` : "";
   const nodes = graph.nodes.filter((node) => node.width && node.type !== "forecast-assumption").map((node) => renderStrategyNode(node, escape3, locale)).join("");
   const controls = graph.controls.map((control) => `<button type="button" class="graph-control" ${control.kind === "compare" ? `data-inspect-level="${control.level}" aria-expanded="${control.expanded}"` : "data-show-all-actions"} style="left:${control.x}px;top:${control.y}px">${control.kind === "compare" ? t2(control.expanded ? "\u2212 \u6536\u8D77\u5176\u4ED6\u505A\u6CD5" : "\uFF0B \u6BD4\u8F83\u8FD9\u4E00\u6B65") : t2("\uFF0B \u5176\u4ED6 {count} \u79CD\u505A\u6CD5", { count: control.count })}</button>`).join("");
   const phaseControls = (graph.phaseControls ?? []).map((phase) => renderPhaseControl(phase, {
@@ -4696,7 +4720,7 @@ function renderStrategyTree(graph, escape3) {
     }).format(instant);
   };
   const forecast = !graph.dayAxis && graph.forecastCalendar?.length ? `<div class="forecast-calendar" aria-label="${t2("\u56FA\u5B9A\u65E5\u671F\u4E4B\u524D\u81F3\u5C11\u53D1\u751F\u4E00\u6B21\u989D\u5916\u91CD\u7F6E\u7684\u7D2F\u8BA1\u6982\u7387")}">
-    <span>\u6B64\u524D\u989D\u5916\u91CD\u7F6E\u6982\u7387</span><div>${graph.forecastCalendar.map((point) => `<span><small>${escape3(forecastDate(point.at))}</small><strong>${round6(point.probability * 100)}%</strong></span>`).join("")}</div></div>` : "";
+    <span>\u6B64\u524D\u989D\u5916\u91CD\u7F6E\u6982\u7387</span><div>${graph.forecastCalendar.map((point) => `<span><small>${escape3(forecastDate(point.at))}</small><strong>${round5(point.probability * 100)}%</strong></span>`).join("")}</div></div>` : "";
   const forecastLegend = !graph.compactForecast && graph.forecastLayout?.length ? `<div class="forecast-legend">${t2("\u84DD\u7EBF\uFF1A\u6B64\u524D\u81F3\u5C11\u53D1\u751F\u4E00\u6B21\u989D\u5916 reset \u7684\u6982\u7387")}</div>` : "";
   const inventory = graph.bankedCount > 0 ? `<div class="retained-resets" data-banked-count="${graph.bankedCount}">${escape3(t2("\u5907\u7528 reset \xB7 {count} \u4E2A", { count: graph.bankedCount }))}</div>` : "";
   return `${forecast}${forecastLegend}<div class="tree-scroll" data-timeline-orientation="horizontal" tabindex="0" role="region" aria-label="${t2("\u4ECE\u5DE6\u5411\u53F3\u7684\u989D\u5EA6\u6F0F\u6597\u4E0E\u7B56\u7565\u9009\u62E9\uFF0C\u53EF\u6A2A\u5411\u6EDA\u52A8")}"><div class="strategy-graph"${graph.compact ? " data-compact" : ""} style="width:${graph.width}px;height:${graph.height}px" ${graph.dayAxis ? `data-timeline-from="${graph.dayAxis.days[0].startAt}" data-timeline-to="${graph.dayAxis.days.at(-1).endAt}"` : ""}>${svg}${days}${alignedForecast}${resetElements.map((element) => element.html).join("")}${headings}${phaseControls}${nodes}${controls}</div></div>${inventory}`;
@@ -4712,13 +4736,13 @@ function workspaceLayout(availableWidth = 1120) {
 // src/page-metadata.js
 var PLANNER_METADATA = {
   en: {
-    title: "Codex4ever | Codex Quota & Reset Planner",
+    title: "Usage Planner | Codex Quota & Reset Planner",
     description: "Plan OpenAI Codex usage with quota depletion estimates, banked reset deadlines and extra reset forecasts. Compare daily usage strategies locally or through MCP.",
     intro: "Plan Codex quota, banked resets and extra reset forecasts, right in your browser.",
     locale: "en_GB"
   },
   "zh-CN": {
-    title: "Codex4ever | Codex \u989D\u5EA6\u4E0E Reset \u7528\u91CF\u89C4\u5212",
+    title: "Usage Planner | Codex \u989D\u5EA6\u4E0E Reset \u7528\u91CF\u89C4\u5212",
     description: "\u6839\u636E Codex \u5269\u4F59\u989D\u5EA6\u3001\u6D88\u8017\u901F\u5EA6\u3001\u5907\u7528 reset \u5230\u671F\u65F6\u95F4\u548C\u989D\u5916\u91CD\u7F6E\u9884\u6D4B\uFF0C\u6BD4\u8F83\u65E5\u5747\u7528\u91CF\u7B56\u7565\u4E0E\u9884\u8BA1\u8017\u5C3D\u65F6\u95F4\u3002\u652F\u6301\u672C\u5730\u8FD0\u884C\u548C MCP \u63A5\u5165\u3002",
     intro: "\u89C4\u5212 Codex \u7528\u91CF\u3001\u5907\u7528 reset \u4E0E\u989D\u5916\u91CD\u7F6E\uFF0C\u5168\u90E8\u5728\u6D4F\u89C8\u5668\u91CC\u8BA1\u7B97\u3002",
     locale: "zh_CN"
@@ -4739,8 +4763,8 @@ function syncPlannerMetadata(document2, language2) {
 }
 
 // src/plugin-page-client.js
-function pluginPageClient(location = globalThis.location, fetcher = globalThis.fetch) {
-  const token = new URLSearchParams(location?.hash?.slice(1) ?? "").get("planner");
+function pluginPageClient(location2 = globalThis.location, fetcher = globalThis.fetch) {
+  const token = new URLSearchParams(location2?.hash?.slice(1) ?? "").get("planner");
   if (!token || !/^[a-f0-9]{64}$/.test(token)) return null;
   const request = async (path, method = "GET", preferences) => {
     const response = await fetcher(path, {
@@ -4761,13 +4785,20 @@ function pluginPageClient(location = globalThis.location, fetcher = globalThis.f
   };
 }
 
+// src/brand-mark.js
+var BRAND_MARK_SVG = '<svg class="pixel-mark" viewBox="0 0 22 11" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M2 0h5v1h-5zM15 0h5v1h-5zM1 1h2v1h-2zM6 1h2v1h-2zM14 1h2v1h-2zM19 1h2v1h-2zM0 2h2v1h-2zM7 2h2v1h-2zM13 2h2v1h-2zM20 2h2v1h-2zM0 3h2v1h-2zM8 3h2v1h-2zM12 3h2v1h-2zM20 3h2v1h-2zM0 4h2v1h-2zM9 4h4v1h-4zM20 4h2v1h-2zM0 5h2v1h-2zM10 5h2v1h-2zM20 5h2v1h-2zM0 6h2v1h-2zM9 6h4v1h-4zM20 6h2v1h-2zM0 7h2v1h-2zM8 7h2v1h-2zM12 7h2v1h-2zM20 7h2v1h-2zM0 8h2v1h-2zM7 8h2v1h-2zM13 8h2v1h-2zM20 8h2v1h-2zM1 9h2v1h-2zM6 9h2v1h-2zM14 9h2v1h-2zM19 9h2v1h-2zM2 10h5v1h-5zM15 10h5v1h-5z"/></svg>';
+
+// src/planner-name.js
+var PRODUCT_DOMAIN = "usageplanner.com";
+
 // src/web.js
 var $ = (selector) => document.querySelector(selector);
 var escape2 = (value) => String(value).replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]);
-var STORAGE_KEY = "codex4ever-intensity-v1";
+var STORAGE_KEY = "usage-planner-intensity-v1";
+var LEGACY_STORAGE_KEYS = ["codex4ever-intensity-v1", "pace-simple-input-v4"];
 var savedLanguage;
 try {
-  savedLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+  savedLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY) ?? localStorage.getItem(LEGACY_LANGUAGE_STORAGE_KEY);
 } catch {
 }
 var language = chooseLanguage({
@@ -4788,21 +4819,25 @@ function renderStaticLanguage() {
   $(".brand p").textContent = metadata.intro;
   for (const [selector, label] of [
     [".affiliation-notice", "OpenAI Codex \u7684\u975E\u5B98\u65B9\u53EF\u89C6\u5316\u7528\u91CF\u89C4\u5212\u5DE5\u5177\u3002\u4E0E OpenAI \u65E0\u96B6\u5C5E\u5173\u7CFB\u3002"],
-    ["#github-star", "\u2605 \u5728 GitHub \u70B9\u4E2A Star"],
+    ["#github-star", "GitHub"],
     ["#follow-x", "\u5728 X \u5173\u6CE8\u6211"],
-    ["#calculate", "\u66F4\u65B0\u6570\u636E"],
     ["#source-code", "GitHub \u5F00\u6E90"],
-    ["#creator-contact", "\u5982\u679C\u4F60\u559C\u6B22\u8FD9\u4E2A\u4F5C\u54C1\uFF0C\u6B22\u8FCE\u5728 X \u4E0A\u5173\u6CE8\u6211"],
-    ["[data-credit-label]", "\u91CD\u7F6E\u6570\u636E\u6765\u6E90"]
+    ["[data-credit-label]", "\u611F\u8C22"],
+    ["[data-credit-suffix]", "\u63D0\u4F9B reset \u6570\u636E"],
+    ["[data-follow-label]", "\u5982\u679C\u4F60\u559C\u6B22\u8FD9\u4E2A\u4F5C\u54C1\uFF1A"],
+    ["#creator-xiaohongshu", "\u5C0F\u7EA2\u4E66"],
+    ["#share-site", "\u5206\u4EAB"],
+    ["#calculate", "\u21BB \u66F4\u65B0\u8BA1\u5212"],
+    ["[data-plugin-hint]", "\u88C5\u6210 Codex \u63D2\u4EF6\u53EF\u81EA\u52A8\u8BFB\u53D6\u3002"],
+    ["#overuse-hint", "\u7528\u91CF\u8FC7\u5EA6\u63D0\u9192\uFF08\u4EC5 Codex \u63D2\u4EF6\uFF09\uFF1A\u5728 Codex \u91CC\u8BF4\u201C\u6253\u5F00\u7528\u91CF\u8FC7\u5EA6\u63D0\u9192\u201D\u3002\u4E4B\u540E\u4F60\u7528\u5F97\u6BD4\u8BA1\u5212\u5FEB\u65F6\uFF0C\u4F1A\u76F4\u63A5\u5728\u5BF9\u8BDD\u91CC\u63D0\u9192\u4F60\u3002"]
   ]) {
     const element = $(selector);
     if (element) element.textContent = t(label);
   }
-  $("#calculate").setAttribute?.("title", t("\u91C7\u7528\u8F93\u5165\u4FEE\u6539\u5E76\u5237\u65B0\u91CD\u7F6E\u8BC1\u636E"));
   $("#planner-guide").textContent = language === "zh-CN" ? "\u4F7F\u7528\u8BF4\u660E" : "How it works";
   $("#planner-guide").setAttribute?.("href", language === "zh-CN" ? "/zh/guide/" : "/guide/");
-  for (const [selector, label] of [[".controls-panel", "\u72B6\u6001\u4E0E\u9884\u6D4B"], ["#inputs", "\u7B97\u6CD5\u8F93\u5165"], ["#forecast", "\u9884\u6D4B\u4F9D\u636E"], ["#output", "\u7B97\u6CD5\u8F93\u51FA"]])
-    $(selector).setAttribute?.("aria-label", t(label));
+  for (const [selector, label] of [["#inputs", "\u7B97\u6CD5\u8F93\u5165"], ["#forecast", "\u9884\u6D4B\u4F9D\u636E"], ["#output", "\u7B97\u6CD5\u8F93\u51FA"]])
+    $(selector)?.setAttribute?.("aria-label", t(label));
   $("#language-switch").setAttribute?.("aria-label", t("\u8BED\u8A00"));
   $("#language-switch").innerHTML = [["en", "English"], ["zh-CN", "\u4E2D\u6587"]].map(([value, label]) => `<button type="button" data-language="${value}" lang="${value}" aria-pressed="${language === value}">${label}</button>`).join("");
   if (statusMessage) $("#status").textContent = t(statusMessage);
@@ -4832,7 +4867,7 @@ var visibleMonth = new Date((/* @__PURE__ */ new Date()).getFullYear(), (/* @__P
 var calendarOpen = false;
 var savedPlannerPreferences;
 try {
-  const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || localStorage.getItem("pace-simple-input-v4"));
+  const saved = JSON.parse([STORAGE_KEY, ...LEGACY_STORAGE_KEYS].map((key) => localStorage.getItem(key)).find(Boolean) ?? "null");
   if (saved) {
     for (const key of Object.keys(input)) if (key in saved) input[key] = saved[key];
   }
@@ -4850,7 +4885,8 @@ var planner = createUsagePlannerState({
   timeZone,
   forecastEnabled: savedPlannerPreferences?.forecastEnabled,
   usageStrategy: savedPlannerPreferences?.usageStrategy,
-  availabilityMode: savedPlannerPreferences?.availabilityMode,
+  // "Assume no reset" replaced the cautious/optimistic choice; an old saved
+  // cautious mode would otherwise stick with no control to leave it.
   alertsEnabled: savedPlannerPreferences?.alertsEnabled
 });
 var monthIndex = (date) => date.getFullYear() * 12 + date.getMonth();
@@ -4878,14 +4914,14 @@ function calendar() {
     <p class="hint">${t("\u70B9\u65E5\u671F\u6DFB\u52A0\u6216\u53D6\u6D88\uFF1B\u540C\u4E00\u5929\u6700\u591A\u4E00\u4E2A\uFF0C\u5230\u671F\u6309\u5F53\u5929\u7ED3\u675F\u4F30\u7B97\u3002")}</p>
   </div>` : ""}`;
 }
-function delayControl(field, label, unit, max) {
-  return `<div class="delay-control"><button type="button" data-delay-step="${field}" data-delta="-1" aria-label="${t("\u51CF\u5C11{label}", { label: t(label) })}">\u2212</button><input type="number" data-field="${field}" aria-label="${t(label)}" min="0" max="${max}" step="1" value="${escape2(input[field])}"><span>${t(unit)}</span><button type="button" data-delay-step="${field}" data-delta="1" aria-label="${t("\u589E\u52A0{label}", { label: t(label) })}">\uFF0B</button></div>`;
+function delayControl(field, label, unit, max, { id = "", step = "1" } = {}) {
+  return `<div class="delay-control"><button type="button" data-delay-step="${field}" data-delta="-1" aria-label="${t("\u51CF\u5C11{label}", { label: t(label) })}">\u2212</button><input type="number"${id ? ` id="${id}"` : ""} data-field="${field}" aria-label="${t(label)}" min="0" max="${max}" step="${step}" value="${escape2(input[field])}"><span>${t(unit)}</span><button type="button" data-delay-step="${field}" data-delta="1" aria-label="${t("\u589E\u52A0{label}", { label: t(label) })}">\uFF0B</button></div>`;
 }
 function renderInputs() {
   $("#inputs").innerHTML = `<div class="compact-form">
     <fieldset class="calendar-field"><legend>${t("\u5907\u7528 reset \xB7 {count} \u4E2A", { count: input.resetDates.length })}</legend>${calendar()}</fieldset>
     <fieldset class="simple-fields"><legend>${t("\u5F53\u524D\u72B6\u6001")}</legend>
-      <label for="weekly-remaining">${t("\u672C\u5468\u989D\u5EA6\u8FD8\u5269\u591A\u5C11 %")}</label><input id="weekly-remaining" data-field="weeklyRemaining" type="number" min="0" max="100" step="any" value="${escape2(input.weeklyRemaining)}">
+      <label for="weekly-remaining">${t("\u672C\u5468\u989D\u5EA6\u8FD8\u5269")}</label>${delayControl("weeklyRemaining", "\u672C\u5468\u989D\u5EA6\u8FD8\u5269\u591A\u5C11 %", "%", 100, { id: "weekly-remaining", step: "any" })}
       <div class="refresh-row"><div class="refresh-label">${t("\u6B63\u5E38\u5237\u65B0\u8FD8\u6709")}</div><div class="delay-controls">${delayControl("weeklyResetDays", "\u6B63\u5E38\u5237\u65B0\u5269\u4F59\u5929\u6570", "\u5929", 7)}${delayControl("weeklyResetHours", "\u6B63\u5E38\u5237\u65B0\u5269\u4F59\u5C0F\u65F6", "\u5C0F\u65F6", 23)}</div></div>
     </fieldset>
   </div>`;
@@ -4893,8 +4929,8 @@ function renderInputs() {
 function markChanged() {
   manualDraft = true;
   calculationRun++;
-  setStatus("\u5DF2\u4FEE\u6539\uFF0C\u8BF7\u66F4\u65B0\u6570\u636E");
   $("#result").classList.add("stale");
+  if ($("#calculate")) $("#calculate").hidden = false;
   planner = updateUsagePlanner(planner, { type: "invalidate" });
   renderStrategyControls();
 }
@@ -4902,14 +4938,8 @@ function renderStrategyControls() {
   $("#strategy-controls").innerHTML = `<div class="control-heading"><h3 id="strategy-controls-title">${t("\u7528\u91CF\u7B56\u7565")}</h3><span class="instant-label">${t("\u5373\u65F6\u66F4\u65B0")}</span></div>${renderUsageStrategies({
     selected: planner.intent.usageStrategy,
     locale: language,
-    disabled: !planner.result?.available,
-    // Cautious / optimistic belong to keep available: show them right under it.
-    after: planner.intent.usageStrategy === "keep-available" ? { "keep-available": renderAvailabilityControls(
-      planner.result?.recommendation?.availability ? { ...planner.result.recommendation.availability, timeZone } : null,
-      { locale: language, mode: planner.intent.availabilityMode, alertsEnabled: planner.intent.alertsEnabled, disabled: !planner.result?.available },
-      escape2
-    ) } : {}
-  }, escape2)}`;
+    disabled: !planner.result?.available
+  }, escape2)}${forecastSource.available ? `<button type="button" class="no-reset-toggle" role="switch" data-toggle-forecast aria-checked="${!planner.intent.forecastEnabled}"${planner.result?.available ? "" : " disabled"} title="${escape2(t("\u6309\u4E0B\u540E\u9690\u85CF\u9884\u6D4B\u7684 reset\uFF0C\u6240\u6709\u7B56\u7565\u90FD\u6309\u6CA1\u6709\u989D\u5916 reset \u6765\u89C4\u5212\u3002"))}"><span class="switch-track" aria-hidden="true"><span class="switch-knob"></span></span>${escape2(t("\u5047\u8BBE\u6CA1\u6709 reset"))}</button>` : ""}`;
 }
 function saveInput() {
   if (plugin && !manualDraft) return;
@@ -4924,9 +4954,19 @@ function saveInput() {
   } catch {
   }
 }
-var round7 = (value) => Number(value.toFixed(1));
 var MOBILE_TIMELINE_WIDTH = 640;
-var BRAND_STAMP = '<div class="brand-stamp" aria-hidden="true"><span>\u221E</span> Codex4ever</div>';
+var BRAND_STAMP = `<div class="brand-stamp" aria-hidden="true"><span>${BRAND_MARK_SVG}</span> ${PRODUCT_DOMAIN}</div>`;
+function renderForecastCard(graph = null) {
+  const planningPrediction = activePlannerPrediction(planner), planningNow = new Date(planner.snapshot.now);
+  const forecastSummary = renderResetForecastSummary({
+    source: forecastSource,
+    prediction: planner.snapshot.prediction,
+    timeZone,
+    now: planningNow,
+    locale: language
+  });
+  $("#forecast").innerHTML = `<div class="forecast-control" ${planningPrediction ? `data-forecast-48-probability="${planningPrediction.next48Probability}"` : ""}><span>${t("\u989D\u5916\u91CD\u7F6E\u9884\u6D4B")}</span></div>${forecastSummary}${BRAND_STAMP}`;
+}
 function renderResult(availableWidth = $("#result").clientWidth) {
   const result = planner.result;
   if (!result) return;
@@ -4934,17 +4974,11 @@ function renderResult(availableWidth = $("#result").clientWidth) {
   $("#result").classList.remove("stale");
   const workspace = workspaceLayout(availableWidth);
   renderedWidth = workspace.width;
-  const forecastSummary = renderResetForecastSummary({
-    source: forecastSource,
-    prediction: planningPrediction,
-    timeZone,
-    now: planningNow,
-    locale: language
-  });
-  $("#forecast").innerHTML = `<div class="forecast-control" ${planningPrediction ? `data-forecast-48-probability="${planningPrediction.next48Probability}"` : ""}><span>${t("\u989D\u5916\u91CD\u7F6E\u9884\u6D4B")}</span><button type="button" data-toggle-forecast aria-pressed="${!!planningPrediction}" ${!forecastSource.available ? "disabled" : ""}>${t(planningPrediction ? "\u5DF2\u5F00\u542F" : "\u5DF2\u5173\u95ED")}</button></div>${forecastSummary}${BRAND_STAMP}`;
   renderStrategyControls();
   if (!result.available) {
+    renderForecastCard();
     $("#result").innerHTML = `<p class="empty-result">${escape2(diagnosticText(language, result.reason, "input"))}</p>`;
+    $("#method").innerHTML = "";
     return;
   }
   const graph = layoutStrategyTree(result, {
@@ -4956,22 +4990,24 @@ function renderResult(availableWidth = $("#result").clientWidth) {
     displayEndHours: planner.displayEndHours,
     locale: language
   });
-  const consumption = usageConsumptionSummary(result, { locale: language });
+  renderForecastCard(graph);
   const policyData = result.recommendation ? ` data-policy-search="${result.recommendation.method}"${result.recommendation.primary ? ' data-plan-basis="predicted-extra-resets-first"' : ""}` : "";
-  $("#result").innerHTML = `<section class="strategy-panel" aria-label="${t("\u7528\u91CF\u8BA1\u5212")}"${policyData} style="--panel-padding:${workspace.panelPadding}px">${graph.compact ? phoneSummary(graph, planningPrediction) : ""}<div class="pace-controls"><div data-current-consumption data-daily="${consumption.dailyPercent}"><span>${t("\u5F53\u524D\u65E5\u5747\u6D88\u8017 {daily}%", { daily: round7(consumption.dailyPercent) })}</span></div>
-    </div>
+  $("#result").innerHTML = `<section class="strategy-panel" aria-label="${t("\u7528\u91CF\u8BA1\u5212")}"${policyData} style="--panel-padding:${workspace.panelPadding}px">
     ${result.recommendation && !result.recommendation.primary ? `<div class="timeline-toolbar"><span>${t("\u82E5\u59CB\u7EC8\u6CA1\u6709\u989D\u5916\u91CD\u7F6E")}</span></div>` : ""}
     ${renderStrategyTree(graph, escape2)}
-    </section>
-    ${renderForecastMethod({ source: forecastSource, prediction: planningPrediction, result, timeZone, locale: language }, escape2)}`;
+    </section>`;
+  $("#method").innerHTML = renderForecastMethod({ source: forecastSource, prediction: planningPrediction, result, timeZone, locale: language }, escape2);
 }
-function phoneSummary(graph, prediction) {
-  const focus = prediction && graph.forecastFocus;
-  const cells = [
-    focus ? `<div data-summary="next-reset"><small>${escape2(t("\u4E0B\u6B21\u989D\u5916 reset"))}</small><strong>${escape2(focus.label)}</strong></div>` : "",
-    Number.isFinite(prediction?.next48Probability) ? `<div data-summary="next-48h"><small>${escape2(t("\u672A\u6765 48 \u5C0F\u65F6"))}</small><strong>${round7(prediction.next48Probability * 100)}%</strong></div>` : ""
-  ].filter(Boolean).join("");
-  return `<div class="phone-summary" data-phone-summary>${cells}<button type="button" data-edit-quota>${escape2(t("\u4FEE\u6539\u989D\u5EA6"))}</button>${BRAND_STAMP}</div>`;
+function busyDispatch(action) {
+  const host = $("#strategy-controls");
+  const run = () => {
+    dispatchPlanning(action);
+    saveInput();
+    host.removeAttribute?.("aria-busy");
+  };
+  if (typeof requestAnimationFrame !== "function") return run();
+  host.setAttribute("aria-busy", "true");
+  requestAnimationFrame(() => setTimeout(run, 0));
 }
 function dispatchPlanning(action) {
   planner = updateUsagePlanner(planner, action);
@@ -4996,7 +5032,6 @@ async function calculate2() {
   const run = ++calculationRun;
   $("#error").hidden = true;
   lastError = null;
-  setStatus("\u66F4\u65B0\u91CD\u7F6E\u8BC1\u636E\u2026");
   try {
     if (plugin && !manualDraft) {
       const update = await plugin.refresh({
@@ -5021,7 +5056,8 @@ async function calculate2() {
     forecastSource = publicForecast;
     planner = updateUsagePlanner(planner, { type: "new-snapshot", input, now, prediction: publicForecast.prediction });
     renderResult();
-    setStatus("\u5DF2\u8BA1\u7B97");
+    if ($("#calculate")) $("#calculate").hidden = true;
+    setStatus("");
     saveInput();
   } catch (error) {
     if (run !== calculationRun) return;
@@ -5082,6 +5118,13 @@ $("#inputs").addEventListener("click", (event) => {
   const button = event.target.closest("button");
   if (!button || !$("#inputs").contains(button)) return;
   const data = button.dataset;
+  if (data.delayStep === "weeklyRemaining") {
+    const current = Number.isFinite(input.weeklyRemaining) ? Math.round(input.weeklyRemaining) : 0;
+    input.weeklyRemaining = Math.max(0, Math.min(100, current + Number(data.delta)));
+    renderInputs();
+    markChanged();
+    return;
+  }
   if (data.delayStep) {
     const total = input.weeklyResetDays * 24 + input.weeklyResetHours + Number(data.delta) * (data.delayStep === "weeklyResetDays" ? 24 : 1);
     if (Number.isInteger(total) && total >= 1 && total <= 168) {
@@ -5111,11 +5154,21 @@ $("#inputs").addEventListener("click", (event) => {
   if (!data.monthNav && data.toggleCalendar === void 0) markChanged();
 });
 $("#calculate").addEventListener("click", calculate2);
-function handlePlanClick(event) {
-  if (event.target.closest("[data-edit-quota]")) {
-    document.querySelector(".input-state")?.scrollIntoView?.({ block: "start" });
-    return;
+$("#share-site")?.addEventListener?.("click", async () => {
+  const url = globalThis.location?.origin ? `${location.origin}/` : "https://usageplanner.com/";
+  try {
+    if (navigator.share) await navigator.share({ title: "Usage Planner", url });
+    else {
+      await navigator.clipboard.writeText(url);
+      $("#share-site").textContent = t("\u5DF2\u590D\u5236\u94FE\u63A5");
+      setTimeout(() => {
+        $("#share-site").textContent = t("\u5206\u4EAB");
+      }, 2e3);
+    }
+  } catch {
   }
+});
+function handlePlanClick(event) {
   if (!planner.result) return;
   const availability = event.target.closest("button[data-availability-mode]");
   if (availability) {
@@ -5123,20 +5176,13 @@ function handlePlanClick(event) {
     saveInput();
     return;
   }
-  if (event.target.closest("[data-toggle-pace-alerts]")) {
-    dispatchPlanning({ type: "toggle-alerts" });
-    saveInput();
-    return;
-  }
   const strategy = event.target.closest("[data-usage-strategy]");
   if (strategy) {
-    dispatchPlanning({ type: "set-strategy", strategy: strategy.dataset.usageStrategy });
-    saveInput();
+    busyDispatch({ type: "set-strategy", strategy: strategy.dataset.usageStrategy });
     return;
   }
   if (event.target.closest("[data-toggle-forecast]")) {
-    dispatchPlanning({ type: "toggle-forecast" });
-    saveInput();
+    busyDispatch({ type: "toggle-forecast" });
     return;
   }
   const assumptionButton = event.target.closest("[data-assume-reset]");
@@ -5201,5 +5247,7 @@ renderStaticLanguage();
 renderStrategyControls();
 $("#result").innerHTML = t("\u70B9\u51FB\u300C\u8BA1\u7B97\u7B56\u7565\u300D\u67E5\u770B\u7ED3\u679C\u3002");
 renderInputs();
+if (plugin && $("#plugin-hint")) $("#plugin-hint").hidden = true;
+if (plugin && $("#overuse-hint")) $("#overuse-hint").hidden = false;
 if (plugin) startPluginPage();
 else calculate2();

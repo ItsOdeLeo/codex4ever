@@ -80,7 +80,7 @@ test('显式timeZone优先于服务器本地时区，活动时区独立，错误
 test('独立预测命令默认取运行环境时区，也可用--time-zone显式指定远程用户时区', async () => {
   // Run the actual entry point in an isolated directory so its report cannot
   // overwrite the user's existing output/reset-prediction.json.
-  const directory = await mkdtemp(join(tmpdir(), 'codex4ever-time-zone-'));
+  const directory = await mkdtemp(join(tmpdir(), 'usage-planner-time-zone-'));
   try {
     await cp(new URL('../src', import.meta.url), join(directory, 'src'), { recursive: true });
     await mkdir(join(directory, 'scripts'));

@@ -2,6 +2,7 @@
 import { spawn } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { createInterface } from 'node:readline';
+import { plannerEnv } from './planner-name.js';
 
 const HOUR_MS = 3_600_000;
 const finite = value => typeof value === 'number' && Number.isFinite(value);
@@ -20,7 +21,7 @@ const BUNDLED_CODEX_CLI=['/Applications/ChatGPT.app/Contents/Resources/codex-cli
   '/Applications/Codex.app/Contents/Resources/codex'];
 
 export function defaultCodexCommand({env=process.env,exists=existsSync}={}) {
-  return env.CODEX4EVER_CODEX_CLI||env.CODEX_CLI_PATH||BUNDLED_CODEX_CLI.find(path=>exists(path))||'codex';
+  return plannerEnv('CODEX_CLI',env)||env.CODEX_CLI_PATH||BUNDLED_CODEX_CLI.find(path=>exists(path))||'codex';
 }
 
 export async function readCodexUsage({ command = defaultCodexCommand(), timeoutMs = 15_000 } = {}) {
@@ -55,7 +56,7 @@ export async function readCodexUsage({ command = defaultCodexCommand(), timeoutM
       }
     });
     send({ id: 1, method: 'initialize', params: {
-      clientInfo: { name: 'codex4ever', title: 'Codex4ever', version: '0.1.0' },
+      clientInfo: { name: 'usage-planner', title: 'Usage Planner', version: '0.1.0' },
       capabilities: null
     } });
   });

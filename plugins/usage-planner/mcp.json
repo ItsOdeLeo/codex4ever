@@ -1,10 +1,10 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
   "mcpServers": {
-    "codex4ever": {
+    "usage-planner": {
       "type": "stdio",
       "command": "node",
-      "args": ["${PLUGIN_ROOT}/server/codex4ever.mjs"],
+      "args": ["${PLUGIN_ROOT}/server/usage-planner.mjs"],
       "cwd": "${PLUGIN_ROOT}"
     }
   }

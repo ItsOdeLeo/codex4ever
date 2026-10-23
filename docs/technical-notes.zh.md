@@ -1,4 +1,4 @@
-# Codex4ever 技术说明
+# Usage Planner 技术说明
 
 面向开发者的设计与算法说明。使用方法、安装和数据来源见 [README](../README.md)。项目只有一套规划算法：`planUsagePath` → `recommendedUsagePath` → `searchResetPolicies` + `forecastFirstPlan`；网页、插件页面、MCP 和 CLI 共用同一默认规则（`DEFAULT_RECOMMENDATION_MODE`）。
 
@@ -167,12 +167,12 @@ Reset 展示使用同一个可复用组件 `src/components/reset-element.js`，�
 
 - 从 [公开 reset API](https://codex-resets.com/api/v1/resets?limit=100) 和 [状态 API](https://codex-resets.com/api/v1/status) 获取时间、类型、原始 X 链接和近期预告。只发备用和直接恢复额度严格区分；同时直接重置并发备用的记录算直接重置。
 - Tibo 帖子／回复及父帖语境：配置 X API token 时直接读官方时间线；否则只用 Codex Resets 记录里附带的帖子。**不使用任何外部 likelihood、分类分数或预测算法**。读取失败不能解释为“没有消息”。
-- 可选 `CODEX4EVER_X_BEARER_TOKEN` 直接读取 `@thsottiaux` 的 [X 用户时间线](https://docs.x.com/x-api/posts/timelines/introduction)，保留回复、排除转帖，并展开父帖。没有令牌时仍可使用公开记录与转载源；不保证完整时间线。
+- 可选 `USAGE_PLANNER_X_BEARER_TOKEN` 直接读取 `@thsottiaux` 的 [X 用户时间线](https://docs.x.com/x-api/posts/timelines/introduction)，保留回复、排除转帖，并展开父帖。没有令牌时仍可使用公开记录与转载源；不保证完整时间线。
 - 配置标准 LLM API 后用现有 `classifyTiboPosts` 分类回复与上下文；没有配置或调用失败时只采用保守的明确语句规则。模糊回复、猜测、否定不能变成已承诺的 reset。
 
 采集优先保留提到 reset 的帖子及带相关父帖语境的回复，避免被最近几条闲聊挤出分析范围。`latestResetMention` 返回最近相关帖子／回复的时间、原帖链接、父帖和分类；它也进入预测证据，页面在关键预测数据中直接显示原文摘要、链接与解析状态。分类置信度不作为重置概率；未识别的回复不会凭空增加概率。
 
-本地 `web`、`mcp` 和 `predict:reset` 入口读取私有 `.env.local` 中的 `CODEX4EVER_LLM_MODEL`、`CODEX4EVER_LLM_BASE_URL`、`CODEX4EVER_LLM_API_KEY`；进程环境优先，安装的 MCP 可通过 `CODEX4EVER_ENV_FILE` 指向自己的私有文件。`.env.example` 提供 Haiku 5.5 和 Anthropic 官方兼容接口示例，其他标准 `POST /v1/chat/completions` 服务仍可配置。配置文件不打包，密钥不进入浏览器、证据缓存或公开仓库。每次刷新最多分类4条新帖子、每条最多2048输出tokens，同内容按分类版本缓存；历史及帖子仍每次刷新。
+本地 `web`、`mcp` 和 `predict:reset` 入口读取私有 `.env.local` 中的 `USAGE_PLANNER_LLM_MODEL`、`USAGE_PLANNER_LLM_BASE_URL`、`USAGE_PLANNER_LLM_API_KEY`；进程环境优先，安装的 MCP 可通过 `USAGE_PLANNER_ENV_FILE` 指向自己的私有文件。`.env.example` 提供 Haiku 5.5 和 Anthropic 官方兼容接口示例，其他标准 `POST /v1/chat/completions` 服务仍可配置。配置文件不打包，密钥不进入浏览器、证据缓存或公开仓库。每次刷新最多分类4条新帖子、每条最多2048输出tokens，同内容按分类版本缓存；历史及帖子仍每次刷新。
 
 `src/reset-event-time.js` 统一校验 LLM、明确语句回退和宿主信号：`resetTiming` 区分 current/historical/unknown，`resetOccurredAt` 只记录正文明确的发生时间；没有具体时刻的新完成公告使用发帖时间作为 `announcement` 口径，并保留 `reportedAt`，不伪装成精确发生时间。JSON 可为纯对象或完整代码块，前后说明及截断输出仍拒绝。采集入库与独立预测入口都必须检查同一事件时间，否则绕过采集器的调用仍会把旧事当作新reset；这两处连接不改变概率拟合或用量规划，每条只增加常数次字符串/日期检查，不增加 API 调用。缓存键包含分类版本，修复前的内存分类不会继续沿用。
 

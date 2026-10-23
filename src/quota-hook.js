@@ -1,4 +1,4 @@
-// Codex hook entry (bundled as plugins/codex4ever/hooks/quota-check.mjs).
+// Codex hook entry (bundled as plugins/usage-planner/hooks/quota-check.mjs).
 // Prints hook JSON only when there is something to tell the user; always
 // exits 0 so a prompt is never blocked.
 import { runQuotaHook } from './usage-alert-hook.js';

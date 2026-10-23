@@ -4,7 +4,7 @@ import { startPlannerPage } from './local-planner-page.js';
 
 export async function startLocalMcp(createServer) {
   let root;
-  for(const relative of ['../web/','../plugins/codex4ever/web/']) {
+  for(const relative of ['../web/','../plugins/usage-planner/web/']) {
     const candidate=new URL(relative,import.meta.url);
     try {await access(new URL('index.html',candidate));root=candidate;break;}catch {/* Try development build. */}
   }

@@ -32,12 +32,12 @@ export async function runQuotaHook({event='UserPromptSubmit',file=defaultAlertFi
     if(result.status==='over-plan') {
       key=[settings.baseline.createdAt,Math.floor(Math.max(0,result.overPercent)/5),result.earlierHours!==null].join(':');
       notice=`${zh ? 'Codex 额度提醒' : 'Codex quota reminder'}：${result.message}`;
-      context=`Codex4ever quota reminder for the user (from their local quota, compared with their plan): ${result.message} `
+      context=`Usage Planner quota reminder for the user (from their local quota, compared with their plan): ${result.message} `
         +'Mention it in one short sentence at the start of your reply, in the user\'s language, then continue with their request.';
     } else if(['refilled','stale'].includes(result.status)) {
       key=`${settings.baseline.createdAt}:${result.status}`;
-      context='Codex4ever: the user\'s quota changed since their last plan (refill or plan ended), so quota reminders are paused. '
-        +'If convenient, call the codex4ever usage_alerts tool with action "check" once to replan; do not mention this otherwise.';
+      context='Usage Planner: the user\'s quota changed since their last plan (refill or plan ended), so quota reminders are paused. '
+        +'If convenient, call the usage-planner usage_alerts tool with action "check" once to replan; do not mention this otherwise.';
     }
     if(key&&key!==state.lastKey) {
       state.lastKey=key;

@@ -1,18 +1,18 @@
 {
-  "name": "codex4ever",
+  "name": "usage-planner",
   "version": "0.1.3",
   "private": true,
   "type": "module",
   "description": "A local Codex quota and reset planner with extra reset forecasts, banked reset planning, a web UI, CLI, and MCP server.",
   "license": "MIT",
   "author": "ItsOdeLeo (https://x.com/ItsOdeLeo)",
-  "homepage": "https://codex4ever.com",
+  "homepage": "https://usageplanner.com",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ItsOdeLeo/codex4ever.git"
+    "url": "git+https://github.com/ItsOdeLeo/usage-planner.git"
   },
   "bugs": {
-    "url": "https://github.com/ItsOdeLeo/codex4ever/issues"
+    "url": "https://github.com/ItsOdeLeo/usage-planner/issues"
   },
   "engines": {
     "node": ">=20"

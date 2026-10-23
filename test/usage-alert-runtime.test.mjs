@@ -12,7 +12,7 @@ const plan=()=>planUsagePath({input:{weeklyRemaining:40,weeklyResetDays:4,weekly
   now,timeZone:'UTC',averagePercentPerDay:20});
 
 test('开启后按计时器检查：超标才通知，同一程度只通知一次，更严重再通知；补满后重新规划',async()=>{
-  const file=join(tmpdir(),`codex4ever-alerts-${process.pid}-${Date.now()}.json`);
+  const file=join(tmpdir(),`usage-planner-alerts-${process.pid}-${Date.now()}.json`);
   let reading={readAt:at(6),timeZone:'UTC',weekly:{remainingPercent:35,resetAt:plan().normalResetAt}};
   const notes=[],timers=[];let replans=0;
   const alerts=createUsageAlerts({file,readSnapshot:async()=>reading,

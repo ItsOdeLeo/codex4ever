@@ -1,5 +1,6 @@
 /** OpenAI-compatible Chat Completions adapter. Prediction math stays in local-predictor.js. */
 import { normalizeResetSignalTime } from './reset-event-time.js';
+import { plannerEnv } from './planner-name.js';
 const KINDS = new Set(['reset_planned', 'reset_completed', 'reset_hint', 'banked_credit',
   'new_feature', 'irrelevant', 'unknown']);
 
@@ -14,9 +15,9 @@ function parseClassification(content) {
   } catch { throw new Error('LLM API 没有返回有效 JSON 分类'); }
 }
 
-export async function classifyTiboPosts(posts, { model = process.env.CODEX4EVER_LLM_MODEL,
-  baseUrl = process.env.CODEX4EVER_LLM_BASE_URL || 'https://api.openai.com/v1',
-  apiKey = process.env.CODEX4EVER_LLM_API_KEY, fetchImpl = fetch, timeoutMs = 30_000,
+export async function classifyTiboPosts(posts, { model = plannerEnv('LLM_MODEL'),
+  baseUrl = plannerEnv('LLM_BASE_URL') || 'https://api.openai.com/v1',
+  apiKey = plannerEnv('LLM_API_KEY'), fetchImpl = fetch, timeoutMs = 30_000,
   maxOutputTokens = 2048 } = {}) {
   if (typeof model !== 'string' || !model.trim()) throw new Error('需要指定 LLM 模型名称');
   if (!Array.isArray(posts) || posts.length > 20) throw new Error('一次最多分类 20 条帖子');

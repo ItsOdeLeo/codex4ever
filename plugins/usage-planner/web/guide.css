@@ -22,6 +22,7 @@
   --ink:var(--pool-black);
   --muted:var(--pool-charcoal);
   --border:var(--pool-black);
+  --divider:var(--border);
   --highlight:var(--pool-white);
   --shadow:var(--pool-black);
   --accent:var(--pool-mint);
@@ -49,7 +50,7 @@
   --warning-text:var(--pool-black);
   --bank-surface:var(--pool-yellow);
   --bank-border:var(--pool-black);
-  --danger:var(--pool-red);
+  --danger:var(--pool-rose-deep);
   --danger-deep:var(--pool-black);
   --danger-text:var(--pool-black);
   --danger-surface:var(--pool-pink);
@@ -259,7 +260,7 @@ legend {
 .calendar-field {
   position: relative;
   padding-bottom: 18px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--divider);
 }
 .simple-fields {
   display: grid;
@@ -441,27 +442,6 @@ legend {
   white-space: nowrap;
   color: var(--muted);
 }
-.availability-controls {
-  display: grid;
-  gap: 8px;
-  margin-top: 12px;
-}
-.availability-controls > small {
-  font-size: 11px;
-  line-height: 1.5;
-  color: var(--muted);
-}
-.availability-controls > button {
-  justify-self: start;
-}
-.availability-controls > p {
-  margin: 0;
-  font-size: 12px;
-  line-height: 1.5;
-}
-.availability-controls .availability-alert {
-  color: var(--danger-text);
-}
 #status {
   font-size: 11px;
   color: var(--muted);
@@ -522,7 +502,7 @@ legend {
 }
 .forecast-summary dl > div {
   padding: 13px 0;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--divider);
 }
 .forecast-summary dt {
   font-size: 11px;
@@ -629,7 +609,7 @@ legend {
   align-items: center;
   margin: 0 0 12px;
   padding-top: 16px;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--divider);
   font-size: 12px;
   font-weight: 550;
   color: var(--muted);
@@ -817,7 +797,7 @@ legend {
   background: var(--accent-soft) !important;
 }
 .graph-alternative {
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--divider);
 }
 .graph-alternative strong {
   font-weight: 500;
@@ -956,7 +936,7 @@ legend {
 }
 .calculation-notes {
   margin-top: 22px;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--divider);
   padding-top: 13px;
 }
 .calculation-notes summary {
@@ -1140,6 +1120,11 @@ footer {
   .strategy-panel {
     border-radius: 11px;
   }
+}
+.pixel-mark {
+  display: block;
+  width: 76%;
+  height: auto;
 }
 
 /* src/components/reset-element.css */
@@ -1421,7 +1406,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 .site-header {
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--divider);
   padding-bottom: 16px;
 }
 h1 {
@@ -1537,7 +1522,7 @@ h1 {
 }
 .forecast-control {
   color: var(--ink);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--divider);
   padding-bottom: 10px;
 }
 .forecast-summary dl > div {
@@ -1601,7 +1586,7 @@ input[type=number],
   background: var(--accent-soft);
 }
 .calendar-field {
-  border-bottom-color: var(--pool-edge);
+  border-bottom-color: var(--divider);
 }
 .calendar-summary button {
   background: var(--bank-surface);
@@ -1649,7 +1634,7 @@ input[type=number],
   box-shadow: inset 1px 1px 0 var(--highlight);
 }
 .timeline-toolbar {
-  border-top-color: var(--pool-edge);
+  border-top-color: var(--divider);
 }
 .tree-scroll {
   scrollbar-color: var(--pool-edge) transparent;
@@ -1861,12 +1846,9 @@ footer a {
   border-color: var(--ink);
 }
 .graph-node .deadline-warning {
-  color: var(--danger-text);
+  color: var(--danger);
   font-weight: 650;
-  text-decoration: underline;
-  text-decoration-color: var(--danger);
-  text-decoration-thickness: 2px;
-  text-underline-offset: 3px;
+  text-decoration: none;
 }
 .graph-depletion {
   border-bottom-color: var(--danger);
@@ -1944,7 +1926,7 @@ footer a {
   vertical-align: 1px;
 }
 .calculation-notes {
-  border-top-color: var(--pool-edge);
+  border-top-color: var(--divider);
 }
 .forecast-method {
   margin-top: 20px;
@@ -2089,7 +2071,7 @@ summary:focus-visible,
   letter-spacing: -.2px;
 }
 .phase-controls[data-quota-label][data-phase-daily="0"] > strong {
-  color: var(--pool-red-ink);
+  color: var(--danger);
 }
 .brand {
   align-items: flex-start;
@@ -2114,7 +2096,7 @@ footer {
   line-height: 1.8;
   margin-top: 32px;
   padding-top: 14px;
-  border-top: 1px solid var(--pool-edge);
+  border-top: 1px solid var(--divider);
 }
 .instant-label {
   display: none;
@@ -2124,7 +2106,7 @@ footer {
 }
 .forecast-more {
   margin-top: 4px;
-  border-top: 1px solid var(--pool-edge);
+  border-top: 1px solid var(--divider);
   padding-top: 10px;
 }
 .forecast-more > summary {
@@ -2226,7 +2208,7 @@ footer {
   align-items: baseline;
   gap: 12px;
   padding: 7px 0 !important;
-  border-bottom: 1px dotted var(--pool-edge) !important;
+  border-bottom: 1px dotted var(--divider) !important;
 }
 .forecast-glance > div:last-child {
   border-bottom: 0 !important;
@@ -2393,22 +2375,22 @@ footer {
   line-height: 15px;
 }
 .forecast-control {
-  border-bottom: 1px solid var(--pool-edge);
+  border-bottom: 1px solid var(--divider);
 }
 .forecast-glance > div {
-  border-bottom: 1px solid var(--pool-edge) !important;
+  border-bottom: 1px solid var(--divider) !important;
 }
 .forecast-more {
-  border-top: 1px solid var(--pool-edge);
+  border-top: 1px solid var(--divider);
 }
 .calendar-field {
-  border-bottom: 1px solid var(--pool-edge);
+  border-bottom: 1px solid var(--divider);
 }
 .timeline-toolbar {
-  border-top: 1px solid var(--pool-edge);
+  border-top: 1px solid var(--divider);
 }
 #inputs {
-  border-bottom: 1px solid var(--pool-edge);
+  border-bottom: 1px solid var(--divider);
 }
 #inputs {
   padding: 14px 16px;
@@ -2430,11 +2412,6 @@ legend {
 }
 .simple-fields {
   gap: 8px;
-}
-.usage-strategies .availability-controls {
-  margin: 2px 0 6px 14px;
-  padding-left: 10px;
-  border-left: 1px solid var(--pool-edge);
 }
 .forecast-glance > [data-forecast-glance=next-hours] {
   flex-direction: column;
@@ -2468,6 +2445,715 @@ legend {
 }
 .forecast-horizons span:nth-child(2) {
   align-items: center;
+}
+.layout {
+  display: block;
+}
+.plan-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  box-shadow: 3px 3px 0 color-mix(in srgb, var(--shadow) 18%, transparent);
+  padding: 24px;
+}
+.plan-card .strategy-panel {
+  border: 0;
+  box-shadow: none;
+  background: none;
+  padding: 0;
+}
+.plan-dock {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--divider);
+}
+.plan-card #strategy-controls .control-heading {
+  display: none;
+}
+.plan-card .usage-strategies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.plan-card .usage-strategies button {
+  display: block;
+  padding: 7px 12px;
+}
+.plan-dock .input-state {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px 20px;
+}
+.plan-dock #inputs {
+  border: 0;
+  box-shadow: none;
+  background: none;
+  padding: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.plan-dock .compact-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 12px 28px;
+}
+.plan-dock .compact-form fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.plan-dock .input-update {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+.plan-dock-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+}
+.plugin-hint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+.plugin-hint a {
+  color: var(--ink);
+}
+.plan-dock-footer .brand-stamp {
+  margin-top: 0;
+}
+#method:empty {
+  display: none;
+}
+#method {
+  margin-top: 16px;
+}
+@media (max-width: 680px) {
+  .plan-card {
+    padding: 14px;
+  }
+  .plan-dock .input-state {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+.plan-dock .toolbar {
+  order: 1;
+}
+.plan-dock .input-state {
+  order: 2;
+}
+.plan-dock-footer {
+  order: 3;
+}
+.plan-card #strategy-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 6px;
+}
+.plan-dock #inputs {
+  flex: 0 1 auto;
+}
+.plan-dock .input-update {
+  align-self: flex-end;
+  margin-bottom: 6px;
+}
+@media (max-width: 680px) {
+  .plan-dock .input-update {
+    align-self: flex-start;
+  }
+}
+.no-reset-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 8px;
+  padding: 6px 4px;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  font-size: 13px;
+  color: var(--ink);
+  cursor: pointer;
+}
+.no-reset-toggle:hover:not(:disabled) {
+  background: none;
+}
+.switch-track {
+  position: relative;
+  flex: none;
+  width: 34px;
+  height: 18px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: var(--surface-soft);
+  box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--shadow) 18%, transparent);
+}
+.switch-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  background: var(--surface);
+  box-shadow: 1px 1px 0 var(--border);
+  transition: left .15s ease;
+}
+.no-reset-toggle[aria-checked=true] .switch-track {
+  background: var(--accent);
+}
+.no-reset-toggle[aria-checked=true] .switch-knob {
+  left: 18px;
+}
+.no-reset-toggle:focus-visible .switch-track {
+  outline: 2px solid var(--border);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .switch-knob {
+    transition: none;
+  }
+}
+.plan-card .timeline-toolbar {
+  border-top: 0;
+  padding-top: 4px;
+}
+@media (max-width: 680px) {
+  .no-reset-toggle {
+    margin-left: 0;
+  }
+}
+.plan-card > .toolbar {
+  margin-bottom: 18px;
+}
+@media (max-width: 680px) {
+  .plan-card .forecast-glance > [data-forecast-glance=next-hours] > dd {
+    flex: 1;
+    min-width: 0;
+  }
+  .plan-card .forecast-horizons {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .plan-card .forecast-horizons span,
+  .plan-card .forecast-horizons span:nth-child(n) {
+    min-width: 0;
+    padding: 6px 8px;
+  }
+  .plan-card .forecast-horizons small {
+    font-size: 10px;
+    white-space: normal;
+  }
+  .plan-card .forecast-horizons b {
+    font-size: 16px;
+  }
+}
+@media (max-width: 680px) {
+  .plan-card .forecast-more > dl > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    padding: 4px 0 !important;
+  }
+}
+.plan-dock {
+  --field-label-height:18px;
+  --field-control-height:36px;
+}
+.plan-dock .input-state {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 14px 28px;
+}
+.plan-dock .compact-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 14px 28px;
+}
+.plan-dock .compact-form fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+.plan-dock .calendar-field > legend,
+.plan-dock .simple-fields label,
+.plan-dock .refresh-label {
+  float: none;
+  display: block;
+  height: var(--field-label-height);
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: var(--field-label-height);
+  color: var(--muted);
+}
+.plan-dock .calendar-field > legend {
+  margin-bottom: 6px;
+}
+.plan-dock .reset-actions {
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--field-control-height);
+}
+.plan-dock .calendar-summary button,
+.plan-dock [data-toggle-calendar] {
+  height: var(--field-control-height);
+  padding: 0 10px;
+}
+.plan-dock .compact-form fieldset.simple-fields {
+  display: grid;
+  justify-items: start;
+  grid-template-columns: auto auto;
+  grid-template-rows: var(--field-label-height) var(--field-control-height);
+  column-gap: 28px;
+  row-gap: 6px;
+  align-items: center;
+}
+.plan-dock .simple-fields > legend {
+  display: none;
+}
+.plan-dock .simple-fields > label {
+  grid-row: 1;
+  grid-column: 1;
+}
+.plan-dock .simple-fields > .delay-control {
+  grid-row: 2;
+  grid-column: 1;
+}
+.plan-dock .refresh-row {
+  display: contents;
+}
+.plan-dock .refresh-row > .refresh-label {
+  grid-row: 1;
+  grid-column: 2;
+}
+.plan-dock .refresh-row > .delay-controls {
+  grid-row: 2;
+  grid-column: 2;
+}
+.plan-dock .delay-control {
+  height: var(--field-control-height);
+}
+.plan-dock .input-update {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  align-self: flex-end;
+  margin: 0;
+}
+.plan-dock .input-update #calculate {
+  height: var(--field-control-height);
+  padding: 0 14px;
+  font-size: 12px;
+}
+@media (max-width: 680px) {
+  .plan-dock .compact-form fieldset.simple-fields {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+  }
+  .plan-dock .simple-fields > label {
+    grid-row: 1;
+  }
+  .plan-dock .simple-fields > .delay-control {
+    grid-row: 2;
+  }
+  .plan-dock .refresh-row > .refresh-label {
+    grid-row: 3;
+    grid-column: 1;
+  }
+  .plan-dock .refresh-row > .delay-controls {
+    grid-row: 4;
+    grid-column: 1;
+  }
+  .plan-dock .simple-fields > label,
+  .plan-dock .refresh-label {
+    height: auto;
+  }
+  .plan-dock .input-update {
+    align-self: flex-start;
+  }
+}
+.plan-dock .delay-control button {
+  padding: 0 7px;
+}
+.plan-dock .delay-control input[type=number] {
+  width: 32px;
+}
+.plan-dock .delay-control span {
+  padding-right: 2px;
+}
+.plan-dock .input-update {
+  flex-wrap: nowrap;
+}
+.plan-dock .input-update #status {
+  flex: 0 1 auto;
+  white-space: nowrap;
+}
+.result-stage {
+  position: relative;
+}
+.refresh-overlay {
+  position: absolute;
+  z-index: 6;
+  top: min(40%, 240px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--accent);
+  color: var(--ink);
+  box-shadow: 3px 3px 0 var(--border);
+  cursor: pointer;
+}
+.refresh-overlay:hover:not(:disabled) {
+  background: var(--accent);
+}
+.refresh-overlay:active {
+  transform: translate(calc(-50% + 2px), 2px);
+  box-shadow: 1px 1px 0 var(--border);
+}
+.refresh-overlay[hidden] {
+  display: none;
+}
+.no-reset-toggle:disabled {
+  opacity: .45;
+  cursor: default;
+}
+@media (min-width: 1180px) {
+  .plan-card {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr);
+    grid-template-rows: auto auto auto auto 1fr;
+    gap: 18px 24px;
+    align-items: start;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+  }
+  .plan-card > #error {
+    grid-column: 1/-1;
+    grid-row: 1;
+  }
+  .plan-card > #forecast,
+  .plan-card > .toolbar,
+  .plan-card > .plan-dock,
+  .plan-card > .result-stage {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    box-shadow: 3px 3px 0 color-mix(in srgb, var(--shadow) 18%, transparent);
+    padding: 18px 20px;
+  }
+  .plan-card > #forecast.forecast-panel {
+    grid-column: 1;
+    grid-row: 2;
+    margin: 0;
+    padding: 18px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    box-shadow: 3px 3px 0 color-mix(in srgb, var(--shadow) 18%, transparent);
+  }
+  .plan-card > .toolbar {
+    grid-column: 1;
+    grid-row: 3;
+    margin: 0;
+  }
+  .plan-card > .plan-dock {
+    grid-column: 1;
+    grid-row: 4;
+    margin: 0;
+  }
+  .plan-card > .result-stage {
+    grid-column: 2;
+    grid-row: 2/-1;
+    align-self: stretch;
+    min-width: 0;
+    padding: 24px;
+  }
+  .plan-card #strategy-controls {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    align-items: center;
+  }
+  .plan-card .usage-strategies {
+    display: contents;
+  }
+  .plan-card .usage-strategies button {
+    width: 100%;
+    text-align: center;
+  }
+  .plan-card .no-reset-toggle {
+    margin: 0;
+    padding: 0 4px;
+    font-size: 12px;
+  }
+  .plan-dock .input-state,
+  .plan-dock .compact-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .plan-dock .compact-form fieldset.simple-fields {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+  }
+  .plan-dock .simple-fields > label {
+    grid-row: 1;
+  }
+  .plan-dock .simple-fields > .delay-control {
+    grid-row: 2;
+  }
+  .plan-dock .refresh-row > .refresh-label {
+    grid-row: 3;
+    grid-column: 1;
+  }
+  .plan-dock .refresh-row > .delay-controls {
+    grid-row: 4;
+    grid-column: 1;
+  }
+  .plan-dock .reset-actions {
+    flex-wrap: wrap;
+  }
+  .plan-dock-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+.footer-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  font: inherit;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--link-stroke);
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.footer-link:hover:not(:disabled) {
+  background: none;
+}
+@media (min-width: 1180px) {
+  .plan-card .no-reset-toggle {
+    white-space: nowrap;
+    gap: 6px;
+  }
+}
+@media (max-width: 1179px) {
+  .plan-card #forecast.forecast-panel {
+    border: 0;
+    box-shadow: none;
+    background: none;
+    padding: 0 0 12px;
+    margin: 0 0 16px;
+    border-bottom: 1px solid var(--divider);
+    border-radius: 0;
+  }
+  .plan-card .forecast-control {
+    display: none;
+  }
+  .plan-card .forecast-glance {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 22px;
+    margin: 0;
+  }
+  .plan-card .forecast-glance > div,
+  .plan-card .forecast-glance > [data-forecast-glance=next-hours] {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline !important;
+    gap: 6px;
+    padding: 0 !important;
+    border: 0 !important;
+  }
+  .plan-card .forecast-glance dt {
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .plan-card .forecast-glance dd {
+    margin: 0;
+    font-size: 12px;
+  }
+  .plan-card .forecast-horizons {
+    display: flex;
+    gap: 10px;
+  }
+  .plan-card .forecast-horizons b {
+    font-size: 14px;
+    line-height: 18px;
+  }
+  .plan-card .forecast-horizons span,
+  .plan-card .forecast-horizons span:nth-child(n) {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 4px;
+  }
+  .plan-card .forecast-more {
+    margin-top: 6px;
+    font-size: 11px;
+  }
+  .plan-card .forecast-more summary {
+    color: var(--muted);
+  }
+  .plan-card .forecast-more[open] {
+    padding: 8px 0;
+  }
+  .plan-card .forecast-horizons span,
+  .plan-card .forecast-glance dd {
+    white-space: nowrap;
+  }
+  .plan-card .forecast-glance > [data-forecast-glance=next-hours],
+  .plan-card .forecast-horizons {
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+  .plan-card .forecast-glance > div:not([data-forecast-glance=next-hours]) {
+    display: none !important;
+  }
+  .plan-card .forecast-glance > [data-forecast-glance=next-hours] {
+    align-items: center !important;
+    gap: 12px;
+  }
+  .plan-card .forecast-glance > [data-forecast-glance=next-hours] > dt {
+    font-size: 12px;
+  }
+  .plan-card .forecast-horizons {
+    gap: 8px;
+  }
+  .plan-card .forecast-horizons span,
+  .plan-card .forecast-horizons span:nth-child(n) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1px;
+    min-width: 84px;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--surface-soft);
+  }
+  .plan-card .forecast-horizons small {
+    font-size: 11px;
+  }
+  .plan-card .forecast-horizons b {
+    font-size: 18px;
+    line-height: 22px;
+  }
+  .plan-card .forecast-glance > [data-forecast-glance=next-hours] > dt {
+    display: none;
+  }
+  .plan-card .forecast-more {
+    border-top: 0;
+    margin-top: 8px;
+    padding-top: 0;
+  }
+  .plan-card .forecast-more > dl > div {
+    display: grid;
+    grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+    gap: 2px 14px;
+    align-items: baseline;
+    padding: 3px 0 !important;
+    border: 0 !important;
+  }
+  .plan-card .forecast-more dt {
+    margin: 0;
+    font-size: 12px;
+  }
+  .plan-card .forecast-more dd {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .plan-card .forecast-more dd small {
+    display: inline;
+    margin: 0 0 0 6px;
+    font-size: 11px;
+  }
+  .plan-card .forecast-more dd q {
+    -webkit-line-clamp: 1;
+    margin-top: 2px;
+    font-size: 11px;
+  }
+  .plan-card .forecast-more > p {
+    margin: 6px 0 0;
+  }
+  .plan-card #forecast {
+    position: relative;
+  }
+  .plan-card #forecast > .brand-stamp {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+  }
+  .forecast-horizons .horizon-short {
+    display: none;
+  }
+}
+@media (min-width: 1180px) {
+  .forecast-horizons .horizon-long {
+    display: none;
+  }
+}
+#strategy-controls[aria-busy=true] .switch-knob {
+  animation: busy-turn .8s steps(8) infinite;
+}
+#strategy-controls[aria-busy=true] {
+  cursor: progress;
+}
+@keyframes busy-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #strategy-controls[aria-busy=true] .switch-knob {
+    animation: none;
+    background: var(--accent);
+  }
+}
+@media (min-width: 1180px) {
+  .forecast-horizons:has([data-forecast-horizon=announced]) {
+    display: block;
+  }
+  .forecast-horizons [data-forecast-horizon=announced] {
+    align-items: flex-start !important;
+  }
+  .forecast-horizons [data-forecast-horizon=announced] small {
+    display: none;
+  }
 }
 
 /* src/styles/theme.css */

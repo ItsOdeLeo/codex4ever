@@ -13,7 +13,7 @@ const baseline=alertBaseline(planUsagePath({input:{weeklyRemaining:40,weeklyRese
   now:start,timeZone:'UTC',averagePercentPerDay:20}));
 
 test('Codex hook：未开启时静默；超标时在 Codex 中提醒一次，并把提醒交给 Codex 转述',async()=>{
-  const dir=await mkdtemp(join(tmpdir(),'codex4ever-hook-')),file=join(dir,'alerts.json');
+  const dir=await mkdtemp(join(tmpdir(),'usage-planner-hook-')),file=join(dir,'alerts.json');
   let remaining=28,clock=at(6);
   const run=()=>runQuotaHook({event:'UserPromptSubmit',file,now:()=>clock,
     readSnapshot:async time=>({readAt:time.toISOString(),weekly:{remainingPercent:remaining,resetAt:baseline.normalResetAt}})});

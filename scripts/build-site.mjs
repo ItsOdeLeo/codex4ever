@@ -7,6 +7,7 @@ import { collectLiveResetEvidence } from '../src/live-reset-evidence.js';
 import { loadLocalLLMEnvironment } from '../src/local-llm-environment.js';
 import { publicSiteOrigin } from '../src/site-seo.js';
 import { buildStaticSite,root } from './static-site.mjs';
+import { plannerEnv } from '../src/planner-name.js';
 
 await loadLocalLLMEnvironment();
 const siteUrl=publicSiteOrigin(process.env.PUBLIC_SITE_URL);
@@ -17,7 +18,7 @@ const fallbackArchive=JSON.parse(await readFile(resolve(root,'experiments/public
 // Post classifications persist between builds (CI restores this file with
 // actions/cache), so only new or edited posts reach the LLM. Keys include the
 // classifier version, model and post text, so stale entries never match.
-const cacheFile=resolve(root,process.env.CODEX4EVER_CLASSIFICATION_CACHE||'.cache/classifications.json');
+const cacheFile=resolve(root,plannerEnv('CLASSIFICATION_CACHE')||'.cache/classifications.json');
 let classificationCache;
 try {classificationCache=new Map(JSON.parse(await readFile(cacheFile,'utf8')));}
 catch {classificationCache=new Map();}

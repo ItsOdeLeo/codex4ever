@@ -1,14 +1,14 @@
 {
-  "name": "codex4ever",
+  "name": "usage-planner",
   "interface": {
-    "displayName": "Codex4ever"
+    "displayName": "Usage Planner"
   },
   "plugins": [
     {
-      "name": "codex4ever",
+      "name": "usage-planner",
       "source": {
         "source": "local",
-        "path": "./plugins/codex4ever"
+        "path": "./plugins/usage-planner"
       },
       "policy": {
         "installation": "AVAILABLE",

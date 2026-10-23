@@ -15,6 +15,7 @@ import { DEFAULT_RECOMMENDATION_MODE } from './recommended-usage-path.js';
 import { createUsageAlerts } from './usage-alert-runtime.js';
 import { installQuotaHook,uninstallQuotaHook } from './codex-hook-install.js';
 import { readCodexUsage, normalizeCodexUsage, estimateUsagePace } from './codex-usage.js';
+import { plannerEnv } from './planner-name.js';
 
 const postSchema = z.object({
   createdAt: z.string().describe('帖子发布时间，ISO 8601'),
@@ -83,9 +84,9 @@ async function forecast(evidence, classifyPosts) {
   })) };
 }
 
-export function createCodex4everServer({ collectEvidence = collectLiveResetEvidence,readUsage=readCodexUsage,clock=()=>new Date(),plannerPage=null,
+export function createUsagePlannerServer({ collectEvidence = collectLiveResetEvidence,readUsage=readCodexUsage,clock=()=>new Date(),plannerPage=null,
   alertOptions={},startAlerts=plannerPage!==null } = {}) {
-  const server = new McpServer({ name: 'codex4ever', version: '0.1.2' });
+  const server = new McpServer({ name: 'usage-planner', version: '0.1.2' });
   const classificationCache = new Map();
   let lastPlanArguments=null;
   // Opt-in quota reminders run inside this MCP while Codex keeps it running.
@@ -126,7 +127,7 @@ export function createCodex4everServer({ collectEvidence = collectLiveResetEvide
     if(read.isError)throw new Error(read.content[0].text);
     const usageSnapshot=read.structuredContent.usageSnapshot;
     const collected=forecastEnabled ? await getResetEvidence({now:usageSnapshot.readAt,timeZone:usageSnapshot.timeZone,
-      classifyPosts:!!process.env.CODEX4EVER_LLM_MODEL}) : null;
+      classifyPosts:!!plannerEnv('LLM_MODEL')}) : null;
     if(collected?.isError)throw new Error(collected.content[0].text);
     const evidence=collected?.structuredContent.evidence;
     // Preserve host analysis only for exactly the same post and parent context.
@@ -287,16 +288,16 @@ export function createCodex4everServer({ collectEvidence = collectLiveResetEvide
   }
   server.registerTool('predict_reset', {
     title: '预测额外 reset',
-    description: '用公开自动 reset 历史和可选 Tibo 帖子估计今天及未来 48 小时发生额外 reset 的概率。未校准，不代表个人账户一定恢复。classifyPosts=true 时只将未分类帖子送到 CODEX4EVER_LLM_BASE_URL 指定的标准 Chat Completions API。',
+    description: '用公开自动 reset 历史和可选 Tibo 帖子估计今天及未来 48 小时发生额外 reset 的概率。未校准，不代表个人账户一定恢复。classifyPosts=true 时只将未分类帖子送到 USAGE_PLANNER_LLM_BASE_URL 指定的标准 Chat Completions API。',
     inputSchema: z.object({ evidence: evidenceSchema,
-      classifyPosts: z.boolean().optional().describe('是否用 LLM 分类未带 signal 的帖子；需要 CODEX4EVER_LLM_MODEL 环境变量') })
+      classifyPosts: z.boolean().optional().describe('是否用 LLM 分类未带 signal 的帖子；需要 USAGE_PLANNER_LLM_MODEL 环境变量') })
   }, async ({ evidence, classifyPosts = false }) => {
     try { return reply(await forecast(evidence, classifyPosts)); }
     catch (error) { return failure(error); }
   });
   async function bundledHookScript() {
     // Installed plugin: server/ beside hooks/. Source checkout: the plugin build.
-    for(const relative of ['../hooks/quota-check.mjs','../plugins/codex4ever/hooks/quota-check.mjs']) {
+    for(const relative of ['../hooks/quota-check.mjs','../plugins/usage-planner/hooks/quota-check.mjs']) {
       const candidate=new URL(relative,import.meta.url);
       try {await access(candidate);return candidate;}catch {/* Try the next layout. */}
     }
@@ -307,7 +308,7 @@ export function createCodex4everServer({ collectEvidence = collectLiveResetEvide
     if(read.isError)throw new Error(read.content[0].text);
     const usageSnapshot=read.structuredContent.usageSnapshot;
     const collected=await getResetEvidence({now:usageSnapshot.readAt,timeZone:usageSnapshot.timeZone,
-      classifyPosts:!!process.env.CODEX4EVER_LLM_MODEL});
+      classifyPosts:!!plannerEnv('LLM_MODEL')});
     const response=await planUsageStrategy({...lastPlanArguments,input:undefined,usageSnapshot,
       now:usageSnapshot.readAt,timeZone:usageSnapshot.timeZone,language:language??lastPlanArguments?.language??'zh-CN',
       evidence:collected.isError ? undefined : collected.structuredContent.evidence,
@@ -316,7 +317,7 @@ export function createCodex4everServer({ collectEvidence = collectLiveResetEvide
   }
   server.registerTool('usage_alerts',{
     title:'Overuse alerts: warn when usage runs ahead of the plan',
-    description:'开启、关闭、查看或立即检查额度提醒。开启时会在 ~/.codex/hooks.json 添加 codex4ever 自己的一条 hook（只增删自己的条目，关闭时删除），并需用户在 Codex 中批准一次；调用前向用户说明这一点。开启后，插件的 Codex hook 在用户发消息前（最多每 10 分钟一次）读取本机额度（只读，不消耗 Codex 用量），'
+    description:'开启、关闭、查看或立即检查额度提醒。开启时会在 ~/.codex/hooks.json 添加 usage-planner 自己的一条 hook（只增删自己的条目，关闭时删除），并需用户在 Codex 中批准一次；调用前向用户说明这一点。开启后，插件的 Codex hook 在用户发消息前（最多每 10 分钟一次）读取本机额度（只读，不消耗 Codex 用量），'
       +'与最近一次计划比较：比计划多用至少 5% 周额度，或按当前速度会比计划提前 20% 以上用完时，直接在 Codex 中显示提醒并给出回到计划所需的日均用量；systemNotifications=true 时另按间隔弹出系统通知。'
       +'发生补满时自动按同一规则重新规划。用户说“打开用量过度提醒”“打开额度提醒”“turn on overuse alerts”“关掉提醒”“现在检查一下”时调用。',
     annotations:{readOnlyHint:false,destructiveHint:false,openWorldHint:true},
@@ -330,7 +331,7 @@ export function createCodex4everServer({ collectEvidence = collectLiveResetEvide
         const check=await alerts.enable({intervalMinutes,language,timeZone,systemNotifications});
         const hook=await installQuotaHook({scriptSource:await bundledHookScript()});
         return reply({enabled:true,check,status:await alerts.status(),codexHook:{...hook,
-          nextStep:'Codex 需要用户批准一次这个 hook：若没有自动提示，请在 Codex 中打开 /hooks，把 codex4ever 的额度提醒设为信任。之后提醒会直接显示在 Codex 里。'}});
+          nextStep:'Codex 需要用户批准一次这个 hook：若没有自动提示，请在 Codex 中打开 /hooks，把 usage-planner 的额度提醒设为信任。之后提醒会直接显示在 Codex 里。'}});
       }
       if(action==='disable') {
         await alerts.disable();
@@ -347,5 +348,5 @@ if (process.argv[1] && import.meta.url === pathToFileURL(await realpath(process.
   const {loadLocalLLMEnvironment}=await import('./local-llm-environment.js');
   await loadLocalLLMEnvironment();
   const {startLocalMcp}=await import('./local-mcp-runtime.js');
-  await startLocalMcp(createCodex4everServer);
+  await startLocalMcp(createUsagePlannerServer);
 }

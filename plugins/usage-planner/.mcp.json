@@ -1,10 +1,10 @@
 {
   "mcpServers": {
-    "codex4ever": {
+    "usage-planner": {
       "type": "stdio",
       "command": "node",
       "args": [
-        "${PLUGIN_ROOT}/server/codex4ever.mjs"
+        "${PLUGIN_ROOT}/server/usage-planner.mjs"
       ],
       "cwd": "${PLUGIN_ROOT}"
     }

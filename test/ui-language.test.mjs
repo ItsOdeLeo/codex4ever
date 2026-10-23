@@ -47,7 +47,7 @@ test('整页切换中英不重新抓取或改变分支，记住语言，英文�
     await import('../src/web.js?language-integration');
     await new Promise(resolve=>setImmediate(resolve));
     assert.equal(html.attributes.lang,'en');
-    assert.equal(document.title,'Codex4ever | Codex Quota & Reset Planner');
+    assert.equal(document.title,'Usage Planner | Codex Quota & Reset Planner');
     assert.match(element('meta[name="description"]').attributes.content,/Plan OpenAI Codex usage/);
     assert.equal(element('#planner-guide').attributes.href,'/guide/');
     assert.equal(element('[data-follow-label]').textContent,'If you like this work:');
@@ -88,7 +88,7 @@ test('整页切换中英不重新抓取或改变分支，记住语言，英文�
     const chosen=fingerprint();
     language('zh-CN');
     assert.equal(html.attributes.lang,'zh-CN');
-    assert.equal(document.title,'Codex4ever | Codex 额度与 Reset 用量规划');
+    assert.equal(document.title,'Usage Planner | Codex 额度与 Reset 用量规划');
     assert.match(element('meta[name="description"]').attributes.content,/根据 Codex 剩余额度/);
     assert.equal(element('#planner-guide').attributes.href,'/zh/guide/');
     assert.equal(element('[data-follow-label]').textContent,'如果你喜欢这个作品：');
@@ -104,7 +104,7 @@ test('整页切换中英不重新抓取或改变分支，记住语言，英文�
     assert.match((output.innerHTML+element('#method').innerHTML),/第二条曲线以首次在标记时间发生为前提/);
     assert.deepEqual(fingerprint(),chosen,'语言不能改变用量、概率、重置状态或日期范围');
     assert.equal(fetches,1,'切换语言不得重新抓取数据');
-    assert.equal(storage.get('codex4ever-language'),'zh-CN');
+    assert.equal(storage.get('usage-planner-language'),'zh-CN');
     language('en');
     assert.deepEqual(fingerprint(),chosen);
     assert.doesNotMatch((output.innerHTML+element('#method').innerHTML),/\p{Script=Han}/u);

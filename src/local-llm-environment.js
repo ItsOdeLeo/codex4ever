@@ -1,15 +1,17 @@
 import { readFile } from 'node:fs/promises';
+import { plannerEnv } from './planner-name.js';
 
-const KEYS=new Set(['CODEX4EVER_LLM_MODEL','CODEX4EVER_LLM_BASE_URL','CODEX4EVER_LLM_API_KEY']);
+// New USAGE_PLANNER_* names and the old CODEX4EVER_* names are both accepted.
+const KEYS=new Set(['LLM_MODEL','LLM_BASE_URL','LLM_API_KEY'].flatMap(key=>[`USAGE_PLANNER_${key}`,`CODEX4EVER_${key}`]));
 
 /** Server entry points only. Never import this from browser code or copy the
  * local file into a plugin. Explicit process settings (including '') win.
  */
 export async function loadLocalLLMEnvironment({env=process.env,
-  file=env.CODEX4EVER_ENV_FILE??new URL('../.env.local',import.meta.url)}={}) {
+  file=plannerEnv('ENV_FILE',env)??new URL('../.env.local',import.meta.url)}={}) {
   let text;
   try {text=await readFile(file,'utf8');}
-  catch(error) {if(error.code==='ENOENT' && !env.CODEX4EVER_ENV_FILE)return [];throw new Error('无法读取本机 LLM 配置文件');}
+  catch(error) {if(error.code==='ENOENT' && !plannerEnv('ENV_FILE',env))return [];throw new Error('无法读取本机 LLM 配置文件');}
   const loaded=[];
   for(const line of text.split(/\r?\n/)) {
     const match=line.match(/^\s*(?:export\s+)?([A-Z_][A-Z0-9_]*)\s*=\s*(.*?)\s*$/);

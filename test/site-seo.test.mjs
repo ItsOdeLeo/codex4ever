@@ -5,7 +5,7 @@ import { spawn } from 'node:child_process';
 import { publicSiteOrigin,renderSeoHead,seoResponse } from '../src/site-seo.js';
 import { PLANNER_METADATA,syncPlannerMetadata } from '../src/page-metadata.js';
 
-const siteUrl='https://codex4ever.example';
+const siteUrl='https://usage-planner.example';
 const template=await readFile(new URL('../index.html',import.meta.url),'utf8');
 const structured=html=>[...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map(match=>JSON.parse(match[1]));
 
@@ -22,9 +22,9 @@ test('未运行 JavaScript 的首页也有介绍、独立元信息和可抓取�
   assert.match(page.body,/<html lang="en">/);
   assert.match(page.body,/Codex quota, banked resets and extra reset forecasts/);
   assert.match(page.body,/<a id="planner-guide" href="\/guide\/">How it works<\/a>/);
-  assert.match(page.body,/<link rel="canonical" href="https:\/\/codex4ever.example\/">/);
+  assert.match(page.body,/<link rel="canonical" href="https:\/\/usage-planner.example\/">/);
   assert.match(page.body,/name="robots" content="index, follow, max-image-preview:large"/);
-  assert.match(page.body,/property="og:image" content="https:\/\/codex4ever.example\/public\/social-card.png\?v=\d+"/);
+  assert.match(page.body,/property="og:image" content="https:\/\/usage-planner.example\/public\/social-card.png\?v=\d+"/);
   const [schema]=structured(page.body);
   assert.equal(schema['@type'],'WebApplication');
   assert.equal(schema.applicationCategory,'DeveloperApplication');
@@ -42,9 +42,9 @@ test('中英文指南直接返回正文、自身 canonical 和双向 hreflang，
     assert.ok(page.body.includes(`<html lang="${language}">`));
     assert.ok(page.body.includes(`<h1>${title}</h1>`));
     assert.ok(page.body.includes(`<link rel="canonical" href="${siteUrl+pathname}">`));
-    assert.match(page.body,/<link rel="alternate" hreflang="en" href="https:\/\/codex4ever.example\/guide\/">/);
-    assert.match(page.body,/<link rel="alternate" hreflang="zh-CN" href="https:\/\/codex4ever.example\/zh\/guide\/">/);
-    assert.match(page.body,/<link rel="alternate" hreflang="x-default" href="https:\/\/codex4ever.example\/guide\/">/);
+    assert.match(page.body,/<link rel="alternate" hreflang="en" href="https:\/\/usage-planner.example\/guide\/">/);
+    assert.match(page.body,/<link rel="alternate" hreflang="zh-CN" href="https:\/\/usage-planner.example\/zh\/guide\/">/);
+    assert.match(page.body,/<link rel="alternate" hreflang="x-default" href="https:\/\/usage-planner.example\/guide\/">/);
     assert.match(page.body,/<a href="\/guide\/" lang="en" hreflang="en"/);
     assert.match(page.body,/<a href="\/zh\/guide\/" lang="zh-CN" hreflang="zh-CN"/);
     assert.equal((page.body.match(/<h2>/g)??[]).length,7);
@@ -60,7 +60,7 @@ test('robots 允许渲染所需文件，sitemap 只列正式页面，不产生�
   const robots=seoResponse({pathname:'/robots.txt',siteUrl});
   assert.equal(robots.headers['Content-Type'],'text/plain; charset=utf-8');
   assert.match(robots.body,/Allow: \/\n/);
-  assert.match(robots.body,/Sitemap: https:\/\/codex4ever.example\/sitemap.xml/);
+  assert.match(robots.body,/Sitemap: https:\/\/usage-planner.example\/sitemap.xml/);
   assert.doesNotMatch(robots.body,/Disallow: \/(?:src|public)\//);
   const sitemap=seoResponse({pathname:'/sitemap.xml',siteUrl});
   assert.equal(sitemap.headers['Content-Type'],'application/xml; charset=utf-8');
@@ -85,10 +85,10 @@ test('没有正式域名的预览使用 noindex，不输出猜测的 canonical �
 
 test('域名只来自显式 HTTPS 配置，语言切换更新描述而不篡改 canonical',()=>{
   assert.equal(publicSiteOrigin(undefined),null);
-  assert.equal(publicSiteOrigin(' https://codex4ever.example/ '),siteUrl);
-  for(const value of ['codex4ever.example','http://codex4ever.example','https://localhost',
-    'https://127.0.0.1','https://[::1]','https://user:secret@codex4ever.example',
-    'https://codex4ever.example/path','https://codex4ever.example/?track=1','https://codex4ever.example/#x'])
+  assert.equal(publicSiteOrigin(' https://usage-planner.example/ '),siteUrl);
+  for(const value of ['usage-planner.example','http://usage-planner.example','https://localhost',
+    'https://127.0.0.1','https://[::1]','https://user:secret@usage-planner.example',
+    'https://usage-planner.example/path','https://usage-planner.example/?track=1','https://usage-planner.example/#x'])
     assert.throws(()=>publicSiteOrigin(value),/PUBLIC_SITE_URL/);
   const attributes=new Map();
   const document={querySelector:selector=>({setAttribute:(key,value)=>attributes.set(`${selector}:${key}`,value)})};
@@ -130,7 +130,7 @@ test('真实 HTTP 服务输出原始 SEO HTML、有效图片、正确状态码�
         const body=await response.text();
         assert.equal(response.status,publicUrl===null&&path==='/sitemap.xml' ? 404 : 200,path);
         if(path==='/'||path.endsWith('guide/')) {
-          assert.match(body,/<title>[^<]+Codex[^<]*<\/title>/);
+          assert.match(body,/<title>[^<]*Codex[^<]*<\/title>/);
           assert.equal((body.match(/rel="canonical"/g)??[]).length,publicUrl ? 1 : 0);
           assert.equal(response.headers.get('x-robots-tag'),publicUrl ? null : 'noindex');
         }
@@ -166,7 +166,7 @@ test('指南带可见 FAQ 与对应 FAQPage 结构化数据，llms.txt 概述站
   }
   const llms=seoResponse({pathname:'/llms.txt',siteUrl});
   assert.equal(llms.headers['Content-Type'],'text/plain; charset=utf-8');
-  assert.match(llms.body,/^# Codex4ever\n\n> /);
-  assert.match(llms.body,/\(https:\/\/codex4ever.example\/guide\/\)/);
+  assert.match(llms.body,/^# Usage Planner\n\n> /);
+  assert.match(llms.body,/\(https:\/\/usage-planner.example\/guide\/\)/);
   assert.match(llms.body,/not affiliated with OpenAI/);
 });
