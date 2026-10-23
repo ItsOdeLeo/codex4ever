@@ -372,3 +372,10 @@ legend {margin-bottom:8px}
 .plan-dock .delay-control input[type=number] {width:32px}
 .plan-dock .delay-control span {padding-right:2px}
 .plan-dock .input-update {flex-wrap:nowrap}.plan-dock .input-update #status {flex:0 1 auto;white-space:nowrap}
+/* After an edit the plan greys out and the update button floats over it. */
+.result-stage {position:relative}
+.refresh-overlay {position:absolute;z-index:6;top:min(40%,240px);left:50%;transform:translateX(-50%);padding:10px 20px;font-size:14px;font-weight:600;border:1px solid var(--border);border-radius:4px;background:var(--accent);color:var(--ink);box-shadow:3px 3px 0 var(--border);cursor:pointer}
+.refresh-overlay:hover:not(:disabled) {background:var(--accent)}
+.refresh-overlay:active {transform:translate(calc(-50% + 2px),2px);box-shadow:1px 1px 0 var(--border)}
+.refresh-overlay[hidden] {display:none}
+.no-reset-toggle:disabled {opacity:.45;cursor:default}

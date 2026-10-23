@@ -27,7 +27,7 @@ function renderStaticLanguage() {
   document.documentElement?.setAttribute('lang',language);
   $('.brand p').textContent=metadata.intro;
   for(const [selector,label] of [['.affiliation-notice','OpenAI Codex 的非官方可视化用量规划工具。与 OpenAI 无隶属关系。'],['#github-star','GitHub'],['#follow-x','在 X 关注我'],
-['#source-code','GitHub 开源'],['#creator-contact','如果你喜欢这个作品，欢迎在 X 上关注我'],['[data-credit-label]','重置数据来源'],['[data-plugin-hint]','安装成 Codex 插件，就能自动读取这些数据。'],['#overuse-hint','用量过度提醒（仅 Codex 插件）：在 Codex 里说“打开用量过度提醒”。之后你用得比计划快时，会直接在对话里提醒你。']])
+['#source-code','GitHub 开源'],['#creator-contact','如果你喜欢这个作品，欢迎在 X 上关注我'],['[data-credit-label]','重置数据来源'],['#calculate','↻ 更新计划'],['[data-plugin-hint]','安装成 Codex 插件，就能自动读取这些数据。'],['#overuse-hint','用量过度提醒（仅 Codex 插件）：在 Codex 里说“打开用量过度提醒”。之后你用得比计划快时，会直接在对话里提醒你。']])
     {const element=$(selector);if(element)element.textContent=t(label);}
   $('#planner-guide').textContent=language==='zh-CN' ? '使用说明' : 'How it works';
   $('#planner-guide').setAttribute?.('href',language==='zh-CN' ? '/zh/guide/' : '/guide/');
@@ -115,21 +115,20 @@ function renderInputs() {
   </div>`;
 }
 
-// Inputs apply themselves shortly after the last change: no update button to
-// find, and the plan never sits greyed out waiting for one.
-let autoCalculation=null;
-const AUTO_CALCULATION_DELAY_MS=400;
+// Editing only greys the plan; recalculating every step makes the steppers
+// lag. The update button then appears over the greyed plan, where you look.
 function markChanged() {
   manualDraft=true;
   calculationRun++;
-  clearTimeout(autoCalculation);
-  autoCalculation=setTimeout(calculate,AUTO_CALCULATION_DELAY_MS);
+  $('#result').classList.add('stale');
+  if($('#calculate'))$('#calculate').hidden=false;
+  planner=updateUsagePlanner(planner,{type:'invalidate'});
+  renderStrategyControls();
 }
 
 function renderStrategyControls() {
-  const planningPrediction=activePlannerPrediction(planner);
   $('#strategy-controls').innerHTML=`<div class="control-heading"><h3 id="strategy-controls-title">${t('用量策略')}</h3><span class="instant-label">${t('即时更新')}</span></div>${renderUsageStrategies({
-    selected:planner.intent.usageStrategy,locale:language,disabled:!planner.result?.available},escape)}${forecastSource.available&&planner.result?.available ? `<button type="button" class="no-reset-toggle" role="switch" data-toggle-forecast aria-checked="${!planningPrediction}" title="${escape(t('按下后隐藏预测的 reset，所有策略都按没有额外 reset 来规划。'))}"><span class="switch-track" aria-hidden="true"><span class="switch-knob"></span></span>${escape(t('假设没有 reset'))}</button>` : ''}`;
+    selected:planner.intent.usageStrategy,locale:language,disabled:!planner.result?.available},escape)}${forecastSource.available ? `<button type="button" class="no-reset-toggle" role="switch" data-toggle-forecast aria-checked="${!planner.intent.forecastEnabled}"${planner.result?.available ? '' : ' disabled'} title="${escape(t('按下后隐藏预测的 reset，所有策略都按没有额外 reset 来规划。'))}"><span class="switch-track" aria-hidden="true"><span class="switch-knob"></span></span>${escape(t('假设没有 reset'))}</button>` : ''}`;
 }
 
 function saveInput() {
@@ -199,7 +198,6 @@ async function bundledPrediction(now) {
 }
 
 async function calculate() {
-  clearTimeout(autoCalculation);
   const run = ++calculationRun;
   $('#error').hidden = true;
   lastError=null;
@@ -218,6 +216,7 @@ async function calculate() {
     forecastSource = publicForecast;
     planner=updateUsagePlanner(planner,{type:'new-snapshot',input,now,prediction:publicForecast.prediction});
     renderResult();
+    if($('#calculate'))$('#calculate').hidden=true;
     setStatus('');
     saveInput();
   } catch (error) {
@@ -307,8 +306,7 @@ $('#inputs').addEventListener('click', event => {
   if (!data.monthNav && data.toggleCalendar === undefined) markChanged();
 });
 
-// Inputs apply themselves; tests (and any embedder) may still trigger a run.
-$('#calculate')?.addEventListener?.('click', calculate);
+$('#calculate').addEventListener('click', calculate);
 function handlePlanClick(event) {
   if (!planner.result) return;
   const availability=event.target.closest('button[data-availability-mode]');

@@ -26,7 +26,7 @@ test('一张计划卡片：预测、策略在时间线上方，输入停靠在�
     .map(token=>card.indexOf(token));
   assert.ok(order.every(index=>index>=0),'卡片包含预测、策略、结果、输入、状态和插件提示');
   assert.deepEqual([...order].sort((a,b)=>a-b),order,'策略在时间线上方不随图高度跳动；输入在下方，插件提示在最后');
-  assert.doesNotMatch(card,/id="calculate"/,'输入改完自动更新，不需要更新按钮');
+  assert.match(card,/<div class="result-stage">\s*<div id="result">[^<]*<\/div>\s*<button id="calculate" class="refresh-overlay" type="button" hidden>/,'更新按钮浮在变灰的计划上，平时隐藏');
   assert.match(card,/href="https:\/\/github\.com\/ItsOdeLeo\/codex4ever#use-it"/);
   assert.match(html,/<a id="creator-contact" href="https:\/\/x\.com\/ItsOdeLeo"/);
 });
