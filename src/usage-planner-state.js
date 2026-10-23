@@ -46,17 +46,6 @@ export function usagePlannerInput(planner) {
     assumedResetCount:intent.resetCountOverride??'auto'};
 }
 
-/** The safe daily budget if no extra reset ever comes: the same planner with
- * the forecast off, using the quota up exactly by the next refill. */
-export function noExtraResetBudget(planner) {
-  const input=usagePlannerInput(planner);
-  if(!input)return null;
-  const result=planUsagePath({...input,prediction:null,usageStrategy:'maximize',
-    heldResetIndices:[],requiredResetIndices:[],assumedResetCount:0});
-  const daily=result.available ? result.phasePlans?.[0]?.dailyPercent : null;
-  return Number.isFinite(daily) ? daily : null;
-}
-
 function calculate(planner,newSnapshot) {
   const result=planUsagePath(usagePlannerInput(planner));
   const assumedResetCount=result.forecastScenario?.selected
