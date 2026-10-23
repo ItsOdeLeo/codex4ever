@@ -117,7 +117,7 @@ footer a {color:var(--ink);text-decoration-color:var(--link-stroke);text-underli
 .graph-backup {background:var(--bank-surface);border:1px solid var(--bank-border);border-radius:3px}
 .graph-backup[aria-pressed=false] {border-style:dashed}
 .graph-backup[aria-pressed]:hover {background:var(--bank-surface);border-color:var(--ink)}
-.graph-node .deadline-warning {color:var(--danger-text);font-weight:650;text-decoration:underline;text-decoration-color:var(--danger);text-decoration-thickness:2px;text-underline-offset:3px}
+.graph-node .deadline-warning {color:var(--danger);font-weight:650;text-decoration:none}
 .graph-depletion {border-bottom-color:var(--danger)}
 .phase-controls button {background:var(--surface-soft);border-color:var(--pool-edge);border-radius:2px;box-shadow:none}
 .phase-controls button[aria-pressed=true] {background:var(--accent-soft);border-color:var(--border);color:var(--accent-text)}
@@ -168,7 +168,7 @@ button:focus-visible,input:focus-visible,summary:focus-visible,.tree-scroll:focu
 /* Suggested usage per day is the headline number of each phase. */
 .phase-controls[data-quota-label]>strong {font-size:16px;font-weight:700;overflow:visible;text-overflow:clip;letter-spacing:-.2px}
 /* The only coloured number: a phase with no quota (an outage). */
-.phase-controls[data-quota-label][data-phase-daily="0"]>strong {color:var(--pool-red-ink)}
+.phase-controls[data-quota-label][data-phase-daily="0"]>strong {color:var(--danger)}
 /* Brand mark lines up with the title, not the middle of three lines. */
 .brand {align-items:flex-start}
 .brand h1 {line-height:46px}
@@ -379,3 +379,23 @@ legend {margin-bottom:8px}
 .refresh-overlay:active {transform:translate(calc(-50% + 2px),2px);box-shadow:1px 1px 0 var(--border)}
 .refresh-overlay[hidden] {display:none}
 .no-reset-toggle:disabled {opacity:.45;cursor:default}
+/* Wide screens: still one card (one screenshot), but the controls form a left
+   column of three sections (forecast, strategies, inputs) beside the timeline. */
+@media(min-width:1180px) {
+  .plan-card {display:grid;grid-template-columns:280px minmax(0,1fr);grid-template-rows:auto auto auto auto 1fr;column-gap:28px}
+  .plan-card>#error {grid-column:1;grid-row:1}
+  .plan-card>#forecast {grid-column:1;grid-row:2}
+  .plan-card>.toolbar {grid-column:1;grid-row:3;margin-bottom:0;padding-bottom:16px}
+  .plan-card>.plan-dock {grid-column:1;grid-row:4;margin-top:0}
+  .plan-card>.result-stage {grid-column:2;grid-row:1/-1;min-width:0;padding-left:28px;border-left:1px solid var(--divider)}
+  .plan-card #strategy-controls {display:block}
+  .plan-card .usage-strategies {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;width:100%}
+  .plan-card .usage-strategies button {width:100%;text-align:center}
+  .plan-card .no-reset-toggle {margin:8px 0 0}
+  .plan-dock .input-state,.plan-dock .compact-form {flex-direction:column;align-items:stretch}
+  .plan-dock .compact-form fieldset.simple-fields {grid-template-columns:minmax(0,1fr);grid-template-rows:none}
+  .plan-dock .simple-fields>label {grid-row:1}.plan-dock .simple-fields>.delay-control {grid-row:2}
+  .plan-dock .refresh-row>.refresh-label {grid-row:3;grid-column:1}.plan-dock .refresh-row>.delay-controls {grid-row:4;grid-column:1}
+  .plan-dock .reset-actions {flex-wrap:wrap}
+  .plan-dock-footer {flex-direction:column;align-items:flex-start}
+}

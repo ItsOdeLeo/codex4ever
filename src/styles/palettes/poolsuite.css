@@ -55,7 +55,9 @@
   --warning-text:var(--pool-black);
   --bank-surface:var(--pool-yellow);
   --bank-border:var(--pool-black);
-  --danger:var(--pool-red);
+  /* Warnings use the palette's rose, not an extra red: same accent as the
+     first reset, softer than a new colour. */
+  --danger:var(--pool-rose-deep);
   --danger-deep:var(--pool-black);
   --danger-text:var(--pool-black);
   --danger-surface:var(--pool-pink);
