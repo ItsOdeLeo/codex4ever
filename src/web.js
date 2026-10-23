@@ -198,8 +198,8 @@ function renderResult(availableWidth=$('#result').clientWidth) {
 }
 
 
-// The page's signature wait: the switch's square turns until a plan is ready.
-// index.html carries the same markup, so it shows before any script runs.
+// The switch's square, turning until a plan is ready (index.html shows the
+// same square page-wide on first load, before any script runs).
 const loadingResult=()=>`<div class="plan-loading" role="status"><span class="busy-square" aria-hidden="true"></span>${escape(t('正在计算…'))}</div>`;
 
 // Replanning takes a moment: paint the busy marker first, then compute, so a
@@ -429,9 +429,14 @@ $('#language-switch').addEventListener('click',event=>{
 });
 renderStaticLanguage();
 renderStrategyControls();
-$('#result').innerHTML=loadingResult();
 renderInputs();
 // The plugin reads quota itself; the install hint is for the website.
 if(plugin&&$('#plugin-hint'))$('#plugin-hint').hidden=true;
 if(plugin&&$('#overuse-hint'))$('#overuse-hint').hidden=false;
-if(plugin)startPluginPage();else calculate();
+// The page stays behind its loader until the first plan or error is ready.
+// Planning blocks the main thread for a few seconds, so paint a frame first:
+// once started, the square keeps turning on the compositor during the work.
+const nextFrame=()=>new Promise(resolve=>typeof requestAnimationFrame==='function'
+  ? requestAnimationFrame(()=>setTimeout(resolve,0)) : resolve());
+nextFrame().then(()=>plugin ? startPluginPage() : calculate())
+  .finally(()=>document.body?.removeAttribute?.('data-loading'));

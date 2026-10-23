@@ -101,7 +101,7 @@ test('三个轨道名称统一放在独立最左栏，分别与两条分布及�
       }
       // Each curve is named for what it plots.
       assert.equal(label.inline,true);
-      assert.equal(label.title,index===0 ? 'Reset probability' : 'Second reset probability');
+      assert.equal(label.title,index===0 ? '1st reset probability' : '2nd reset probability');
       assert.match(label.tooltip,/Probability density/);
     }
     const consumption=graph.headings.find(item=>item.kind==='consumption');

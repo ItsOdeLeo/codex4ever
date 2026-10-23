@@ -92,8 +92,9 @@ footer a {color:var(--ink);text-decoration-color:var(--link-stroke);text-underli
 .timeline-lane-label>span,.timeline-lane-label>small {font-size:10px;line-height:14px;color:var(--muted)}
 .timeline-lane-label[data-lane-inline] {justify-content:flex-start}
 .timeline-lane-label[data-lane-inline]>.timeline-lane-text {font-size:12px;font-weight:500;line-height:20px;white-space:nowrap;color:inherit}
-.reset-element .timeline-lane-label[data-lane-inline] {color:var(--reset-curve)}
-.reset-element .timeline-lane-label>strong,.reset-element .timeline-lane-note {color:var(--reset-curve)}
+/* Lane names are all ink; colour belongs to the curves and cards they name. */
+.reset-element .timeline-lane-label[data-lane-inline] {color:var(--ink)}
+.reset-element .timeline-lane-label>strong,.reset-element .timeline-lane-note {color:var(--ink)}
 .timeline-lane-label[data-lane-label="usage"] {justify-content:flex-start}
 .timeline-lane-label[data-lane-label="usage"]>strong {line-height:20px}
 .timeline-lane-label[data-lane-label="opportunity"] {justify-content:flex-start}
@@ -423,8 +424,7 @@ legend {margin-bottom:8px}
 @keyframes busy-turn {to {transform:rotate(360deg)}}
 .refresh-overlay[aria-busy=true] {display:inline-flex;align-items:center;gap:8px;cursor:progress}
 .refresh-overlay[aria-busy=true]::before {content:'';background:var(--surface)!important}
-.busy-square,.refresh-overlay[aria-busy=true]::before {flex:none;width:12px;height:12px;border:1px solid var(--border);border-radius:2px;background:var(--accent);box-shadow:1px 1px 0 var(--border);animation:busy-turn .8s steps(8) infinite}
-/* First load: the same square, centred where the plan will appear. */
+.busy-square,.refresh-overlay[aria-busy=true]::before {flex:none;width:12px;height:12px;border:1px solid var(--border);border-radius:2px;background:var(--accent);box-shadow:1px 1px 0 var(--border);animation:busy-turn .8s steps(8) infinite;will-change:transform}
 .plan-loading {display:flex;align-items:center;justify-content:center;gap:10px;min-height:320px;font-size:14px;color:var(--muted)}
 @media(prefers-reduced-motion:reduce) {#strategy-controls[aria-busy=true] .switch-knob,.busy-square,.refresh-overlay[aria-busy=true]::before {animation:none;background:var(--accent)}}
 /* Wide card, announced: one full-width entry under its own heading. */
@@ -463,3 +463,9 @@ html:lang(zh-CN) .brand h1, html:lang(zh-CN) .guide-page .brand a {font-size:24p
 @media(max-width:374px) {#language-switch {position:static}}
 /* Before the forecast arrives its panel is empty: no box, no divider lines. */
 .plan-card #forecast:empty {display:none}
+/* First load: only the turning square shows. The cards are laid out but
+ * invisible, so the timeline measures the real width behind the loader. */
+.page-loading {display:none}
+body[data-loading] .layout {position:relative;min-height:60vh}
+body[data-loading] .layout>*:not(.page-loading),body[data-loading] footer {visibility:hidden}
+body[data-loading] .page-loading {position:absolute;inset:0;z-index:1;display:flex;align-items:center;justify-content:center;gap:10px;font-size:14px;color:var(--muted)}

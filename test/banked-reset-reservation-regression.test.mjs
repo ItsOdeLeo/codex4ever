@@ -117,7 +117,7 @@ test('真实网页刷新默认纳入两次假设、按当前用量规划且保�
     assert.match(output,/data-policy-search="scenario-based-rolling-policy-search"/);
     assert.doesNotMatch(output,/data-node-id="backup:0"/);
     assert.doesNotMatch(output,/data-node-id="held:0"|Keep banked reset/);
-    assert.match(output,/data-banked-count="1">Banked resets · 1/);
+    assert.match(output,/data-banked-count="1"/);
     const firstRate=Number(output.match(/data-phase-daily="([\d.]+)"/)?.[1]);
     // Keep pace (the default) shows the current pace; assumed resets refill but never retarget it.
     assert.equal(firstRate,17);

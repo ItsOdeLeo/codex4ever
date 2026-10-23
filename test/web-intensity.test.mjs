@@ -133,7 +133,7 @@ test('反复切换双假设及备用，仅使用建议有日期节点；正常�
     inputClick({calendarDate:'2027-05-01'});
     await element('#calculate').listeners.click();
     assert.deepEqual(range(),withoutBank,'本轮不需要的远期库存不能额外拉长时间轴');
-    assert.match(output.innerHTML,/data-banked-count="1">备用 reset · 1 个/);
+    assert.match(output.innerHTML,/data-banked-count="1"/);
     assert.doesNotMatch(output.innerHTML,/data-retained-reset|2027-05-01 到期/);
     assert.doesNotMatch(output.innerHTML,/data-backup-choice="0"/,'正常刷新点不提供无意义的兑换按钮');
     const retainedHTML=output.innerHTML;

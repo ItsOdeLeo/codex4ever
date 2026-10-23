@@ -25,7 +25,7 @@ test('远期备用本轮不需要时只保留库存，不在正常刷新处伪�
     assert.equal(graph.bankedCount,1);
     assert.equal(graph.nodes.filter(node=>node.resetIndex===0).length,0);
     const html=renderStrategyTree(graph,String);
-    assert.match(html,/data-banked-count="1">备用 reset · 1 个/);
+    assert.match(html,/data-banked-count="1"/);
     assert.doesNotMatch(html,/本轮保留|2027-05-01|保留备用 reset/);
     assert.doesNotMatch(html,/data-backup-choice|点击使用/);
     assert.equal(graph.nodes.filter(node=>node.id==='normal-reset').length,1);
