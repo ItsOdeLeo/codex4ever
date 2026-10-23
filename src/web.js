@@ -11,7 +11,6 @@ import { COMPACT_TIMELINE_WIDTH } from './strategy-time-layout.js';
 import { workspaceLayout } from './workspace-layout.js';
 import { syncPlannerMetadata } from './page-metadata.js';
 import { pluginPageClient } from './plugin-page-client.js';
-import { BRAND_MARK_SVG } from './brand-mark.js';
 
 const $ = selector => document.querySelector(selector);
 const escape = value => String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
@@ -30,13 +29,13 @@ function renderStaticLanguage() {
   document.documentElement?.setAttribute('lang',language);
   $('.brand p').textContent=metadata.intro;
   for(const [selector,label] of [['.affiliation-notice','OpenAI Codex 的非官方可视化用量规划工具。与 OpenAI 无隶属关系。'],['#github-star','GitHub'],['#follow-x','在 X 关注我'],
-    ['#calculate','更新数据'],['#source-code','GitHub 开源'],['#creator-contact','如果你喜欢这个作品，欢迎在 X 上关注我'],['[data-credit-label]','重置数据来源']])
+    ['#calculate','更新数据'],['#source-code','GitHub 开源'],['#creator-contact','如果你喜欢这个作品，欢迎在 X 上关注我'],['[data-credit-label]','重置数据来源'],['[data-plugin-hint]','安装成 Codex 插件，就能自动读取这些数据。']])
     {const element=$(selector);if(element)element.textContent=t(label);}
   $('#calculate').setAttribute?.('title',t('采用输入修改并刷新重置证据'));
   $('#planner-guide').textContent=language==='zh-CN' ? '使用说明' : 'How it works';
   $('#planner-guide').setAttribute?.('href',language==='zh-CN' ? '/zh/guide/' : '/guide/');
-  for(const [selector,label] of [['.controls-panel','状态与预测'],['#inputs','算法输入'],['#forecast','预测依据'],['#output','算法输出']])
-    $(selector).setAttribute?.('aria-label',t(label));
+  for(const [selector,label] of [['#inputs','算法输入'],['#forecast','预测依据'],['#output','算法输出']])
+    $(selector)?.setAttribute?.('aria-label',t(label));
   $('#language-switch').setAttribute?.('aria-label',t('语言'));
   $('#language-switch').innerHTML=[['en','English'],['zh-CN','中文']].map(([value,label])=>
     `<button type="button" data-language="${value}" lang="${value}" aria-pressed="${language===value}">${label}</button>`).join('');
@@ -144,8 +143,6 @@ function saveInput() {
 
 const round = value => Number(value.toFixed(1));
 const MOBILE_TIMELINE_WIDTH=640;
-// Cards people screenshot carry the name, so a cropped image still says where it came from.
-const BRAND_STAMP=`<div class="brand-stamp" aria-hidden="true"><span>${BRAND_MARK_SVG}</span> Codex4ever</div>`;
 
 function renderResult(availableWidth=$('#result').clientWidth) {
   const result=planner.result;
@@ -156,10 +153,12 @@ function renderResult(availableWidth=$('#result').clientWidth) {
   renderedWidth=workspace.width;
   const forecastSummary = renderResetForecastSummary({ source: forecastSource, prediction: planningPrediction,
     timeZone, now: planningNow,locale:language });
-  $('#forecast').innerHTML = `<div class="forecast-control" ${planningPrediction ? `data-forecast-48-probability="${planningPrediction.next48Probability}"` : ''}><span>${t('额外重置预测')}</span></div>${forecastSummary}${BRAND_STAMP}`;
+  $('#forecast').innerHTML = `<div class="forecast-control" ${planningPrediction ? `data-forecast-48-probability="${planningPrediction.next48Probability}"` : ''}><span>${t('额外重置预测')}</span></div>${forecastSummary}`;
   renderStrategyControls();
+  parkForecast();
   if (!result.available) {
     $('#result').innerHTML = `<p class="empty-result">${escape(diagnosticText(language,result.reason,'input'))}</p>`;
+    $('#method').innerHTML='';
     return;
   }
   const graph = layoutStrategyTree(result, { expandedLevel: null, prediction: planningPrediction,
@@ -170,22 +169,21 @@ function renderResult(availableWidth=$('#result').clientWidth) {
     displayEndHours:planner.displayEndHours,locale:language });
   const consumption=usageConsumptionSummary(result,{locale:language});
   const policyData=result.recommendation ? ` data-policy-search="${result.recommendation.method}"${result.recommendation.primary ? ' data-plan-basis="predicted-extra-resets-first"' : ''}` : '';
-  $('#result').innerHTML = `<section class="strategy-panel" aria-label="${t('用量计划')}"${policyData} style="--panel-padding:${workspace.panelPadding}px">${graph.compact ? phoneSummary(graph,planningPrediction) : ''}<div class="pace-controls"><div data-current-consumption data-daily="${consumption.dailyPercent}"><span>${t('当前日均消耗 {daily}%',{daily:round(consumption.dailyPercent)})}</span></div>${forecastSource.available ? `<button type="button" class="no-reset-toggle" data-toggle-forecast aria-pressed="${!planningPrediction}" title="${escape(t('按下后隐藏预测的 reset，所有策略都按没有额外 reset 来规划。'))}">${escape(t('假设没有 reset'))}</button>` : ''}
-    </div>
+  $('#result').innerHTML = `<section class="strategy-panel" aria-label="${t('用量计划')}"${policyData} style="--panel-padding:${workspace.panelPadding}px"><div class="pace-controls"><div data-current-consumption data-daily="${consumption.dailyPercent}"><span>${t('当前日均消耗 {daily}%',{daily:round(consumption.dailyPercent)})}</span></div>${forecastSource.available ? `<button type="button" class="no-reset-toggle" data-toggle-forecast aria-pressed="${!planningPrediction}" title="${escape(t('按下后隐藏预测的 reset，所有策略都按没有额外 reset 来规划。'))}">${escape(t('假设没有 reset'))}</button>` : ''}
+    </div><div data-forecast-slot></div>
     ${result.recommendation&&!result.recommendation.primary ? `<div class="timeline-toolbar"><span>${t('若始终没有额外重置')}</span></div>` : ''}
     ${renderStrategyTree(graph, escape)}
-    </section>
-    ${renderForecastMethod({source:forecastSource,prediction:planningPrediction,result,timeZone,locale:language},escape)}`;
+    </section>`;
+  // The forecast strip sits under the heading, inside the one plan card.
+  const slot=$('#result').querySelector?.('[data-forecast-slot]');
+  if(slot?.replaceWith)slot.replaceWith($('#forecast'));
+  $('#method').innerHTML=renderForecastMethod({source:forecastSource,prediction:planningPrediction,result,timeZone,locale:language},escape);
 }
 
-// Phones: only what the timeline below does not already say, plus a jump to the inputs.
-function phoneSummary(graph,prediction) {
-  const focus=prediction&&graph.forecastFocus;
-  const cells=[
-    focus ? `<div data-summary="next-reset"><small>${escape(t('下次额外 reset'))}</small><strong>${escape(focus.label)}</strong></div>` : '',
-    Number.isFinite(prediction?.next48Probability) ? `<div data-summary="next-48h"><small>${escape(t('未来 48 小时'))}</small><strong>${round(prediction.next48Probability*100)}%</strong></div>` : ''
-  ].filter(Boolean).join('');
-  return `<div class="phone-summary" data-phone-summary>${cells}<button type="button" data-edit-quota>${escape(t('修改额度'))}</button>${BRAND_STAMP}</div>`;
+// Rewriting the plan would discard the forecast strip placed inside it.
+function parkForecast() {
+  const forecast=$('#forecast'),result=$('#result');
+  if(result.contains?.(forecast))result.after?.(forecast);
 }
 
 function dispatchPlanning(action) {
@@ -314,9 +312,6 @@ $('#inputs').addEventListener('click', event => {
 
 $('#calculate').addEventListener('click', calculate);
 function handlePlanClick(event) {
-  if(event.target.closest('[data-edit-quota]')) {
-    document.querySelector('.input-state')?.scrollIntoView?.({block:'start'});return;
-  }
   if (!planner.result) return;
   const availability=event.target.closest('button[data-availability-mode]');
   if(availability) {
@@ -392,4 +387,6 @@ renderStaticLanguage();
 renderStrategyControls();
 $('#result').innerHTML=t('点击「计算策略」查看结果。');
 renderInputs();
+// The plugin reads quota itself; the install hint is for the website.
+if(plugin&&$('#plugin-hint'))$('#plugin-hint').hidden=true;
 if(plugin)startPluginPage();else calculate();

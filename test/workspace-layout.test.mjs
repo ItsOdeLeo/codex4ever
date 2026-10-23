@@ -17,27 +17,18 @@ test('策略区始终使用实际可用宽度，不用最小图宽把窄窗口�
   assert.ok(workspaceLayout(1920).timelineWidth>1100);
 });
 
-test('输入和预测共用紧凑侧栏，结果独占右侧；窄屏保留计划和证据',async()=>{
+test('一张计划卡片：标题、预测、时间线在上，策略和输入停靠在底部，说明在卡片外',async()=>{
   const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
-  const css=await readFile(new URL('../src/styles/base.css',import.meta.url),'utf8');
-  const sidebar=html.match(/<aside class="controls-panel"[\s\S]*?<\/aside>/)?.[0];
-  assert.match(sidebar,/id="inputs"/);
-  assert.match(sidebar,/id="calculate"/);
-  assert.ok(sidebar.indexOf('id="calculate"')<sidebar.indexOf('id="strategy-controls"'),
-    '更新数据跟随状态输入，不能在策略后充当提交按钮');
-  assert.match(sidebar,/<div class="input-update">\s*<button id="calculate" type="button"/);
-  assert.doesNotMatch(sidebar,/<button id="calculate"[^>]*class="primary"/);
-  assert.match(sidebar,/<div class="toolbar">\s*<section id="strategy-controls"[^>]+><\/section>\s*<\/div>/,
-    '策略是唯一的即时调整区，不再有用量滑块');
+  const card=html.match(/<section id="output" class="plan-card"[\s\S]*?<div id="method"><\/div>/)?.[0];
+  assert.ok(card,'所有控件都在同一张卡片里');
+  assert.doesNotMatch(html,/controls-panel/,'不再有左侧栏');
+  const order=['id="result"','id="forecast"','class="plan-dock"','id="strategy-controls"','id="inputs"','id="calculate"','id="plugin-hint"']
+    .map(token=>card.indexOf(token));
+  assert.ok(order.every(index=>index>=0),'卡片包含结果、预测、策略、输入、更新和插件提示');
+  assert.deepEqual([...order].sort((a,b)=>a-b),order,'策略和输入在时间线下方，插件提示在最后');
+  assert.match(card,/<div class="input-update">\s*<button id="calculate" type="button"/);
+  assert.match(card,/href="https:\/\/github\.com\/ItsOdeLeo\/codex4ever#use-it"/);
   assert.match(html,/<a id="creator-contact" href="https:\/\/x\.com\/ItsOdeLeo"/);
-  assert.match(sidebar,/id="forecast"/);
-  assert.doesNotMatch(sidebar,/id="output"/);
-  assert.match(css,/\.layout\{[^}]*grid-template-columns:300px minmax\(0,1fr\)/);
-  assert.doesNotMatch(css,/planning-workspace|--forecast-width/);
-  assert.match(css,/@media\(max-width:960px\)/);
-  assert.match(css,/#output\{width:100%;order:0\}/,'窄屏时间轴排最前');
-  assert.match(css,/\.forecast-panel\{width:100%;order:2/);
-  assert.match(css,/@media\(max-width:960px\)\{[^}]*\}#output\{order:0[;}]/,'Codex 侧边面板宽度下时间轴排最前');
 });
 
 test('样式单入口实际导入配色、基础排版、reset组件和材质，颜色只在配色文件中定义',async()=>{

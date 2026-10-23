@@ -70,12 +70,12 @@ test('整页切换中英不重新抓取或改变分支，记住语言，英文�
     assert.doesNotMatch(output.innerHTML,/Auto-reset:/);
     assert.match(output.innerHTML,/aria-label="First planned reset · /);
     assert.match(output.innerHTML,/title="Second extra reset prediction · Probability density · Given 1st reset/);
-    assert.match(output.innerHTML,/data-forecast-method/);
-    assert.match(output.innerHTML,/data-forecast-formula/);
-    assert.match(output.innerHTML,/All history · \d+ reset days/);
-    assert.match(output.innerHTML,/Current campaign · \d+ complete intervals/);
-    assert.doesNotMatch(output.innerHTML,/\p{Script=Han}/u);
-    const method=output.innerHTML.match(/<section class="forecast-method"[\s\S]*?<\/section>/)?.[0];
+    assert.match((output.innerHTML+element('#method').innerHTML),/data-forecast-method/);
+    assert.match((output.innerHTML+element('#method').innerHTML),/data-forecast-formula/);
+    assert.match((output.innerHTML+element('#method').innerHTML),/All history · \d+ reset days/);
+    assert.match((output.innerHTML+element('#method').innerHTML),/Current campaign · \d+ complete intervals/);
+    assert.doesNotMatch((output.innerHTML+element('#method').innerHTML),/\p{Script=Han}/u);
+    const method=(output.innerHTML+element('#method').innerHTML).match(/<section class="forecast-method"[\s\S]*?<\/section>/)?.[0];
     assert.match(method,/^<section[^>]*><details><summary><h3>/,'预测依据默认折叠，标题始终可见');
     assert.doesNotMatch(method,/<details open| hidden/);
     assert.doesNotMatch(forecast.innerHTML,/\p{Script=Han}/u);
@@ -84,8 +84,8 @@ test('整页切换中英不重新抓取或改变分支，记住语言，英文�
     assert.doesNotMatch(output.innerHTML,/Customize usage|id="usage-pace-current"/);
     assert.equal([...output.innerHTML.matchAll(/data-refill-sequence="[12]"/g)].length,2,
       '两次假设保留，切语言也必须沿用');
-    assert.match(output.innerHTML,/Current assumptions/);
-    assert.match(output.innerHTML,/First: .* · Second:/);
+    assert.match((output.innerHTML+element('#method').innerHTML),/Current assumptions/);
+    assert.match((output.innerHTML+element('#method').innerHTML),/First: .* · Second:/);
     const chosen=fingerprint();
     language('zh-CN');
     assert.equal(html.attributes.lang,'zh-CN');
@@ -103,13 +103,13 @@ test('整页切换中英不重新抓取或改变分支，记住语言，英文�
     assert.doesNotMatch(output.innerHTML,/data-plan-mode|policy-recommendation|data-usage-strategy/);
     assert.match(output.innerHTML,/<span class="timeline-lane-text">剩余额度<\/span>/);
     assert.doesNotMatch(output.innerHTML,/自定义用量/);
-    assert.match(output.innerHTML,/第二条曲线以首次在标记时间发生为前提/);
+    assert.match((output.innerHTML+element('#method').innerHTML),/第二条曲线以首次在标记时间发生为前提/);
     assert.deepEqual(fingerprint(),chosen,'语言不能改变用量、概率、重置状态或日期范围');
     assert.equal(fetches,1,'切换语言不得重新抓取数据');
     assert.equal(storage.get('codex4ever-language'),'zh-CN');
     language('en');
     assert.deepEqual(fingerprint(),chosen);
-    assert.doesNotMatch(output.innerHTML,/\p{Script=Han}/u);
+    assert.doesNotMatch((output.innerHTML+element('#method').innerHTML),/\p{Script=Han}/u);
     browser.languages=['zh-CN'];browser.language='zh-CN';
     await import('../src/web.js?language-manual-override');
     await new Promise(resolve=>setImmediate(resolve));

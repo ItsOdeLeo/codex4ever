@@ -41,7 +41,7 @@ const english={
   '即时更新':'Updates instantly','自定义用量':'Customize usage',
   '如果你喜欢这个作品，欢迎在 X 上关注我':'If you like this work, follow me on X',
   'GitHub 开源':'Open source on GitHub',
-  'Reset 概率':'Reset probability','假设没有 reset':'Assume no reset','按下后隐藏预测的 reset，所有策略都按没有额外 reset 来规划。':'Hides the predicted resets and plans every strategy as if no extra reset comes.','已宣布的 reset':'Announced reset','已宣布':'Announced','Tibo 已宣布这次 reset 的时间':'Tibo announced the time of this reset','未来 reset 概率':'Chance of a reset in the next','{hours} 小时':'{hours}h','第二次 reset 概率':'Second reset probability',
+  'Reset 概率':'Reset probability','假设没有 reset':'Assume no reset','安装成 Codex 插件，就能自动读取这些数据。':'Install this as a Codex plugin to fill these in automatically.','按下后隐藏预测的 reset，所有策略都按没有额外 reset 来规划。':'Hides the predicted resets and plans every strategy as if no extra reset comes.','已宣布的 reset':'Announced reset','已宣布':'Announced','Tibo 已宣布这次 reset 的时间':'Tibo announced the time of this reset','未来 reset 概率':'Chance of a reset in the next','{hours} 小时':'{hours}h','第二次 reset 概率':'Second reset probability',
   '下次额外 reset':'Next extra reset','未来 48 小时':'Next 48h','修改额度':'Edit quota',
   '点击「计算策略」查看结果。':'Calculate a plan to see your timeline.',
   '重置数据来源':'Reset data',
