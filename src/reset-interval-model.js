@@ -25,11 +25,16 @@ export function intervalSurvival(distribution,ageDays) {
   return kernelSurvival(distribution,ageDays);
 }
 
+// Each kernel's truncation at age 0 depends only on the distribution; the
+// planner evaluates survival thousands of times, so compute it once.
+const truncations=new WeakMap();
 function kernelSurvival(distribution,ageDays) {
   if(ageDays<=0)return 1;
   const {intervals,bandwidthDays,priorEquivalentIntervals,meanIntervalDays}=distribution;
-  const observed=intervals.reduce((sum,length)=>sum+normalSurvival((ageDays-length)/bandwidthDays)
-    /normalSurvival(-length/bandwidthDays),0);
+  if(!truncations.has(distribution))truncations.set(distribution,intervals.map(length=>normalSurvival(-length/bandwidthDays)));
+  const truncation=truncations.get(distribution);
+  const observed=intervals.reduce((sum,length,index)=>sum+normalSurvival((ageDays-length)/bandwidthDays)
+    /truncation[index],0);
   return (observed+priorEquivalentIntervals*Math.exp(-ageDays/meanIntervalDays))
     /(intervals.length+priorEquivalentIntervals);
 }

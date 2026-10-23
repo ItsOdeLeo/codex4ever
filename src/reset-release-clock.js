@@ -2,14 +2,42 @@ const DAY = 86_400_000, HOUR = 3_600_000, SLOT = 15 * 60_000;
 const caches = new WeakMap();
 const hazardCaches = new WeakMap();
 
-function clockCache(clock) {
-  if (!caches.has(clock)) caches.set(clock, { days: new Map(), formatter: new Intl.DateTimeFormat('en-CA', {
-    timeZone: clock.timeZone, year: 'numeric', month: '2-digit', day: '2-digit',
+// UTC offsets belong to the zone, not to a fitted clock: one table per zone,
+// shared by every scenario's clock.
+const zones = new Map();
+function zoneCache(timeZone) {
+  if (!zones.has(timeZone)) zones.set(timeZone, { offsets: new Map(), formatter: new Intl.DateTimeFormat('en-CA', {
+    timeZone, year: 'numeric', month: '2-digit', day: '2-digit',
     hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' }) });
+  return zones.get(timeZone);
+}
+function clockCache(clock) {
+  if (!caches.has(clock)) caches.set(clock, { days: new Map() });
   return caches.get(clock);
 }
-const parts = (stamp, clock) => Object.fromEntries(clockCache(clock).formatter.formatToParts(stamp)
-  .map(part => [part.type, Number(part.value)]));
+// Local wall-clock fields. formatToParts is slow (seconds per plan on a
+// phone) and the planner asks thousands of times, but a zone's UTC offset
+// only changes at transitions, which always fall on a quarter hour. So ask
+// once per quarter-hour slot and add the offset; the fields are identical.
+function offsetAt(stamp, clock) {
+  const cache = zoneCache(clock.timeZone), slot = Math.floor(stamp / SLOT);
+  let offset = cache.offsets.get(slot);
+  if (offset === undefined) {
+    const p = Object.fromEntries(cache.formatter.formatToParts(slot * SLOT).map(part => [part.type, Number(part.value)]));
+    offset = Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, p.second) - slot * SLOT;
+    cache.offsets.set(slot, offset);
+  }
+  return offset;
+}
+// Hot paths need only the local day and the local quarter hour: arithmetic
+// on the shifted stamp, no Date objects.
+const localDay = (stamp, clock) => Math.floor((stamp + offsetAt(stamp, clock)) / DAY);
+const localQuarter = (stamp, clock) => Math.floor((((stamp + offsetAt(stamp, clock)) % DAY + DAY) % DAY) / SLOT);
+const parts = (stamp, clock) => {
+  const local = new Date(stamp + offsetAt(stamp, clock));
+  return { year: local.getUTCFullYear(), month: local.getUTCMonth() + 1, day: local.getUTCDate(),
+    hour: local.getUTCHours(), minute: local.getUTCMinutes(), second: local.getUTCSeconds() };
+};
 
 function zonedStamp(target, clock) {
   let stamp = target;
@@ -23,15 +51,14 @@ function zonedStamp(target, clock) {
 }
 
 function clockDay(stamp, clock) {
-  const p = parts(stamp, clock), key = `${p.year}-${p.month}-${p.day}`;
+  const key = localDay(stamp, clock);
   const cache = clockCache(clock).days;
   if (!cache.has(key)) {
-    const start = zonedStamp(Date.UTC(p.year, p.month - 1, p.day), clock);
-    const end = zonedStamp(Date.UTC(p.year, p.month - 1, p.day + 1), clock);
+    const start = zonedStamp(key * DAY, clock);
+    const end = zonedStamp((key + 1) * DAY, clock);
     const weights = [], prefix = [0];
     for (let time = start; time < end; time += SLOT) {
-      const local = parts(time + SLOT / 2, clock);
-      const weight = clock.quarterHourWeights[Math.floor((local.hour * 60 + local.minute) / 15)];
+      const weight = clock.quarterHourWeights[localQuarter(time + SLOT / 2, clock)];
       weights.push(weight);
       prefix.push(prefix.at(-1) + weight * Math.min(SLOT, end - time));
     }
@@ -143,8 +170,8 @@ function continuousClockProbability(prediction,hours,baseProbability) {
       if(prediction.forecastWindows.some(window=>window.scheduled&&window.startHours<=a&&b<=window.endHours+1e-8)) {
         hazard+=step;continue;
       }
-      const stamp=origin+(a+b)/2*HOUR,day=clockDay(stamp,clock),local=parts(stamp,clock);
-      const weight=clock.quarterHourWeights[Math.floor((local.hour*60+local.minute)/15)];
+      const stamp=origin+(a+b)/2*HOUR,day=clockDay(stamp,clock);
+      const weight=clock.quarterHourWeights[localQuarter(stamp,clock)];
       const mean=day.prefix.at(-1)/(day.end-day.start);
       hazard+=step*weight/mean;
     }
