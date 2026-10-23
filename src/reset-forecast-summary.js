@@ -8,7 +8,7 @@ const postUrl = value => /^https:\/\/(?:x|twitter)\.com\/thsottiaux\/status\/\d+
 
 /** Present existing model outputs; never derive a new probability or quota. */
 export function renderResetForecastSummary({ source, prediction = null,
-  timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone, now = new Date(),locale='zh-CN' } = {}) {
+  timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone, now = new Date(),locale='zh-CN',moreOpen=false,following=null } = {}) {
   const t=translator(locale);
   if (!source?.available) return `<p class="forecast-summary-unavailable" data-forecast-summary>${escape(diagnosticText(locale,source?.reason??'预测数据暂不可用'))}</p>`;
   const dateFormat = new Intl.DateTimeFormat('en-GB', { timeZone, year: 'numeric', month: '2-digit',
@@ -103,7 +103,15 @@ export function renderResetForecastSummary({ source, prediction = null,
   // An announced reset is a known time, not a chance: one tile replaces the three.
   const announcedAt=prediction?.evidence?.scheduledResetAt;
   if(announcedAt&&Date.parse(announcedAt)>now.getTime()&&format(announcedAt))
-    glance.push(`<div data-forecast-glance="next-hours"><dt>${escape(t('已宣布的 reset'))}</dt><dd class="forecast-horizons"><span data-forecast-horizon="announced"><small>${escape(t('已宣布的 reset'))}</small><b>${escape(t('{time} 前',{time:format(announcedAt)}))}</b></span></dd></div>`);
+  {
+    // The next reset restarts from the announced one. Show the timeline's own
+    // marker when the page passes it, so the card and the chart agree.
+    const next=following?.pointAt ? following : prediction.followingResetEstimate;
+    const nextShare=Number.isFinite(next?.cumulativeProbability) ? next.cumulativeProbability
+      : Number.isFinite(next?.laterProbability) ? 1-next.laterProbability : null;
+    const nextLine=next?.pointAt&&format(next.pointAt) ? `<span class="forecast-announced-next" data-forecast-following="${escape(next.pointAt)}"><small>${escape(t('下一次 reset'))}</small><b>${escape(format(next.pointAt))}</b>${nextShare===null ? '' : `<small>${escape(t('累计 {percent}%',{percent:Math.round(nextShare*100)}))}</small>`}</span>` : '';
+    glance.push(`<div data-forecast-glance="next-hours"><dt>${escape(t('已宣布的 reset'))}</dt><dd class="forecast-horizons forecast-announced"><span data-forecast-horizon="announced"><small>${escape(t('已宣布的 reset'))}</small><b>${escape(t('{time} 前',{time:format(announcedAt)}))}</b></span>${nextLine}</dd></div>`);
+  }
   else if(horizons.length)glance.push(`<div data-forecast-glance="next-hours"><dt>${escape(t('未来 reset 概率'))}</dt><dd class="forecast-horizons">${horizons.map(([hours,value])=>
     `<span data-forecast-horizon="${hours}"><small>${escape(t('{hours} 小时内 reset',{hours}))}</small><b>${Number((value*100).toFixed(1))}%</b></span>`).join('')}</dd></div>`);
   const windowFrom=dayFormat(prediction?.nextResetWindow?.from),windowTo=dayFormat(prediction?.nextResetWindow?.to);
@@ -125,5 +133,5 @@ export function renderResetForecastSummary({ source, prediction = null,
       ? t('已安排 · {time} 前',{time:format(mention.signal.scheduledFor)})
       : `${t(postLabels[mention.signal?.kind]??'暂未识别')} · ${dayFormat(mention.createdAt)}`)}</a>`);
   const statusLine=`<p>${escape(`${status}${updated ? t(' · 更新 {time}',{time:updated}) : ''} · ${t('你的时间（{zone}）',{zone:timeZone})}`)}${prediction ? ` · ${t(prediction.calibrated===true ? '模型预测' : '模型未校准')}` : ''}</p>`;
-  return `<section class="forecast-summary" data-forecast-summary aria-label="${t('额外 reset 预测关键数据')}">${glance.length ? `<dl class="forecast-glance">${glance.join('')}</dl>` : ''}<details class="forecast-more"><summary>${t('更多数据')}</summary><dl>${rows.join('')}</dl>${statusLine}</details></section>`;
+  return `<section class="forecast-summary" data-forecast-summary aria-label="${t('额外 reset 预测关键数据')}">${glance.length ? `<dl class="forecast-glance">${glance.join('')}</dl>` : ''}<details class="forecast-more"${moreOpen ? ' open' : ''}><summary>${t('更多数据')}</summary><dl>${rows.join('')}</dl>${statusLine}</details></section>`;
 }

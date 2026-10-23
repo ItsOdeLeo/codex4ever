@@ -9,6 +9,7 @@ import { COMPACT_TIMELINE_WIDTH } from './strategy-time-layout.js';
 import { workspaceLayout } from './workspace-layout.js';
 import { syncPlannerMetadata } from './page-metadata.js';
 import { pluginPageClient } from './plugin-page-client.js';
+import { BRAND_MARK_SVG } from './brand-mark.js';
 
 const $ = selector => document.querySelector(selector);
 const escape = value => String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
@@ -27,7 +28,7 @@ function renderStaticLanguage() {
   document.documentElement?.setAttribute('lang',language);
   $('.brand p').textContent=metadata.intro;
   for(const [selector,label] of [['.affiliation-notice','OpenAI Codex 的非官方可视化用量规划工具。与 OpenAI 无隶属关系。'],['#github-star','GitHub'],['#follow-x','在 X 关注我'],
-['#source-code','GitHub 开源'],['#creator-contact','如果你喜欢这个作品，欢迎在 X 上关注我'],['[data-credit-label]','重置数据来源'],['#calculate','↻ 更新计划'],['[data-plugin-hint]','安装成 Codex 插件，就能自动读取这些数据。'],['#overuse-hint','用量过度提醒（仅 Codex 插件）：在 Codex 里说“打开用量过度提醒”。之后你用得比计划快时，会直接在对话里提醒你。']])
+['#source-code','GitHub 开源'],['[data-credit-label]','感谢'],['[data-credit-suffix]','提供 reset 数据'],['[data-follow-label]','如果你喜欢这个作品：'],['#creator-xiaohongshu','小红书'],['#share-site','分享'],['#calculate','↻ 更新计划'],['[data-plugin-hint]','装成 Codex 插件可自动读取。'],['#overuse-hint','用量过度提醒（仅 Codex 插件）：在 Codex 里说“打开用量过度提醒”。之后你用得比计划快时，会直接在对话里提醒你。']])
     {const element=$(selector);if(element)element.textContent=t(label);}
   $('#planner-guide').textContent=language==='zh-CN' ? '使用说明' : 'How it works';
   $('#planner-guide').setAttribute?.('href',language==='zh-CN' ? '/zh/guide/' : '/guide/');
@@ -141,6 +142,20 @@ function saveInput() {
 
 const round = value => Number(value.toFixed(1));
 const MOBILE_TIMELINE_WIDTH=640;
+// The name rides with the forecast at the top, inside any screenshot.
+const BRAND_STAMP=`<div class="brand-stamp" aria-hidden="true"><span>${BRAND_MARK_SVG}</span> Codex4ever</div>`;
+
+function renderForecastCard(graph=null) {
+  const planningPrediction=activePlannerPrediction(planner),planningNow=new Date(planner.snapshot.now);
+  // The chance tiles stay while "Assume no reset" is on: the forecast still
+  // exists, the plan just does not count it, and the card keeps its height.
+  const forecastSummary = renderResetForecastSummary({ source: forecastSource, prediction: planner.snapshot.prediction,
+    timeZone, now: planningNow,locale:language,
+    // Wide screens give the forecast its own card, with room to show the details.
+    moreOpen:globalThis.matchMedia?.('(min-width:1180px)').matches??false,
+    following:graph?.forecastFollowing??null });
+  $('#forecast').innerHTML = `<div class="forecast-control" ${planningPrediction ? `data-forecast-48-probability="${planningPrediction.next48Probability}"` : ''}><span>${t('额外重置预测')}</span></div>${forecastSummary}${BRAND_STAMP}`;
+}
 
 function renderResult(availableWidth=$('#result').clientWidth) {
   const result=planner.result;
@@ -149,13 +164,9 @@ function renderResult(availableWidth=$('#result').clientWidth) {
   $('#result').classList.remove('stale');
   const workspace=workspaceLayout(availableWidth);
   renderedWidth=workspace.width;
-  // The chance tiles stay while "Assume no reset" is on: the forecast still
-  // exists, the plan just does not count it, and the card keeps its height.
-  const forecastSummary = renderResetForecastSummary({ source: forecastSource, prediction: planner.snapshot.prediction,
-    timeZone, now: planningNow,locale:language });
-  $('#forecast').innerHTML = `<div class="forecast-control" ${planningPrediction ? `data-forecast-48-probability="${planningPrediction.next48Probability}"` : ''}><span>${t('额外重置预测')}</span></div>${forecastSummary}`;
   renderStrategyControls();
   if (!result.available) {
+    renderForecastCard();
     $('#result').innerHTML = `<p class="empty-result">${escape(diagnosticText(language,result.reason,'input'))}</p>`;
     $('#method').innerHTML='';
     return;
@@ -166,6 +177,7 @@ function renderResult(availableWidth=$('#result').clientWidth) {
     viewportWidth:availableWidth<COMPACT_TIMELINE_WIDTH ? workspace.timelineWidth
       : Math.max(workspace.timelineWidth,availableWidth<680 ? MOBILE_TIMELINE_WIDTH : 0),
     displayEndHours:planner.displayEndHours,locale:language });
+  renderForecastCard(graph);
   const policyData=result.recommendation ? ` data-policy-search="${result.recommendation.method}"${result.recommendation.primary ? ' data-plan-basis="predicted-extra-resets-first"' : ''}` : '';
   $('#result').innerHTML = `<section class="strategy-panel" aria-label="${t('用量计划')}"${policyData} style="--panel-padding:${workspace.panelPadding}px">
     ${result.recommendation&&!result.recommendation.primary ? `<div class="timeline-toolbar"><span>${t('若始终没有额外重置')}</span></div>` : ''}
@@ -307,6 +319,15 @@ $('#inputs').addEventListener('click', event => {
 });
 
 $('#calculate').addEventListener('click', calculate);
+// Share: the system sheet where there is one, otherwise copy the link.
+$('#share-site')?.addEventListener?.('click',async()=>{
+  const url=globalThis.location?.origin ? `${location.origin}/` : 'https://codex4ever.com/';
+  try {
+    if(navigator.share)await navigator.share({title:'Codex4ever',url});
+    else {await navigator.clipboard.writeText(url);$('#share-site').textContent=t('已复制链接');
+      setTimeout(()=>{$('#share-site').textContent=t('分享');},2000);}
+  } catch { /* Dismissed share sheet or blocked clipboard: nothing to do. */ }
+});
 function handlePlanClick(event) {
   if (!planner.result) return;
   const availability=event.target.closest('button[data-availability-mode]');

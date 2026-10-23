@@ -23,7 +23,7 @@ const guides={
       ['Keep control of your account','The website calculates your plan in your browser. It fetches public evidence without sending your quota inputs. The local MCP can read usage from a locally signed-in Codex account when requested. Neither interface redeems a reset or spends credits for you.']
     ],
     source:'Open source on GitHub',
-    credit:'Reset data',
+    credit:'Thanks to',creditSuffix:'for reset data',
     faqHeading:'Frequently asked questions',
     faq:[
       ['Is Codex4ever affiliated with OpenAI?','No. Codex4ever is an unofficial, MIT-licensed planner built by an independent developer. It is not affiliated with or endorsed by OpenAI.'],
@@ -46,7 +46,7 @@ const guides={
       ['账户由你控制','网页在浏览器内计算计划，获取公开证据时不会发送你填写的额度。本地 MCP 可在请求时读取本机已登录 Codex 的用量。两个入口都不会自动兑换 reset 或消耗 credits。']
     ],
     source:'GitHub 开源',
-    credit:'重置数据来源',
+    credit:'感谢',creditSuffix:'提供 reset 数据',
     faqHeading:'常见问题',
     faq:[
       ['Codex4ever 是 OpenAI 官方的吗？','不是。Codex4ever 是独立开发者制作的非官方规划器，以 MIT 协议开源，与 OpenAI 无隶属或背书关系。'],
@@ -126,7 +126,7 @@ ${guide.sections.map(([heading,text])=>`<section><h2>${escape(heading)}</h2><p>$
 <section><h2>${escape(guide.faqHeading)}</h2>
 ${guide.faq.map(([question,answer])=>`<h3>${escape(question)}</h3><p>${escape(answer)}</p>`).join('\n')}</section>
 <p><a href="/">${escape(guide.back)} →</a></p></article>
-<footer>© 2026 ItsOdeLeo · ${escape(guide.notice)} · <a href="${SOURCE_URL}" rel="noopener">${escape(guide.source)}</a> · ${escape(guide.credit)}: ${DATA_SOURCES.map(([name,url])=>`<a href="${url}" rel="noopener">${escape(name)}</a>`).join(', ')}</footer></main></body></html>`;
+<footer>© 2026 ItsOdeLeo · ${escape(guide.notice)} · <a href="${SOURCE_URL}" rel="noopener">${escape(guide.source)}</a> · ${escape(guide.credit)} ${DATA_SOURCES.map(([name,url])=>`<a href="${url}" rel="noopener">${escape(name)}</a>`).join(', ')} ${escape(guide.creditSuffix)}</footer></main></body></html>`;
 }
 
 /** A plain-text site summary for AI assistants and answer engines (llmstxt.org). */
