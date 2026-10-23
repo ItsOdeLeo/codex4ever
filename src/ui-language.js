@@ -132,7 +132,7 @@ const english={
   '额外 reset':'extra reset','假设首次发生':'assuming the first occurs','概率分布':'distribution',
   '首次发生后':'after the first','第二次（假设首次发生）':'Second (assuming the first)',
   '首次额外reset的概率分布。':'First extra reset distribution. ',
-  '以首次在标记时刻发生为条件。':'Conditional on the first reset at its marker. ',
+  
   '标线对应本条分布最高峰。':'The marker is at this distribution’s highest-density hourly window. ',
   '第二次以首次在预测点发生为前提。':'The second assumes the first happens at its marker.',
   '标线对应概率分布的最高峰。':'The marker is at the distribution’s highest-density hourly window. ',
@@ -190,7 +190,7 @@ const english={
   'Tibo 最近相关回复':'Tibo’s latest related reply',
   'Tibo 最近相关帖子':'Tibo’s latest related post','Tibo 相关帖子':'Tibo’s related posts',
   '暂无可用帖子／回复':'No post or reply available','实时记录':'Live history','缓存 {date}':'Cached {date}',
-  ' · 更新 {time}':' · Updated {time}','模型预测':'Model forecast','模型未校准':'Uncalibrated model','更多数据':'More data','降到平时的 {percent}%':'{percent}% of usual','未来 48 小时':'Next 48h','可能窗口':'Likely window','上次 reset':'Last reset','活动':'Campaign','第 {day} / {total} 天 · {end} 结束':'Day {day} of {total} · ends {end}','{hours} 小时前':'{hours}h ago',
+  ' · 更新 {time}':' · Updated {time}','模型预测':'Model forecast','模型未校准':'Uncalibrated model','更多数据':'More data','降到平时的 {percent}%':'{percent}% of usual','可能窗口':'Likely window','上次 reset':'Last reset','活动':'Campaign','第 {day} / {total} 天 · {end} 结束':'Day {day} of {total} · ends {end}','{hours} 小时前':'{hours}h ago',
   '额外 reset 预测关键数据':'Extra reset forecast evidence',
   '预测怎么算':'How the forecast is built','发布钟点':'Time of day','重置间隔':'Time between resets','距上次重置':'Time since last reset',
   '全部历史 · {count} 个重置日':'All history · {count} reset days',
