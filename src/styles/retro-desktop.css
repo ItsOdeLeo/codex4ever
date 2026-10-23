@@ -1,19 +1,10 @@
 /* Original implementation inspired by Poolsuite's light desktop UI.
  * Theme only: no time coordinates, minimum chart width or planning behavior. */
-@font-face {
-  font-family:'Codex Desktop';font-style:normal;font-weight:400;font-display:swap;
-  src:url('/public/fonts/vt323/VT323-Regular.ttf') format('truetype');
-}
-@font-face {
-  font-family:'Desktop Controls';font-style:normal;font-weight:400;font-display:swap;
-  src:url('/public/fonts/vt323/VT323-Regular.ttf') format('truetype');
-  unicode-range:U+0020-007E;size-adjust:125%;
-}
+/* No web fonts: the pixel names are SVG wordmarks (src/wordmarks.js). */
 :root {
   color-scheme:light;--chart-label:var(--surface);
-  --font-ui:'Desktop Controls',Tahoma,'PingFang SC','Microsoft YaHei',sans-serif;
   --font-reading:-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue','PingFang SC','Microsoft YaHei',sans-serif;
-  --font-brand:'Codex Desktop',ui-monospace,monospace;
+  --font-brand:ui-monospace,monospace;
   /* Pixel face only for what is read at a glance; everything small reads in the system face. */
   font-family:var(--font-reading);
 }
@@ -432,3 +423,14 @@ legend {margin-bottom:8px}
 /* The domain stamp must survive a compressed screenshot: larger and in ink. */
 .brand-stamp {font-size:20px;color:var(--ink);opacity:1}
 .brand-stamp span {width:22px;height:22px}
+/* Pixel wordmarks. --pixel is one glyph cell, chosen so a cell is always a
+ * whole number of device pixels; any other scale blurs the edges. */
+:root {--pixel:2px}
+@media(min-resolution:1.5dppx) {:root {--pixel:1.5px}}
+@media(min-resolution:2.5dppx) {:root {--pixel:calc(4px / 3)}}
+.sr-only {position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.wordmark-slot {display:inline-flex;align-items:center}
+.wordmark {display:block;width:auto}
+.wordmark-en {height:calc(18 * var(--pixel))}
+.wordmark-zh {height:26px}
+.brand-stamp .wordmark-domain {height:18px}

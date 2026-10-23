@@ -8,12 +8,10 @@ const assets=new Map([
   ['/','index.html'],['/app.js','app.js'],['/app.css','app.css'],
   ['/guide/','guide/index.html'],['/zh/guide/','zh/guide/index.html'],
   ['/guide.css','guide.css'],
-  ['/public/fonts/vt323/VT323-Regular.ttf','public/fonts/vt323/VT323-Regular.ttf'],
   ['/experiments/public-reset-events.json','experiments/public-reset-events.json']
 ]);
 const mime=file=>file.endsWith('.js') ? 'text/javascript; charset=utf-8'
-  : file.endsWith('.css') ? 'text/css; charset=utf-8' : file.endsWith('.ttf') ? 'font/ttf'
-  : file.endsWith('.json') ? 'application/json; charset=utf-8' : 'text/html; charset=utf-8';
+  : file.endsWith('.css') ? 'text/css; charset=utf-8' : file.endsWith('.json') ? 'application/json; charset=utf-8' : 'text/html; charset=utf-8';
 
 export async function startPlannerPage({root,port=0}={}) {
   const token=randomBytes(32).toString('hex');

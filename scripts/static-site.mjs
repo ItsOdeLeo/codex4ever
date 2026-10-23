@@ -42,9 +42,7 @@ export async function buildStaticSite({outDir,siteUrl=null,extraPublic=[]}) {
 <link rel="stylesheet" href="${guideCss}"></head>
 <body><main><h1>Page not found</h1><p><a href="/">Open Usage Planner</a> · <a href="/guide/">How it works</a></p></main></body></html>
 `);
-  const font=resolve(outDir,'public/fonts/vt323');
-  await mkdir(font,{recursive:true});
-  for(const name of ['VT323-Regular.ttf','OFL.txt'])await copyFile(resolve(root,'public/fonts/vt323',name),resolve(font,name));
+  await mkdir(resolve(outDir,'public'),{recursive:true});
   for(const name of extraPublic)await copyFile(resolve(root,'public',name),resolve(outDir,'public',name));
   await mkdir(resolve(outDir,'experiments'),{recursive:true});
   await copyFile(resolve(root,'experiments/public-reset-events.json'),resolve(outDir,'experiments/public-reset-events.json'));

@@ -49,8 +49,7 @@ test('插件身份、启动配置、兼容清单和发行 ZIP 相互一致，不
   assert.ok(entries.includes('skills/codex-usage/SKILL.md'));
   assert.ok(entries.includes('THIRD_PARTY_NOTICES.txt'));
   assert.ok(entries.includes('experiments/public-reset-events.json'));
-  for(const entry of ['web/index.html','web/app.js','web/app.css','web/public/fonts/vt323/VT323-Regular.ttf',
-    'web/public/fonts/vt323/OFL.txt','web/guide/index.html'])assert.ok(entries.includes(entry),entry);
+  for(const entry of ['web/index.html','web/app.js','web/app.css','web/guide/index.html'])assert.ok(entries.includes(entry),entry);
   for(const entry of entries)assert.doesNotMatch(entry,/(?:^|\/)(?:\.env[^/]*|\.git|output|node_modules|test)(?:\/|$)/);
 });
 
@@ -112,7 +111,6 @@ test('干净安装副本可直接读取账户并用精确快照规划，无 sess
     assert.ok(script&&style,'资源地址带内容指纹，浏览器不会混用旧脚本');
     assert.equal((await fetch(new URL(script,url))).status,200);
     assert.equal((await fetch(new URL(style,url))).status,200);
-    assert.equal((await fetch(new URL('/public/fonts/vt323/VT323-Regular.ttf',url))).status,200);
     const state=await (await fetch(new URL('/api/session',url),{headers})).json();
     assert.equal(state.session.usageSnapshot.readAt,usageSnapshot.readAt);
     assert.equal(state.session.usageSnapshot.weekly.remainingPercent,usageSnapshot.weekly.remainingPercent);
