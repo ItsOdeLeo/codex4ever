@@ -29,7 +29,7 @@ function renderStaticLanguage() {
   document.documentElement?.setAttribute('lang',language);
   $('.brand p').textContent=metadata.intro;
   for(const [selector,label] of [['.affiliation-notice','OpenAI Codex 的非官方可视化用量规划工具。与 OpenAI 无隶属关系。'],['#github-star','GitHub'],['#follow-x','在 X 关注我'],
-    ['#calculate','更新数据'],['#source-code','GitHub 开源'],['#creator-contact','如果你喜欢这个作品，欢迎在 X 上关注我'],['[data-credit-label]','重置数据来源'],['[data-plugin-hint]','安装成 Codex 插件，就能自动读取这些数据。']])
+    ['#calculate','更新数据'],['#source-code','GitHub 开源'],['#creator-contact','如果你喜欢这个作品，欢迎在 X 上关注我'],['[data-credit-label]','重置数据来源'],['[data-plugin-hint]','安装成 Codex 插件，就能自动读取这些数据。'],['#overuse-hint','用量过度提醒（仅 Codex 插件）：在 Codex 里说“打开用量过度提醒”。之后你用得比计划快时，会直接在对话里提醒你。']])
     {const element=$(selector);if(element)element.textContent=t(label);}
   $('#calculate').setAttribute?.('title',t('采用输入修改并刷新重置证据'));
   $('#planner-guide').textContent=language==='zh-CN' ? '使用说明' : 'How it works';
@@ -127,12 +127,13 @@ function markChanged() {
 }
 
 function renderStrategyControls() {
+  const planningPrediction=activePlannerPrediction(planner);
   $('#strategy-controls').innerHTML=`<div class="control-heading"><h3 id="strategy-controls-title">${t('用量策略')}</h3><span class="instant-label">${t('即时更新')}</span></div>${renderUsageStrategies({
     selected:planner.intent.usageStrategy,locale:language,disabled:!planner.result?.available,
     // Cautious / optimistic belong to keep available: show them right under it.
     after:planner.intent.usageStrategy==='keep-available' ? {'keep-available':renderAvailabilityControls(
       planner.result?.recommendation?.availability ? {...planner.result.recommendation.availability,timeZone} : null,
-      {locale:language,mode:planner.intent.availabilityMode,alertsEnabled:planner.intent.alertsEnabled,disabled:!planner.result?.available},escape)} : {}},escape)}`;
+      {locale:language,mode:planner.intent.availabilityMode},escape)} : {}},escape)}${forecastSource.available&&planner.result?.available ? `<button type="button" class="no-reset-toggle" data-toggle-forecast aria-pressed="${!planningPrediction}" title="${escape(t('按下后隐藏预测的 reset，所有策略都按没有额外 reset 来规划。'))}">${escape(t('假设没有 reset'))}</button>` : ''}`;
 }
 
 function saveInput() {
@@ -171,7 +172,7 @@ function renderResult(availableWidth=$('#result').clientWidth) {
     displayEndHours:planner.displayEndHours,locale:language });
   const consumption=usageConsumptionSummary(result,{locale:language});
   const policyData=result.recommendation ? ` data-policy-search="${result.recommendation.method}"${result.recommendation.primary ? ' data-plan-basis="predicted-extra-resets-first"' : ''}` : '';
-  $('#result').innerHTML = `<section class="strategy-panel" aria-label="${t('用量计划')}"${policyData} style="--panel-padding:${workspace.panelPadding}px"><div class="pace-controls"><div data-current-consumption data-daily="${consumption.dailyPercent}"><span>${t('当前日均消耗 {daily}%',{daily:round(consumption.dailyPercent)})}</span></div>${forecastSource.available ? `<button type="button" class="no-reset-toggle" data-toggle-forecast aria-pressed="${!planningPrediction}" title="${escape(t('按下后隐藏预测的 reset，所有策略都按没有额外 reset 来规划。'))}">${escape(t('假设没有 reset'))}</button>` : ''}
+  $('#result').innerHTML = `<section class="strategy-panel" aria-label="${t('用量计划')}"${policyData} style="--panel-padding:${workspace.panelPadding}px"><div class="pace-controls"><div data-current-consumption data-daily="${consumption.dailyPercent}"><span>${t('当前日均消耗 {daily}%',{daily:round(consumption.dailyPercent)})}</span></div>
     </div><div data-forecast-slot></div>
     ${result.recommendation&&!result.recommendation.primary ? `<div class="timeline-toolbar"><span>${t('若始终没有额外重置')}</span></div>` : ''}
     ${renderStrategyTree(graph, escape)}
@@ -320,9 +321,6 @@ function handlePlanClick(event) {
     dispatchPlanning({type:'set-availability-mode',mode:availability.dataset.availabilityMode});
     saveInput();return;
   }
-  if(event.target.closest('[data-toggle-pace-alerts]')) {
-    dispatchPlanning({type:'toggle-alerts'});saveInput();return;
-  }
   const strategy=event.target.closest('[data-usage-strategy]');
   if(strategy) {
     dispatchPlanning({type:'set-strategy',strategy:strategy.dataset.usageStrategy});
@@ -391,4 +389,5 @@ $('#result').innerHTML=t('点击「计算策略」查看结果。');
 renderInputs();
 // The plugin reads quota itself; the install hint is for the website.
 if(plugin&&$('#plugin-hint'))$('#plugin-hint').hidden=true;
+if(plugin&&$('#overuse-hint'))$('#overuse-hint').hidden=false;
 if(plugin)startPluginPage();else calculate();

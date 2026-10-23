@@ -318,3 +318,9 @@ legend {margin-bottom:8px}
 .plan-card .forecast-horizons small {font-size:11px}
 .plan-card .forecast-horizons b {font-size:18px;line-height:22px}
 .plan-dock .usage-strategies .availability-controls {order:9}
+/* "Assume no reset" sits in the strategy row, set apart by a divider. */
+.plan-dock #strategy-controls {display:flex;flex-wrap:wrap;align-items:flex-start;gap:6px}
+.plan-dock #strategy-controls .no-reset-toggle {margin-left:8px;padding:7px 12px;font-size:13px;position:relative}
+.plan-dock #strategy-controls .no-reset-toggle::before {content:'';position:absolute;left:-9px;top:4px;bottom:4px;border-left:1px solid var(--border)}
+.plan-dock #inputs {flex:0 1 auto}.plan-dock .input-update {align-self:flex-end;margin-bottom:6px}
+@media(max-width:680px) {.plan-dock #strategy-controls .no-reset-toggle {margin-left:0}.plan-dock #strategy-controls .no-reset-toggle::before {display:none}.plan-dock .input-update {align-self:flex-start}}

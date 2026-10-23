@@ -124,8 +124,9 @@ test('提醒开关只改变提醒，不改策略、概率、日期轴；MCP文�
     const text=renderMcpUsageAdvice(advice,{language});
     assert.match(text,language==='en' ? /Pace alert/ : /用量提醒/);
     assert.doesNotMatch(text,/undefined|NaN/);
-    const html=renderAvailabilityControls(advice.availability,{locale:language,mode:'cautious',alertsEnabled:true},String);
-    assert.match(html,/data-toggle-pace-alerts aria-pressed="true"/);
+    const html=renderAvailabilityControls(advice.availability,{locale:language,mode:'cautious'},String);
+    // Real overuse alerts live in the Codex plugin; the page has no toggle.
+    assert.doesNotMatch(html,/data-toggle-pace-alerts/);
     assert.doesNotMatch(html,/undefined|NaN/);
   }
   const optimistic=updateUsagePlanner(state,{type:'set-availability-mode',mode:'optimistic'});

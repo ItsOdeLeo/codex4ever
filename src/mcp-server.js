@@ -315,10 +315,10 @@ export function createCodex4everServer({ collectEvidence = collectLiveResetEvide
     if(response.isError)throw new Error(response.content[0].text);
   }
   server.registerTool('usage_alerts',{
-    title:'Quota reminders: warn when usage runs ahead of the plan',
+    title:'Overuse alerts: warn when usage runs ahead of the plan',
     description:'开启、关闭、查看或立即检查额度提醒。开启时会在 ~/.codex/hooks.json 添加 codex4ever 自己的一条 hook（只增删自己的条目，关闭时删除），并需用户在 Codex 中批准一次；调用前向用户说明这一点。开启后，插件的 Codex hook 在用户发消息前（最多每 10 分钟一次）读取本机额度（只读，不消耗 Codex 用量），'
       +'与最近一次计划比较：比计划多用至少 5% 周额度，或按当前速度会比计划提前 20% 以上用完时，直接在 Codex 中显示提醒并给出回到计划所需的日均用量；systemNotifications=true 时另按间隔弹出系统通知。'
-      +'发生补满时自动按同一规则重新规划。用户说“打开额度提醒”“关掉提醒”“现在检查一下”时调用。',
+      +'发生补满时自动按同一规则重新规划。用户说“打开用量过度提醒”“打开额度提醒”“turn on overuse alerts”“关掉提醒”“现在检查一下”时调用。',
     annotations:{readOnlyHint:false,destructiveHint:false,openWorldHint:true},
     inputSchema:z.object({action:z.enum(['enable','disable','status','check']),
       intervalMinutes:z.number().int().min(10).max(240).optional().describe('系统通知的检查间隔，默认 30 分钟'),
