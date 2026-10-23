@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createUsagePlannerState,updateUsagePlanner,activePlannerPrediction,usagePlannerInput } from '../src/usage-planner-state.js';
+import { createUsagePlannerState,updateUsagePlanner,activePlannerPrediction,usagePlannerInput,noExtraResetBudget } from '../src/usage-planner-state.js';
 
 const now='2026-10-18T12:00:00Z',timeZone='Europe/Berlin',HOUR=3600000;
 const at=hours=>new Date(Date.parse(now)+hours*HOUR).toISOString();
@@ -133,4 +133,14 @@ test('导入插件计划时，正常刷新取账户自己的时间，而不是�
   assert.equal(imported.snapshot.input.weeklyResetDays,Math.floor(hours/24));
   assert.equal(imported.snapshot.input.weeklyResetHours,Math.floor(hours%24));
   assert.ok(imported.snapshot.input.weeklyResetDays<=7,'每周窗口最多 7 天');
+});
+
+test('不算额外 reset 的安全预算：同一规划器关掉预测，刷新前刚好用完',()=>{
+  const planner=updateUsagePlanner(createUsagePlannerState({timeZone:'UTC',usageStrategy:'balanced'}),
+    {type:'new-snapshot',now:'2026-10-23T08:00:00Z',
+      input:{weeklyRemaining:40,weeklyResetDays:4,weeklyResetHours:0,resetDates:['2026-10-30']},
+      prediction:null});
+  assert.equal(noExtraResetBudget(planner),10);
+  assert.equal(planner.intent.usageStrategy,'balanced');
+  assert.equal(noExtraResetBudget(createUsagePlannerState({timeZone:'UTC'})),null);
 });

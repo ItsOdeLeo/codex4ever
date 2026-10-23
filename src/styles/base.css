@@ -83,7 +83,7 @@ legend{font-size:12px;font-weight:650;color:var(--ink);margin-bottom:12px;paddin
 .pace-controls{margin:0 0 20px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px 24px}
 .pace-controls [data-current-consumption]{display:flex;flex-direction:column;gap:5px}
 .pace-controls [data-current-consumption]>span{font-size:18px;font-weight:650;letter-spacing:-.35px;color:var(--ink)}
-.pace-controls [data-current-consumption]>small{font-size:11px;color:var(--muted)}
+.pace-controls [data-current-consumption]>small{font-size:13px;color:var(--muted)}
 .intent-picker{display:flex;gap:7px;flex:0 1 330px;min-width:240px}
 .intent-picker button{flex:1;padding:9px 6px}
 .intent-picker button[aria-pressed=true]{background:var(--accent-soft);border-color:var(--base-selected-border);color:var(--accent-text)}

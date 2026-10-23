@@ -5,7 +5,7 @@ import { renderResetForecastSummary } from './reset-forecast-summary.js';
 import { renderUsageStrategies } from './components/usage-strategies.js';
 import { renderAvailabilityControls } from './components/availability-controls.js';
 import { usageConsumptionSummary } from './usage-consumption-summary.js';
-import { createUsagePlannerState,updateUsagePlanner,activePlannerPrediction } from './usage-planner-state.js';
+import { createUsagePlannerState,updateUsagePlanner,activePlannerPrediction,noExtraResetBudget } from './usage-planner-state.js';
 import { layoutStrategyTree, renderStrategyTree } from './strategy-tree-layout.js';
 import { COMPACT_TIMELINE_WIDTH } from './strategy-time-layout.js';
 import { workspaceLayout } from './workspace-layout.js';
@@ -169,8 +169,9 @@ function renderResult(availableWidth=$('#result').clientWidth) {
       : Math.max(workspace.timelineWidth,availableWidth<680 ? MOBILE_TIMELINE_WIDTH : 0),
     displayEndHours:planner.displayEndHours,locale:language });
   const consumption=usageConsumptionSummary(result,{locale:language});
+  const safeBudget=noExtraResetBudget(planner);
   const policyData=result.recommendation ? ` data-policy-search="${result.recommendation.method}"${result.recommendation.primary ? ' data-plan-basis="predicted-extra-resets-first"' : ''}` : '';
-  $('#result').innerHTML = `<section class="strategy-panel" aria-label="${t('用量计划')}"${policyData} style="--panel-padding:${workspace.panelPadding}px">${graph.compact ? phoneSummary(graph,planningPrediction) : ''}<div class="pace-controls"><div data-current-consumption data-daily="${consumption.dailyPercent}"><span>${t('当前日均消耗 {daily}%',{daily:round(consumption.dailyPercent)})}</span></div>
+  $('#result').innerHTML = `<section class="strategy-panel" aria-label="${t('用量计划')}"${policyData} style="--panel-padding:${workspace.panelPadding}px">${graph.compact ? phoneSummary(graph,planningPrediction) : ''}<div class="pace-controls"><div data-current-consumption data-daily="${consumption.dailyPercent}"><span>${t('当前日均消耗 {daily}%',{daily:round(consumption.dailyPercent)})}</span>${Number.isFinite(safeBudget) ? `<small data-no-reset-budget="${safeBudget}" title="${escape(t('一次额外 reset 都不来，每天用这么多也能撑到正常刷新。'))}">${t('不算额外 reset：每天 {daily}%',{daily:round(safeBudget)})}</small>` : ''}</div>
     </div>
     ${result.recommendation&&!result.recommendation.primary ? `<div class="timeline-toolbar"><span>${t('若始终没有额外重置')}</span></div>` : ''}
     ${renderStrategyTree(graph, escape)}
