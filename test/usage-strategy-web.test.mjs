@@ -71,7 +71,7 @@ test('真实页面策略按钮驱动统一规划，切换不抓取证据、不�
     checkControls();
     assert.doesNotMatch(output.innerHTML,/data-reset-density-plot|quota-refill-assumed-extra/);
     click('[data-usage-strategy]',{usageStrategy:'balanced'});
-    assert.doesNotMatch(output.innerHTML+strategies.innerHTML,/data-usage-slider/,'保持节奏也不再提供用量滑块');
+    assert.doesNotMatch(output.innerHTML+strategies.innerHTML,/data-usage-slider/,'稳如老狗也不再提供用量滑块');
     checkControls();
     await element('#calculate').listeners.click();
     assert.equal(fetches,3,'只有Calculate重新获取证据');

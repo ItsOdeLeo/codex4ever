@@ -10,7 +10,7 @@ import { workspaceLayout } from './workspace-layout.js';
 import { syncPlannerMetadata } from './page-metadata.js';
 import { pluginPageClient } from './plugin-page-client.js';
 import { BRAND_MARK_SVG } from './brand-mark.js';
-import { PRODUCT_DOMAIN } from './planner-name.js';
+import { PRODUCT_DOMAIN,PRODUCT_NAME,PRODUCT_NAME_ZH } from './planner-name.js';
 
 const $ = selector => document.querySelector(selector);
 const escape = value => String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
@@ -27,6 +27,7 @@ const setStatus=message=>{statusMessage=message;$('#status').textContent=t(messa
 
 function renderStaticLanguage() {
   const metadata=syncPlannerMetadata(document,language);
+  const heading=$('.brand h1');if(heading)heading.textContent=language==='zh-CN' ? PRODUCT_NAME_ZH : PRODUCT_NAME;
   document.documentElement?.setAttribute('lang',language);
   for(const [selector,label] of [['.affiliation-notice','OpenAI Codex 的非官方可视化用量规划工具。与 OpenAI 无隶属关系。'],['#github-star','GitHub'],['#follow-x','X'],
 ['#source-code','GitHub 开源'],['[data-credit-label]','感谢'],['[data-credit-suffix]','提供 reset 数据'],['[data-follow-label]','如果你喜欢这个作品，欢迎在 '],['[data-follow-or]',' 或'],['#creator-xiaohongshu','小红书'],['[data-follow-tail]','关注我，或者'],['#share-site','分享给朋友'],['[data-follow-end]','。'],['#calculate','↻ 更新计划'],['[data-plugin-hint]','可安装成 Codex 插件，自动读取以上数据。'],['#overuse-hint','用量过度提醒（仅 Codex 插件）：在 Codex 里说“打开用量过度提醒”。之后你用得比计划快时，会直接在对话里提醒你。']])

@@ -41,7 +41,7 @@ test('高预测概率被计入计划并推迟耗尽，低概率不计入；未�
   const no = plan(), low = plan({prediction:prior(.0001)}), high = plan({prediction:prior(.98)});
   const depletion = result => result.milestones.points.find(point=>point.reasons.includes('depletion')).hours;
   assert.equal(low.phasePlans[0].dailyPercent,no.phasePlans[0].dailyPercent);
-  assert.equal(high.phasePlans[0].dailyPercent,no.phasePlans[0].dailyPercent,'保持节奏不改目标日均');
+  assert.equal(high.phasePlans[0].dailyPercent,no.phasePlans[0].dailyPercent,'稳如老狗不改目标日均');
   assert.equal(no.recommendation.primary?.assumedResetTimes?.length ?? 0,0);
   assert.equal(low.recommendation.primary?.assumedResetTimes?.length ?? 0,0);
   assert.ok(high.recommendation.primary.assumedResetTimes.length>=1);

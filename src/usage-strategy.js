@@ -1,11 +1,11 @@
 const HOUR=3600000,EPS=1e-7;
 
 export const usageStrategies=Object.freeze([
-  Object.freeze({id:'balanced',label:'保持节奏',description:'按当前速度用，看什么时候用完'}),
-  Object.freeze({id:'keep-available',label:'保持可用',description:'尽量一直有额度，必要时放慢'}),
+  Object.freeze({id:'balanced',label:'稳如老狗',description:'按当前速度用，看什么时候用完'}),
+  Object.freeze({id:'keep-available',label:'细水长流',description:'尽量一直有额度，必要时放慢'}),
   Object.freeze({id:'maximize',label:'赛博牛马拉满',description:'在下次补满前刚好用完'}),
-  Object.freeze({id:'weekdays',label:'周末不用',description:'周末休息，额度分给工作日'}),
-  Object.freeze({id:'weekend-focus',label:'只在周末用',description:'优先在周末用完额度'})
+  Object.freeze({id:'weekdays',label:'周末躺平',description:'周末休息，额度分给工作日'}),
+  Object.freeze({id:'weekend-focus',label:'周末卷起来',description:'平时不用，额度都留到周末'})
 ]);
 export const validUsageStrategy=value=>usageStrategies.some(strategy=>strategy.id===value);
 

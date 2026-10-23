@@ -91,7 +91,7 @@ export function layoutStrategyTree(result, { expandedLevel = 0, showAll = false,
         resetIndex: result.paceChoices ? event.resetIndex : undefined,
         lines: [time(event.at),
           `${event.expiresOn.slice(5).replace('-', '/')}到期`,
-          ...(event.overwrittenPercent > 1e-6 ? [`提前兑换将覆盖 ${round(event.overwrittenPercent)}%`] : [])] };
+          ...(event.overwrittenPercent > 1e-6 ? [`提前兑换会浪费剩下的 ${round(event.overwrittenPercent)}%`] : [])] };
       nodes.push(backup);
       link(decision.id, backup.id, 'backup');
       edges.at(-1).lane = resourceCount++;

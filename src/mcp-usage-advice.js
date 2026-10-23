@@ -131,7 +131,7 @@ export function renderMcpUsageAdvice(advice,{language='en'}={}) {
     : (zh ? `当前等待；${date(a.reviewAt)} 复查。` : `Wait for now; review ${date(a.reviewAt)}.`));
   if(advice.availability) {
     const goal=advice.availability;
-    rows.push(zh ? `保持可用：${goal.mode==='optimistic' ? '乐观' : '稳妥'}；目标预留约 ${p(goal.bufferPercent)}。`
+    rows.push(zh ? `细水长流：${goal.mode==='optimistic' ? '乐观' : '稳妥'}；目标预留约 ${p(goal.bufferPercent)}。`
       : `Keep available: ${goal.mode}; target buffer about ${p(goal.bufferPercent)}.`);
     if(goal.forecastUsed)rows.push(zh ? `${date(goal.reviewAt)} 前额外 reset：${p(goal.probabilityOfResetByReview*100)}（模型估计${advice.forecast.calibrated ? '' : '，未校准'}）。`
       : `Extra reset by ${date(goal.reviewAt)}: ${p(goal.probabilityOfResetByReview*100)} (model estimate${advice.forecast.calibrated ? '' : ', uncalibrated'}).`);

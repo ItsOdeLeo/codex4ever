@@ -401,7 +401,7 @@ test('实时证据、条件用量、备用切换和精简累计概率；保持�
     assert.doesNotMatch(element('#inputs').innerHTML+output.innerHTML,/保持当前速度|Fast|session/i);
     await element('#calculate').listeners.click();
     countNoReset();
-    assert.match(output.innerHTML,/data-phase-daily="20"/,'保持节奏按当前日均用量');
+    assert.match(output.innerHTML,/data-phase-daily="20"/,'稳如老狗按当前日均用量');
     assert.equal(saved.currentPhasePace,undefined,'不再保存用量加量');
     assert.equal(saved.timelineOrientation,undefined);
     assert.doesNotMatch(output.innerHTML,/data-timeline-direction|strategy-graph-vertical/);

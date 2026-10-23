@@ -88,7 +88,7 @@ test('整页切换中英不重新抓取或改变分支，记住语言，英文�
     const chosen=fingerprint();
     language('zh-CN');
     assert.equal(html.attributes.lang,'zh-CN');
-    assert.equal(document.title,'Usage Planner | Codex 额度与 Reset 用量规划');
+    assert.equal(document.title,'赛博牛马规划器 | Codex 额度与 reset 规划');
     assert.match(element('meta[name="description"]').attributes.content,/根据 Codex 剩余额度/);
     assert.equal(element('#planner-guide').attributes.href,'/zh/guide/');
     assert.equal(element('[data-follow-label]').textContent,'如果你喜欢这个作品，欢迎在 ');
@@ -96,8 +96,8 @@ test('整页切换中英不重新抓取或改变分支，记住语言，英文�
     assert.equal(element('.affiliation-notice').textContent,'OpenAI Codex 的非官方可视化用量规划工具。与 OpenAI 无隶属关系。');
     assert.match(element('#forecast').innerHTML,/12 小时内 reset/);
     assert.match(element('#strategy-controls').innerHTML,/赛博牛马拉满/);
-    assert.match(element('#strategy-controls').innerHTML,/周末不用/);
-    assert.match(element('#strategy-controls').innerHTML,/只在周末用/);
+    assert.match(element('#strategy-controls').innerHTML,/周末躺平/);
+    assert.match(element('#strategy-controls').innerHTML,/周末卷起来/);
     assert.doesNotMatch(output.innerHTML,/data-plan-mode|policy-recommendation|data-usage-strategy/);
     assert.match(output.innerHTML,/<span class="timeline-lane-text">剩余额度<\/span>/);
     assert.doesNotMatch(output.innerHTML,/自定义用量/);

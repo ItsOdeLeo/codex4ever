@@ -33,13 +33,13 @@ const guides={
       ['How do I use Usage Planner inside Codex?','Install the plugin with: codex plugin marketplace add ItsOdeLeo/usage-planner, then codex plugin add usage-planner@usage-planner. Start a new chat and ask Codex to plan your usage from your current quota. It reads your local, signed-in quota and needs no separate API key.']
     ],
     notice:'Unofficial visual usage planner for OpenAI Codex. Not affiliated with OpenAI.'},
-  'zh-CN':{path:'/zh/guide/',title:'Codex 用量、额度与 Reset 规划指南 | Usage Planner',
-    description:'Usage Planner 帮你规划 Codex 每周额度：按现在的速度能用多久、额外 reset 大概什么时候来、备用 reset 什么时候值得用。',
+  'zh-CN':{path:'/zh/guide/',title:'Codex 用量与 reset 规划指南 | 赛博牛马规划器',
+    description:'赛博牛马规划器帮你规划 Codex 每周额度：按现在的速度能用多久、额外 reset 大概什么时候来、备用 reset 什么时候值得用。',
     heading:'规划你的 Codex 用量',back:'打开规划器',
-    intro:'Usage Planner（原名 Codex4ever）是 OpenAI Codex 每周额度的非官方规划工具。它告诉你按现在的速度额度能撑多久、额外 reset 大概什么时候来，以及备用 reset 什么时候值得用。',
+    intro:'赛博牛马规划器（英文名 Usage Planner，原名 Codex4ever）是 OpenAI Codex 每周额度的非官方规划工具。它告诉你按现在的速度额度能撑多久、额外 reset 大概什么时候来，以及备用 reset 什么时候值得用。',
     sections:[
       ['从现在的额度开始','填上本周还剩多少额度、离正常刷新还有多久，有备用 reset 的话再填上到期日期。规划器会根据你已经用掉的额度算出每天的用量，并告诉你什么时候会用完。'],
-      ['选一种用法','保持节奏：按现在的速度用。保持可用：必要时放慢，保证一直有额度。赛博牛马拉满：在下次补满前全部用完。周末不用、只在周末用：把额度集中在对应的日子。时间轴上能看到每天用多少、剩多少、什么时候补满、什么时候用完。'],
+      ['选一种用法','稳如老狗：按现在的速度用。细水长流：必要时放慢，保证一直有额度。赛博牛马拉满：在下次补满前全部用完。周末躺平、周末卷起来：把额度集中在对应的日子。时间轴上能看到每天用多少、剩多少、什么时候补满、什么时候用完。'],
       ['看懂 reset 预测','预测参考了所有公开的 reset 记录：两次 reset 一般隔多久、通常在几点发。Codex 团队 Tibo 发的帖子也会算进去；他已经宣布的 reset，会直接按宣布的时间显示。第一条曲线是下一次额外 reset，第二条假设第一次发生在标记的时间。这些都是估算，不是保证。'],
       ['也看看没有 reset 的情况','打开「假设没有 reset」，所有用法都会按一次额外 reset 都不来重新规划。每次补满（备用 reset、正常刷新或额外 reset）都会重新开始 7 天周期。真的 reset 之后，更新额度再算一遍就行。'],
       ['在 Codex 里直接用','装上 Codex 插件后，它会在你自己的电脑上读取已登录账户的额度，并在对话旁边打开同一个规划器。其他 MCP 客户端可以用 npm 包 usage-planner。预测不需要任何 API key。'],
@@ -49,11 +49,11 @@ const guides={
     credit:'感谢',creditSuffix:'提供 reset 数据',
     faqHeading:'常见问题',
     faq:[
-      ['Usage Planner 是 OpenAI 官方的吗？','不是。Usage Planner 是独立开发者制作的非官方规划器，以 MIT 协议开源，与 OpenAI 无隶属或背书关系。'],
+      ['赛博牛马规划器是 OpenAI 官方的吗？','不是。赛博牛马规划器是独立开发者制作的非官方规划器，以 MIT 协议开源，与 OpenAI 无隶属或背书关系。'],
       ['网页会把我的额度发送到服务器吗？','不会。网页在浏览器内计算计划，只下载公开的 reset 证据，你填写的额度不会离开页面。'],
-      ['Usage Planner 会自动兑换备用 reset 或消耗 credits 吗？','不会。它只建议日均用量，并显示备用 reset 何时可能有用。是否兑换由你在 Codex 中决定。'],
+      ['赛博牛马规划器会自动兑换备用 reset 或消耗 credits 吗？','不会。它只建议日均用量，并显示备用 reset 何时可能有用。是否兑换由你在 Codex 中决定。'],
       ['额外 reset 是怎么预测的？','预测依据公开的历史 reset 公告、当前 reset 活动，以及 OpenAI Codex 团队 Tibo 的公开帖子。概率是实验性估计，不保证个人账户一定刷新。'],
-      ['怎样在 Codex 里使用 Usage Planner？','运行 codex plugin marketplace add ItsOdeLeo/usage-planner，再运行 codex plugin add usage-planner@usage-planner 安装插件。新开对话，让 Codex 根据当前额度规划用量即可。它读取本机已登录账户的额度，不需要另外的 API key。']
+      ['怎样在 Codex 里使用赛博牛马规划器？','运行 codex plugin marketplace add ItsOdeLeo/usage-planner，再运行 codex plugin add usage-planner@usage-planner 安装插件。新开对话，让 Codex 根据当前额度规划用量即可。它读取本机已登录账户的额度，不需要另外的 API key。']
     ],
     notice:'OpenAI Codex 的非官方可视化用量规划工具。与 OpenAI 无隶属关系。'}
 };
@@ -81,7 +81,7 @@ export function renderSeoHead({siteUrl=null,page='planner',language='en'}={}) {
     description:meta.description,inLanguage:language,about:{'@type':'WebApplication',name:'Usage Planner'},
     ...(url ? {url,mainEntityOfPage:url} : {})
   } : {
-    '@context':'https://schema.org','@type':'WebApplication',name:'Usage Planner',alternateName:'Codex4ever',
+    '@context':'https://schema.org','@type':'WebApplication',name:'Usage Planner',alternateName:['赛博牛马规划器','Codex4ever'],
     description:meta.description,applicationCategory:'DeveloperApplication',operatingSystem:'Web',
     inLanguage:['en','zh-CN'],isAccessibleForFree:true,license:'https://opensource.org/licenses/MIT',
     author:{'@type':'Person',name:'ItsOdeLeo',url:CREATOR_URL},
@@ -119,7 +119,7 @@ function renderGuide({language,siteUrl}) {
 ${renderSeoHead({siteUrl,page:'guide',language})}
 <meta name="theme-color" content="#F7D5D5"><link rel="stylesheet" href="/src/styles/guide.css"></head>
 <body class="guide-page"><main>
-<header class="site-header"><div class="brand"><span class="brand-mark" aria-hidden="true">${BRAND_MARK_SVG}</span><div><a href="/">Usage Planner</a></div></div>
+<header class="site-header"><div class="brand"><span class="brand-mark" aria-hidden="true">${BRAND_MARK_SVG}</span><div><a href="/">${language==='zh-CN' ? '赛博牛马规划器' : 'Usage Planner'}</a></div></div>
 <nav aria-label="${language==='en' ? 'Language' : '语言'}"><a href="/guide/" lang="en" hreflang="en"${language==='en' ? ' aria-current="page"' : ''}>English</a> · <a href="/zh/guide/" lang="zh-CN" hreflang="zh-CN"${language==='zh-CN' ? ' aria-current="page"' : ''}>中文</a></nav></header>
 <article><h1>${escape(guide.heading)}</h1><p>${escape(guide.intro)}</p>
 ${guide.sections.map(([heading,text])=>`<section><h2>${escape(heading)}</h2><p>${escape(text)}</p></section>`).join('\n')}
@@ -136,7 +136,7 @@ function renderLlmsText(origin) {
 
 > ${PLANNER_METADATA.en.description} Unofficial; not affiliated with OpenAI. MIT licensed.
 
-Usage Planner (formerly Codex4ever) estimates when your remaining OpenAI Codex quota runs out, when a banked reset could help, and how possible extra resets change a daily usage plan. The website calculates in the browser; the Codex plugin reads a locally signed-in quota. Neither redeems resets or spends credits.
+Usage Planner (Chinese name 赛博牛马规划器, formerly Codex4ever) estimates when your remaining OpenAI Codex quota runs out, when a banked reset could help, and how possible extra resets change a daily usage plan. The website calculates in the browser; the Codex plugin reads a locally signed-in quota. Neither redeems resets or spends credits.
 
 ## Pages
 

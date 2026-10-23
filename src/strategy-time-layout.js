@@ -174,7 +174,7 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
   const card = (hours, node, kind) => annotations.push({ ...node, anchorX: axis.xAtHours(hours),
     atHours: hours, edgeKind: kind, width: Math.min(compact ? Math.max(COMPACT_CARD_WIDTH,node.minWidth??0) : node.width??190,plotLabelWidth), height: 64,
     from: `decision:${Math.max(0, pointIndex(hours))}` });
-  const expires = reset => t('{date} 24:00到期（估算）',{date:reset.expiresOn.slice(5).replace('-', '/')});
+  const expires = reset => t('{date} 24:00 到期（估算）',{date:reset.expiresOn.slice(5).replace('-', '/')});
   const scenario=result.forecastScenario;
   // Inventory is not a scheduled action. Only actual recommended redemptions
   // receive a dated node and a connector to the quota line.
@@ -210,7 +210,7 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
       warning: event.deadlineDriven || event.overwrittenPercent > 1e-6,
       lines: [time(event.at),
         event.deadlineDriven ? expires(event) : t('{date}到期',{date:event.expiresOn.slice(5).replace('-', '/')}),
-        ...(event.overwrittenPercent > 1e-6 ? [t('提前兑换将覆盖 {percent}%',{percent:round(event.overwrittenPercent)})] : []),
+        ...(event.overwrittenPercent > 1e-6 ? [t('提前兑换会浪费剩下的 {percent}%',{percent:round(event.overwrittenPercent)})] : []),
         ...(bankRisk ? [bankRisk] : [])],
       lineTones: ['',event.deadlineDriven ? 'danger' : '',
         ...(event.overwrittenPercent > 1e-6 ? ['danger'] : []),...(bankRisk ? [''] : [])] }, 'backup');
