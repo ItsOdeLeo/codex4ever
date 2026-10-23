@@ -95,7 +95,7 @@ test('整页切换中英不重新抓取或改变分支，记住语言，英文�
     assert.match(element('#strategy-controls').innerHTML,/即时更新/);
     assert.equal(element('.affiliation-notice').textContent,'OpenAI Codex 的非官方可视化用量规划工具。与 OpenAI 无隶属关系。');
     assert.match(element('#forecast').innerHTML,/12 小时内 reset/);
-    assert.match(element('#strategy-controls').innerHTML,/用满 100%/);
+    assert.match(element('#strategy-controls').innerHTML,/赛博牛马拉满/);
     assert.match(element('#strategy-controls').innerHTML,/周末不用/);
     assert.match(element('#strategy-controls').innerHTML,/只在周末用/);
     assert.doesNotMatch(output.innerHTML,/data-plan-mode|policy-recommendation|data-usage-strategy/);
