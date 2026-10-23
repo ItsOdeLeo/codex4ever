@@ -18,7 +18,7 @@
   font-family:var(--font-reading);
 }
 body {min-height:100vh;background:var(--canvas);-webkit-font-smoothing:antialiased}
-.site-header {border-bottom:1px solid var(--border);padding-bottom:16px}
+.site-header {border-bottom:1px solid var(--divider);padding-bottom:16px}
 h1 {font-family:var(--font-brand);font-size:36px;font-weight:400;letter-spacing:-1px;line-height:1}
 .brand-mark {background:var(--accent);color:var(--ink);border:1px solid var(--border);border-radius:4px;box-shadow:2px 2px 0 var(--shadow)}
 .brand p {margin-top:7px}
@@ -42,7 +42,7 @@ h1 {font-family:var(--font-brand);font-size:36px;font-weight:400;letter-spacing:
 .calendar-panel {box-shadow:4px 4px 0 color-mix(in srgb,var(--shadow) 18%,transparent)}
 #output>h2 {display:flex;align-items:center;gap:12px;font-size:14px;letter-spacing:0}
 #output>h2::after {content:'';flex:1;height:7px;background:repeating-linear-gradient(to bottom,var(--ink) 0 1px,transparent 1px 3px)}
-.forecast-control {color:var(--ink);border-bottom:1px solid var(--border);padding-bottom:10px}
+.forecast-control {color:var(--ink);border-bottom:1px solid var(--divider);padding-bottom:10px}
 .forecast-summary dl>div {border-bottom:0;padding:11px 0}
 .forecast-summary dl>div:first-child {padding-top:2px}
 .forecast-summary dt {font-weight:400}
@@ -57,7 +57,7 @@ button.primary:active {box-shadow:inset 1px 1px 0 var(--pool-mint-ink),inset -1p
 input[type=number],.delay-control {border:1px solid var(--border);background:var(--surface-soft);border-radius:2px;box-shadow:inset 1px 1px 0 var(--pool-edge)}
 .delay-control button,.delay-control input[type=number] {background:transparent;box-shadow:none}
 .delay-control button:hover:not(:disabled) {background:var(--accent-soft)}
-.calendar-field {border-bottom-color:var(--pool-edge)}
+.calendar-field {border-bottom-color:var(--divider)}
 .calendar-summary button {background:var(--bank-surface);border-color:var(--bank-border);color:var(--warning-text);border-radius:3px}
 .month-grid button {background:transparent;border-color:transparent;box-shadow:none}
 .month-grid button[aria-pressed=true] {background:var(--accent-soft);border-color:var(--border);color:var(--accent-text)}
@@ -66,7 +66,7 @@ input[type=number],.delay-control {border:1px solid var(--border);background:var
 .intent-picker {padding:3px;gap:3px;background:var(--surface-soft);border:1px solid var(--border);border-radius:4px;box-shadow:none}
 .intent-picker button {padding:7px 6px;background:transparent;border-color:transparent;box-shadow:none}
 .intent-picker button[aria-pressed=true] {background:var(--accent-soft);border-color:var(--border);color:var(--accent-text);box-shadow:inset 1px 1px 0 var(--highlight)}
-.timeline-toolbar {border-top-color:var(--pool-edge)}
+.timeline-toolbar {border-top-color:var(--divider)}
 .tree-scroll {scrollbar-color:var(--pool-edge) transparent}
 .time-day {font-size:12px;font-weight:600}
 /* Only the brand title keeps the pixel face; every other text uses one
@@ -135,7 +135,7 @@ footer a {color:var(--ink);text-decoration-color:var(--link-stroke);text-underli
 .tree-edges .reset-element[data-reset-element="2"] .reset-density-line {stroke-dasharray:4 3}
 .tree-edges .reset-element :is(.forecast-mode-guide,.forecast-following-guide) {stroke:var(--reset-accent);stroke-width:1;stroke-opacity:.85}
 .reset-element .reset-density-caption>span:first-child::before {content:'';display:inline-block;width:7px;height:7px;margin-right:6px;background:var(--reset-curve);vertical-align:1px}
-.calculation-notes {border-top-color:var(--pool-edge)}
+.calculation-notes {border-top-color:var(--divider)}
 .forecast-method {margin-top:20px;padding:18px 20px;background:var(--surface);border:1px solid var(--border);border-radius:7px;box-shadow:3px 3px 0 color-mix(in srgb,var(--shadow) 18%,transparent)}
 .forecast-method h3 {margin:0 0 14px;font-size:13px;font-weight:650}
 .forecast-method dl {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:0 0 14px}
@@ -176,11 +176,11 @@ button:focus-visible,input:focus-visible,summary:focus-visible,.tree-scroll:focu
 .forecast-summary dt,.forecast-summary dd small,.forecast-method dt,.forecast-method small {font-size:12px}
 .forecast-method p {font-size:13px}
 .forecast-data-status {font-size:12px}
-footer {font-size:12px;line-height:1.8;margin-top:32px;padding-top:14px;border-top:1px solid var(--pool-edge)}
+footer {font-size:12px;line-height:1.8;margin-top:32px;padding-top:14px;border-top:1px solid var(--divider)}
 /* Less text: secondary forecast facts fold away, labels the UI already implies go. */
 .instant-label {display:none}
 .forecast-summary q {-webkit-line-clamp:2}
-.forecast-more {margin-top:4px;border-top:1px solid var(--pool-edge);padding-top:10px}
+.forecast-more {margin-top:4px;border-top:1px solid var(--divider);padding-top:10px}
 .forecast-more>summary {cursor:pointer;font-size:12px;color:var(--muted);list-style-position:inside}
 .forecast-more[open]>summary {margin-bottom:4px}
 .forecast-more>p {font-size:11px;color:var(--muted);margin:8px 0 0}
@@ -200,7 +200,7 @@ footer {font-size:12px;line-height:1.8;margin-top:32px;padding-top:14px;border-t
 .forecast-more>summary::before {content:'▸ '}
 .forecast-more[open]>summary::before {content:'▾ '}
 /* Glance list: label left, value right, one line each. */
-.forecast-glance>div {display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:7px 0!important;border-bottom:1px dotted var(--pool-edge)!important}
+.forecast-glance>div {display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:7px 0!important;border-bottom:1px dotted var(--divider)!important}
 .forecast-glance>div:last-child {border-bottom:0!important}
 .forecast-glance dt {margin:0;font-size:12px;color:var(--muted);white-space:nowrap}
 .forecast-glance dd {margin:0;font-size:13px;text-align:right}
@@ -245,12 +245,12 @@ footer {font-size:12px;line-height:1.8;margin-top:32px;padding-top:14px;border-t
 .strategy-graph[data-compact] .graph-node span {font-size:10px;line-height:15px}
 /* One divider style: black outlines frame panels; every division inside a
    panel is the same thin grey rule (no black or dotted inner lines). */
-.forecast-control {border-bottom:1px solid var(--pool-edge)}
-.forecast-glance>div {border-bottom:1px solid var(--pool-edge)!important}
-.forecast-more {border-top:1px solid var(--pool-edge)}
-.calendar-field {border-bottom:1px solid var(--pool-edge)}
-.timeline-toolbar {border-top:1px solid var(--pool-edge)}
-#inputs {border-bottom:1px solid var(--pool-edge)}
+.forecast-control {border-bottom:1px solid var(--divider)}
+.forecast-glance>div {border-bottom:1px solid var(--divider)!important}
+.forecast-more {border-top:1px solid var(--divider)}
+.calendar-field {border-bottom:1px solid var(--divider)}
+.timeline-toolbar {border-top:1px solid var(--divider)}
+#inputs {border-bottom:1px solid var(--divider)}
 /* Compact inputs. */
 #inputs {padding:14px 16px}
 .compact-form {gap:12px}
@@ -260,7 +260,7 @@ legend {margin-bottom:8px}
 .refresh-row {gap:6px}
 .simple-fields {gap:8px}
 /* Cautious / optimistic sit under keep available as its sub-options. */
-.usage-strategies .availability-controls {margin:2px 0 6px 14px;padding-left:10px;border-left:1px solid var(--pool-edge)}
+.usage-strategies .availability-controls {margin:2px 0 6px 14px;padding-left:10px;border-left:1px solid var(--divider)}
 /* Next 12h / 24h / 48h reset chances, side by side. */
 .forecast-glance>[data-forecast-glance="next-hours"] {flex-direction:column;align-items:stretch!important;gap:6px}
 .forecast-horizons {display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0}
@@ -289,7 +289,7 @@ legend {margin-bottom:8px}
 .plan-card .forecast-more {margin-top:6px;font-size:11px}
 .plan-card .forecast-more summary {color:var(--muted)}
 .plan-card .forecast-more[open] {padding:8px 0}
-.plan-dock {display:flex;flex-direction:column;gap:14px;margin-top:18px;padding-top:16px;border-top:1px solid var(--border)}
+.plan-dock {display:flex;flex-direction:column;gap:14px;margin-top:18px;padding-top:16px;border-top:1px solid var(--divider)}
 .plan-dock #strategy-controls .control-heading {display:none}
 .plan-dock .usage-strategies {display:flex;flex-wrap:wrap;gap:6px}
 .plan-dock .usage-strategies button {display:block;padding:7px 12px}
@@ -321,6 +321,6 @@ legend {margin-bottom:8px}
 /* "Assume no reset" sits in the strategy row, set apart by a divider. */
 .plan-dock #strategy-controls {display:flex;flex-wrap:wrap;align-items:flex-start;gap:6px}
 .plan-dock #strategy-controls .no-reset-toggle {margin-left:8px;padding:7px 12px;font-size:13px;position:relative}
-.plan-dock #strategy-controls .no-reset-toggle::before {content:'';position:absolute;left:-9px;top:4px;bottom:4px;border-left:1px solid var(--border)}
+.plan-dock #strategy-controls .no-reset-toggle::before {content:'';position:absolute;left:-9px;top:4px;bottom:4px;border-left:1px solid var(--divider)}
 .plan-dock #inputs {flex:0 1 auto}.plan-dock .input-update {align-self:flex-end;margin-bottom:6px}
 @media(max-width:680px) {.plan-dock #strategy-controls .no-reset-toggle {margin-left:0}.plan-dock #strategy-controls .no-reset-toggle::before {display:none}.plan-dock .input-update {align-self:flex-start}}

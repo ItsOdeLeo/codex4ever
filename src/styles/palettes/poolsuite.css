@@ -25,6 +25,8 @@
   --ink:var(--pool-black);
   --muted:var(--pool-charcoal);
   --border:var(--pool-black);
+  /* Every section rule (header, card sections, footer) uses this one colour. */
+  --divider:var(--border);
   --highlight:var(--pool-white);
   --shadow:var(--pool-black);
   --accent:var(--pool-mint);

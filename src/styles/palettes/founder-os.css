@@ -10,6 +10,7 @@
   --ink:#EDF7F9;
   --muted:#96AEB4;
   --border:#39393D;
+  --divider:var(--border);
   --highlight:#FFFFFF;
   --shadow:#000000;
 

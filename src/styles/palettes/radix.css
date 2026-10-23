@@ -28,6 +28,7 @@
   --ink:var(--slate-12);
   --muted:var(--slate-11);
   --border:var(--slate-7);
+  --divider:var(--border);
   --highlight:var(--white);
   --shadow:var(--slate-12);
   --accent:var(--indigo-9);

@@ -19,6 +19,7 @@
   --ink:var(--sample-ink);
   --muted:var(--sample-ink);
   --border:color-mix(in srgb,var(--sample-ink) 22%,var(--surface));
+  --divider:var(--border);
   --highlight:var(--sample-paper-highlight);
   --shadow:var(--sample-ink);
   --paper-fiber:var(--sample-ink);
