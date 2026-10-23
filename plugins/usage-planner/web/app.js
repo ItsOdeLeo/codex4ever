@@ -1421,10 +1421,13 @@ function intervalSurvival(distribution, ageDays) {
   }
   return kernelSurvival(distribution, ageDays);
 }
+var truncations = /* @__PURE__ */ new WeakMap();
 function kernelSurvival(distribution, ageDays) {
   if (ageDays <= 0) return 1;
   const { intervals, bandwidthDays, priorEquivalentIntervals, meanIntervalDays } = distribution;
-  const observed = intervals.reduce((sum, length) => sum + normalSurvival((ageDays - length) / bandwidthDays) / normalSurvival(-length / bandwidthDays), 0);
+  if (!truncations.has(distribution)) truncations.set(distribution, intervals.map((length) => normalSurvival(-length / bandwidthDays)));
+  const truncation = truncations.get(distribution);
+  const observed = intervals.reduce((sum, length, index) => sum + normalSurvival((ageDays - length) / bandwidthDays) / truncation[index], 0);
   return (observed + priorEquivalentIntervals * Math.exp(-ageDays / meanIntervalDays)) / (intervals.length + priorEquivalentIntervals);
 }
 function renewIntervalDistribution(distribution, resetAt) {
@@ -1457,8 +1460,8 @@ function fitIntervals(intervals, priorDailyProbability) {
   return { daily, distribution, meanIntervalDays: average, meanIntervalConfidence: confidence };
 }
 function resetIntervalModel(times, nowMs, timeZone2, priorDailyProbability, campaign = null) {
-  const localDay = new Intl.DateTimeFormat("en-CA", { timeZone: timeZone2, year: "numeric", month: "2-digit", day: "2-digit" });
-  const eventDays = [...new Map(times.map((time) => [localDay.format(time), time])).values()];
+  const localDay2 = new Intl.DateTimeFormat("en-CA", { timeZone: timeZone2, year: "numeric", month: "2-digit", day: "2-digit" });
+  const eventDays = [...new Map(times.map((time) => [localDay2.format(time), time])).values()];
   const all = eventDays.slice(1).map((time, index) => ({ end: time, start: eventDays[index], days: (time - eventDays[index]) / DAY }));
   const start = Date.parse(campaign?.startsAt), end = Date.parse(campaign?.endsAt);
   const active = campaign?.status === "active", ended = campaign?.status === "ended";
@@ -1599,15 +1602,15 @@ function resetTimingDistribution({
   const start = new Date(now).getTime();
   if (!Number.isFinite(start) || !Number.isInteger(searchDays) || searchDays < 1 || searchDays > 31)
     throw new Error("\u91CD\u7F6E\u5206\u5E03\u9700\u8981\u6709\u6548\u65F6\u95F4\u53CA1\u201331\u5929\u641C\u7D22\u8303\u56F4");
-  const localDay = new Intl.DateTimeFormat("en-CA", { timeZone: timeZone2, year: "numeric", month: "2-digit", day: "2-digit" });
+  const localDay2 = new Intl.DateTimeFormat("en-CA", { timeZone: timeZone2, year: "numeric", month: "2-digit", day: "2-digit" });
   const days = [];
   let from = start, before = 0;
   for (let index = 0; index < searchDays; index++) {
-    const date = localDay.format(from);
+    const date = localDay2.format(from);
     let lo = from, hi = from + 27 * HOUR;
     while (hi - lo > 1) {
       const mid = Math.floor((lo + hi) / 2);
-      if (localDay.format(mid) === date) lo = mid;
+      if (localDay2.format(mid) === date) lo = mid;
       else hi = mid;
     }
     const fromHours = (from - start) / HOUR, toHours = (hi - start) / HOUR;
@@ -1641,9 +1644,10 @@ var HOUR2 = 36e5;
 var SLOT = 15 * 6e4;
 var caches = /* @__PURE__ */ new WeakMap();
 var hazardCaches = /* @__PURE__ */ new WeakMap();
-function clockCache(clock) {
-  if (!caches.has(clock)) caches.set(clock, { days: /* @__PURE__ */ new Map(), formatter: new Intl.DateTimeFormat("en-CA", {
-    timeZone: clock.timeZone,
+var zones = /* @__PURE__ */ new Map();
+function zoneCache(timeZone2) {
+  if (!zones.has(timeZone2)) zones.set(timeZone2, { offsets: /* @__PURE__ */ new Map(), formatter: new Intl.DateTimeFormat("en-CA", {
+    timeZone: timeZone2,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
@@ -1652,9 +1656,35 @@ function clockCache(clock) {
     second: "2-digit",
     hourCycle: "h23"
   }) });
+  return zones.get(timeZone2);
+}
+function clockCache(clock) {
+  if (!caches.has(clock)) caches.set(clock, { days: /* @__PURE__ */ new Map() });
   return caches.get(clock);
 }
-var parts = (stamp, clock) => Object.fromEntries(clockCache(clock).formatter.formatToParts(stamp).map((part) => [part.type, Number(part.value)]));
+function offsetAt(stamp, clock) {
+  const cache2 = zoneCache(clock.timeZone), slot = Math.floor(stamp / SLOT);
+  let offset = cache2.offsets.get(slot);
+  if (offset === void 0) {
+    const p = Object.fromEntries(cache2.formatter.formatToParts(slot * SLOT).map((part) => [part.type, Number(part.value)]));
+    offset = Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, p.second) - slot * SLOT;
+    cache2.offsets.set(slot, offset);
+  }
+  return offset;
+}
+var localDay = (stamp, clock) => Math.floor((stamp + offsetAt(stamp, clock)) / DAY2);
+var localQuarter = (stamp, clock) => Math.floor(((stamp + offsetAt(stamp, clock)) % DAY2 + DAY2) % DAY2 / SLOT);
+var parts = (stamp, clock) => {
+  const local = new Date(stamp + offsetAt(stamp, clock));
+  return {
+    year: local.getUTCFullYear(),
+    month: local.getUTCMonth() + 1,
+    day: local.getUTCDate(),
+    hour: local.getUTCHours(),
+    minute: local.getUTCMinutes(),
+    second: local.getUTCSeconds()
+  };
+};
 function zonedStamp(target, clock) {
   let stamp = target;
   for (let i = 0; i < 4; i++) {
@@ -1666,15 +1696,14 @@ function zonedStamp(target, clock) {
   return stamp;
 }
 function clockDay(stamp, clock) {
-  const p = parts(stamp, clock), key = `${p.year}-${p.month}-${p.day}`;
+  const key = localDay(stamp, clock);
   const cache2 = clockCache(clock).days;
   if (!cache2.has(key)) {
-    const start = zonedStamp(Date.UTC(p.year, p.month - 1, p.day), clock);
-    const end = zonedStamp(Date.UTC(p.year, p.month - 1, p.day + 1), clock);
+    const start = zonedStamp(key * DAY2, clock);
+    const end = zonedStamp((key + 1) * DAY2, clock);
     const weights = [], prefix = [0];
     for (let time = start; time < end; time += SLOT) {
-      const local = parts(time + SLOT / 2, clock);
-      const weight = clock.quarterHourWeights[Math.floor((local.hour * 60 + local.minute) / 15)];
+      const weight = clock.quarterHourWeights[localQuarter(time + SLOT / 2, clock)];
       weights.push(weight);
       prefix.push(prefix.at(-1) + weight * Math.min(SLOT, end - time));
     }
@@ -1785,8 +1814,8 @@ function continuousClockProbability(prediction, hours, baseProbability) {
         hazard2 += step;
         continue;
       }
-      const stamp = origin + (a + b) / 2 * HOUR2, day = clockDay(stamp, clock), local = parts(stamp, clock);
-      const weight = clock.quarterHourWeights[Math.floor((local.hour * 60 + local.minute) / 15)];
+      const stamp = origin + (a + b) / 2 * HOUR2, day = clockDay(stamp, clock);
+      const weight = clock.quarterHourWeights[localQuarter(stamp, clock)];
       const mean = day.prefix.at(-1) / (day.end - day.start);
       hazard2 += step * weight / mean;
     }
@@ -2140,7 +2169,7 @@ function predictReset({
     priorEquivalentIntervals: distribution.priorEquivalentIntervals
   } : null;
   const currentAge = ageDays ?? 0;
-  const localDay = new Intl.DateTimeFormat("en-CA", {
+  const localDay2 = new Intl.DateTimeFormat("en-CA", {
     timeZone: forecastTimeZone,
     year: "numeric",
     month: "2-digit",
@@ -2148,7 +2177,7 @@ function predictReset({
   });
   const cooldownRule = enforceResetCooldown ? resetCooldownRule({ lastReset: times.at(-1), now: nowMs, timeZone: forecastTimeZone }) : null;
   const cooldown = cooldownRule ? { ...cooldownRule, hazardFactor: suppressedHazardFactor } : null;
-  const feature = enforceCampaignFeatureRule && posts.filter((post) => campaignFeature(post) && dateMs(post.createdAt, "\u5E16\u5B50\u65F6\u95F4") <= nowMs && localDay.format(new Date(post.createdAt)) === localDay.format(new Date(nowMs))).sort((a, b) => dateMs(b.createdAt, "\u5E16\u5B50\u65F6\u95F4") - dateMs(a.createdAt, "\u5E16\u5B50\u65F6\u95F4"))[0];
+  const feature = enforceCampaignFeatureRule && posts.filter((post) => campaignFeature(post) && dateMs(post.createdAt, "\u5E16\u5B50\u65F6\u95F4") <= nowMs && localDay2.format(new Date(post.createdAt)) === localDay2.format(new Date(nowMs))).sort((a, b) => dateMs(b.createdAt, "\u5E16\u5B50\u65F6\u95F4") - dateMs(a.createdAt, "\u5E16\u5B50\u65F6\u95F4"))[0];
   const blockedToday = !!feature || !!cooldown;
   const rule = feature ? {
     kind: "campaign-feature-day",
