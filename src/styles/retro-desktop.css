@@ -405,17 +405,15 @@ legend {margin-bottom:8px}
 .plan-card #forecast {position:relative}
 .plan-card #forecast>.brand-stamp {position:absolute;top:0;right:0;margin:0}
 @media(min-width:1180px) {.plan-card #forecast>.brand-stamp {top:18px;right:20px}}
-/* Announced tile: label and time on one compact line, the next reset below. */
-.plan-card .forecast-announced {display:flex;flex-direction:column;gap:6px}
-.plan-card .forecast-announced span,.plan-card .forecast-announced span:nth-child(n) {flex-direction:row;align-items:baseline;gap:8px;padding:6px 10px}
-.plan-card .forecast-announced b {font-size:15px;line-height:20px}
-.plan-card .forecast-announced .forecast-announced-next {border:0;background:none;padding:0 2px}
-.plan-card .forecast-announced .forecast-announced-next b {font-size:13px}
 /* Footer Share reads as a link like its neighbours. */
 .footer-link {padding:0;border:0;background:none;box-shadow:none;font:inherit;color:var(--ink);text-decoration:underline;text-decoration-color:var(--link-stroke);text-underline-offset:3px;cursor:pointer}
 .footer-link:hover:not(:disabled) {background:none}
 @media(min-width:1180px) {
-  .plan-card .forecast-more>dl>div {grid-template-columns:minmax(0,1fr);gap:0;padding:4px 0!important}
+  /* Narrow forecast card: one line per fact, numbers only; notes stay in the
+     narrow-screen layout and the method section. */
+  .plan-card .forecast-more>dl>div {grid-template-columns:104px minmax(0,1fr);gap:0 10px;padding:2px 0!important}
+  .plan-card .forecast-more dt,.plan-card .forecast-more dd {font-size:11px;line-height:1.5}
+  .plan-card .forecast-more dd small,.plan-card .forecast-more dd q {display:none}
   .plan-card #forecast>.brand-stamp {position:static;justify-content:flex-start;margin-top:12px}
   .plan-card .no-reset-toggle {white-space:nowrap;gap:6px}
 }

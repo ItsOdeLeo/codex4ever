@@ -152,8 +152,7 @@ function renderForecastCard(graph=null) {
   const forecastSummary = renderResetForecastSummary({ source: forecastSource, prediction: planner.snapshot.prediction,
     timeZone, now: planningNow,locale:language,
     // Wide screens give the forecast its own card, with room to show the details.
-    moreOpen:globalThis.matchMedia?.('(min-width:1180px)').matches??false,
-    following:graph?.forecastFollowing??null });
+    moreOpen:globalThis.matchMedia?.('(min-width:1180px)').matches??false });
   $('#forecast').innerHTML = `<div class="forecast-control" ${planningPrediction ? `data-forecast-48-probability="${planningPrediction.next48Probability}"` : ''}><span>${t('额外重置预测')}</span></div>${forecastSummary}${BRAND_STAMP}`;
 }
 
