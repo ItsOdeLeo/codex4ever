@@ -198,7 +198,7 @@ const ZH_TEMPLATE=[
     'aria-label="语言"><button type="button" data-language="en" lang="en" aria-pressed="false">English</button><button type="button" data-language="zh-CN" lang="zh-CN" aria-pressed="true">中文</button>'],
   [/<noscript>[\s\S]*?<\/noscript>/,'<noscript><p>赛博牛马规划器（Usage Planner）根据 Codex 剩余额度、消耗速度、备用 reset 到期时间和额外 reset 预测，帮你算出每天用多少。开启 JavaScript 后即可计算，也可以先<a href="/zh/guide/">看看使用说明</a>。</p></noscript>'],
   ['aria-label="Usage plan"','aria-label="算法输出"'],['aria-label="Forecast evidence"','aria-label="预测依据"'],['aria-label="Usage inputs"','aria-label="算法输入"'],
-  ['Calculate a plan to see your timeline.','点击「计算策略」查看结果。'],['↻ Update plan','↻ 更新计划'],
+  ['Working out your plan…','正在计算…'],['↻ Update plan','↻ 更新计划'],
   [/<p id="overuse-hint"([^>]*)>[^<]*<\/p>/,'<p id="overuse-hint"$1>用量过度提醒（仅 Codex 插件）：在 Codex 里说“打开用量过度提醒”。之后你用得比计划快时，会直接在对话里提醒你。</p>'],
   ['<span data-plugin-hint>Fill these in automatically with the Codex plugin.</span>','<span data-plugin-hint>可安装成 Codex 插件，自动读取以上数据。</span>'],
   ['Unofficial visual usage planner for OpenAI Codex. Not affiliated with OpenAI.','OpenAI Codex 的非官方可视化用量规划工具。与 OpenAI 无隶属关系。'],

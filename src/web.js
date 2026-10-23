@@ -198,6 +198,10 @@ function renderResult(availableWidth=$('#result').clientWidth) {
 }
 
 
+// The page's signature wait: the switch's square turns until a plan is ready.
+// index.html carries the same markup, so it shows before any script runs.
+const loadingResult=()=>`<div class="plan-loading" role="status"><span class="busy-square" aria-hidden="true"></span>${escape(t('正在计算…'))}</div>`;
+
 // Replanning takes a moment: paint the busy marker first, then compute, so a
 // click never looks ignored. Without a browser frame (tests) it runs at once.
 function busyDispatch(action) {
@@ -420,12 +424,12 @@ $('#language-switch').addEventListener('click',event=>{
   if(planner.result)renderResult();
   else {
     renderStrategyControls();
-    $('#result').innerHTML=t(statusMessage==='已修改，请重新计算' ? statusMessage : '点击「计算策略」查看结果。');
+    $('#result').innerHTML=statusMessage==='已修改，请重新计算' ? t(statusMessage) : loadingResult();
   }
 });
 renderStaticLanguage();
 renderStrategyControls();
-$('#result').innerHTML=t('点击「计算策略」查看结果。');
+$('#result').innerHTML=loadingResult();
 renderInputs();
 // The plugin reads quota itself; the install hint is for the website.
 if(plugin&&$('#plugin-hint'))$('#plugin-hint').hidden=true;

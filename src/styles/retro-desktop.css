@@ -422,8 +422,11 @@ legend {margin-bottom:8px}
 #strategy-controls[aria-busy=true] {cursor:progress}
 @keyframes busy-turn {to {transform:rotate(360deg)}}
 .refresh-overlay[aria-busy=true] {display:inline-flex;align-items:center;gap:8px;cursor:progress}
-.refresh-overlay[aria-busy=true]::before {content:'';width:12px;height:12px;border:1px solid var(--border);border-radius:2px;background:var(--surface);box-shadow:1px 1px 0 var(--border);animation:busy-turn .8s steps(8) infinite}
-@media(prefers-reduced-motion:reduce) {#strategy-controls[aria-busy=true] .switch-knob,.refresh-overlay[aria-busy=true]::before {animation:none;background:var(--accent)}}
+.refresh-overlay[aria-busy=true]::before {content:''}
+.busy-square,.refresh-overlay[aria-busy=true]::before {flex:none;width:12px;height:12px;border:1px solid var(--border);border-radius:2px;background:var(--surface);box-shadow:1px 1px 0 var(--border);animation:busy-turn .8s steps(8) infinite}
+/* First load: the same square, centred where the plan will appear. */
+.plan-loading {display:flex;align-items:center;justify-content:center;gap:10px;min-height:320px;font-size:14px;color:var(--muted)}
+@media(prefers-reduced-motion:reduce) {#strategy-controls[aria-busy=true] .switch-knob,.busy-square,.refresh-overlay[aria-busy=true]::before {animation:none;background:var(--accent)}}
 /* Wide card, announced: one full-width entry under its own heading. */
 @media(min-width:1180px) {
   .forecast-horizons:has([data-forecast-horizon=announced]) {display:block}
@@ -457,4 +460,4 @@ html:lang(zh-CN) .brand h1, html:lang(zh-CN) .guide-page .brand a {font-size:24p
 /* The name never breaks; on a narrow window the header buttons wrap instead. */
 .brand h1 {white-space:nowrap}
 .site-header .brand {flex:none}
-@media(max-width:400px) {#language-switch {position:static}}
+@media(max-width:374px) {#language-switch {position:static}}
