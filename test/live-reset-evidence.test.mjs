@@ -225,4 +225,19 @@ test('Codex Resets 已宣布的 reset：按确定事件处理，过了时间就�
   assert.equal(later.lastResetAt,'2026-10-22T17:00:00.000Z');
   assert.equal(later.lastResetSource,'https://x.com/thsottiaux/status/9');
   veryUnlikely(later.prediction.next12Probability,'刚 reset 后进入冷却期');
+  // Landed early and already recorded: never counted twice.
+  const early=record('10','2026-10-22T15:00:00Z');
+  const recorded=await collectLiveResetEvidence({now:new Date('2026-10-22T21:00:00Z'),classifyWithLLM:false,xBearerToken:null,
+    fetchImpl:async url=>response(String(url)===RESET_HISTORY_URL ? {data:[early,...history.data]}
+      : {data:{latest_reset:early,scheduled_reset:scheduled,active_watch:null}})});
+  const once=predictionFromArchive({archive:recorded,now:new Date('2026-10-22T21:00:00Z'),timeZone:'UTC'});
+  assert.equal(once.lastResetAt,'2026-10-22T15:00:00.000Z');
+  // Recorded on time: the plan is identical to having no announcement at all.
+  const onTime=record('11','2026-10-22T17:00:00Z');
+  const confirmed=await collectLiveResetEvidence({now:new Date('2026-10-22T21:00:00Z'),classifyWithLLM:false,xBearerToken:null,
+    fetchImpl:async url=>response(String(url)===RESET_HISTORY_URL ? {data:[onTime,...history.data]}
+      : {data:{latest_reset:onTime,scheduled_reset:null,active_watch:null}})});
+  const plain=predictionFromArchive({archive:confirmed,now:new Date('2026-10-22T21:00:00Z'),timeZone:'UTC'});
+  assert.equal(plain.lastResetAt,'2026-10-22T17:00:00.000Z');
+  assert.ok(Math.abs(plain.prediction.next48Probability-later.prediction.next48Probability)<.02);
 });

@@ -19,8 +19,11 @@ export function predictionFromArchive({ archive, now = new Date(), timeZone = In
   // An announced reset whose time has passed has landed even before a public
   // record catches up; the forecast then looks for the reset after it.
   const landed=(archive.posts??[]).filter(post=>post.signal?.kind==='reset_planned'&&post.signal.scheduledFor)
+    // The announcement must postdate the last record, or an early reset that
+    // was already recorded would be counted a second time.
+    .filter(post=>Date.parse(post.createdAt)>Date.parse(resetTimes.at(-1)))
     .map(post=>({at:Date.parse(post.signal.scheduledFor),source:post.sourceUrl}))
-    .filter(item=>item.at<=now.getTime()&&item.at>Date.parse(resetTimes.at(-1))+3_600_000&&item.at>now.getTime()-3*DAY)
+    .filter(item=>item.at<=now.getTime()&&item.at>now.getTime()-3*DAY)
     .sort((a,b)=>b.at-a.at)[0];
   if(landed)resetTimes.push(new Date(landed.at).toISOString());
   const prediction = predictReset({ now: now.toISOString(), timeZone, resetTimes,
