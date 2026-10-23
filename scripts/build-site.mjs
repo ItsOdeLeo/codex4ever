@@ -12,7 +12,7 @@ import { plannerEnv } from '../src/planner-name.js';
 await loadLocalLLMEnvironment();
 const siteUrl=publicSiteOrigin(process.env.PUBLIC_SITE_URL);
 const outDir=resolve(root,process.env.SITE_OUT_DIR||'dist');
-await buildStaticSite({outDir,siteUrl,extraPublic:['social-card.png']});
+await buildStaticSite({outDir,siteUrl,extraPublic:['social-card.png','social-card-zh.png']});
 
 const fallbackArchive=JSON.parse(await readFile(resolve(root,'experiments/public-reset-events.json'),'utf8'));
 // Post classifications persist between builds (CI restores this file with

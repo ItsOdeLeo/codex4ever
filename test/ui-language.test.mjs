@@ -88,8 +88,8 @@ test('整页切换中英不重新抓取或改变分支，记住语言，英文�
     const chosen=fingerprint();
     language('zh-CN');
     assert.equal(html.attributes.lang,'zh-CN');
-    assert.equal(document.title,'赛博牛马规划器 | Codex 额度与 reset 规划');
-    assert.match(element('meta[name="description"]').attributes.content,/根据 Codex 剩余额度/);
+    assert.equal(document.title,'赛博牛马规划器 | Codex 额度与 reset 规划工具');
+    assert.match(element('meta[name="description"]').attributes.content,/赛博牛马规划器（Usage Planner）帮你规划 Codex 每周额度/);
     assert.equal(element('#planner-guide').attributes.href,'/zh/guide/');
     assert.equal(element('[data-follow-label]').textContent,'如果你喜欢这个作品，欢迎在 ');
     assert.match(element('#strategy-controls').innerHTML,/即时更新/);

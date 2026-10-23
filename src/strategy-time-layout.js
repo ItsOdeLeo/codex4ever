@@ -137,7 +137,7 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
   const headingY = lastPlot ? lastPlot.bottomY+20 : forecastEndY + (forecastFocus ? 92 : 0) + 12;
   const phaseControls = [];
   const phaseWidth = 198;
-  const quotaThickness=40,labelGap=10,phaseY=headingY+28;
+  const quotaThickness=40,labelGap=28,phaseY=headingY+28;
   const restPeriods=(result.phasePlans??[]).filter(phase=>phase.plannedRest);
   const shownPhases=timelineUsagePhases(result.phasePlans??[],axis.xAtHours);
   for(const [index,phase] of shownPhases.entries()) {
@@ -155,9 +155,27 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
   }
   const opportunityHeight=Math.max(0,...phaseControls.map(phase=>phase.nextResetOpportunity
     ? resetOpportunityLayout(phase.width).height : 0));
-  const labelHeight=Math.max(34,20+(opportunityHeight ? 16+opportunityHeight : 0));
+  const labelHeight=Math.max(72,20+(opportunityHeight ? 16+opportunityHeight : 0));
   const centerY=phaseY+labelHeight+labelGap+quotaThickness;
   for(const phase of phaseControls)Object.assign(phase,{labelHeight,quotaAnchorY:centerY-quotaThickness});
+  // One bar per calendar day: what the plan uses that day (today counts from
+  // now). A shared scale with a few gridlines reads the values, so no figure
+  // sits on any bar.
+  const usageOn=day=>(result.phasePlans??[]).reduce((sum,phase)=>sum+phase.dailyPercent
+    *Math.max(0,Math.min(phase.endHours,day.endHours)-Math.max(phase.startHours,day.startHours,0))/24,0);
+  const dayUsage=axis.days.map(day=>({day,percent:usageOn(day)}));
+  const largest=Math.max(0,...dayUsage.map(item=>item.percent));
+  const step=[5,10,20,25,50].find(size=>Math.ceil(largest/size)<=3)??50;
+  const scaleTop=Math.max(step,Math.ceil(largest/step-1e-9)*step);
+  const barBottom=phaseY+labelHeight,barSpace=labelHeight-4;
+  const yAt=percent=>barBottom-barSpace*percent/scaleTop;
+  const usageScale={x1:axis.leftPadding,x2:axis.width-axis.padding,labelX:axis.width-axis.padding+4,
+    ticks:Array.from({length:Math.round(scaleTop/step)},(_,index)=>({percent:(index+1)*step,y:yAt((index+1)*step)}))};
+  const dailyBars=dayUsage.filter(item=>item.percent>0.05).map(({day,percent})=>{
+    const from=axis.xAtHours(Math.max(day.startHours,0)),to=day.x+day.width;
+    const width=Math.min(26,Math.max(4,(to-from)*.5)),height=Math.max(1,barBottom-yAt(percent));
+    return {x:(from+to)/2-width/2,y:barBottom-height,width,height,percent:Number(percent.toFixed(1)),startAt:day.startAt};
+  });
   const funnel = quotaFunnelGeometry(result.milestones, { centerY, xAtHours: axis.xAtHours,
     maxThickness:quotaThickness,terminalWidth: 16,restPeriods,shape:'area' });
   // Use the refills actually drawn, including assumed extra resets. A refill
@@ -210,7 +228,7 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
       warning: event.deadlineDriven || event.overwrittenPercent > 1e-6,
       lines: [time(event.at),
         event.deadlineDriven ? expires(event) : t('{date}到期',{date:event.expiresOn.slice(5).replace('-', '/')}),
-        ...(event.overwrittenPercent > 1e-6 ? [t('提前兑换会浪费剩下的 {percent}%',{percent:round(event.overwrittenPercent)})] : []),
+        ...(event.overwrittenPercent > 1e-6 ? [t('兑换前先用完剩下的 {percent}%',{percent:round(event.overwrittenPercent)})] : []),
         ...(bankRisk ? [bankRisk] : [])],
       lineTones: ['',event.deadlineDriven ? 'danger' : '',
         ...(event.overwrittenPercent > 1e-6 ? ['danger'] : []),...(bankRisk ? [''] : [])] }, 'backup');
@@ -299,7 +317,7 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
       inline:true,date:t('重置概率 · 截至'),state:'',tooltip:t('固定日期之前至少发生一次额外 reset 的累计概率')}] : []),
     {x:0,y:centerY-quotaThickness/2-10,width:gutterWidth,height:20,kind:'consumption',inline:true,
     date:t('剩余额度'),state:''}];
-  return { compact,nodes, edges, headings, controls: [], phaseControls,bankedCount,retainedBanks, compactForecast: result.flexibleSchedule,
+  return { compact,nodes, edges, headings, controls: [], phaseControls,dailyBars,usageScale,bankedCount,retainedBanks, compactForecast: result.flexibleSchedule,
     width: axis.width, height,
     levels: strategyTreeView(result), displayLevels: strategyMilestoneView(result), funnel,
     locale,timeZone: result.timeZone,resetLaneLabels, forecastCalendar: result.forecastCalendar,

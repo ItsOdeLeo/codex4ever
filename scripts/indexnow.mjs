@@ -3,7 +3,7 @@
 import { INDEXNOW_KEY,publicSiteOrigin } from '../src/site-seo.js';
 
 const origin=publicSiteOrigin(process.env.PUBLIC_SITE_URL??'https://usageplanner.com');
-const urlList=['/','/guide/','/zh/guide/','/llms.txt'].map(path=>origin+path);
+const urlList=['/','/zh/','/guide/','/zh/guide/','/llms.txt'].map(path=>origin+path);
 const response=await fetch('https://api.indexnow.org/indexnow',{method:'POST',
   headers:{'content-type':'application/json; charset=utf-8'},
   body:JSON.stringify({host:new URL(origin).host,key:INDEXNOW_KEY,keyLocation:`${origin}/${INDEXNOW_KEY}.txt`,urlList})});

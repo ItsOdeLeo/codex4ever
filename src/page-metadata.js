@@ -7,8 +7,8 @@ export const PLANNER_METADATA={
     locale:'en_GB'
   },
   'zh-CN':{
-    title:'赛博牛马规划器 | Codex 额度与 reset 规划',
-    description:'根据 Codex 剩余额度、消耗速度、备用 reset 到期时间和额外 reset 预测，比较日均用量策略与预计耗尽时间。支持本地运行和 MCP 接入。',
+    title:'赛博牛马规划器 | Codex 额度与 reset 规划工具',
+    description:'赛博牛马规划器（Usage Planner）帮你规划 Codex 每周额度：按现在的速度哪天用完、额外 reset 大概什么时候来、备用 reset 什么时候值得用，再算出每天用多少。免费开源，也能装成 Codex 插件。',
     intro:'规划 Codex 用量、备用 reset 与额外 reset，全部在浏览器里计算。',
     locale:'zh_CN'
   }

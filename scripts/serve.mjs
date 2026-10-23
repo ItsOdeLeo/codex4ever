@@ -49,7 +49,7 @@ const server=http.createServer(async (req, res) => {
     }
     if(['GET','HEAD'].includes(req.method)) {
       const seo=seoResponse({pathname:url.pathname,siteUrl,
-        template:url.pathname==='/' ? await readFile(resolve(root,'index.html'),'utf8') : undefined});
+        template:url.pathname==='/'||url.pathname==='/zh/' ? await readFile(resolve(root,'index.html'),'utf8') : undefined});
       if(seo) {
         res.writeHead(seo.status,seo.headers).end(req.method==='HEAD' ? undefined : seo.body);
         return;

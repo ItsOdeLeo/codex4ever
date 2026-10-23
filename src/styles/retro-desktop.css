@@ -430,3 +430,13 @@ legend {margin-bottom:8px}
 .brand-stamp span {width:22px;height:22px}
 /* Fusion Pixel is drawn on a 12px grid: keep the Chinese name at exactly 2x. */
 html:lang(zh-CN) .brand h1, html:lang(zh-CN) .guide-page .brand a {font-size:24px;letter-spacing:0}
+.brand-stamp em {display:flex;align-items:center;gap:5px;font-style:normal;white-space:nowrap}
+.brand-stamp b {font-size:12px;font-weight:400}
+.brand-stamp i {font-style:normal}
+/* Phones: name over domain, so the stamp stays clear of the forecast tile. */
+@media(max-width:680px) {.brand-stamp em {flex-direction:column;align-items:flex-end;gap:3px}.brand-stamp em i {display:none}}
+/* Visually hidden, still read aloud. */
+.sr-only {position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+/* Daily usage bars: the quota area's fill and outline, one bar per day. */
+.tree-edges .daily-bar {fill:var(--quota-fill-start);stroke:var(--quota-stroke);stroke-width:1.2}
+.tree-edges .usage-gridline {stroke:var(--divider);stroke-width:1;stroke-dasharray:2 3;opacity:.6}

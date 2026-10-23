@@ -125,7 +125,7 @@ test('每段用量统一紧贴绿色额度上沿；假设、备用、窄屏均�
         assert.equal(graph.headings.some(heading=>heading.kind==='opportunity'),false,'不再单列重置概率行');
         assert.equal(new Set(graph.phaseControls.map(phase=>phase.y)).size,1,'用量说明共用一条水平线');
         for(const [index,phase] of graph.phaseControls.entries()) {
-          near(phase.y+phase.labelHeight+10,graph.dayAxis.quotaTopY);
+          near(phase.y+phase.labelHeight+28,graph.dayAxis.quotaTopY);
           assert.equal(phase.quotaLabel,true);
           assert.ok(phase.x>=0&&phase.x+phase.width<=graph.width);
           if(index) {
@@ -361,4 +361,24 @@ test('额外 reset 只显示各日累计概率，不跳日、不画假想100%补
   for(const probability of ['22','39.2','52.4'])assert.ok(html.includes(`额外 reset ${probability}%`));
   assert.doesNotMatch(html,/extra-reset-(ghost|arrow)|data-hypothetical|发生后重算|此时间情景|>可能额外 reset</);
   assert.equal(layoutStrategyTree(planUsagePath({input:flexInput,now:flexNow,timeZone})).forecastLayout.length,0);
+});
+
+test('每天一根用量柱：同一天不出现两根，柱子与数字落在当天格内，合计等于计划用量',()=>{
+  for(const extra of [{},{heldResetIndices:[0]},{intensityMultiplier:1.5}])
+    for(const viewportWidth of [270,640,1400]) {
+      const result=plan(extra);
+      const graph=layoutStrategyTree(result,{viewportWidth});
+      const days=graph.dayAxis.days;
+      const dayOf=bar=>days.findIndex(day=>bar.startAt===day.startAt);
+      assert.equal(new Set(graph.dailyBars.map(dayOf)).size,graph.dailyBars.length,'每天最多一根');
+      for(const bar of graph.dailyBars) {
+        const day=days[dayOf(bar)];
+        assert.ok(bar.x>=day.x-1e-6&&bar.x+bar.width<=day.x+day.width+1e-6,'柱子不越出当天');
+        assert.ok(bar.y+bar.height<=graph.dayAxis.quotaTopY,'柱子在额度区上方');
+      }
+      const planned=result.phasePlans.reduce((sum,phase)=>sum+phase.dailyPercent*(phase.endHours-Math.max(0,phase.startHours))/24,0);
+      const shown=graph.dailyBars.reduce((sum,bar)=>sum+bar.percent,0);
+      assert.ok(Math.abs(planned-shown)<=.06*graph.dailyBars.length+.1,`${shown} != ${planned}`);
+      assert.match(renderStrategyTree(graph,String),/class="sr-only"><div class="phase-controls"/,'读屏仍能读到各段用量');
+    }
 });

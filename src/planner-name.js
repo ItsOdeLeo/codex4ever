@@ -5,4 +5,6 @@ export const PRODUCT_NAME='Usage Planner';
 export const PRODUCT_NAME_ZH='赛博牛马规划器';
 export const PRODUCT_ID='usage-planner';
 export const PRODUCT_DOMAIN='usageplanner.com';
+// One planner page per language, so search engines index the Chinese name too.
+export const HOMES={en:'/','zh-CN':'/zh/'};
 export const plannerEnv=(name,env=process.env)=>env[`USAGE_PLANNER_${name}`]??env[`CODEX4EVER_${name}`];

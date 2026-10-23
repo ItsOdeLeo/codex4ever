@@ -10,7 +10,7 @@ import { workspaceLayout } from './workspace-layout.js';
 import { syncPlannerMetadata } from './page-metadata.js';
 import { pluginPageClient } from './plugin-page-client.js';
 import { BRAND_MARK_SVG } from './brand-mark.js';
-import { PRODUCT_DOMAIN,PRODUCT_NAME,PRODUCT_NAME_ZH } from './planner-name.js';
+import { HOMES,PRODUCT_DOMAIN,PRODUCT_NAME,PRODUCT_NAME_ZH } from './planner-name.js';
 
 const $ = selector => document.querySelector(selector);
 const escape = value => String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
@@ -18,14 +18,25 @@ const STORAGE_KEY = 'usage-planner-intensity-v1';
 const LEGACY_STORAGE_KEYS = ['codex4ever-intensity-v1','pace-simple-input-v4'];
 let savedLanguage;
 try {savedLanguage=localStorage.getItem(LANGUAGE_STORAGE_KEY)??localStorage.getItem(LEGACY_LANGUAGE_STORAGE_KEY);}catch {/* Optional storage. */}
-let language=chooseLanguage({saved:savedLanguage,
+const plugin=pluginPageClient();
+// /zh/ is the Chinese page whatever was saved; / follows the visitor.
+let language=globalThis.location?.pathname===HOMES['zh-CN'] && !plugin ? 'zh-CN' : chooseLanguage({saved:savedLanguage,
   browserLanguages:typeof navigator==='undefined' ? [] : navigator.languages,
   browserLanguage:typeof navigator==='undefined' ? undefined : navigator.language});
 const t=(source,values)=>translate(language,source,values);
 let statusMessage=null,lastError=null;
 const setStatus=message=>{statusMessage=message;$('#status').textContent=t(message);};
 
+// Keep the address on the page for the shown language, so a shared link opens
+// in that language. The plugin page has a single local route.
+function syncLanguagePath() {
+  const path=globalThis.location?.pathname;
+  if(plugin||!Object.values(HOMES).includes(path)||path===HOMES[language])return;
+  history.replaceState?.(history.state,'',HOMES[language]+location.search+location.hash);
+}
+
 function renderStaticLanguage() {
+  syncLanguagePath();
   const metadata=syncPlannerMetadata(document,language);
   const heading=$('.brand h1');if(heading)heading.textContent=language==='zh-CN' ? PRODUCT_NAME_ZH : PRODUCT_NAME;
   document.documentElement?.setAttribute('lang',language);
@@ -44,7 +55,6 @@ function renderStaticLanguage() {
 }
 
 let timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-const plugin=pluginPageClient();
 let pluginRevision=null,manualDraft=false;
 const localDate = date => new Intl.DateTimeFormat('en-CA', { timeZone,
   year: 'numeric', month: '2-digit', day: '2-digit' }).format(date);
@@ -145,8 +155,9 @@ function saveInput() {
 const round = value => Number(value.toFixed(1));
 const MOBILE_TIMELINE_WIDTH=640;
 // The name rides with the forecast at the top, inside any screenshot.
-// The domain, not just the name, so a screenshot tells people where to go.
-const BRAND_STAMP=`<div class="brand-stamp" aria-hidden="true"><span>${BRAND_MARK_SVG}</span> ${PRODUCT_DOMAIN}</div>`;
+// The domain, not just the name, so a screenshot tells people where to go;
+// in Chinese the Chinese name too, which is what people search on Xiaohongshu.
+const brandStamp=()=>`<div class="brand-stamp" aria-hidden="true"><span>${BRAND_MARK_SVG}</span>${language==='zh-CN' ? `<em><b>${PRODUCT_NAME_ZH}</b><i>·</i>` : '<em>'}${PRODUCT_DOMAIN}</em></div>`;
 
 function renderForecastCard(graph=null) {
   const planningPrediction=activePlannerPrediction(planner),planningNow=new Date(planner.snapshot.now);
@@ -154,7 +165,7 @@ function renderForecastCard(graph=null) {
   // exists, the plan just does not count it, and the card keeps its height.
   const forecastSummary = renderResetForecastSummary({ source: forecastSource, prediction: planner.snapshot.prediction,
     timeZone, now: planningNow,locale:language });
-  $('#forecast').innerHTML = `<div class="forecast-control" ${planningPrediction ? `data-forecast-48-probability="${planningPrediction.next48Probability}"` : ''}><span>${t('额外 reset 预测')}</span></div>${forecastSummary}${BRAND_STAMP}`;
+  $('#forecast').innerHTML = `<div class="forecast-control" ${planningPrediction ? `data-forecast-48-probability="${planningPrediction.next48Probability}"` : ''}><span>${t('额外 reset 预测')}</span></div>${forecastSummary}${brandStamp()}`;
 }
 
 function renderResult(availableWidth=$('#result').clientWidth) {
@@ -331,9 +342,11 @@ $('#inputs').addEventListener('click', event => {
 $('#calculate').addEventListener('click', calculate);
 // Share: the system sheet where there is one, otherwise copy the link.
 $('#share-site')?.addEventListener?.('click',async()=>{
-  const url=globalThis.location?.origin ? `${location.origin}/` : 'https://usageplanner.com/';
+  // The plugin page lives on localhost; share the public site instead.
+  const origin=plugin||!globalThis.location?.origin ? `https://${PRODUCT_DOMAIN}` : location.origin;
+  const url=origin+HOMES[language];
   try {
-    if(navigator.share)await navigator.share({title:'Usage Planner',url});
+    if(navigator.share)await navigator.share({title:language==='zh-CN' ? PRODUCT_NAME_ZH : PRODUCT_NAME,url});
     else {await navigator.clipboard.writeText(url);$('#share-site').textContent=t('已复制链接');
       setTimeout(()=>{$('#share-site').textContent=t('分享给朋友');},2000);}
   } catch { /* Dismissed share sheet or blocked clipboard: nothing to do. */ }

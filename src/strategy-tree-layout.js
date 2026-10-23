@@ -91,7 +91,7 @@ export function layoutStrategyTree(result, { expandedLevel = 0, showAll = false,
         resetIndex: result.paceChoices ? event.resetIndex : undefined,
         lines: [time(event.at),
           `${event.expiresOn.slice(5).replace('-', '/')}到期`,
-          ...(event.overwrittenPercent > 1e-6 ? [`提前兑换会浪费剩下的 ${round(event.overwrittenPercent)}%`] : [])] };
+          ...(event.overwrittenPercent > 1e-6 ? [`兑换前先用完剩下的 ${round(event.overwrittenPercent)}%`] : [])] };
       nodes.push(backup);
       link(decision.id, backup.id, 'backup');
       edges.at(-1).lane = resourceCount++;
@@ -199,6 +199,8 @@ export function renderStrategyTree(graph, escape) {
     ${graph.dayAxis ? graph.dayAxis.days.filter((_,index)=>index%2).map(day => `<rect class="time-day-band" x="${day.x}" y="${graph.dayAxis.gridTop}" width="${graph.dayAxis.dayWidth}" height="${graph.dayAxis.gridBottom-graph.dayAxis.gridTop}"/>`).join('') : ''}
     ${graph.dayAxis ? [...graph.dayAxis.days.map(day => day.x), graph.dayAxis.days.at(-1).x + graph.dayAxis.dayWidth].map(x => `<path class="time-grid-line" d="M ${x} ${graph.dayAxis.gridTop} V ${graph.dayAxis.gridBottom}"/>`).join('') : ''}
     ${resetElements.map(element=>element.svg).join('')}
+    ${graph.usageScale ? graph.usageScale.ticks.map(tick=>`<path class="usage-gridline" d="M ${graph.usageScale.x1} ${tick.y} H ${graph.usageScale.x2}"/><text class="quota-label" x="${graph.usageScale.labelX}" y="${tick.y+4}">${tick.percent}%</text>`).join('') : ''}
+    ${(graph.dailyBars??[]).map(bar=>`<rect class="daily-bar" data-day="${bar.startAt}" data-percent="${bar.percent}" x="${bar.x}" y="${bar.y}" width="${bar.width}" height="${bar.height}"><title>${round(bar.percent)}%</title></rect>`).join('')}
     ${!graph.compactForecast && graph.forecastLayout?.length ? `<path class="time-forecast-line" d="M ${graph.forecastLayout[0].x} ${graph.dayAxis.forecastY} H ${graph.forecastLayout.at(-1).x}"/>${graph.forecastLayout.map(point => `<circle class="time-forecast-point" cx="${point.x}" cy="${graph.dayAxis.forecastY}" r="2.5"/>`).join('')}` : ''}
     ${graph.funnel.bands.map(band => `<g class="quota-phase${band.kind==='assumed-refresh' ? ' quota-phase-assumed' : ''}"${band.kind==='rest' ? ' data-quota-rest' : ''} data-start-quota="${band.startQuota}" data-end-quota="${band.endQuota}">
       <path class="quota-baseline${band.kind === 'pause' ? ' quota-paused-line' : band.kind==='rest' ? ' quota-rest-line' : ''}" d="${band.baseline}"/>
@@ -221,6 +223,9 @@ export function renderStrategyTree(graph, escape) {
   const phaseControls = (graph.phaseControls ?? []).map(phase=>renderPhaseControl(phase,{
     firstPhaseIndex:graph.phaseControls[0]?.phaseIndex,scenarioSelected:graph.forecastScenario?.selected,
     timeZone:graph.timeZone,escape,locale})).join('');
+  // Daily bars show usage on screen; the SVG is hidden from screen readers,
+  // so the per-phase figures stay in the page as text for them.
+  const phaseText=graph.dailyBars&&phaseControls ? `<div class="sr-only">${phaseControls}</div>` : phaseControls;
   const forecastDate = value => {
     const instant = new Date(value);
     const clock = new Intl.DateTimeFormat('en-GB', {timeZone: graph.timeZone,
@@ -235,5 +240,5 @@ export function renderStrategyTree(graph, escape) {
   const forecastLegend = !graph.compactForecast && graph.forecastLayout?.length
     ? `<div class="forecast-legend">${t('蓝线：此前至少发生一次额外 reset 的概率')}</div>` : '';
   const inventory=graph.bankedCount>0 ? `<div class="retained-resets" data-banked-count="${graph.bankedCount}">${escape(t('备用 reset · {count} 个',{count:graph.bankedCount}))}</div>` : '';
-  return `${forecast}${forecastLegend}<div class="tree-scroll" data-timeline-orientation="horizontal" tabindex="0" role="region" aria-label="${t('从左向右的额度漏斗与策略选择，可横向滚动')}"><div class="strategy-graph"${graph.compact ? ' data-compact' : ''} style="width:${graph.width}px;height:${graph.height}px" ${graph.dayAxis ? `data-timeline-from="${graph.dayAxis.days[0].startAt}" data-timeline-to="${graph.dayAxis.days.at(-1).endAt}"` : ''}>${svg}${days}${alignedForecast}${resetElements.map(element=>element.html).join('')}${headings}${phaseControls}${nodes}${controls}</div></div>${inventory}`;
+  return `${forecast}${forecastLegend}<div class="tree-scroll" data-timeline-orientation="horizontal" tabindex="0" role="region" aria-label="${t('从左向右的额度漏斗与策略选择，可横向滚动')}"><div class="strategy-graph"${graph.compact ? ' data-compact' : ''} style="width:${graph.width}px;height:${graph.height}px" ${graph.dayAxis ? `data-timeline-from="${graph.dayAxis.days[0].startAt}" data-timeline-to="${graph.dayAxis.days.at(-1).endAt}"` : ''}>${svg}${days}${alignedForecast}${resetElements.map(element=>element.html).join('')}${headings}${phaseText}${nodes}${controls}</div></div>${inventory}`;
 }

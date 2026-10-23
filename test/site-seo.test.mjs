@@ -25,13 +25,43 @@ test('未运行 JavaScript 的首页也有介绍、独立元信息和可抓取�
   assert.match(page.body,/<link rel="canonical" href="https:\/\/usage-planner.example\/">/);
   assert.match(page.body,/name="robots" content="index, follow, max-image-preview:large"/);
   assert.match(page.body,/property="og:image" content="https:\/\/usage-planner.example\/public\/social-card.png\?v=\d+"/);
-  const [schema]=structured(page.body);
+  assert.match(page.body,/<link rel="alternate" hreflang="zh-CN" href="https:\/\/usage-planner.example\/zh\/">/);
+  assert.match(page.body,/<link rel="alternate" hreflang="x-default" href="https:\/\/usage-planner.example\/">/);
+  const [schema,site]=structured(page.body)[0]['@graph'];
   assert.equal(schema['@type'],'WebApplication');
   assert.equal(schema.applicationCategory,'DeveloperApplication');
   assert.equal(schema.url,siteUrl+'/');
-  assert.deepEqual(schema.inLanguage,['en','zh-CN']);
+  assert.equal(schema.inLanguage,'en');
+  assert.deepEqual(schema.alternateName,['赛博牛马规划器','Codex4ever']);
+  assert.equal(site['@type'],'WebSite');
+  assert.equal(site.url,siteUrl+'/');
+  assert.ok(site.alternateName.includes('赛博牛马规划器'));
   assert.equal(schema.aggregateRating,undefined,'不编造评分来争取富搜索结果');
   assert.equal(schema.offers,undefined,'不编造价格信息');
+});
+
+test('中文首页 /zh/ 在脚本运行前就是中文：中文名、标题、说明链接、分享图与双向 hreflang',()=>{
+  assert.deepEqual(seoResponse({pathname:'/zh',siteUrl}),{status:308,headers:{'X-Content-Type-Options':'nosniff','Cache-Control':'no-store',Location:'/zh/'},body:''});
+  const page=seoResponse({pathname:'/zh/',siteUrl,template});
+  assert.equal(page.status,200);
+  assert.equal(page.headers['Content-Language'],'zh-CN');
+  assert.match(page.body,/<html lang="zh-CN">/);
+  assert.match(page.body,/<h1>赛博牛马规划器<\/h1>/);
+  assert.match(page.body,/<title>赛博牛马规划器 \| Codex 额度与 reset 规划工具<\/title>/);
+  assert.match(page.body,/name="description" content="赛博牛马规划器（Usage Planner）/);
+  assert.match(page.body,/property="og:site_name" content="赛博牛马规划器"/);
+  assert.match(page.body,/property="og:image" content="https:\/\/usage-planner.example\/public\/social-card-zh.png\?v=\d+"/);
+  assert.match(page.body,/<link rel="canonical" href="https:\/\/usage-planner.example\/zh\/">/);
+  assert.match(page.body,/<link rel="alternate" hreflang="en" href="https:\/\/usage-planner.example\/">/);
+  assert.match(page.body,/<a id="planner-guide" href="\/zh\/guide\/">使用说明<\/a>/);
+  assert.match(page.body,/data-language="zh-CN" lang="zh-CN" aria-pressed="true"/);
+  assert.doesNotMatch(page.body.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/g,''),/How it works|Open source on GitHub|share it|Update plan/);
+  const [schema]=structured(page.body)[0]['@graph'];
+  assert.equal(schema.name,'赛博牛马规划器');
+  assert.equal(schema.url,siteUrl+'/zh/');
+  assert.deepEqual(schema.alternateName,['Usage Planner','Codex4ever']);
+  assert.match(seoResponse({pathname:'/zh/guide/',siteUrl}).body,/<a href="\/zh\/">打开规划器 →<\/a>/);
+  assert.match(seoResponse({pathname:'/llms.txt',siteUrl}).body,/Chinese name: 赛博牛马规划器[\s\S]*https:\/\/usage-planner.example\/zh\/[\s\S]*## 中文简介/);
 });
 
 test('中英文指南直接返回正文、自身 canonical 和双向 hreflang，均有真实链接',()=>{
@@ -65,8 +95,8 @@ test('robots 允许渲染所需文件，sitemap 只列正式页面，不产生�
   const sitemap=seoResponse({pathname:'/sitemap.xml',siteUrl});
   assert.equal(sitemap.headers['Content-Type'],'application/xml; charset=utf-8');
   assert.deepEqual([...sitemap.body.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match=>match[1]),
-    [siteUrl+'/',siteUrl+'/guide/',siteUrl+'/zh/guide/']);
-  assert.equal((sitemap.body.match(/hreflang="zh-CN"/g)??[]).length,2);
+    [siteUrl+'/',siteUrl+'/zh/',siteUrl+'/guide/',siteUrl+'/zh/guide/']);
+  assert.equal((sitemap.body.match(/hreflang="zh-CN"/g)??[]).length,4);
   assert.doesNotMatch(sitemap.body,/lastmod|priority|changefreq|localhost|127\.0\.0\.1|\/api\//);
 });
 

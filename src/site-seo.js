@@ -1,5 +1,6 @@
 import { PLANNER_METADATA } from './page-metadata.js';
 import { BRAND_MARK_SVG } from './brand-mark.js';
+import { HOMES } from './planner-name.js';
 
 const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const json=value=>JSON.stringify(value).replace(/</g,'\\u003c');
@@ -9,6 +10,8 @@ export const INDEXNOW_KEY='98f3b4121e21dd55fee643d8af3a1002';
 export const SOURCE_URL='https://github.com/ItsOdeLeo/usage-planner';
 export const CREATOR_URL='https://x.com/ItsOdeLeo';
 export const DATA_SOURCES=[['Codex Resets','https://codex-resets.com']];
+const SOCIAL_CARDS={en:['/public/social-card.png?v=4','Usage Planner — Codex quota and reset planner'],
+  'zh-CN':['/public/social-card-zh.png?v=1','赛博牛马规划器（Usage Planner）— Codex 额度与 reset 规划工具']};
 const guides={
   en:{path:'/guide/',title:'Codex Usage, Quota & Reset Planning Guide | Usage Planner',
     description:'Learn how Usage Planner estimates quota depletion, compares banked and extra resets, and plans daily Codex usage with a local MCP interface.',
@@ -74,39 +77,52 @@ export function renderSeoHead({siteUrl=null,page='planner',language='en'}={}) {
   const origin=publicSiteOrigin(siteUrl);
   const guide=guides[language]??guides.en;
   const meta=page==='guide' ? guide : PLANNER_METADATA[language]??PLANNER_METADATA.en;
-  const path=page==='guide' ? guide.path : '/';
+  const zh=language==='zh-CN';
+  const path=page==='guide' ? guide.path : HOMES[language]??'/';
   const url=origin ? origin+path : null;
+  const alternates=page==='guide' ? Object.fromEntries(Object.entries(guides).map(([lang,entry])=>[lang,entry.path])) : HOMES;
+  const [card,cardAlt]=SOCIAL_CARDS[language]??SOCIAL_CARDS.en;
   const schema=page==='guide' ? {
     '@context':'https://schema.org','@type':'TechArticle',headline:meta.heading,
-    description:meta.description,inLanguage:language,about:{'@type':'WebApplication',name:'Usage Planner'},
+    description:meta.description,inLanguage:language,
+    about:{'@type':'WebApplication',name:zh ? '赛博牛马规划器' : 'Usage Planner',alternateName:zh ? 'Usage Planner' : '赛博牛马规划器'},
     ...(url ? {url,mainEntityOfPage:url} : {})
   } : {
-    '@context':'https://schema.org','@type':'WebApplication',name:'Usage Planner',alternateName:['赛博牛马规划器','Codex4ever'],
-    description:meta.description,applicationCategory:'DeveloperApplication',operatingSystem:'Web',
-    inLanguage:['en','zh-CN'],isAccessibleForFree:true,license:'https://opensource.org/licenses/MIT',
-    author:{'@type':'Person',name:'ItsOdeLeo',url:CREATOR_URL},
-    sameAs:[SOURCE_URL],...(url ? {url} : {})
+    '@context':'https://schema.org','@graph':[{
+      '@type':'WebApplication',name:zh ? '赛博牛马规划器' : 'Usage Planner',
+      alternateName:zh ? ['Usage Planner','Codex4ever'] : ['赛博牛马规划器','Codex4ever'],
+      description:meta.description,applicationCategory:'DeveloperApplication',operatingSystem:'Web',
+      inLanguage:language,isAccessibleForFree:true,
+      license:'https://opensource.org/licenses/MIT',author:{'@type':'Person',name:'ItsOdeLeo',url:CREATOR_URL},
+      sameAs:[SOURCE_URL,'https://www.npmjs.com/package/usage-planner'],...(url ? {url} : {})
+    },{
+      // Google reads the site name from WebSite data on the home page.
+      '@type':'WebSite',name:'Usage Planner',alternateName:['赛博牛马规划器','usageplanner.com'],
+      inLanguage:['en','zh-CN'],...(origin ? {url:origin+'/'} : {})
+    }]
   };
   return `<title>${escape(meta.title)}</title>
   <meta name="description" content="${escape(meta.description)}">
   <meta name="robots" content="${origin ? 'index, follow, max-image-preview:large' : 'noindex, follow'}">
-  <meta property="og:site_name" content="Usage Planner">
+  <meta property="og:site_name" content="${zh ? '赛博牛马规划器' : 'Usage Planner'}">
   <meta property="og:type" content="${page==='guide' ? 'article' : 'website'}">
   <meta property="og:title" content="${escape(meta.title)}">
   <meta property="og:description" content="${escape(meta.description)}">
-  <meta property="og:locale" content="${language==='zh-CN' ? 'zh_CN' : 'en_GB'}">
+  <meta property="og:locale" content="${zh ? 'zh_CN' : 'en_GB'}">
+  <meta property="og:locale:alternate" content="${zh ? 'en_GB' : 'zh_CN'}">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${escape(meta.title)}">
   <meta name="twitter:description" content="${escape(meta.description)}">
   ${url ? `<link rel="canonical" href="${escape(url)}">
   <meta property="og:url" content="${escape(url)}">
-  <meta property="og:image" content="${escape(origin)}/public/social-card.png?v=4">
+  <meta property="og:image" content="${escape(origin+card)}">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Usage Planner — Codex quota and reset planner">
-  <meta name="twitter:image" content="${escape(origin)}/public/social-card.png?v=4">
-  <meta name="twitter:image:alt" content="Usage Planner — Codex quota and reset planner">
-  ${page==='guide' ? Object.entries(guides).map(([lang,entry])=>`<link rel="alternate" hreflang="${lang}" href="${escape(origin+entry.path)}">`).join('\n  ')+`\n  <link rel="alternate" hreflang="x-default" href="${escape(origin+guides.en.path)}">` : ''}` : ''}
+  <meta property="og:image:alt" content="${escape(cardAlt)}">
+  <meta name="twitter:image" content="${escape(origin+card)}">
+  <meta name="twitter:image:alt" content="${escape(cardAlt)}">
+  ${Object.entries(alternates).map(([lang,href])=>`<link rel="alternate" hreflang="${lang}" href="${escape(origin+href)}">`).join('\n  ')}
+  <link rel="alternate" hreflang="x-default" href="${escape(origin+alternates.en)}">` : ''}
   <script type="application/ld+json">${json(schema)}</script>${page==='guide' ? `
   <script type="application/ld+json">${json({'@context':'https://schema.org','@type':'FAQPage',inLanguage:language,
     mainEntity:guide.faq.map(([name,text])=>({'@type':'Question',name,acceptedAnswer:{'@type':'Answer',text}}))})}</script>` : ''}`;
@@ -119,13 +135,13 @@ function renderGuide({language,siteUrl}) {
 ${renderSeoHead({siteUrl,page:'guide',language})}
 <meta name="theme-color" content="#F7D5D5"><link rel="stylesheet" href="/src/styles/guide.css"></head>
 <body class="guide-page"><main>
-<header class="site-header"><div class="brand"><span class="brand-mark" aria-hidden="true">${BRAND_MARK_SVG}</span><div><a href="/">${language==='zh-CN' ? '赛博牛马规划器' : 'Usage Planner'}</a></div></div>
+<header class="site-header"><div class="brand"><span class="brand-mark" aria-hidden="true">${BRAND_MARK_SVG}</span><div><a href="${HOMES[language]}">${language==='zh-CN' ? '赛博牛马规划器' : 'Usage Planner'}</a></div></div>
 <nav aria-label="${language==='en' ? 'Language' : '语言'}"><a href="/guide/" lang="en" hreflang="en"${language==='en' ? ' aria-current="page"' : ''}>English</a> · <a href="/zh/guide/" lang="zh-CN" hreflang="zh-CN"${language==='zh-CN' ? ' aria-current="page"' : ''}>中文</a></nav></header>
 <article><h1>${escape(guide.heading)}</h1><p>${escape(guide.intro)}</p>
 ${guide.sections.map(([heading,text])=>`<section><h2>${escape(heading)}</h2><p>${escape(text)}</p></section>`).join('\n')}
 <section><h2>${escape(guide.faqHeading)}</h2>
 ${guide.faq.map(([question,answer])=>`<h3>${escape(question)}</h3><p>${escape(answer)}</p>`).join('\n')}</section>
-<p><a href="/">${escape(guide.back)} →</a></p></article>
+<p><a href="${HOMES[language]}">${escape(guide.back)} →</a></p></article>
 <footer>© 2026 ItsOdeLeo · ${escape(guide.notice)} · <a href="${SOURCE_URL}" rel="noopener">${escape(guide.source)}</a> · ${escape(guide.credit)} ${DATA_SOURCES.map(([name,url])=>`<a href="${url}" rel="noopener">${escape(name)}</a>`).join(', ')} ${escape(guide.creditSuffix)}</footer></main></body></html>`;
 }
 
@@ -138,9 +154,17 @@ function renderLlmsText(origin) {
 
 Usage Planner (Chinese name 赛博牛马规划器, formerly Codex4ever) estimates when your remaining OpenAI Codex quota runs out, when a banked reset could help, and how possible extra resets change a daily usage plan. The website calculates in the browser; the Codex plugin reads a locally signed-in quota. Neither redeems resets or spends credits.
 
+## Names
+
+- English name: Usage Planner (site: usageplanner.com)
+- Chinese name: 赛博牛马规划器 (same product; "cyber workhorse planner", a joke about people who max out their Codex quota)
+- Former name: Codex4ever
+- npm package and MCP server: usage-planner (MCP Registry: io.github.ItsOdeLeo/usage-planner)
+
 ## Pages
 
 - [Planner](${link('/')}): interactive quota and reset planner
+- [赛博牛马规划器（中文版）](${link(HOMES['zh-CN'])}): the same planner in Chinese
 - [Guide](${link(guides.en.path)}): how the planner and forecasts work, with FAQ
 - [中文指南](${link(guides['zh-CN'].path)}): Chinese guide and FAQ
 
@@ -156,30 +180,68 @@ ${DATA_SOURCES.map(([name,url])=>`- [${name}](${url})`).join('\n')}: public rese
 ## FAQ
 
 ${guides.en.faq.map(([question,answer])=>`- ${question} ${answer}`).join('\n')}
+
+## 中文简介
+
+${guides['zh-CN'].intro}
+
+${guides['zh-CN'].faq.map(([question,answer])=>`- ${question}${answer}`).join('\n')}
 `;
+}
+
+// Static text of index.html in Chinese, so /zh/ is Chinese before any script
+// runs. Every pair must match the template; a stale pair fails the build.
+const ZH_TEMPLATE=[
+  ['<html lang="en">','<html lang="zh-CN">'],
+  ['<h1>Usage Planner</h1>','<h1>赛博牛马规划器</h1>'],
+  ['aria-label="Language"><button type="button" data-language="en" lang="en" aria-pressed="true">English</button><button type="button" data-language="zh-CN" lang="zh-CN" aria-pressed="false">中文</button>',
+    'aria-label="语言"><button type="button" data-language="en" lang="en" aria-pressed="false">English</button><button type="button" data-language="zh-CN" lang="zh-CN" aria-pressed="true">中文</button>'],
+  [/<noscript>[\s\S]*?<\/noscript>/,'<noscript><p>赛博牛马规划器（Usage Planner）根据 Codex 剩余额度、消耗速度、备用 reset 到期时间和额外 reset 预测，帮你算出每天用多少。开启 JavaScript 后即可计算，也可以先<a href="/zh/guide/">看看使用说明</a>。</p></noscript>'],
+  ['aria-label="Usage plan"','aria-label="算法输出"'],['aria-label="Forecast evidence"','aria-label="预测依据"'],['aria-label="Usage inputs"','aria-label="算法输入"'],
+  ['Calculate a plan to see your timeline.','点击「计算策略」查看结果。'],['↻ Update plan','↻ 更新计划'],
+  [/<p id="overuse-hint"([^>]*)>[^<]*<\/p>/,'<p id="overuse-hint"$1>用量过度提醒（仅 Codex 插件）：在 Codex 里说“打开用量过度提醒”。之后你用得比计划快时，会直接在对话里提醒你。</p>'],
+  ['<span data-plugin-hint>Fill these in automatically with the Codex plugin.</span>','<span data-plugin-hint>可安装成 Codex 插件，自动读取以上数据。</span>'],
+  ['Unofficial visual usage planner for OpenAI Codex. Not affiliated with OpenAI.','OpenAI Codex 的非官方可视化用量规划工具。与 OpenAI 无隶属关系。'],
+  ['<a id="planner-guide" href="/guide/">How it works</a>','<a id="planner-guide" href="/zh/guide/">使用说明</a>'],
+  ['rel="noopener">Open source on GitHub</a>','rel="noopener">GitHub 开源</a>'],
+  ['<span data-credit-label>Thanks to</span>','<span data-credit-label>感谢</span>'],['<span data-credit-suffix>for reset data</span>','<span data-credit-suffix>提供 reset 数据</span>'],
+  ['<span data-follow-label>If you like this work, please follow me on </span>','<span data-follow-label>如果你喜欢这个作品，欢迎在 </span>'],
+  ['<span data-follow-or> or </span>','<span data-follow-or> 或</span>'],['rel="noopener noreferrer">Xiaohongshu</a>','rel="noopener noreferrer">小红书</a>'],
+  ['<span data-follow-tail>, or </span>','<span data-follow-tail>关注我，或者</span>'],['type="button">share it</button>','type="button">分享给朋友</button>'],
+  ['<span data-follow-end>.</span>','<span data-follow-end>。</span>']
+];
+export function localizePlannerTemplate(template,language) {
+  if(language!=='zh-CN')return template;
+  return ZH_TEMPLATE.reduce((html,[from,to])=>{
+    const next=html.replace(from,to);
+    if(next===html)throw new Error(`Chinese planner template is out of date: ${from}`);
+    return next;
+  },template);
 }
 
 /** SEO-only HTTP responses. No evidence fetches, account reads or solver calls. */
 export function seoResponse({pathname,siteUrl=null,template}={}) {
-  if(!['/','/index.html','/guide','/guide/','/zh/guide','/zh/guide/','/robots.txt','/sitemap.xml','/llms.txt'].includes(pathname))return null;
+  if(!['/','/index.html','/zh','/zh/','/guide','/guide/','/zh/guide','/zh/guide/','/robots.txt','/sitemap.xml','/llms.txt'].includes(pathname))return null;
   const origin=publicSiteOrigin(siteUrl);
   const headers={'X-Content-Type-Options':'nosniff','Cache-Control':'no-store'};
-  if(pathname==='/index.html'||pathname==='/guide'||pathname==='/zh/guide')return {
+  if(pathname==='/index.html'||pathname==='/zh'||pathname==='/guide'||pathname==='/zh/guide')return {
     status:308,headers:{...headers,Location:pathname==='/index.html' ? '/' : pathname+'/'},body:''};
   if(pathname==='/robots.txt')return {status:200,headers:{...headers,'Content-Type':'text/plain; charset=utf-8'},body:
     `User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /output/\nDisallow: /experiments/\nDisallow: /test/\nDisallow: /scripts/\n${origin ? `Sitemap: ${origin}/sitemap.xml\n` : ''}`};
   if(pathname==='/llms.txt')return {status:200,headers:{...headers,'Content-Type':'text/plain; charset=utf-8'},body:renderLlmsText(origin)};
   if(pathname==='/sitemap.xml') {
     if(!origin)return {status:404,headers:{...headers,'Content-Type':'text/plain; charset=utf-8','X-Robots-Tag':'noindex'},body:'Sitemap requires PUBLIC_SITE_URL.'};
-    const alternates=Object.entries(guides).map(([lang,entry])=>`<xhtml:link rel="alternate" hreflang="${lang}" href="${escape(origin+entry.path)}"/>`).join('')
-      +`<xhtml:link rel="alternate" hreflang="x-default" href="${escape(origin+guides.en.path)}"/>`;
-    const pages=['/',guides.en.path,guides['zh-CN'].path];
+    // Each page lists every language version of itself, x-default English.
+    const group=paths=>Object.entries(paths).map(([lang,path])=>`<xhtml:link rel="alternate" hreflang="${lang}" href="${escape(origin+path)}"/>`).join('')
+      +`<xhtml:link rel="alternate" hreflang="x-default" href="${escape(origin+paths.en)}"/>`;
+    const guidePaths=Object.fromEntries(Object.entries(guides).map(([lang,entry])=>[lang,entry.path]));
+    const pages=[...Object.values(HOMES).map(path=>[path,group(HOMES)]),...Object.values(guidePaths).map(path=>[path,group(guidePaths)])];
     return {status:200,headers:{...headers,'Content-Type':'application/xml; charset=utf-8'},body:
-      `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${pages.map(path=>`<url><loc>${escape(origin+path)}</loc>${path==='/' ? '' : alternates}</url>`).join('')}</urlset>`};
+      `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${pages.map(([path,links])=>`<url><loc>${escape(origin+path)}</loc>${links}</url>`).join('')}</urlset>`};
   }
-  const language=pathname==='/zh/guide/' ? 'zh-CN' : 'en';
-  const body=pathname==='/' ? template.replace(/<!-- site-meta:start -->[\s\S]*?<!-- site-meta:end -->/,
-    `<!-- site-meta:start -->\n  ${renderSeoHead({siteUrl:origin})}\n  <!-- site-meta:end -->`)
+  const language=pathname.startsWith('/zh/') ? 'zh-CN' : 'en';
+  const body=pathname==='/'||pathname==='/zh/' ? localizePlannerTemplate(template,language).replace(/<!-- site-meta:start -->[\s\S]*?<!-- site-meta:end -->/,
+    `<!-- site-meta:start -->\n  ${renderSeoHead({siteUrl:origin,language})}\n  <!-- site-meta:end -->`)
     : renderGuide({language,siteUrl:origin});
   return {status:200,headers:{...headers,'Content-Type':'text/html; charset=utf-8','Content-Language':language,
     ...(!origin ? {'X-Robots-Tag':'noindex'} : {})},body};

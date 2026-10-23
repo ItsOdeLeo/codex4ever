@@ -24,8 +24,12 @@ export async function buildStaticSite({outDir,siteUrl=null,extraPublic=[]}) {
   const asset=async name=>`/${name}?v=${createHash('sha256').update(await readFile(resolve(outDir,name))).digest('hex').slice(0,12)}`;
   const [appJs,appCss,guideCss]=await Promise.all(['app.js','app.css','guide.css'].map(asset));
   const template=await readFile(resolve(root,'index.html'),'utf8');
-  const index=siteUrl ? seoResponse({pathname:'/',siteUrl,template}).body : template;
-  await writeFile(resolve(outDir,'index.html'),index.replace('/src/styles/theme.css',appCss).replace('/src/web.js',appJs));
+  // The plugin page has no /zh/ route; only the public site gets a Chinese home.
+  for(const pathname of siteUrl ? ['/','/zh/'] : ['/']) {
+    const page=siteUrl ? seoResponse({pathname,siteUrl,template}).body : template;
+    await mkdir(resolve(outDir,'.'+pathname),{recursive:true});
+    await writeFile(resolve(outDir,'.'+pathname,'index.html'),page.replace('/src/styles/theme.css',appCss).replace('/src/web.js',appJs));
+  }
   for(const pathname of ['/guide/','/zh/guide/']) {
     const directory=resolve(outDir,'.'+pathname);
     await mkdir(directory,{recursive:true});

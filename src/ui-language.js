@@ -147,7 +147,7 @@ const english={
   '使用 1 个备用 reset':'Use 1 banked reset','保留备用 reset':'Keep banked reset',
   '{date} 24:00 到期（估算）':'Expires {date} 24:00 (est.)',
   '{date}到期':'Expires {date}','{date}结束':'End of {date}',
-  '提前兑换会浪费剩下的 {percent}%':'Wastes the {percent}% still left',
+  '兑换前先用完剩下的 {percent}%':'Use the {percent}% left before redeeming',
   '未额外 reset：{percent}%':'No extra reset: {percent}%',
   '此时仍未额外 reset：{percent}%':'Still no extra reset: {percent}%',
   '未重置时暂停：{percent}%':'Pause if no reset: {percent}%','暂停，等待正常刷新':'Pause until normal refresh',
