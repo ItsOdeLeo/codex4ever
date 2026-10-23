@@ -35,7 +35,7 @@ const english={
   'Usage Planner · 用量策略建议':'Usage Planner · Usage planner',
   '规划接下来怎么用，什么时候补给。':'Plan your usage and your next reset.',
   'OpenAI Codex 的非官方可视化用量规划工具。与 OpenAI 无隶属关系。':'Unofficial visual usage planner for OpenAI Codex. Not affiliated with OpenAI.',
-  '在 X 关注我':'Follow on X',
+  
   '状态与预测':'State and forecast','算法输入':'Usage inputs','预测依据':'Forecast evidence','算法输出':'Usage plan',
   '计算策略建议':'Calculate plan','接下来怎么用':'Your next few days',
   '更新数据':'Update data','采用输入修改并刷新重置证据':'Apply input changes and refresh reset evidence',
@@ -43,7 +43,7 @@ const english={
   '即时更新':'Updates instantly','自定义用量':'Customize usage',
   '如果你喜欢这个作品，欢迎在 X 上关注我':'If you like this work, follow me on X',
   'GitHub 开源':'Open source on GitHub',
-  'Reset 概率':'Reset probability','假设没有 reset':'Assume no reset','感谢':'Thanks to','提供 reset 数据':'for reset data','如果你喜欢这个作品：':'If you like this work:','小红书':'Xiaohongshu','分享':'Share','已复制链接':'Link copied','↻ 更新计划':'↻ Update plan','{time} 前':'By {time}','本周额度还剩':'Weekly quota left','{hours} 小时内 reset':'Reset within {hours}h','用量过度提醒（仅 Codex 插件）：在 Codex 里说“打开用量过度提醒”。之后你用得比计划快时，会直接在对话里提醒你。':'Overuse alert (Codex plugin only): tell Codex “turn on overuse alerts”. When you use more than the plan, it reminds you right in the conversation.','可安装成 Codex 插件，自动读取以上数据。':'Install the Codex plugin to fill these in automatically.','按下后隐藏预测的 reset，所有策略都按没有额外 reset 来规划。':'Hides the predicted resets and plans every strategy as if no extra reset comes.','已宣布的 reset':'Announced reset','已宣布':'Announced','Tibo 已宣布这次 reset 的时间':'Tibo announced the time of this reset','未来 reset 概率':'Chance of a reset in the next','{hours} 小时':'{hours}h','第二次 reset 概率':'Second reset probability',
+  'Reset 概率':'Reset probability','假设没有 reset':'Assume no reset','感谢':'Thanks to','提供 reset 数据':'for reset data','如果你喜欢这个作品，欢迎在 ':'If you like this work, please follow me on ',' 或':' or ','关注我，或者':', or ','分享给朋友':'share it','。':'.','小红书':'Xiaohongshu','已复制链接':'Link copied','↻ 更新计划':'↻ Update plan','{time} 前':'By {time}','本周额度还剩':'Weekly quota left','{hours} 小时内 reset':'Reset within {hours}h','用量过度提醒（仅 Codex 插件）：在 Codex 里说“打开用量过度提醒”。之后你用得比计划快时，会直接在对话里提醒你。':'Overuse alert (Codex plugin only): tell Codex “turn on overuse alerts”. When you use more than the plan, it reminds you right in the conversation.','可安装成 Codex 插件，自动读取以上数据。':'Install the Codex plugin to fill these in automatically.','按下后隐藏预测的 reset，所有策略都按没有额外 reset 来规划。':'Hides the predicted resets and plans every strategy as if no extra reset comes.','已宣布的 reset':'Announced reset','已宣布':'Announced','Tibo 已宣布这次 reset 的时间':'Tibo announced the time of this reset','未来 reset 概率':'Chance of a reset in the next','{hours} 小时':'{hours}h','第二次 reset 概率':'Second reset probability',
   '下次额外 reset':'Next extra reset','未来 48 小时':'Next 48h','修改额度':'Edit quota',
   '点击「计算策略」查看结果。':'Calculate a plan to see your timeline.',
   '重置数据来源':'Reset data',

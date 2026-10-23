@@ -28,8 +28,8 @@ const setStatus=message=>{statusMessage=message;$('#status').textContent=t(messa
 function renderStaticLanguage() {
   const metadata=syncPlannerMetadata(document,language);
   document.documentElement?.setAttribute('lang',language);
-  for(const [selector,label] of [['.affiliation-notice','OpenAI Codex 的非官方可视化用量规划工具。与 OpenAI 无隶属关系。'],['#github-star','GitHub'],['#follow-x','在 X 关注我'],
-['#source-code','GitHub 开源'],['[data-credit-label]','感谢'],['[data-credit-suffix]','提供 reset 数据'],['[data-follow-label]','如果你喜欢这个作品：'],['#creator-xiaohongshu','小红书'],['#share-site','分享'],['#calculate','↻ 更新计划'],['[data-plugin-hint]','可安装成 Codex 插件，自动读取以上数据。'],['#overuse-hint','用量过度提醒（仅 Codex 插件）：在 Codex 里说“打开用量过度提醒”。之后你用得比计划快时，会直接在对话里提醒你。']])
+  for(const [selector,label] of [['.affiliation-notice','OpenAI Codex 的非官方可视化用量规划工具。与 OpenAI 无隶属关系。'],['#github-star','GitHub'],['#follow-x','X'],
+['#source-code','GitHub 开源'],['[data-credit-label]','感谢'],['[data-credit-suffix]','提供 reset 数据'],['[data-follow-label]','如果你喜欢这个作品，欢迎在 '],['[data-follow-or]',' 或'],['#creator-xiaohongshu','小红书'],['[data-follow-tail]','关注我，或者'],['#share-site','分享给朋友'],['[data-follow-end]','。'],['#calculate','↻ 更新计划'],['[data-plugin-hint]','可安装成 Codex 插件，自动读取以上数据。'],['#overuse-hint','用量过度提醒（仅 Codex 插件）：在 Codex 里说“打开用量过度提醒”。之后你用得比计划快时，会直接在对话里提醒你。']])
     {const element=$(selector);if(element)element.textContent=t(label);}
   $('#planner-guide').textContent=language==='zh-CN' ? '使用说明' : 'How it works';
   $('#planner-guide').setAttribute?.('href',language==='zh-CN' ? '/zh/guide/' : '/guide/');
@@ -334,7 +334,7 @@ $('#share-site')?.addEventListener?.('click',async()=>{
   try {
     if(navigator.share)await navigator.share({title:'Usage Planner',url});
     else {await navigator.clipboard.writeText(url);$('#share-site').textContent=t('已复制链接');
-      setTimeout(()=>{$('#share-site').textContent=t('分享');},2000);}
+      setTimeout(()=>{$('#share-site').textContent=t('分享给朋友');},2000);}
   } catch { /* Dismissed share sheet or blocked clipboard: nothing to do. */ }
 });
 function handlePlanClick(event) {

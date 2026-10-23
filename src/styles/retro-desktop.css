@@ -429,3 +429,6 @@ legend {margin-bottom:8px}
   .forecast-horizons [data-forecast-horizon=announced] {align-items:flex-start!important}
   .forecast-horizons [data-forecast-horizon=announced] small {display:none}
 }
+/* The domain stamp must survive a compressed screenshot: larger and in ink. */
+.brand-stamp {font-size:20px;color:var(--ink);opacity:1}
+.brand-stamp span {width:22px;height:22px}
