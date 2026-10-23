@@ -5755,11 +5755,11 @@ var PRODUCT_DOMAIN = "usageplanner.com";
 var HOMES = { en: "/", "zh-CN": "/zh/" };
 
 // src/share-card.js
-async function cardImage(source, doc = globalThis.document) {
+async function cardImage(source, { stamp = "" } = {}, doc = globalThis.document) {
   const { toBlob: toBlob2 } = await Promise.resolve().then(() => (init_es(), es_exports));
   const frame = doc.createElement("div");
   frame.className = "share-frame";
-  frame.innerHTML = `<section class="forecast-panel share-card">${source.innerHTML}</section>`;
+  frame.innerHTML = `<section class="forecast-panel share-card">${source.innerHTML}${stamp}</section>`;
   frame.querySelector("[data-share-control]")?.remove();
   doc.body.append(frame);
   try {
@@ -6003,7 +6003,7 @@ async function shareForecastCard(button) {
   }
   button.setAttribute("aria-busy", "true");
   try {
-    const blob = await cardImage($("#forecast"));
+    const blob = await cardImage($("#forecast"), { stamp: brandStamp() });
     const file = new File([blob], language === "zh-CN" ? "\u8D5B\u535A\u725B\u9A6C\u89C4\u5212\u5668.png" : "usage-planner.png", { type: "image/png" });
     sharedCard = { blob, file, text: t("Codex \u4E0B\u6B21 reset \u5927\u6982\u4EC0\u4E48\u65F6\u5019\u6765\u3001\u6BCF\u5929\u7528\u591A\u5C11\uFF0C\u7528\u8D5B\u535A\u725B\u9A6C\u89C4\u5212\u5668\u770B\u770B"), url: publicPageUrl() };
     if (prefersSystemShare(file)) {
@@ -6081,7 +6081,7 @@ function renderForecastCard(graph = null) {
     now: planningNow,
     locale: language
   });
-  $("#forecast").innerHTML = `<div class="forecast-control" ${planningPrediction ? `data-forecast-48-probability="${planningPrediction.next48Probability}"` : ""}><span>${t("\u989D\u5916 reset \u9884\u6D4B")}</span></div>${forecastSummary}${brandStamp()}${shareControl()}`;
+  $("#forecast").innerHTML = `<div class="forecast-control" ${planningPrediction ? `data-forecast-48-probability="${planningPrediction.next48Probability}"` : ""}><span>${t("\u989D\u5916 reset \u9884\u6D4B")}</span></div>${forecastSummary}${shareControl()}`;
 }
 function renderResult(availableWidth = $("#result").clientWidth) {
   const result = planner.result;

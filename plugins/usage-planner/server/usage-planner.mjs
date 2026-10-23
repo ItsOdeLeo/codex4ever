@@ -25733,7 +25733,7 @@ function createUsagePlannerServer({
 } = {}) {
   const server = new McpServer({
     name: "usage-planner",
-    version: true ? "0.2.2" : "dev"
+    version: true ? "0.2.3" : "dev"
   });
   const classificationCache = /* @__PURE__ */ new Map();
   let lastPlanArguments = null;
