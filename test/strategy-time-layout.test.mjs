@@ -363,7 +363,7 @@ test('额外 reset 只显示各日累计概率，不跳日、不画假想100%补
   assert.equal(layoutStrategyTree(planUsagePath({input:flexInput,now:flexNow,timeZone})).forecastLayout.length,0);
 });
 
-test('每天一根用量柱：同一天不出现两根，柱子与数字落在当天格内，合计等于计划用量',()=>{
+test('每天一根用量柱：同一天不出现两根，落在当天格内，按固定 0-100% 刻度向下，合计等于计划用量',()=>{
   for(const extra of [{},{heldResetIndices:[0]},{intensityMultiplier:1.5}])
     for(const viewportWidth of [270,640,1400]) {
       const result=plan(extra);
@@ -379,6 +379,12 @@ test('每天一根用量柱：同一天不出现两根，柱子与数字落在�
       const planned=result.phasePlans.reduce((sum,phase)=>sum+phase.dailyPercent*(phase.endHours-Math.max(0,phase.startHours))/24,0);
       const shown=graph.dailyBars.reduce((sum,bar)=>sum+bar.percent,0);
       assert.ok(Math.abs(planned-shown)<=.06*graph.dailyBars.length+.1,`${shown} != ${planned}`);
+      assert.deepEqual(graph.usageScale.ticks.map(tick=>tick.percent),[0,25,50,75,100],'刻度固定，不随计划变化');
+      const [zero,,,,full]=graph.usageScale.ticks;
+      for(const bar of graph.dailyBars) {
+        assert.ok(Math.abs(bar.y-zero.y)<1e-6,'柱子从 0% 线向下');
+        if(bar.percent>=1)assert.ok(Math.abs(bar.height-(full.y-zero.y)*Math.min(100,bar.percent)/100)<.1,'柱长按固定刻度');
+      }
       assert.match(renderStrategyTree(graph,String),/class="sr-only"><div class="phase-controls"/,'读屏仍能读到各段用量');
     }
 });

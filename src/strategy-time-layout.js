@@ -137,7 +137,7 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
   const headingY = lastPlot ? lastPlot.bottomY+20 : forecastEndY + (forecastFocus ? 92 : 0) + 12;
   const phaseControls = [];
   const phaseWidth = 198;
-  const quotaThickness=40,labelGap=28,phaseY=headingY+28;
+  const quotaThickness=40,labelGap=28,phaseY=headingY+12;
   const restPeriods=(result.phasePlans??[]).filter(phase=>phase.plannedRest);
   const shownPhases=timelineUsagePhases(result.phasePlans??[],axis.xAtHours);
   for(const [index,phase] of shownPhases.entries()) {
@@ -155,26 +155,23 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
   }
   const opportunityHeight=Math.max(0,...phaseControls.map(phase=>phase.nextResetOpportunity
     ? resetOpportunityLayout(phase.width).height : 0));
-  const labelHeight=Math.max(72,20+(opportunityHeight ? 16+opportunityHeight : 0));
+  const labelHeight=Math.max(108,20+(opportunityHeight ? 16+opportunityHeight : 0));
   const centerY=phaseY+labelHeight+labelGap+quotaThickness;
   for(const phase of phaseControls)Object.assign(phase,{labelHeight,quotaAnchorY:centerY-quotaThickness});
   // One bar per calendar day: what the plan uses that day (today counts from
-  // now). A shared scale with a few gridlines reads the values, so no figure
-  // sits on any bar.
+  // now). Bars hang from a 0% line on a fixed 0-100% scale, the same for
+  // every plan, so a day's depth always means the same share of the quota.
   const usageOn=day=>(result.phasePlans??[]).reduce((sum,phase)=>sum+phase.dailyPercent
     *Math.max(0,Math.min(phase.endHours,day.endHours)-Math.max(phase.startHours,day.startHours,0))/24,0);
   const dayUsage=axis.days.map(day=>({day,percent:usageOn(day)}));
-  const largest=Math.max(0,...dayUsage.map(item=>item.percent));
-  const step=[5,10,20,25,50].find(size=>Math.ceil(largest/size)<=3)??50;
-  const scaleTop=Math.max(step,Math.ceil(largest/step-1e-9)*step);
-  const barBottom=phaseY+labelHeight,barSpace=labelHeight-4;
-  const yAt=percent=>barBottom-barSpace*percent/scaleTop;
+  const barTop=phaseY+4,barSpace=labelHeight-8;
+  const yAt=percent=>barTop+barSpace*Math.min(100,percent)/100;
   const usageScale={x1:axis.leftPadding,x2:axis.width-axis.padding,labelX:axis.width-axis.padding+4,
-    ticks:Array.from({length:Math.round(scaleTop/step)},(_,index)=>({percent:(index+1)*step,y:yAt((index+1)*step)}))};
+    ticks:[0,25,50,75,100].map(percent=>({percent,y:yAt(percent)}))};
   const dailyBars=dayUsage.filter(item=>item.percent>0.05).map(({day,percent})=>{
     const from=axis.xAtHours(Math.max(day.startHours,0)),to=day.x+day.width;
-    const width=Math.min(26,Math.max(4,(to-from)*.5)),height=Math.max(1,barBottom-yAt(percent));
-    return {x:(from+to)/2-width/2,y:barBottom-height,width,height,percent:Number(percent.toFixed(1)),startAt:day.startAt};
+    const width=Math.min(26,Math.max(4,(to-from)*.5)),height=Math.max(1,yAt(percent)-barTop);
+    return {x:(from+to)/2-width/2,y:barTop,width,height,percent:Number(percent.toFixed(1)),startAt:day.startAt};
   });
   const funnel = quotaFunnelGeometry(result.milestones, { centerY, xAtHours: axis.xAtHours,
     maxThickness:quotaThickness,terminalWidth: 16,restPeriods,shape:'area' });
