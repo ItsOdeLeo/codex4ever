@@ -168,12 +168,11 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
   const dayUsage=axis.days.map(day=>({day,percent:usageOn(day)}));
   const barTop=phaseY+4,barSpace=labelHeight-4;
   const yAt=percent=>barTop+barSpace*Math.min(100,percent)/100;
-  // No drawn 0% line: the bars' common top edge already shows it.
   const usageScale={x1:axis.leftPadding,x2:axis.width-axis.padding,// Labels sit in the lane gutter beside the axis; phones have none, so right.
     labelX:compact ? axis.width-axis.padding+4 : axis.leftPadding-6,labelAnchor:compact ? 'start' : 'end',zeroY:barTop,
     // On phones the 100% label would meet the quota area at the right edge;
     // that line is the quota's top edge, so it goes unlabelled there.
-    ticks:[25,50,75,100].map(percent=>({percent,y:yAt(percent),label:!(compact&&percent===100)}))};
+    ticks:[0,25,50,75,100].map(percent=>({percent,y:yAt(percent),label:!(compact&&percent===100)}))};
   const dailyBars=dayUsage.filter(item=>item.percent>0.05).map(({day,percent})=>{
     const from=axis.xAtHours(Math.max(day.startHours,0)),to=day.x+day.width;
     const width=Math.min(26,Math.max(4,(to-from)*.5)),height=Math.max(1,yAt(percent)-barTop);
@@ -315,7 +314,8 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
     &&Math.abs(phase.dailyPercent-phase.baselineDailyPercent)>1e-5);
   const headings = compact ? [{x:axis.leftPadding,y:phaseY-22,width:plotLabelWidth,height:18,kind:'usage',inline:true,
     date:[t(suggested ? '建议 / 天' : '用量 / 天'),...(opportunityHeight ? [t('重置概率 · 截至')] : [])].join(' · '),state:''}]
-    : [{x:0,y:phaseY,width:gutterWidth,height:20,kind:'usage',inline:true,
+    // Narrower than the gutter: the scale's 0% label sits at its right end.
+    : [{x:0,y:phaseY,width:Math.max(0,gutterWidth-28),height:20,kind:'usage',inline:true,
     date:t(gutterWidth<100 ? suggested ? '建议 / 天' : '用量 / 天' : suggested ? '建议用量 / 天' : '日均用量'),state:''},
     ...(opportunityHeight ? [{x:0,y:phaseY+36,width:gutterWidth,height:opportunityHeight,kind:'opportunity',
       inline:true,date:t('重置概率 · 截至'),state:'',tooltip:t('固定日期之前至少发生一次额外 reset 的累计概率')}] : []),
