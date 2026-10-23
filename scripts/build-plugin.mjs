@@ -13,6 +13,8 @@ if(manifest.version!==pkg.version)throw new Error('Plugin and package versions m
 await mkdir(resolve(plugin,'server'),{recursive:true});
 await build({absWorkingDir:root,entryPoints:['src/mcp-server.js'],bundle:true,platform:'node',target:'node20',
   format:'esm',outfile:resolve(plugin,'server/usage-planner.mjs'),legalComments:'linked',
+  // The server reports the released version, not a hand-kept constant.
+  define:{__PLANNER_VERSION__:JSON.stringify(pkg.version)},
   banner:{js:'import { createRequire as __nodeCreateRequire } from "node:module"; const require = __nodeCreateRequire(import.meta.url);'}});
 // In-conversation quota reminders: a Codex hook bundled with the plugin. It
 // stays silent unless the user turned reminders on (usage_alerts enable).

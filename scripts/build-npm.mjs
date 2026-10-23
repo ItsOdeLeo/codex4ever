@@ -18,7 +18,7 @@ for(const name of ['server','web','hooks','experiments','LICENSE','THIRD_PARTY_N
 await writeFile(resolve(out,'package.json'),JSON.stringify({
   name:'usage-planner',version:pkg.version,
   description:'MCP server that plans OpenAI Codex usage from your local quota, banked resets and extra-reset forecasts.',
-  mcpName:MCP_NAME,type:'module',bin:{usage-planner:'server/usage-planner.mjs'},
+  mcpName:MCP_NAME,type:'module',bin:{'usage-planner':'server/usage-planner.mjs'},
   files:['server','web','hooks','experiments','LICENSE','THIRD_PARTY_NOTICES.txt','README.md'],
   engines:{node:'>=20'},license:pkg.license,author:pkg.author,homepage:pkg.homepage,
   repository:pkg.repository,bugs:pkg.bugs,keywords:['mcp','mcp-server','codex','openai-codex','quota','usage-planner']

@@ -25733,7 +25733,10 @@ function createUsagePlannerServer({
   alertOptions = {},
   startAlerts = plannerPage !== null
 } = {}) {
-  const server = new McpServer({ name: "usage-planner", version: "0.1.2" });
+  const server = new McpServer({
+    name: "usage-planner",
+    version: true ? "0.2.0" : "dev"
+  });
   const classificationCache = /* @__PURE__ */ new Map();
   let lastPlanArguments = null;
   const alerts = createUsageAlerts({

@@ -86,7 +86,8 @@ async function forecast(evidence, classifyPosts) {
 
 export function createUsagePlannerServer({ collectEvidence = collectLiveResetEvidence,readUsage=readCodexUsage,clock=()=>new Date(),plannerPage=null,
   alertOptions={},startAlerts=plannerPage!==null } = {}) {
-  const server = new McpServer({ name: 'usage-planner', version: '0.1.2' });
+  const server = new McpServer({ name: 'usage-planner',
+    version: typeof __PLANNER_VERSION__==='string' ? __PLANNER_VERSION__ : 'dev' });
   const classificationCache = new Map();
   let lastPlanArguments=null;
   // Opt-in quota reminders run inside this MCP while Codex keeps it running.
