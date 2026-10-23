@@ -340,3 +340,30 @@ legend {margin-bottom:8px}
 .plan-card .forecast-more dd q {-webkit-line-clamp:1;margin-top:2px;font-size:11px}
 .plan-card .forecast-more>p {margin:6px 0 0}
 @media(max-width:680px) {.plan-card .forecast-more>dl>div {grid-template-columns:minmax(0,1fr);gap:0;padding:4px 0!important}}
+/* Dock inputs: one aligned row. Every field has the same small label on top
+   and a 36px control below, so labels and controls each share one line. */
+.plan-dock {--field-label-height:18px;--field-control-height:36px}
+.plan-dock .input-state {display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px 28px}
+.plan-dock .compact-form {display:flex;flex-wrap:wrap;align-items:flex-start;gap:14px 28px}
+.plan-dock .compact-form fieldset {display:flex;flex-direction:column;gap:6px;margin:0;padding:0;border:0;min-width:0}
+.plan-dock .calendar-field>legend,.plan-dock .simple-fields label,.plan-dock .refresh-label {float:none;display:block;height:var(--field-label-height);margin:0;padding:0;font-size:12px;font-weight:400;line-height:var(--field-label-height);color:var(--muted)}
+.plan-dock .calendar-field>legend {margin-bottom:6px}
+.plan-dock .reset-actions {flex-direction:row;align-items:center;gap:6px;min-height:var(--field-control-height)}
+.plan-dock .calendar-summary button,.plan-dock [data-toggle-calendar] {height:var(--field-control-height);padding:0 10px}
+.plan-dock .compact-form fieldset.simple-fields {display:grid;justify-items:start;grid-template-columns:auto auto;grid-template-rows:var(--field-label-height) var(--field-control-height);column-gap:28px;row-gap:6px;align-items:center}
+.plan-dock .simple-fields>legend {display:none}
+.plan-dock .simple-fields>label {grid-row:1;grid-column:1}
+.plan-dock .simple-fields>input {grid-row:2;grid-column:1;width:88px;height:var(--field-control-height)}
+.plan-dock .refresh-row {display:contents}
+.plan-dock .refresh-row>.refresh-label {grid-row:1;grid-column:2}
+.plan-dock .refresh-row>.delay-controls {grid-row:2;grid-column:2}
+.plan-dock .delay-control {height:var(--field-control-height)}
+.plan-dock .input-update {display:flex;flex-direction:row;align-items:center;gap:10px;align-self:flex-end;margin:0}
+.plan-dock .input-update #calculate {height:var(--field-control-height);padding:0 14px;font-size:12px}
+@media(max-width:680px) {
+  .plan-dock .compact-form fieldset.simple-fields {grid-template-columns:minmax(0,1fr);grid-template-rows:none}
+  .plan-dock .simple-fields>label {grid-row:1}.plan-dock .simple-fields>input {grid-row:2}
+  .plan-dock .refresh-row>.refresh-label {grid-row:3;grid-column:1}.plan-dock .refresh-row>.delay-controls {grid-row:4;grid-column:1}
+  .plan-dock .simple-fields>label,.plan-dock .refresh-label {height:auto}
+  .plan-dock .input-update {align-self:flex-start}
+}
