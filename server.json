@@ -7,12 +7,12 @@
     "source": "github"
   },
   "websiteUrl": "https://usageplanner.com",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "usage-planner",
-      "version": "0.2.4",
+      "version": "0.2.5",
       "transport": {
         "type": "stdio"
       }

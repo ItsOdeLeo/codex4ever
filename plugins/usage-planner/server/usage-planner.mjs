@@ -23267,7 +23267,9 @@ function planIntensityUsage({
     return Number.isFinite(date4.getTime()) ? date4.toISOString() : null;
   };
   const elapsedDays = (168 - horizon) / 24;
-  const averagePercentPerDay = elapsedDays > EPS && remaining2 < 100 ? (100 - remaining2) / elapsedDays : null;
+  const observed = elapsedDays >= 1 / 24 && remaining2 < 100 ? (100 - remaining2) / elapsedDays : null;
+  const evenSplit = observed === null && remaining2 > 0;
+  const averagePercentPerDay = observed ?? (evenSplit ? remaining2 * 24 / horizon : null);
   const common = {
     now: now.toISOString(),
     timeZone,
@@ -23275,6 +23277,7 @@ function planIntensityUsage({
     elapsedDays,
     usedPercent: 100 - remaining2,
     averagePercentPerDay,
+    evenSplit,
     normalResetInHours: horizon,
     normalResetAt: at(horizon),
     resets,
@@ -24654,7 +24657,9 @@ function accountResourceState(snapshot, { now, timeZone, prediction = null }) {
     warnings.push("\u5907\u7528 reset \u6570\u91CF\u6216\u5230\u671F\u8BE6\u60C5\u4E0D\u5B8C\u6574\uFF1B\u53EA\u7EB3\u5165\u5DF2\u786E\u8BA4\u5230\u671F\u65F6\u95F4\u7684\u5E93\u5B58");
   if (known.length > 8) warnings.push("\u53EA\u6A21\u62DF\u6700\u65E9\u5230\u671F\u7684\u516B\u4E2A\u5907\u7528 reset");
   const elapsedDays = (168 - horizon) / 24, used = 100 - remaining2;
-  const average = elapsedDays >= 1 / 24 && used > 0 ? used / elapsedDays : null;
+  const observed = elapsedDays >= 1 / 24 && used > 0 ? used / elapsedDays : null;
+  const evenSplit = observed === null && remaining2 > 0;
+  const average = observed ?? (evenSplit ? remaining2 * 24 / horizon : null);
   return {
     now: now.toISOString(),
     timeZone,
@@ -24662,6 +24667,7 @@ function accountResourceState(snapshot, { now, timeZone, prediction = null }) {
     elapsedDays,
     usedPercent: used,
     averagePercentPerDay: average,
+    evenSplit,
     normalResetInHours: horizon,
     normalResetAt: new Date(resetAt).toISOString(),
     resets: known.slice(0, 8),
@@ -24671,7 +24677,7 @@ function accountResourceState(snapshot, { now, timeZone, prediction = null }) {
     ...!average ? { reason: "\u672C\u8F6E\u8FD8\u6CA1\u6709\u53EF\u8BA1\u7B97\u7684\u5E73\u5747\u6D88\u8017\uFF0C\u6682\u65F6\u65E0\u6CD5\u4F30\u8BA1\u7528\u5B8C\u65E5\u671F\u3002" } : {},
     resourceSource: "codex-app-server",
     resourceWarnings: warnings,
-    paceAssumption: "\u4ECE\u672C\u8F6E\u7A97\u53E3\u5DF2\u6D88\u8017\u989D\u5EA6\u63A8\u7B97\u5E73\u5747\u7528\u91CF\uFF1B\u4E0D\u662F\u8FD1\u671F\u5B9E\u6D4B\u901F\u5EA6"
+    paceAssumption: evenSplit ? "\u672C\u8F6E\u8FD8\u6CA1\u7528\u8FC7\u989D\u5EA6\uFF1A\u6309\u5269\u4F59\u989D\u5EA6\u5E73\u5747\u5206\u5230\u6B63\u5E38\u5237\u65B0\u524D\u7684\u6BCF\u4E00\u5929" : "\u4ECE\u672C\u8F6E\u7A97\u53E3\u5DF2\u6D88\u8017\u989D\u5EA6\u63A8\u7B97\u5E73\u5747\u7528\u91CF\uFF1B\u4E0D\u662F\u8FD1\u671F\u5B9E\u6D4B\u901F\u5EA6"
   };
 }
 
@@ -24723,7 +24729,7 @@ function planUsagePath({
     base.available = true;
     base.paceSource = "provided-observation";
     delete base.reason;
-  } else base.paceSource = "normal-window-average";
+  } else base.paceSource = base.evenSplit ? "even-split" : "normal-window-average";
   base.credits = {
     balance: input?.credits ?? 0,
     allowed: input?.allowCredits === true,
@@ -25203,7 +25209,8 @@ function renderMcpUsageAdvice(advice, { language = "en" } = {}) {
   ].filter(Boolean).join("\n");
   const a = advice.recommendation;
   const rows = [resources];
-  if (advice.currentUsage.dailyPercent !== null) rows.push(zh ? `\u5F53\u524D\u65E5\u5747\u6D88\u8017 ${p(advice.currentUsage.dailyPercent)}\uFF08${advice.currentUsage.source === "normal-window-average" ? "\u672C\u8F6E\u7A97\u53E3\u5E73\u5747" : "\u63D0\u4F9B\u7684\u4F30\u8BA1"}\uFF09\u3002` : `Current daily consumption ${p(advice.currentUsage.dailyPercent)} (${advice.currentUsage.source === "normal-window-average" ? "window average" : "provided estimate"}).`);
+  const source = advice.currentUsage.source;
+  if (advice.currentUsage.dailyPercent !== null) rows.push(source === "even-split" ? zh ? `\u672C\u8F6E\u521A\u5F00\u59CB\uFF0C\u8FD8\u6CA1\u6709\u4F60\u7684\u771F\u5B9E\u7528\u91CF\uFF1A\u5148\u6309\u5269\u4F59\u989D\u5EA6\u5E73\u5747\u5206\u5230\u6B63\u5E38\u5237\u65B0\u524D\uFF0C\u7EA6 ${p(advice.currentUsage.dailyPercent)} / \u5929\uFF1B\u7528\u4E00\u6BB5\u65F6\u95F4\u540E\u518D\u89C4\u5212\u4F1A\u6539\u7528\u5B9E\u9645\u901F\u5EA6\u3002` : `This window has just started, so there is no measured pace yet: the plan starts from an even split of the remaining quota until normal refresh, about ${p(advice.currentUsage.dailyPercent)} / day. Plan again after some use to switch to your actual pace.` : zh ? `\u5F53\u524D\u65E5\u5747\u6D88\u8017 ${p(advice.currentUsage.dailyPercent)}\uFF08${source === "normal-window-average" ? "\u672C\u8F6E\u7A97\u53E3\u5E73\u5747" : "\u63D0\u4F9B\u7684\u4F30\u8BA1"}\uFF09\u3002` : `Current daily consumption ${p(advice.currentUsage.dailyPercent)} (${source === "normal-window-average" ? "window average" : "provided estimate"}).`);
   if (advice.basis === "conditional-forecast-preview") {
     const times = (advice.forecastAlternative?.assumedResetTimes ?? []).map(date4).join(zh ? "\u3001" : " and ");
     rows.push(zh ? `\u672C\u8BA1\u5212\u8BA1\u5165\u4E86\u8F83\u6709\u628A\u63E1\u7684\u989D\u5916 reset\uFF08${times}\uFF0C\u653E\u5728\u4FDD\u5B88\u65F6\u523B\uFF09\uFF1B\u82E5\u5C4A\u65F6\u672A\u53D1\u751F\uFF0C\u6309\u4E0B\u65B9\u672A\u53D1\u751F\u65F6\u7684\u5B89\u6392\u3002` : `This plan counts likely extra resets (${times}, at conservative times); if they do not arrive, follow the no-reset plan below.`);
@@ -25762,7 +25769,7 @@ function createUsagePlannerServer({
 } = {}) {
   const server = new McpServer({
     name: "usage-planner",
-    version: true ? "0.2.4" : "dev"
+    version: true ? "0.2.5" : "dev"
   });
   const classificationCache = /* @__PURE__ */ new Map();
   let lastPlanArguments = null;

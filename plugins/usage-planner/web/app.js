@@ -1056,7 +1056,7 @@ var english = {
   "\u9884\u6D4B\u6570\u636E\u6682\u4E0D\u53EF\u7528": "Forecast unavailable",
   "\u5386\u53F2\u6570\u636E\u52A0\u8F7D\u5931\u8D25\uFF0C\u6682\u4E0D\u9884\u6D4B": "Reset history could not be loaded. Forecast unavailable.",
   "\u5386\u53F2\u6570\u636E\u5DF2\u8FC7\u671F\uFF0C\u6682\u4E0D\u9884\u6D4B": "Reset history is out of date. Forecast unavailable.",
-  "\u672C\u8F6E\u8FD8\u6CA1\u6709\u53EF\u8BA1\u7B97\u7684\u5E73\u5747\u6D88\u8017\uFF0C\u6682\u65F6\u65E0\u6CD5\u4F30\u8BA1\u7528\u5B8C\u65E5\u671F\u3002": "There is not enough usage in this cycle to estimate a daily rate or depletion time.",
+  "\u672C\u8F6E\u8FD8\u6CA1\u6709\u53EF\u8BA1\u7B97\u7684\u5E73\u5747\u6D88\u8017\uFF0C\u6682\u65F6\u65E0\u6CD5\u4F30\u8BA1\u7528\u5B8C\u65E5\u671F\u3002": "Nothing has been used yet this week, so there is no daily rate to plan from.",
   "\u6B63\u5E38\u5237\u65B0\u9700\u4F4D\u4E8E\u672A\u6765\u4E00\u5468\u5185": "Normal refresh must be within the next seven days.",
   "\u5907\u7528 reset \u8BF7\u9009\u62E9\u6709\u6548\u5230\u671F\u65E5\u671F": "Choose a valid expiry date for each banked reset.",
   "\u5907\u7528 reset \u5230\u671F\u65E5\u671F\u65E0\u6548": "A banked reset expiry date is invalid.",
@@ -3447,7 +3447,9 @@ function planIntensityUsage({
     return Number.isFinite(date.getTime()) ? date.toISOString() : null;
   };
   const elapsedDays = (168 - horizon) / 24;
-  const averagePercentPerDay = elapsedDays > EPS4 && remaining < 100 ? (100 - remaining) / elapsedDays : null;
+  const observed = elapsedDays >= 1 / 24 && remaining < 100 ? (100 - remaining) / elapsedDays : null;
+  const evenSplit = observed === null && remaining > 0;
+  const averagePercentPerDay = observed ?? (evenSplit ? remaining * 24 / horizon : null);
   const common = {
     now: now.toISOString(),
     timeZone: timeZone2,
@@ -3455,6 +3457,7 @@ function planIntensityUsage({
     elapsedDays,
     usedPercent: 100 - remaining,
     averagePercentPerDay,
+    evenSplit,
     normalResetInHours: horizon,
     normalResetAt: at(horizon),
     resets,
@@ -3972,7 +3975,9 @@ function accountResourceState(snapshot, { now, timeZone: timeZone2, prediction =
     warnings.push("\u5907\u7528 reset \u6570\u91CF\u6216\u5230\u671F\u8BE6\u60C5\u4E0D\u5B8C\u6574\uFF1B\u53EA\u7EB3\u5165\u5DF2\u786E\u8BA4\u5230\u671F\u65F6\u95F4\u7684\u5E93\u5B58");
   if (known.length > 8) warnings.push("\u53EA\u6A21\u62DF\u6700\u65E9\u5230\u671F\u7684\u516B\u4E2A\u5907\u7528 reset");
   const elapsedDays = (168 - horizon) / 24, used = 100 - remaining;
-  const average = elapsedDays >= 1 / 24 && used > 0 ? used / elapsedDays : null;
+  const observed = elapsedDays >= 1 / 24 && used > 0 ? used / elapsedDays : null;
+  const evenSplit = observed === null && remaining > 0;
+  const average = observed ?? (evenSplit ? remaining * 24 / horizon : null);
   return {
     now: now.toISOString(),
     timeZone: timeZone2,
@@ -3980,6 +3985,7 @@ function accountResourceState(snapshot, { now, timeZone: timeZone2, prediction =
     elapsedDays,
     usedPercent: used,
     averagePercentPerDay: average,
+    evenSplit,
     normalResetInHours: horizon,
     normalResetAt: new Date(resetAt).toISOString(),
     resets: known.slice(0, 8),
@@ -3989,7 +3995,7 @@ function accountResourceState(snapshot, { now, timeZone: timeZone2, prediction =
     ...!average ? { reason: "\u672C\u8F6E\u8FD8\u6CA1\u6709\u53EF\u8BA1\u7B97\u7684\u5E73\u5747\u6D88\u8017\uFF0C\u6682\u65F6\u65E0\u6CD5\u4F30\u8BA1\u7528\u5B8C\u65E5\u671F\u3002" } : {},
     resourceSource: "codex-app-server",
     resourceWarnings: warnings,
-    paceAssumption: "\u4ECE\u672C\u8F6E\u7A97\u53E3\u5DF2\u6D88\u8017\u989D\u5EA6\u63A8\u7B97\u5E73\u5747\u7528\u91CF\uFF1B\u4E0D\u662F\u8FD1\u671F\u5B9E\u6D4B\u901F\u5EA6"
+    paceAssumption: evenSplit ? "\u672C\u8F6E\u8FD8\u6CA1\u7528\u8FC7\u989D\u5EA6\uFF1A\u6309\u5269\u4F59\u989D\u5EA6\u5E73\u5747\u5206\u5230\u6B63\u5E38\u5237\u65B0\u524D\u7684\u6BCF\u4E00\u5929" : "\u4ECE\u672C\u8F6E\u7A97\u53E3\u5DF2\u6D88\u8017\u989D\u5EA6\u63A8\u7B97\u5E73\u5747\u7528\u91CF\uFF1B\u4E0D\u662F\u8FD1\u671F\u5B9E\u6D4B\u901F\u5EA6"
   };
 }
 
@@ -4041,7 +4047,7 @@ function planUsagePath({
     base.available = true;
     base.paceSource = "provided-observation";
     delete base.reason;
-  } else base.paceSource = "normal-window-average";
+  } else base.paceSource = base.evenSplit ? "even-split" : "normal-window-average";
   base.credits = {
     balance: input2?.credits ?? 0,
     allowed: input2?.allowCredits === true,
@@ -5065,7 +5071,7 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
     zeroY: barTop,
     // On phones the 100% label would meet the quota area at the right edge;
     // that line is the quota's top edge, so it goes unlabelled there.
-    ticks: [25, 50, 75, 100].map((percent) => ({ percent, y: yAt(percent), label: !(compact && percent === 100) }))
+    ticks: [0, 25, 50, 75, 100].map((percent) => ({ percent, y: yAt(percent), label: !(compact && percent === 100) }))
   };
   const dailyBars = dayUsage.filter((item) => item.percent > 0.05).map(({ day, percent }) => {
     const from = axis.xAtHours(Math.max(day.startHours, 0)), to = day.x + day.width;
@@ -5278,7 +5284,7 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
     {
       x: 0,
       y: phaseY,
-      width: gutterWidth,
+      width: Math.max(0, gutterWidth - 28),
       height: 20,
       kind: "usage",
       inline: true,

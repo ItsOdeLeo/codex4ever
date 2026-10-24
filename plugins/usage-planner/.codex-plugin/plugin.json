@@ -1,6 +1,6 @@
 {
   "name": "usage-planner",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Plan Codex usage from your current quota, banked resets and public reset evidence.",
   "author": {
     "name": "ItsOdeLeo",
