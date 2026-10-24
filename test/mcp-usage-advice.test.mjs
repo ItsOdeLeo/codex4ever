@@ -96,18 +96,18 @@ test('无备用、明确保留的备用不能在应急方案中被凭空使用',
   }
 });
 
-test('新窗口不编造速度，未知备用库存不伪造可兑换日期',()=>{
+test('新窗口按平均分配规划并说明不是实测速度，未知备用库存不伪造可兑换日期',()=>{
   const s=snapshot();s.weekly={remainingPercent:100,periodHours:168,
     resetAt:new Date(now.getTime()+167.99*HOUR).toISOString()};
   s.bankedResetDetailsComplete=false;s.bankedResets=[{expiresAt:null}];
   const r=plan({usageSnapshot:s,prediction:null}),a=mcpUsageAdvice(r,{usageSnapshot:s});
-  assert.equal(a.status,'needs-usage-estimate');
-  assert.equal(a.recommendation.dailyPercent,null);
-  assert.equal(a.currentUsage.dailyPercent,null);
+  assert.equal(a.status,'ready');
+  assert.equal(a.currentUsage.source,'even-split');
+  assert.ok(a.recommendation.dailyPercent>0);
   assert.equal(a.resources.inventoryComplete,false);
   assert.equal(a.resources.knownBankDeadlines.length,0);
-  assert.ok(a.knownResourceDailyPercent>0);
-  assert.match(renderMcpUsageAdvice(a),/approximate daily/);
+  assert.match(renderMcpUsageAdvice(a),/no measured pace yet/);
+  assert.doesNotMatch(renderMcpUsageAdvice(a),/Current daily consumption/);
 });
 
 test('周额度尚有余量也不能忽略已耗尽的短窗口',()=>{

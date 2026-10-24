@@ -62,10 +62,14 @@ export function planIntensityUsage({ input, now = new Date(), prediction = null,
     return Number.isFinite(date.getTime()) ? date.toISOString() : null;
   };
   const elapsedDays = (168 - horizon) / 24;
-  const averagePercentPerDay = elapsedDays > EPS && remaining < 100
-    ? (100 - remaining) / elapsedDays : null;
+  // Nothing used yet this cycle (often right after a refill): plan from an
+  // even split of what is left until the normal refresh instead of nothing.
+  // Same rule as the account path: an hour of history before using a pace.
+  const observed = elapsedDays >= 1 / 24 && remaining < 100 ? (100 - remaining) / elapsedDays : null;
+  const evenSplit = observed === null && remaining > 0;
+  const averagePercentPerDay = observed ?? (evenSplit ? remaining * 24 / horizon : null);
   const common = { now: now.toISOString(), timeZone, remainingPercent: remaining,
-    elapsedDays, usedPercent: 100 - remaining, averagePercentPerDay,
+    elapsedDays, usedPercent: 100 - remaining, averagePercentPerDay, evenSplit,
     normalResetInHours: horizon, normalResetAt: at(horizon), resets,
     credits: { balance: credits, creditsPerPercent, included: creditsPerPercent !== null },
     predictionEnabled: prediction !== null };

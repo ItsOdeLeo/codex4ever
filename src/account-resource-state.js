@@ -24,12 +24,17 @@ export function accountResourceState(snapshot,{now,timeZone,prediction=null}) {
     warnings.push('备用 reset 数量或到期详情不完整；只纳入已确认到期时间的库存');
   if(known.length>8)warnings.push('只模拟最早到期的八个备用 reset');
   const elapsedDays=(168-horizon)/24,used=100-remaining;
-  const average=elapsedDays>=1/24&&used>0 ? used/elapsedDays : null;
+  // Nothing used yet this cycle (often right after a refill): plan from an
+  // even split of what is left until the normal refresh, as the website does.
+  const observed=elapsedDays>=1/24&&used>0 ? used/elapsedDays : null;
+  const evenSplit=observed===null&&remaining>0;
+  const average=observed??(evenSplit ? remaining*24/horizon : null);
   return {now:now.toISOString(),timeZone,remainingPercent:remaining,elapsedDays,usedPercent:used,
-    averagePercentPerDay:average,normalResetInHours:horizon,normalResetAt:new Date(resetAt).toISOString(),
+    averagePercentPerDay:average,evenSplit,normalResetInHours:horizon,normalResetAt:new Date(resetAt).toISOString(),
     resets:known.slice(0,8),credits:{balance:0,creditsPerPercent:null,included:false},
     predictionEnabled:prediction!==null,available:average!==null,
     ...(!average ? {reason:'本轮还没有可计算的平均消耗，暂时无法估计用完日期。'} : {}),
     resourceSource:'codex-app-server',resourceWarnings:warnings,
-    paceAssumption:'从本轮窗口已消耗额度推算平均用量；不是近期实测速度'};
+    paceAssumption:evenSplit ? '本轮还没用过额度：按剩余额度平均分到正常刷新前的每一天'
+      : '从本轮窗口已消耗额度推算平均用量；不是近期实测速度'};
 }

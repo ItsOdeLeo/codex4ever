@@ -71,7 +71,7 @@ const english={
   ' · LLM 分析帖子':' · Posts analysed by LLM','预测数据暂不可用':'Forecast unavailable',
   '历史数据加载失败，暂不预测':'Reset history could not be loaded. Forecast unavailable.',
   '历史数据已过期，暂不预测':'Reset history is out of date. Forecast unavailable.',
-  '本轮还没有可计算的平均消耗，暂时无法估计用完日期。':'There is not enough usage in this cycle to estimate a daily rate or depletion time.',
+  '本轮还没有可计算的平均消耗，暂时无法估计用完日期。':'Nothing has been used yet this week, so there is no daily rate to plan from.',
   '正常刷新需位于未来一周内':'Normal refresh must be within the next seven days.',
   '备用 reset 请选择有效到期日期':'Choose a valid expiry date for each banked reset.',
   '备用 reset 到期日期无效':'A banked reset expiry date is invalid.',

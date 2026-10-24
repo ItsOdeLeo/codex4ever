@@ -47,7 +47,7 @@ export function planUsagePath({ input, now = new Date(), timeZone = Intl.DateTim
     base.available = true;
     base.paceSource = 'provided-observation';
     delete base.reason;
-  } else base.paceSource = 'normal-window-average';
+  } else base.paceSource = base.evenSplit ? 'even-split' : 'normal-window-average';
   base.credits = { balance: input?.credits ?? 0, allowed: input?.allowCredits === true,
     unit: 'credits', included: false, quantified: false, consumption: 'user-estimated', bridge: null };
   base.creditsCostSource = 'not-estimated';

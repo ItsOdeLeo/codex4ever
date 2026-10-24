@@ -66,9 +66,13 @@ test('耗尽前的重置概率对应补给决策的时点，发生后需重新�
   assert.equal(plan().options[0].forecast, null);
 });
 
-test('没有平均消耗依据时明确缺失；零余额立即需要补给', () => {
-  assert.equal(plan({ weeklyRemaining: 100 }).available, false);
-  assert.equal(plan({ weeklyResetDays: 7 }).available, false);
+test('刚补满还没有消耗时按剩余额度平均分配并注明；零余额立即需要补给', () => {
+  for (const fresh of [plan({ weeklyRemaining: 100 }), plan({ weeklyResetDays: 7 })]) {
+    assert.equal(fresh.available, true, '不再整页空白');
+    assert.equal(fresh.evenSplit, true, '注明是平均分配，不是实测速度');
+    assert.ok(Math.abs(fresh.averagePercentPerDay - fresh.remainingPercent * 24 / fresh.normalResetInHours) < 1e-9);
+  }
+  assert.equal(plan({ weeklyRemaining: 60 }).evenSplit, false, '有消耗时仍用本轮实际平均');
   const empty = plan({ weeklyRemaining: 0 });
   assert.equal(empty.options[0].stopAtHours, 0);
   assert.equal(empty.options[0].days[0].remainingPercent, 0);
