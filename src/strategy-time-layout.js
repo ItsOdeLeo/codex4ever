@@ -139,8 +139,10 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
   const headingY = lastPlot ? lastPlot.bottomY+20 : forecastEndY + (forecastFocus ? 92 : 0) + 12;
   const phaseControls = [];
   const phaseWidth = 198;
-  // The quota area's top sits on the usage scale's 100% line.
-  const quotaThickness=40,labelGap=0,phaseY=headingY+12;
+  // Usage grows up from its 0% line, a short gap above the quota area; its
+  // 100% line sits just under the reset curves, which daily use rarely
+  // reaches. Phones keep room for the lane caption above the row.
+  const quotaThickness=40,labelGap=14,phaseY=compact ? headingY+12 : headingY-18;
   const restPeriods=(result.phasePlans??[]).filter(phase=>phase.plannedRest);
   const shownPhases=timelineUsagePhases(result.phasePlans??[],axis.xAtHours);
   for(const [index,phase] of shownPhases.entries()) {
@@ -161,30 +163,40 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
   const labelHeight=Math.max(104,20+(opportunityHeight ? 16+opportunityHeight : 0));
   const centerY=phaseY+labelHeight+labelGap+quotaThickness;
   for(const phase of phaseControls)Object.assign(phase,{labelHeight,quotaAnchorY:centerY-quotaThickness});
-  // One bar per calendar day: what the plan uses that day (today counts from
-  // now). Bars hang from a 0% line on a fixed 0-100% scale, the same for
-  // every plan, so a day's depth always means the same share of the quota.
+  // What the plan uses each calendar day (today counts from now), on a fixed
+  // 0-100% scale, the same for every plan, so a step's height always means
+  // the same share of the quota.
   const usageOn=day=>(result.phasePlans??[]).reduce((sum,phase)=>sum+phase.dailyPercent
     *Math.max(0,Math.min(phase.endHours,day.endHours)-Math.max(phase.startHours,day.startHours,0))/24,0);
   const dayUsage=axis.days.map(day=>({day,percent:usageOn(day)}));
-  const barTop=phaseY+4,barSpace=labelHeight-4;
-  const yAt=percent=>barTop+barSpace*Math.min(100,percent)/100;
+  const zero=phaseY+labelHeight,barSpace=labelHeight-4;
+  const yAt=percent=>zero-barSpace*Math.min(100,percent)/100;
   const usageScale={x1:axis.leftPadding,x2:axis.width-axis.padding,// Labels sit in the lane gutter beside the axis; phones have none, so right.
-    labelX:compact ? axis.width-axis.padding+4 : axis.leftPadding-6,labelAnchor:compact ? 'start' : 'end',zeroY:barTop,
-    // On phones the 100% label would meet the quota area at the right edge;
+    labelX:compact ? axis.width-axis.padding+4 : axis.leftPadding-6,labelAnchor:compact ? 'start' : 'end',zeroY:zero,
+    // On phones the 0% label would meet the quota area at the right edge;
     // that line is the quota's top edge, so it goes unlabelled there.
-    ticks:[0,25,50,75,100].map(percent=>({percent,y:yAt(percent),label:!(compact&&percent===100)}))};
+    ticks:[0,25,50,75,100].map(percent=>({percent,y:yAt(percent),label:!(compact&&percent===0)}))};
   const dailyBars=dayUsage.filter(item=>item.percent>0.05).map(({day,percent})=>{
     const from=axis.xAtHours(Math.max(day.startHours,0)),to=day.x+day.width;
-    const width=Math.min(26,Math.max(4,(to-from)*.5)),height=Math.max(1,yAt(percent)-barTop);
-    return {x:(from+to)/2-width/2,y:barTop,width,height,percent:Number(percent.toFixed(1)),startAt:day.startAt};
+    const width=Math.min(26,Math.max(4,(to-from)*.5)),height=Math.max(1,zero-yAt(percent));
+    return {x:(from+to)/2-width/2,y:zero-height,width,height,percent:Number(percent.toFixed(1)),startAt:day.startAt};
   });
-  // Daily usage as one staircase hanging from the 0% line, a step per day.
+  // Daily usage as one staircase standing on the 0% line, a step per day.
+  // The outline follows only days with use, so idle days draw no line.
   const planEnd=axis.xAtHours(Math.max(0,...(result.phasePlans??[]).map(phase=>phase.endHours)));
-  const usageSteps=dayUsage.reduce((path,{day,percent})=>{
-    const from=axis.xAtHours(Math.max(day.startHours,0)),to=Math.min(day.x+day.width,planEnd);
-    return to>from ? `${path} V ${coordinate(yAt(percent))} H ${coordinate(to)}` : path;
-  },`M ${coordinate(axis.xAtHours(0))} ${coordinate(barTop)}`)+` V ${coordinate(barTop)} Z`;
+  const steps=dayUsage.map(({day,percent})=>({from:axis.xAtHours(Math.max(day.startHours,0)),
+    to:Math.min(day.x+day.width,planEnd),percent})).filter(step=>step.to>step.from);
+  const usageSteps=steps.reduce((path,{percent,to})=>`${path} V ${coordinate(yAt(percent))} H ${coordinate(to)}`,
+    `M ${coordinate(axis.xAtHours(0))} ${coordinate(zero)}`)+` V ${coordinate(zero)} Z`;
+  let usageOutline='',drawing=false;
+  for(const {from,to,percent} of steps) {
+    const used=percent>0.05;
+    if(used&&!drawing)usageOutline+=` M ${coordinate(from)} ${coordinate(zero)}`;
+    if(used)usageOutline+=` V ${coordinate(yAt(percent))} H ${coordinate(to)}`;
+    else if(drawing)usageOutline+=` V ${coordinate(zero)}`;
+    drawing=used;
+  }
+  if(drawing)usageOutline+=` V ${coordinate(zero)}`;
   const funnel = quotaFunnelGeometry(result.milestones, { centerY, xAtHours: axis.xAtHours,
     maxThickness:quotaThickness,terminalWidth: 16,restPeriods,shape:'area' });
   // The quota slope as steps too: each day holds what is left at its start;
@@ -332,14 +344,15 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
   const headings = compact ? [{x:axis.leftPadding,y:phaseY-22,width:plotLabelWidth,height:18,kind:'usage',inline:true,
     date:[t('建议 / 天'),...(opportunityHeight ? [t('重置概率 · 截至')] : [])].join(' · '),state:''}]
     // Narrower than the gutter: the scale's 0% label sits at its right end.
-    : [{x:0,y:phaseY,width:Math.max(0,gutterWidth-28),height:20,kind:'usage',inline:true,
+    // Centred on its row, like the other lane names on theirs.
+    : [{x:0,y:(yAt(100)+zero)/2-10,width:Math.max(0,gutterWidth-28),height:20,kind:'usage',inline:true,
     // Every strategy's row is the plan's advice, so it is always named so.
     date:t(gutterWidth<100 ? '建议 / 天' : '建议日均用量'),state:''},
     ...(opportunityHeight ? [{x:0,y:phaseY+36,width:gutterWidth,height:opportunityHeight,kind:'opportunity',
       inline:true,date:t('重置概率 · 截至'),state:'',tooltip:t('固定日期之前至少发生一次额外 reset 的累计概率')}] : []),
     {x:0,y:centerY-quotaThickness/2-10,width:gutterWidth,height:20,kind:'consumption',inline:true,
     date:t('剩余额度'),state:''}];
-  return { compact,nodes, edges, headings, controls: [], phaseControls,dailyBars,usageSteps,usageScale,bankedCount,retainedBanks, compactForecast: result.flexibleSchedule,
+  return { compact,nodes, edges, headings, controls: [], phaseControls,dailyBars,usageSteps,usageOutline:usageOutline.trim(),usageScale,bankedCount,retainedBanks, compactForecast: result.flexibleSchedule,
     width: axis.width, height,
     levels: strategyTreeView(result), displayLevels: strategyMilestoneView(result), funnel,
     locale,timeZone: result.timeZone,resetLaneLabels, forecastCalendar: result.forecastCalendar,

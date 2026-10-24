@@ -121,11 +121,11 @@ test('每段用量统一紧贴绿色额度上沿；假设、备用、窄屏均�
         }
         assert.equal(usage.x,0,'用量名称位于时间轴外的左侧公共栏');
         assert.ok(usage.width<=graph.dayAxis.leftPadding);
-        assert.equal(usage.y,graph.phaseControls[0].y,'公共名称与各段数字对齐同一行');
+        near(usage.y+usage.height/2,(graph.usageScale.ticks.at(-1).y+graph.usageScale.zeroY)/2);// 名称居中对着自己那一行
         assert.equal(graph.headings.some(heading=>heading.kind==='opportunity'),false,'不再单列重置概率行');
         assert.equal(new Set(graph.phaseControls.map(phase=>phase.y)).size,1,'用量说明共用一条水平线');
         for(const [index,phase] of graph.phaseControls.entries()) {
-          near(phase.y+phase.labelHeight,graph.dayAxis.quotaTopY);
+          near(phase.y+phase.labelHeight+14,graph.dayAxis.quotaTopY);
           assert.equal(phase.quotaLabel,true);
           assert.ok(phase.x>=0&&phase.x+phase.width<=graph.width);
           if(index) {
@@ -371,7 +371,7 @@ test('额外 reset 只显示各日累计概率，不跳日、不画假想100%补
   assert.equal(layoutStrategyTree(planUsagePath({input:flexInput,now:flexNow,timeZone})).forecastLayout.length,0);
 });
 
-test('每天一根用量柱：同一天不出现两根，落在当天格内，按固定 0-100% 刻度向下，合计等于计划用量',()=>{
+test('每天一根用量柱：同一天不出现两根，落在当天格内，按固定 0-100% 刻度从额度区顶边往上，合计等于计划用量',()=>{
   for(const extra of [{},{heldResetIndices:[0]},{intensityMultiplier:1.5}])
     for(const viewportWidth of [270,640,1400]) {
       const result=plan(extra);
@@ -389,10 +389,11 @@ test('每天一根用量柱：同一天不出现两根，落在当天格内，�
       assert.ok(Math.abs(planned-shown)<=.06*graph.dailyBars.length+.1,`${shown} != ${planned}`);
       assert.deepEqual(graph.usageScale.ticks.map(tick=>tick.percent),[0,25,50,75,100],'刻度固定，不随计划变化');
       const zero=graph.usageScale.zeroY,full=graph.usageScale.ticks.at(-1).y;
-      assert.ok(Math.abs(full-graph.dayAxis.quotaTopY)<1e-6,'100% 线与额度区顶端齐平');
+      assert.ok(zero<graph.dayAxis.quotaTopY,'0% 线在额度区上方，留出间隔');
+      assert.ok(full<zero,'100% 在上方');
       for(const bar of graph.dailyBars) {
-        assert.ok(Math.abs(bar.y-zero)<1e-6,'柱子从同一顶边向下');
-        if(bar.percent>=1)assert.ok(Math.abs(bar.height-(full-zero)*Math.min(100,bar.percent)/100)<.1,'柱长按固定刻度');
+        assert.ok(Math.abs(bar.y+bar.height-zero)<1e-6,'每天都从 0% 线往上');
+        if(bar.percent>=1)assert.ok(Math.abs(bar.height-(zero-full)*Math.min(100,bar.percent)/100)<.1,'高度按固定刻度');
       }
       assert.match(renderStrategyTree(graph,String),/class="sr-only"><div class="phase-controls"/,'读屏仍能读到各段用量');
     }
