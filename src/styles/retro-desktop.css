@@ -84,9 +84,10 @@ footer a {color:var(--ink);text-decoration-color:var(--link-stroke);text-underli
 .tree-edges .quota-label,.tree-edges .quota-phase-assumed .quota-label {fill:var(--quota-text)}
 .tree-edges .quota-pause {fill:transparent;stroke:none}
 .tree-edges .quota-paused-line {stroke:var(--pool-edge);stroke-width:1;stroke-dasharray:3 6}
-.tree-edges .quota-refill-normal {stroke:var(--pool-mint-ink)}
 .tree-edges .edge-backup {stroke:var(--warning);stroke-width:1.2;stroke-linecap:round}
-.tree-edges .quota-refill-backup {stroke:var(--warning)}
+/* The quota outline already draws each refill's jump; no extra thick stroke,
+ * so every card joins the timeline with one thin line. */
+.tree-edges .quota-refill-backup,.tree-edges .quota-refill-normal {stroke:none}
 .graph-day,.phase-controls,.graph-node {background:var(--chart-label);border-radius:3px}
 .timeline-lane-label {position:absolute;display:flex;flex-direction:column;justify-content:center;gap:1px;padding:0 8px 0 0;background:var(--surface);color:var(--ink);line-height:16px}
 .timeline-lane-label>strong {font-size:13px;line-height:18px;font-weight:650}
@@ -496,4 +497,5 @@ body[data-loading] .page-loading {position:absolute;inset:0;z-index:1;display:fl
 /* Keep pace on little or no history: one quiet line above the timeline. */
 .pace-note {margin:0 0 10px;font-size:12px;line-height:18px;color:var(--muted)}
 /* The plan in one line above the timeline. */
-.plan-summary {margin:0 0 12px;font-size:13px;line-height:20px;color:var(--ink)}
+.plan-summary {margin:0 0 12px;font-size:14px;line-height:20px;color:var(--ink)}
+.plan-summary strong {margin-right:4px;font-weight:700}

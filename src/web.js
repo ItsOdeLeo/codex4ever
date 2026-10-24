@@ -236,7 +236,8 @@ const paceNote=result=>result.usageStrategy!=='balanced' ? ''
   : result.shortHistory ? `<p class="pace-note">${t('本轮使用不到 1 小时，当前速度可能不具代表性。')}</p>`
     : result.evenSplit ? `<p class="pace-note">${t('本轮还没用过额度，先按平均分配到正常刷新来算。')}</p>` : '';
 
-// The plan in one line: each stretch of equal daily use, once.
+// The plan's conclusion in one line: what to do from now. Later stretches
+// depend on resets arriving, and the slope below already shows them.
 function planSummary(result) {
   const day=value=>new Intl.DateTimeFormat(uiLocale(language),{timeZone,month:language==='zh-CN' ? 'numeric' : 'short',day:'numeric'})
     .format(new Date(value)).replace(/月/,'/').replace(/日/,'');
@@ -247,13 +248,13 @@ function planSummary(result) {
     if(last&&last.kind===kind&&(kind!=='use'||last.percent===percent))last.endAt=phase.endAt;
     else stretches.push({kind,percent,startAt:phase.startAt,endAt:phase.endAt});
   }
-  if(!stretches.length)return '';
-  const items=stretches.slice(0,5).map(({kind,percent,startAt,endAt})=>{
-    const from=day(startAt),to=day(Date.parse(endAt)-1),span=from===to ? from : `${from}–${to}`;
-    return kind==='rest' ? t('{span} 不用',{span}) : kind==='out' ? t('{span} 额度用完，等补满',{span})
-      : t('{span} 每天 {percent}%',{span,percent});
-  });
-  return `<p class="plan-summary">${escape(items.join(' · ')+(stretches.length>5 ? ' …' : ''))}</p>`;
+  const [now,...later]=stretches;
+  if(!now)return '';
+  const next=later.find(stretch=>stretch.kind==='use');
+  const text=now.kind==='use' ? t('现在到 {date}，每天用 {percent}%',{date:day(Date.parse(now.endAt)-1),percent:now.percent})
+    : now.kind==='rest' ? next ? t('今天不用，{date} 起每天 {percent}%',{date:day(next.startAt),percent:next.percent}) : t('今天不用')
+      : next ? t('额度已用完，{date} 补满后每天 {percent}%',{date:day(next.startAt),percent:next.percent}) : t('额度已用完，等补满');
+  return `<p class="plan-summary"><strong>${t('建议：')}</strong>${escape(text)}</p>`;
 }
 
 function renderResult(availableWidth=$('#result').clientWidth) {
