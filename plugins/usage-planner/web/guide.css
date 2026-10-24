@@ -3400,6 +3400,12 @@ body[data-loading] .page-loading {
   position: static;
   margin-top: 14px;
 }
+.pace-note {
+  margin: 0 0 10px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--muted);
+}
 
 /* src/styles/theme.css */
 

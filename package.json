@@ -1,6 +1,6 @@
 {
   "name": "usage-planner",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "private": true,
   "type": "module",
   "description": "A local Codex quota and reset planner with extra reset forecasts, banked reset planning, a web UI, CLI, and MCP server.",

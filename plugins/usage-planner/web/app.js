@@ -982,6 +982,8 @@ var english = {
   "\u21BB \u66F4\u65B0\u8BA1\u5212": "\u21BB Update plan",
   "\u66F4\u65B0\u4E2D\u2026": "Updating\u2026",
   "\u6B63\u5728\u8BA1\u7B97\u2026": "Working out your plan\u2026",
+  "\u672C\u8F6E\u8FD8\u6CA1\u7528\u8FC7\u989D\u5EA6\uFF0C\u5148\u6309\u5E73\u5747\u5206\u914D\u5230\u6B63\u5E38\u5237\u65B0\u6765\u7B97\u3002": "Nothing used yet this week, so this plans an even split until the normal refresh.",
+  "\u672C\u8F6E\u4F7F\u7528\u4E0D\u5230 1 \u5C0F\u65F6\uFF0C\u5F53\u524D\u901F\u5EA6\u53EF\u80FD\u4E0D\u5177\u4EE3\u8868\u6027\u3002": "Less than an hour into this week, so the current pace may not be representative.",
   "\u5206\u4EAB": "Share",
   "\u53D1\u5230 X": "Post to X",
   "\u590D\u5236\u56FE\u7247": "Copy image",
@@ -3447,7 +3449,8 @@ function planIntensityUsage({
     return Number.isFinite(date.getTime()) ? date.toISOString() : null;
   };
   const elapsedDays = (168 - horizon) / 24;
-  const observed = elapsedDays >= 1 / 24 && remaining < 100 ? (100 - remaining) / elapsedDays : null;
+  const observed = elapsedDays > EPS4 && remaining < 100 ? (100 - remaining) / elapsedDays : null;
+  const shortHistory = remaining < 100 && elapsedDays < 1 / 24;
   const evenSplit = observed === null && remaining > 0;
   const averagePercentPerDay = observed ?? (evenSplit ? remaining * 24 / horizon : null);
   const common = {
@@ -3458,6 +3461,7 @@ function planIntensityUsage({
     usedPercent: 100 - remaining,
     averagePercentPerDay,
     evenSplit,
+    shortHistory,
     normalResetInHours: horizon,
     normalResetAt: at(horizon),
     resets,
@@ -3975,7 +3979,8 @@ function accountResourceState(snapshot, { now, timeZone: timeZone2, prediction =
     warnings.push("\u5907\u7528 reset \u6570\u91CF\u6216\u5230\u671F\u8BE6\u60C5\u4E0D\u5B8C\u6574\uFF1B\u53EA\u7EB3\u5165\u5DF2\u786E\u8BA4\u5230\u671F\u65F6\u95F4\u7684\u5E93\u5B58");
   if (known.length > 8) warnings.push("\u53EA\u6A21\u62DF\u6700\u65E9\u5230\u671F\u7684\u516B\u4E2A\u5907\u7528 reset");
   const elapsedDays = (168 - horizon) / 24, used = 100 - remaining;
-  const observed = elapsedDays >= 1 / 24 && used > 0 ? used / elapsedDays : null;
+  const observed = elapsedDays > 0 && used > 0 ? used / elapsedDays : null;
+  const shortHistory = used > 0 && elapsedDays < 1 / 24;
   const evenSplit = observed === null && remaining > 0;
   const average = observed ?? (evenSplit ? remaining * 24 / horizon : null);
   return {
@@ -3986,6 +3991,7 @@ function accountResourceState(snapshot, { now, timeZone: timeZone2, prediction =
     usedPercent: used,
     averagePercentPerDay: average,
     evenSplit,
+    shortHistory,
     normalResetInHours: horizon,
     normalResetAt: new Date(resetAt).toISOString(),
     resets: known.slice(0, 8),
@@ -6118,6 +6124,7 @@ function renderForecastCard(graph = null) {
   });
   $("#forecast").innerHTML = `<div class="forecast-control" ${planningPrediction ? `data-forecast-48-probability="${planningPrediction.next48Probability}"` : ""}><span>${t("\u989D\u5916 reset \u9884\u6D4B")}</span></div>${forecastSummary}${shareControl()}`;
 }
+var paceNote = (result) => result.usageStrategy !== "balanced" ? "" : result.shortHistory ? `<p class="pace-note">${t("\u672C\u8F6E\u4F7F\u7528\u4E0D\u5230 1 \u5C0F\u65F6\uFF0C\u5F53\u524D\u901F\u5EA6\u53EF\u80FD\u4E0D\u5177\u4EE3\u8868\u6027\u3002")}</p>` : result.evenSplit ? `<p class="pace-note">${t("\u672C\u8F6E\u8FD8\u6CA1\u7528\u8FC7\u989D\u5EA6\uFF0C\u5148\u6309\u5E73\u5747\u5206\u914D\u5230\u6B63\u5E38\u5237\u65B0\u6765\u7B97\u3002")}</p>` : "";
 function renderResult(availableWidth = $("#result").clientWidth) {
   const result = planner.result;
   if (!result) return;
@@ -6145,6 +6152,7 @@ function renderResult(availableWidth = $("#result").clientWidth) {
   const policyData = result.recommendation ? ` data-policy-search="${result.recommendation.method}"${result.recommendation.primary ? ' data-plan-basis="predicted-extra-resets-first"' : ""}` : "";
   $("#result").innerHTML = `<section class="strategy-panel" aria-label="${t("\u7528\u91CF\u8BA1\u5212")}"${policyData} style="--panel-padding:${workspace.panelPadding}px">
     ${result.recommendation && !result.recommendation.primary ? `<div class="timeline-toolbar"><span>${t("\u5047\u8BBE\u6CA1\u6709\u989D\u5916 reset")}</span></div>` : ""}
+    ${paceNote(result)}
     ${renderStrategyTree(graph, escape2)}
     </section>`;
   $("#method").innerHTML = renderForecastMethod({ source: forecastSource, prediction: planningPrediction, result, timeZone, locale: language }, escape2);
