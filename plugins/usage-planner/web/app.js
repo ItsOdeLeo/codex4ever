@@ -982,6 +982,14 @@ var english = {
   "\u21BB \u66F4\u65B0\u8BA1\u5212": "\u21BB Update plan",
   "\u66F4\u65B0\u4E2D\u2026": "Updating\u2026",
   "\u6B63\u5728\u8BA1\u7B97\u2026": "Working out your plan\u2026",
+  "\u5EFA\u8BAE\uFF1A": "Plan:",
+  "\u5B89\u88C5\u65B9\u6CD5 \u2192": "How to install \u2192",
+  "\u73B0\u5728\u5230 {date}\uFF0C\u6BCF\u5929\u7528 {percent}%": "From now to {date}, use {percent}% a day",
+  "\u4ECA\u5929\u4E0D\u7528\uFF0C{date} \u8D77\u6BCF\u5929 {percent}%": "No use today; from {date}, {percent}% a day",
+  "\u4ECA\u5929\u4E0D\u7528": "No use today",
+  "\u989D\u5EA6\u5DF2\u7528\u5B8C\uFF0C{date} \u8865\u6EE1\u540E\u6BCF\u5929 {percent}%": "Out of quota; after the {date} refill, {percent}% a day",
+  "\u989D\u5EA6\u5DF2\u7528\u5B8C\uFF0C\u7B49\u8865\u6EE1": "Out of quota until a refill",
+  "\u5EFA\u8BAE\u65E5\u5747\u7528\u91CF": "Suggested / day",
   "\u672C\u8F6E\u8FD8\u6CA1\u7528\u8FC7\u989D\u5EA6\uFF0C\u5148\u6309\u5E73\u5747\u5206\u914D\u5230\u6B63\u5E38\u5237\u65B0\u6765\u7B97\u3002": "Nothing used yet this week, so this plans an even split until the normal refresh.",
   "\u672C\u8F6E\u4F7F\u7528\u4E0D\u5230 1 \u5C0F\u65F6\uFF0C\u5F53\u524D\u901F\u5EA6\u53EF\u80FD\u4E0D\u5177\u4EE3\u8868\u6027\u3002": "Less than an hour into this week, so the current pace may not be representative.",
   "\u5206\u4EAB": "Share",
@@ -4873,6 +4881,7 @@ function timelineUsagePhases(phases, xAtHours) {
 var round3 = (value) => Number(value.toFixed(1));
 var COMPACT_TIMELINE_WIDTH = 480;
 var COMPACT_CARD_WIDTH = 112;
+var coordinate3 = (value) => Number(value.toFixed(3));
 var titleWidth = (text, size) => Math.ceil([...String(text)].reduce((sum, char) => sum + (/[\u2E80-\u9FFF\uFF00-\uFFEF]/.test(char) ? size : size * 0.5), 0)) + 18;
 function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayEndHours: fixedEndHours = null, locale = "zh-CN" } = {}) {
   const t2 = translator(locale);
@@ -5041,7 +5050,7 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
   const headingY = lastPlot ? lastPlot.bottomY + 20 : forecastEndY + (forecastFocus ? 92 : 0) + 12;
   const phaseControls = [];
   const phaseWidth = 198;
-  const quotaThickness = 40, labelGap = 0, phaseY = headingY + 12;
+  const quotaThickness = 100, labelGap = 0, phaseY = compact ? headingY + 12 : headingY + 6;
   const restPeriods = (result.phasePlans ?? []).filter((phase) => phase.plannedRest);
   const shownPhases = timelineUsagePhases(result.phasePlans ?? [], axis.xAtHours);
   for (const [index, phase] of shownPhases.entries()) {
@@ -5061,29 +5070,9 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
     });
   }
   const opportunityHeight = Math.max(0, ...phaseControls.map((phase) => phase.nextResetOpportunity ? resetOpportunityLayout(phase.width).height : 0));
-  const labelHeight = Math.max(104, 20 + (opportunityHeight ? 16 + opportunityHeight : 0));
+  const labelHeight = 0;
   const centerY = phaseY + labelHeight + labelGap + quotaThickness;
   for (const phase of phaseControls) Object.assign(phase, { labelHeight, quotaAnchorY: centerY - quotaThickness });
-  const usageOn = (day) => (result.phasePlans ?? []).reduce((sum, phase) => sum + phase.dailyPercent * Math.max(0, Math.min(phase.endHours, day.endHours) - Math.max(phase.startHours, day.startHours, 0)) / 24, 0);
-  const dayUsage = axis.days.map((day) => ({ day, percent: usageOn(day) }));
-  const barTop = phaseY + 4, barSpace = labelHeight - 4;
-  const yAt = (percent) => barTop + barSpace * Math.min(100, percent) / 100;
-  const usageScale = {
-    x1: axis.leftPadding,
-    x2: axis.width - axis.padding,
-    // Labels sit in the lane gutter beside the axis; phones have none, so right.
-    labelX: compact ? axis.width - axis.padding + 4 : axis.leftPadding - 6,
-    labelAnchor: compact ? "start" : "end",
-    zeroY: barTop,
-    // On phones the 100% label would meet the quota area at the right edge;
-    // that line is the quota's top edge, so it goes unlabelled there.
-    ticks: [0, 25, 50, 75, 100].map((percent) => ({ percent, y: yAt(percent), label: !(compact && percent === 100) }))
-  };
-  const dailyBars = dayUsage.filter((item) => item.percent > 0.05).map(({ day, percent }) => {
-    const from = axis.xAtHours(Math.max(day.startHours, 0)), to = day.x + day.width;
-    const width = Math.min(26, Math.max(4, (to - from) * 0.5)), height2 = Math.max(1, yAt(percent) - barTop);
-    return { x: (from + to) / 2 - width / 2, y: barTop, width, height: height2, percent: Number(percent.toFixed(1)), startAt: day.startAt };
-  });
   const funnel = quotaFunnelGeometry(result.milestones, {
     centerY,
     xAtHours: axis.xAtHours,
@@ -5092,6 +5081,16 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
     restPeriods,
     shape: "area"
   });
+  const quotaY = (quota) => coordinate3(centerY - quotaThickness * quota / 100);
+  const quotaScale = {
+    x1: axis.leftPadding,
+    x2: axis.width - axis.padding,
+    // Labels sit in the lane gutter beside the axis; phones have none, so right.
+    labelX: compact ? axis.width - axis.padding + 4 : axis.leftPadding - 6,
+    labelAnchor: compact ? "start" : "end",
+    ticks: [0, 20, 40, 60, 80, 100].map((percent) => ({ percent, y: Number(quotaY(percent)), label: true }))
+  };
+  for (const band of funnel.bands) band.labels = [];
   const refillTimes = new Set(funnel.refills.filter((refill) => refill.after > 0).map((refill) => refill.at));
   const nodes = points.map((point, index) => ({
     id: `decision:${index}`,
@@ -5276,49 +5275,25 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
       index === 1 ? t2("\u4EE5\u7B2C\u4E00\u6B21\u53D1\u751F\u4E3A\u524D\u63D0") : ""
     ].filter(Boolean).join(" \xB7 ")
   } : null);
-  const suggested = shownPhases.some((phase) => !phase.fixed && !phase.constrained && phase.reason !== "no-resource" && Math.abs(phase.dailyPercent - phase.baselineDailyPercent) > 1e-5);
   const headings = compact ? [{
     x: axis.leftPadding,
     y: phaseY - 22,
     width: plotLabelWidth,
     height: 18,
-    kind: "usage",
+    kind: "consumption",
     inline: true,
-    date: [t2(suggested ? "\u5EFA\u8BAE / \u5929" : "\u7528\u91CF / \u5929"), ...opportunityHeight ? [t2("\u91CD\u7F6E\u6982\u7387 \xB7 \u622A\u81F3")] : []].join(" \xB7 "),
+    date: t2("\u5269\u4F59\u989D\u5EA6"),
     state: ""
-  }] : [
-    {
-      x: 0,
-      y: phaseY,
-      width: Math.max(0, gutterWidth - 28),
-      height: 20,
-      kind: "usage",
-      inline: true,
-      date: t2(gutterWidth < 100 ? suggested ? "\u5EFA\u8BAE / \u5929" : "\u7528\u91CF / \u5929" : suggested ? "\u5EFA\u8BAE\u7528\u91CF / \u5929" : "\u65E5\u5747\u7528\u91CF"),
-      state: ""
-    },
-    ...opportunityHeight ? [{
-      x: 0,
-      y: phaseY + 36,
-      width: gutterWidth,
-      height: opportunityHeight,
-      kind: "opportunity",
-      inline: true,
-      date: t2("\u91CD\u7F6E\u6982\u7387 \xB7 \u622A\u81F3"),
-      state: "",
-      tooltip: t2("\u56FA\u5B9A\u65E5\u671F\u4E4B\u524D\u81F3\u5C11\u53D1\u751F\u4E00\u6B21\u989D\u5916 reset \u7684\u7D2F\u8BA1\u6982\u7387")
-    }] : [],
-    {
-      x: 0,
-      y: centerY - quotaThickness / 2 - 10,
-      width: gutterWidth,
-      height: 20,
-      kind: "consumption",
-      inline: true,
-      date: t2("\u5269\u4F59\u989D\u5EA6"),
-      state: ""
-    }
-  ];
+  }] : [{
+    x: 0,
+    y: centerY - quotaThickness / 2 - 10,
+    width: Math.max(0, gutterWidth - 28),
+    height: 20,
+    kind: "consumption",
+    inline: true,
+    date: t2("\u5269\u4F59\u989D\u5EA6"),
+    state: ""
+  }];
   return {
     compact,
     nodes,
@@ -5326,8 +5301,7 @@ function layoutTimeStrategy(result, { prediction = null, viewportWidth, displayE
     headings,
     controls: [],
     phaseControls,
-    dailyBars,
-    usageScale,
+    quotaScale,
     bankedCount,
     retainedBanks,
     compactForecast: result.flexibleSchedule,
@@ -5673,8 +5647,7 @@ function renderStrategyTree(graph, escape3) {
     ${graph.dayAxis ? graph.dayAxis.days.filter((_, index) => index % 2).map((day) => `<rect class="time-day-band" x="${day.x}" y="${graph.dayAxis.gridTop}" width="${graph.dayAxis.dayWidth}" height="${graph.dayAxis.gridBottom - graph.dayAxis.gridTop}"/>`).join("") : ""}
     ${graph.dayAxis ? [...graph.dayAxis.days.map((day) => day.x), graph.dayAxis.days.at(-1).x + graph.dayAxis.dayWidth].map((x) => `<path class="time-grid-line" d="M ${x} ${graph.dayAxis.gridTop} V ${graph.dayAxis.gridBottom}"/>`).join("") : ""}
     ${resetElements.map((element) => element.svg).join("")}
-    ${graph.usageScale ? graph.usageScale.ticks.map((tick) => `<path class="usage-gridline" d="M ${graph.usageScale.x1} ${tick.y} H ${graph.usageScale.x2}"/>${tick.label === false ? "" : `<text class="quota-label usage-tick" x="${graph.usageScale.labelX}" y="${tick.y + 4}" text-anchor="${graph.usageScale.labelAnchor}">${tick.percent}%</text>`}`).join("") : ""}
-    ${(graph.dailyBars ?? []).map((bar) => `<rect class="daily-bar" data-day="${bar.startAt}" data-percent="${bar.percent}" x="${bar.x}" y="${bar.y}" width="${bar.width}" height="${bar.height}"><title>${round5(bar.percent)}%</title></rect>`).join("")}
+    ${graph.quotaScale ? graph.quotaScale.ticks.map((tick) => `<path class="usage-gridline" d="M ${graph.quotaScale.x1} ${tick.y} H ${graph.quotaScale.x2}"/>${tick.label === false ? "" : `<text class="quota-label usage-tick" x="${graph.quotaScale.labelX}" y="${tick.y + 4}" text-anchor="${graph.quotaScale.labelAnchor}">${tick.percent}</text>`}`).join("") : ""}
     ${!graph.compactForecast && graph.forecastLayout?.length ? `<path class="time-forecast-line" d="M ${graph.forecastLayout[0].x} ${graph.dayAxis.forecastY} H ${graph.forecastLayout.at(-1).x}"/>${graph.forecastLayout.map((point) => `<circle class="time-forecast-point" cx="${point.x}" cy="${graph.dayAxis.forecastY}" r="2.5"/>`).join("")}` : ""}
     ${graph.funnel.bands.map((band) => `<g class="quota-phase${band.kind === "assumed-refresh" ? " quota-phase-assumed" : ""}"${band.kind === "rest" ? " data-quota-rest" : ""} data-start-quota="${band.startQuota}" data-end-quota="${band.endQuota}">
       <path class="quota-baseline${band.kind === "pause" ? " quota-paused-line" : band.kind === "rest" ? " quota-rest-line" : ""}" d="${band.baseline}"/>
@@ -5698,7 +5671,7 @@ function renderStrategyTree(graph, escape3) {
     escape: escape3,
     locale
   })).join("");
-  const phaseText = graph.dailyBars && phaseControls ? `<div class="sr-only">${phaseControls}</div>` : phaseControls;
+  const phaseText = graph.quotaScale && phaseControls ? `<div class="sr-only">${phaseControls}</div>` : phaseControls;
   const forecastDate = (value) => {
     const instant = new Date(value);
     const clock = new Intl.DateTimeFormat("en-GB", {
@@ -5905,6 +5878,7 @@ function renderStaticLanguage() {
     ["[data-follow-end]", "\u3002"],
     ["#calculate", "\u21BB \u66F4\u65B0\u8BA1\u5212"],
     ["[data-plugin-hint]", "\u53EF\u5B89\u88C5\u6210 Codex \u63D2\u4EF6\uFF0C\u81EA\u52A8\u8BFB\u53D6\u4EE5\u4E0A\u6570\u636E\u3002"],
+    ["#plugin-install", "\u5B89\u88C5\u65B9\u6CD5 \u2192"],
     ["#overuse-hint", "\u7528\u91CF\u8FC7\u5EA6\u63D0\u9192\uFF08\u4EC5 Codex \u63D2\u4EF6\uFF09\uFF1A\u5728 Codex \u91CC\u8BF4\u201C\u6253\u5F00\u7528\u91CF\u8FC7\u5EA6\u63D0\u9192\u201D\u3002\u4E4B\u540E\u4F60\u7528\u5F97\u6BD4\u8BA1\u5212\u5FEB\u65F6\uFF0C\u4F1A\u76F4\u63A5\u5728\u5BF9\u8BDD\u91CC\u63D0\u9192\u4F60\u3002"]
   ]) {
     const element = $(selector);
@@ -6125,6 +6099,23 @@ function renderForecastCard(graph = null) {
   $("#forecast").innerHTML = `<div class="forecast-control" ${planningPrediction ? `data-forecast-48-probability="${planningPrediction.next48Probability}"` : ""}><span>${t("\u989D\u5916 reset \u9884\u6D4B")}</span></div>${forecastSummary}${shareControl()}`;
 }
 var paceNote = (result) => result.usageStrategy !== "balanced" ? "" : result.shortHistory ? `<p class="pace-note">${t("\u672C\u8F6E\u4F7F\u7528\u4E0D\u5230 1 \u5C0F\u65F6\uFF0C\u5F53\u524D\u901F\u5EA6\u53EF\u80FD\u4E0D\u5177\u4EE3\u8868\u6027\u3002")}</p>` : result.evenSplit ? `<p class="pace-note">${t("\u672C\u8F6E\u8FD8\u6CA1\u7528\u8FC7\u989D\u5EA6\uFF0C\u5148\u6309\u5E73\u5747\u5206\u914D\u5230\u6B63\u5E38\u5237\u65B0\u6765\u7B97\u3002")}</p>` : "";
+function planSummary(result) {
+  const day = (value) => new Intl.DateTimeFormat(uiLocale(language), { timeZone, month: language === "zh-CN" ? "numeric" : "short", day: "numeric" }).format(new Date(value)).replace(/月/, "/").replace(/日/, "");
+  const stretches = [];
+  for (const phase of result.phasePlans ?? []) {
+    const kind = phase.plannedRest ? "rest" : phase.dailyPercent > 0.05 ? "use" : "out";
+    const percent = Number(phase.dailyPercent.toFixed(1)), last = stretches.at(-1);
+    if (last && last.kind === kind && (kind !== "use" || last.percent === percent)) last.endAt = phase.endAt;
+    else stretches.push({ kind, percent, startAt: phase.startAt, endAt: phase.endAt });
+  }
+  const [now, ...later] = stretches;
+  if (!now) return "";
+  const next = later.find((stretch) => stretch.kind === "use");
+  const mark = "\0", figure = (percent) => `<b class="plan-figure">${percent}%</b>`;
+  const [key, values] = now.kind === "use" ? ["\u73B0\u5728\u5230 {date}\uFF0C\u6BCF\u5929\u7528 {percent}%", { date: day(Date.parse(now.endAt) - 1), percent: now.percent }] : now.kind === "rest" ? next ? ["\u4ECA\u5929\u4E0D\u7528\uFF0C{date} \u8D77\u6BCF\u5929 {percent}%", { date: day(next.startAt), percent: next.percent }] : ["\u4ECA\u5929\u4E0D\u7528", {}] : next ? ["\u989D\u5EA6\u5DF2\u7528\u5B8C\uFF0C{date} \u8865\u6EE1\u540E\u6BCF\u5929 {percent}%", { date: day(next.startAt), percent: next.percent }] : ["\u989D\u5EA6\u5DF2\u7528\u5B8C\uFF0C\u7B49\u8865\u6EE1", {}];
+  const text = escape2(t(key, { ...values, percent: mark })).replace(`${mark}%`, () => figure(values.percent));
+  return `<p class="plan-summary"><strong>${t("\u5EFA\u8BAE\uFF1A")}</strong>${text}</p>`;
+}
 function renderResult(availableWidth = $("#result").clientWidth) {
   const result = planner.result;
   if (!result) return;
@@ -6153,6 +6144,7 @@ function renderResult(availableWidth = $("#result").clientWidth) {
   $("#result").innerHTML = `<section class="strategy-panel" aria-label="${t("\u7528\u91CF\u8BA1\u5212")}"${policyData} style="--panel-padding:${workspace.panelPadding}px">
     ${result.recommendation && !result.recommendation.primary ? `<div class="timeline-toolbar"><span>${t("\u5047\u8BBE\u6CA1\u6709\u989D\u5916 reset")}</span></div>` : ""}
     ${paceNote(result)}
+    ${planSummary(result)}
     ${renderStrategyTree(graph, escape2)}
     </section>`;
   $("#method").innerHTML = renderForecastMethod({ source: forecastSource, prediction: planningPrediction, result, timeZone, locale: language }, escape2);
