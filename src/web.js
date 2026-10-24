@@ -42,7 +42,7 @@ function renderStaticLanguage() {
   const heading=$('.brand h1');if(heading)heading.textContent=language==='zh-CN' ? PRODUCT_NAME_ZH : PRODUCT_NAME;
   document.documentElement?.setAttribute('lang',language);
   for(const [selector,label] of [['.affiliation-notice','OpenAI Codex 的非官方可视化用量规划工具。与 OpenAI 无隶属关系。'],['#github-star','GitHub'],['#follow-x','X'],
-['#source-code','GitHub 开源'],['[data-credit-label]','感谢'],['[data-credit-suffix]','提供 reset 数据'],['[data-follow-label]','如果你喜欢这个作品，欢迎在 '],['[data-follow-or]',' 或'],['#creator-xiaohongshu','小红书'],['[data-follow-tail]','关注我，或者'],['#share-site','分享给朋友'],['[data-follow-end]','。'],['#calculate','↻ 更新计划'],['[data-plugin-hint]','可安装成 Codex 插件，自动读取以上数据。'],['#overuse-hint','用量过度提醒（仅 Codex 插件）：在 Codex 里说“打开用量过度提醒”。之后你用得比计划快时，会直接在对话里提醒你。']])
+['#source-code','GitHub 开源'],['[data-credit-label]','感谢'],['[data-credit-suffix]','提供 reset 数据'],['[data-follow-label]','如果你喜欢这个作品，欢迎在 '],['[data-follow-or]',' 或'],['#creator-xiaohongshu','小红书'],['[data-follow-tail]','关注我，或者'],['#share-site','分享给朋友'],['[data-follow-end]','。'],['#calculate','↻ 更新计划'],['[data-plugin-hint]','可安装成 Codex 插件，自动读取以上数据。'],['#plugin-install','安装方法 →'],['#overuse-hint','用量过度提醒（仅 Codex 插件）：在 Codex 里说“打开用量过度提醒”。之后你用得比计划快时，会直接在对话里提醒你。']])
     {const element=$(selector);if(element)element.textContent=t(label);}
   $('#planner-guide').textContent=language==='zh-CN' ? '使用说明' : 'How it works';
   $('#planner-guide').setAttribute?.('href',language==='zh-CN' ? '/zh/guide/' : '/guide/');
@@ -251,10 +251,13 @@ function planSummary(result) {
   const [now,...later]=stretches;
   if(!now)return '';
   const next=later.find(stretch=>stretch.kind==='use');
-  const text=now.kind==='use' ? t('现在到 {date}，每天用 {percent}%',{date:day(Date.parse(now.endAt)-1),percent:now.percent})
-    : now.kind==='rest' ? next ? t('今天不用，{date} 起每天 {percent}%',{date:day(next.startAt),percent:next.percent}) : t('今天不用')
-      : next ? t('额度已用完，{date} 补满后每天 {percent}%',{date:day(next.startAt),percent:next.percent}) : t('额度已用完，等补满');
-  return `<p class="plan-summary"><strong>${t('建议：')}</strong>${escape(text)}</p>`;
+  // The daily figure is the answer: set it in bold within the sentence.
+  const mark='\u0000',figure=percent=>`<b class="plan-figure">${percent}%</b>`;
+  const [key,values]=now.kind==='use' ? ['现在到 {date}，每天用 {percent}%',{date:day(Date.parse(now.endAt)-1),percent:now.percent}]
+    : now.kind==='rest' ? next ? ['今天不用，{date} 起每天 {percent}%',{date:day(next.startAt),percent:next.percent}] : ['今天不用',{}]
+      : next ? ['额度已用完，{date} 补满后每天 {percent}%',{date:day(next.startAt),percent:next.percent}] : ['额度已用完，等补满',{}];
+  const text=escape(t(key,{...values,percent:mark})).replace(`${mark}%`,()=>figure(values.percent));
+  return `<p class="plan-summary"><strong>${t('建议：')}</strong>${text}</p>`;
 }
 
 function renderResult(availableWidth=$('#result').clientWidth) {

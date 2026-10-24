@@ -201,6 +201,7 @@ const ZH_TEMPLATE=[
   ['<span>Working out your plan…</span>','<span>正在计算…</span>'],['↻ Update plan','↻ 更新计划'],
   [/<p id="overuse-hint"([^>]*)>[^<]*<\/p>/,'<p id="overuse-hint"$1>用量过度提醒（仅 Codex 插件）：在 Codex 里说“打开用量过度提醒”。之后你用得比计划快时，会直接在对话里提醒你。</p>'],
   ['<span data-plugin-hint>Fill these in automatically with the Codex plugin.</span>','<span data-plugin-hint>可安装成 Codex 插件，自动读取以上数据。</span>'],
+  ['>How to install →</a>','>安装方法 →</a>'],
   ['Unofficial visual usage planner for OpenAI Codex. Not affiliated with OpenAI.','OpenAI Codex 的非官方可视化用量规划工具。与 OpenAI 无隶属关系。'],
   ['<a id="planner-guide" href="/guide/">How it works</a>','<a id="planner-guide" href="/zh/guide/">使用说明</a>'],
   ['rel="noopener">Open source on GitHub</a>','rel="noopener">GitHub 开源</a>'],
