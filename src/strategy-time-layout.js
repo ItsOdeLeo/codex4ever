@@ -14,6 +14,7 @@ const round = value => Number(value.toFixed(1));
 export const COMPACT_TIMELINE_WIDTH=480;
 // Phone event cards: narrow enough that two share a row.
 const COMPACT_CARD_WIDTH=112;
+const coordinate=value=>Number(value.toFixed(3));
 // Rendered width of a bold card title plus the card's padding and border
 // (measured: CJK glyphs about a font size wide, Latin about half of it).
 const titleWidth=(text,size)=>Math.ceil([...String(text)].reduce((sum,char)=>
@@ -178,8 +179,24 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
     const width=Math.min(26,Math.max(4,(to-from)*.5)),height=Math.max(1,yAt(percent)-barTop);
     return {x:(from+to)/2-width/2,y:barTop,width,height,percent:Number(percent.toFixed(1)),startAt:day.startAt};
   });
+  // Daily usage as one staircase hanging from the 0% line, a step per day.
+  const planEnd=axis.xAtHours(Math.max(0,...(result.phasePlans??[]).map(phase=>phase.endHours)));
+  const usageSteps=dayUsage.reduce((path,{day,percent})=>{
+    const from=axis.xAtHours(Math.max(day.startHours,0)),to=Math.min(day.x+day.width,planEnd);
+    return to>from ? `${path} V ${coordinate(yAt(percent))} H ${coordinate(to)}` : path;
+  },`M ${coordinate(axis.xAtHours(0))} ${coordinate(barTop)}`)+` V ${coordinate(barTop)} Z`;
   const funnel = quotaFunnelGeometry(result.milestones, { centerY, xAtHours: axis.xAtHours,
     maxThickness:quotaThickness,terminalWidth: 16,restPeriods,shape:'area' });
+  // The quota slope as steps too: each day holds what is left at its start;
+  // a refill steps up. Quota values and refill times are unchanged.
+  const quotaY=quota=>coordinate(centerY-quotaThickness*quota/100);
+  for(const band of funnel.bands.filter(band=>['usage','pause'].includes(band.kind)&&band.x2>band.x1)) {
+    const cuts=axis.days.map(day=>day.x).filter(x=>x>band.x1+1e-6&&x<band.x2-1e-6);
+    const at=x=>band.startQuota+(band.endQuota-band.startQuota)*(x-band.x1)/(band.x2-band.x1);
+    band.path=[band.x1,...cuts].reduce((path,x,index,starts)=>
+      `${path} V ${quotaY(at(x))} H ${coordinate(starts[index+1]??band.x2)}`,`M ${coordinate(band.x1)} ${coordinate(centerY)}`)
+      +` V ${coordinate(centerY)} Z`;
+  }
   // Use the refills actually drawn, including assumed extra resets. A refill
   // at depletion is one event to present, not an additional outage warning.
   const refillTimes=new Set(funnel.refills.filter(refill=>refill.after>0).map(refill=>refill.at));
@@ -313,15 +330,16 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
   const suggested=shownPhases.some(phase=>!phase.fixed&&!phase.constrained&&phase.reason!=='no-resource'
     &&Math.abs(phase.dailyPercent-phase.baselineDailyPercent)>1e-5);
   const headings = compact ? [{x:axis.leftPadding,y:phaseY-22,width:plotLabelWidth,height:18,kind:'usage',inline:true,
-    date:[t(suggested ? '建议 / 天' : '用量 / 天'),...(opportunityHeight ? [t('重置概率 · 截至')] : [])].join(' · '),state:''}]
+    date:[t('建议 / 天'),...(opportunityHeight ? [t('重置概率 · 截至')] : [])].join(' · '),state:''}]
     // Narrower than the gutter: the scale's 0% label sits at its right end.
     : [{x:0,y:phaseY,width:Math.max(0,gutterWidth-28),height:20,kind:'usage',inline:true,
-    date:t(gutterWidth<100 ? suggested ? '建议 / 天' : '用量 / 天' : suggested ? '建议用量 / 天' : '日均用量'),state:''},
+    // Every strategy's row is the plan's advice, so it is always named so.
+    date:t(gutterWidth<100 ? '建议 / 天' : '建议日均用量'),state:''},
     ...(opportunityHeight ? [{x:0,y:phaseY+36,width:gutterWidth,height:opportunityHeight,kind:'opportunity',
       inline:true,date:t('重置概率 · 截至'),state:'',tooltip:t('固定日期之前至少发生一次额外 reset 的累计概率')}] : []),
     {x:0,y:centerY-quotaThickness/2-10,width:gutterWidth,height:20,kind:'consumption',inline:true,
     date:t('剩余额度'),state:''}];
-  return { compact,nodes, edges, headings, controls: [], phaseControls,dailyBars,usageScale,bankedCount,retainedBanks, compactForecast: result.flexibleSchedule,
+  return { compact,nodes, edges, headings, controls: [], phaseControls,dailyBars,usageSteps,usageScale,bankedCount,retainedBanks, compactForecast: result.flexibleSchedule,
     width: axis.width, height,
     levels: strategyTreeView(result), displayLevels: strategyMilestoneView(result), funnel,
     locale,timeZone: result.timeZone,resetLaneLabels, forecastCalendar: result.forecastCalendar,

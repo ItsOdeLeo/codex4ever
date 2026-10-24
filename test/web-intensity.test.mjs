@@ -288,7 +288,7 @@ test('实时证据、条件用量、备用切换和精简累计概率；保持�
     assert.ok(normal().includes(localTime(NativeDate.parse(assumedAt)+168*3600000)),
       '第一次额外 reset 之后，页面正常刷新必须移动到该时刻七天后');
     assert.doesNotMatch(output.innerHTML,/class="phase-advice"/,'用量未被改动，不显示建议值');
-    assert.match(output.innerHTML,/<span class="timeline-lane-text">日均用量<\/span>/);
+    assert.match(output.innerHTML,/<span class="timeline-lane-text">建议日均用量<\/span>/);
     assert.doesNotMatch(output.innerHTML,/建议增加用量|建议减少用量|日均消耗 [\d.]+% →/);
     assert.match(output.innerHTML,/class="phase-controls" data-phase-start-at="2026-10-14T12:00:00.000Z"/);
     assert.doesNotMatch(output.innerHTML,/假设方案建议日均用量|0% → 100%/,'建议在实际线段上只显示一次，去掉重复补满说明');

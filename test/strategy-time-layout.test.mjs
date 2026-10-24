@@ -152,7 +152,15 @@ test('每段用量统一紧贴绿色额度上沿；假设、备用、窄屏均�
           '轨道名称是同字号的一行文字');
         assert.equal(graph.funnel.shape,'area');
         for(const band of graph.funnel.bands) {
-          const expectedBottom=`L ${band.x2} ${Number(graph.dayAxis.centerY.toFixed(6))} L ${band.x1} ${Number(graph.dayAxis.centerY.toFixed(6))} Z`;
+          const base=graph.dayAxis.centerY;
+          if(['usage','pause'].includes(band.kind)&&band.x2>band.x1) {
+            // Day steps: start and end on the baseline, never dip below it.
+            const c=value=>Number(value.toFixed(3));
+            assert.ok(band.path.startsWith(`M ${c(band.x1)} ${c(base)}`)&&band.path.endsWith(` V ${c(base)} Z`),'每段底边水平，只有上边缘随余额按天下降');
+            for(const [,y] of band.path.matchAll(/V ([\d.]+)/g))assert.ok(+y<=base+1e-6);
+            continue;
+          }
+          const expectedBottom=`L ${band.x2} ${Number(base.toFixed(6))} L ${band.x1} ${Number(base.toFixed(6))} Z`;
           assert.ok(band.path.endsWith(expectedBottom),'每段底边水平，只有上边缘随余额下降');
         }
       }
