@@ -1,7 +1,7 @@
 # Usage Planner — Codex quota & reset planner
 
 <p align="center">
-  <img src="docs/images/ask.gif" alt="Typing “open usage planner” in Codex opens Usage Planner in the side browser" width="1200" />
+  <img src="docs/images/ask.gif" alt="Typing “open quota planning” in Codex opens Usage Planner in the side browser" width="1280" />
 </p>
 
 <p align="center"><strong>Know how much Codex to use today.</strong></p>
@@ -27,7 +27,7 @@ Unofficial; not affiliated with OpenAI. MIT licensed.
 
 Ask once in Codex and the planner opens beside the chat. Pick a strategy and the plan changes: daily usage, refills and run-out points.
 
-<p align="center"><img src="docs/images/strategies.gif" alt="Switching to Keep available and Weekdays only updates the plan; scrolling down shows the planned refills" width="1200" /></p>
+<p align="center"><img src="docs/images/strategies.gif" alt="Switching between Keep pace, Keep available, Use it all, Weekdays only and Weekend focus updates the timeline" width="1280" /></p>
 
 ## What it does
 
