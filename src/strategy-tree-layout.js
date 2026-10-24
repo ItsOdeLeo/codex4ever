@@ -199,8 +199,7 @@ export function renderStrategyTree(graph, escape) {
     ${graph.dayAxis ? graph.dayAxis.days.filter((_,index)=>index%2).map(day => `<rect class="time-day-band" x="${day.x}" y="${graph.dayAxis.gridTop}" width="${graph.dayAxis.dayWidth}" height="${graph.dayAxis.gridBottom-graph.dayAxis.gridTop}"/>`).join('') : ''}
     ${graph.dayAxis ? [...graph.dayAxis.days.map(day => day.x), graph.dayAxis.days.at(-1).x + graph.dayAxis.dayWidth].map(x => `<path class="time-grid-line" d="M ${x} ${graph.dayAxis.gridTop} V ${graph.dayAxis.gridBottom}"/>`).join('') : ''}
     ${resetElements.map(element=>element.svg).join('')}
-    ${graph.usageScale ? graph.usageScale.ticks.map(tick=>`<path class="usage-gridline" d="M ${graph.usageScale.x1} ${tick.y} H ${graph.usageScale.x2}"/>${tick.label===false ? '' : `<text class="quota-label usage-tick" x="${graph.usageScale.labelX}" y="${tick.y+4}" text-anchor="${graph.usageScale.labelAnchor}">${tick.percent}%</text>`}`).join('') : ''}
-    ${graph.usageSteps ? `<path class="usage-steps" d="${graph.usageSteps}"/>${graph.usageOutline ? `<path class="usage-outline" d="${graph.usageOutline}"/>` : ''}` : ''}
+    ${graph.quotaScale ? graph.quotaScale.ticks.map(tick=>`<path class="usage-gridline" d="M ${graph.quotaScale.x1} ${tick.y} H ${graph.quotaScale.x2}"/>${tick.label===false ? '' : `<text class="quota-label usage-tick" x="${graph.quotaScale.labelX}" y="${tick.y+4}" text-anchor="${graph.quotaScale.labelAnchor}">${tick.percent}</text>`}`).join('') : ''}
     ${!graph.compactForecast && graph.forecastLayout?.length ? `<path class="time-forecast-line" d="M ${graph.forecastLayout[0].x} ${graph.dayAxis.forecastY} H ${graph.forecastLayout.at(-1).x}"/>${graph.forecastLayout.map(point => `<circle class="time-forecast-point" cx="${point.x}" cy="${graph.dayAxis.forecastY}" r="2.5"/>`).join('')}` : ''}
     ${graph.funnel.bands.map(band => `<g class="quota-phase${band.kind==='assumed-refresh' ? ' quota-phase-assumed' : ''}"${band.kind==='rest' ? ' data-quota-rest' : ''} data-start-quota="${band.startQuota}" data-end-quota="${band.endQuota}">
       <path class="quota-baseline${band.kind === 'pause' ? ' quota-paused-line' : band.kind==='rest' ? ' quota-rest-line' : ''}" d="${band.baseline}"/>
@@ -225,7 +224,7 @@ export function renderStrategyTree(graph, escape) {
     timeZone:graph.timeZone,escape,locale})).join('');
   // Daily bars show usage on screen; the SVG is hidden from screen readers,
   // so the per-phase figures stay in the page as text for them.
-  const phaseText=graph.dailyBars&&phaseControls ? `<div class="sr-only">${phaseControls}</div>` : phaseControls;
+  const phaseText=graph.quotaScale&&phaseControls ? `<div class="sr-only">${phaseControls}</div>` : phaseControls;
   const forecastDate = value => {
     const instant = new Date(value);
     const clock = new Intl.DateTimeFormat('en-GB', {timeZone: graph.timeZone,

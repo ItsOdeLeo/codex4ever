@@ -69,7 +69,7 @@ test('真实网页入口从 MCP 会话呈现数据，不加载示例账户，也
     await new Promise(resolve=>setImmediate(resolve));
     assert.deepEqual(requests,['/api/session']);
     assert.match(element('#inputs').innerHTML,/value="59"/);
-    assert.match(element('#result').innerHTML,/59%/);
+    assert.match(element('#result').innerHTML,/data-start-quota="59"/);
     assert.match(element('#result').innerHTML,/data-policy-search/);
     assert.match(element('#status').textContent,/Connected to local MCP/);
     assert.equal(element('#error').hidden,true,element('#error').textContent);

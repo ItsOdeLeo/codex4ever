@@ -139,10 +139,10 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
   const headingY = lastPlot ? lastPlot.bottomY+20 : forecastEndY + (forecastFocus ? 92 : 0) + 12;
   const phaseControls = [];
   const phaseWidth = 198;
-  // Usage grows up from its 0% line, a short gap above the quota area; its
-  // 100% line sits just under the reset curves, which daily use rarely
-  // reaches. Phones keep room for the lane caption above the row.
-  const quotaThickness=40,labelGap=14,phaseY=compact ? headingY+12 : headingY-18;
+  // One lane for remaining quota, 1px per percent on a fixed 0-100% scale:
+  // how fast it steps down is the usage, so there is no separate usage row.
+  // Phones keep room for the lane caption above it.
+  const quotaThickness=100,labelGap=0,phaseY=compact ? headingY+12 : headingY+6;
   const restPeriods=(result.phasePlans??[]).filter(phase=>phase.plannedRest);
   const shownPhases=timelineUsagePhases(result.phasePlans??[],axis.xAtHours);
   for(const [index,phase] of shownPhases.entries()) {
@@ -160,50 +160,23 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
   }
   const opportunityHeight=Math.max(0,...phaseControls.map(phase=>phase.nextResetOpportunity
     ? resetOpportunityLayout(phase.width).height : 0));
-  const labelHeight=Math.max(104,20+(opportunityHeight ? 16+opportunityHeight : 0));
+  const labelHeight=0;
   const centerY=phaseY+labelHeight+labelGap+quotaThickness;
   for(const phase of phaseControls)Object.assign(phase,{labelHeight,quotaAnchorY:centerY-quotaThickness});
-  // What the plan uses each calendar day (today counts from now), on a fixed
-  // 0-100% scale, the same for every plan, so a step's height always means
-  // the same share of the quota.
-  const usageOn=day=>(result.phasePlans??[]).reduce((sum,phase)=>sum+phase.dailyPercent
-    *Math.max(0,Math.min(phase.endHours,day.endHours)-Math.max(phase.startHours,day.startHours,0))/24,0);
-  const dayUsage=axis.days.map(day=>({day,percent:usageOn(day)}));
-  const zero=phaseY+labelHeight,barSpace=labelHeight-4;
-  const yAt=percent=>zero-barSpace*Math.min(100,percent)/100;
-  const usageScale={x1:axis.leftPadding,x2:axis.width-axis.padding,// Labels sit in the lane gutter beside the axis; phones have none, so right.
-    labelX:compact ? axis.width-axis.padding+4 : axis.leftPadding-6,labelAnchor:compact ? 'start' : 'end',zeroY:zero,
-    // On phones the 0% label would meet the quota area at the right edge;
-    // that line is the quota's top edge, so it goes unlabelled there.
-    ticks:[0,25,50,75,100].map(percent=>({percent,y:yAt(percent),label:!(compact&&percent===0)}))};
-  const dailyBars=dayUsage.filter(item=>item.percent>0.05).map(({day,percent})=>{
-    const from=axis.xAtHours(Math.max(day.startHours,0)),to=day.x+day.width;
-    const width=Math.min(26,Math.max(4,(to-from)*.5)),height=Math.max(1,zero-yAt(percent));
-    return {x:(from+to)/2-width/2,y:zero-height,width,height,percent:Number(percent.toFixed(1)),startAt:day.startAt};
-  });
-  // Daily usage as one staircase standing on the 0% line, a step per day.
-  // The outline follows only days with use, so idle days draw no line.
-  const planEnd=axis.xAtHours(Math.max(0,...(result.phasePlans??[]).map(phase=>phase.endHours)));
-  const steps=dayUsage.map(({day,percent})=>({from:axis.xAtHours(Math.max(day.startHours,0)),
-    to:Math.min(day.x+day.width,planEnd),percent})).filter(step=>step.to>step.from);
-  const usageSteps=steps.reduce((path,{percent,to})=>`${path} V ${coordinate(yAt(percent))} H ${coordinate(to)}`,
-    `M ${coordinate(axis.xAtHours(0))} ${coordinate(zero)}`)+` V ${coordinate(zero)} Z`;
-  let usageOutline='',drawing=false;
-  for(const {from,to,percent} of steps) {
-    const used=percent>0.05;
-    if(used&&!drawing)usageOutline+=` M ${coordinate(from)} ${coordinate(zero)}`;
-    if(used)usageOutline+=` V ${coordinate(yAt(percent))} H ${coordinate(to)}`;
-    else if(drawing)usageOutline+=` V ${coordinate(zero)}`;
-    drawing=used;
-  }
-  if(drawing)usageOutline+=` V ${coordinate(zero)}`;
   const funnel = quotaFunnelGeometry(result.milestones, { centerY, xAtHours: axis.xAtHours,
     maxThickness:quotaThickness,terminalWidth: 16,restPeriods,shape:'area' });
-  // The quota slope as steps too: each day holds what is left at its start;
-  // a refill steps up. Quota values and refill times are unchanged.
+  // The quota slope as fine steps, every six local hours: each step holds
+  // what is left at its start; a refill steps up. The fixed scale reads off
+  // how much each step uses. Quota values and refill times are unchanged.
   const quotaY=quota=>coordinate(centerY-quotaThickness*quota/100);
+  const stepCuts=axis.days.flatMap(day=>[0,1,2,3].map(part=>day.x+day.width*part/4));
+  const quotaScale={x1:axis.leftPadding,x2:axis.width-axis.padding,
+    // Labels sit in the lane gutter beside the axis; phones have none, so right.
+    labelX:compact ? axis.width-axis.padding+4 : axis.leftPadding-6,labelAnchor:compact ? 'start' : 'end',
+    ticks:[0,20,40,60,80,100].map(percent=>({percent,y:Number(quotaY(percent)),label:true}))};
+  for(const band of funnel.bands)band.labels=[];
   for(const band of funnel.bands.filter(band=>['usage','pause'].includes(band.kind)&&band.x2>band.x1)) {
-    const cuts=axis.days.map(day=>day.x).filter(x=>x>band.x1+1e-6&&x<band.x2-1e-6);
+    const cuts=stepCuts.filter(x=>x>band.x1+1e-6&&x<band.x2-1e-6);
     const at=x=>band.startQuota+(band.endQuota-band.startQuota)*(x-band.x1)/(band.x2-band.x1);
     band.path=[band.x1,...cuts].reduce((path,x,index,starts)=>
       `${path} V ${quotaY(at(x))} H ${coordinate(starts[index+1]??band.x2)}`,`M ${coordinate(band.x1)} ${coordinate(centerY)}`)
@@ -339,20 +312,12 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
     title:t(index===0 ? plot.announced ? '已宣布的 reset' : '第一次 reset 概率' : '第二次 reset 概率'),detail:'',
     tooltip:plot.announced ? t('Tibo 已宣布这次 reset 的时间') : [t(index===0 ? '第一次额外 reset 预测' : '第二次额外 reset 预测'),t('概率密度'),
       index===1 ? t('以第一次发生为前提') : ''].filter(Boolean).join(' · ')} : null);
-  const suggested=shownPhases.some(phase=>!phase.fixed&&!phase.constrained&&phase.reason!=='no-resource'
-    &&Math.abs(phase.dailyPercent-phase.baselineDailyPercent)>1e-5);
-  const headings = compact ? [{x:axis.leftPadding,y:phaseY-22,width:plotLabelWidth,height:18,kind:'usage',inline:true,
-    date:[t('建议 / 天'),...(opportunityHeight ? [t('重置概率 · 截至')] : [])].join(' · '),state:''}]
-    // Narrower than the gutter: the scale's 0% label sits at its right end.
-    // Centred on its row, like the other lane names on theirs.
-    : [{x:0,y:(yAt(100)+zero)/2-10,width:Math.max(0,gutterWidth-28),height:20,kind:'usage',inline:true,
-    // Every strategy's row is the plan's advice, so it is always named so.
-    date:t(gutterWidth<100 ? '建议 / 天' : '建议日均用量'),state:''},
-    ...(opportunityHeight ? [{x:0,y:phaseY+36,width:gutterWidth,height:opportunityHeight,kind:'opportunity',
-      inline:true,date:t('重置概率 · 截至'),state:'',tooltip:t('固定日期之前至少发生一次额外 reset 的累计概率')}] : []),
-    {x:0,y:centerY-quotaThickness/2-10,width:gutterWidth,height:20,kind:'consumption',inline:true,
+  // Narrower than the gutter: the scale's labels sit at its right end.
+  const headings = compact ? [{x:axis.leftPadding,y:phaseY-22,width:plotLabelWidth,height:18,kind:'consumption',inline:true,
+    date:t('剩余额度'),state:''}]
+    : [{x:0,y:centerY-quotaThickness/2-10,width:Math.max(0,gutterWidth-28),height:20,kind:'consumption',inline:true,
     date:t('剩余额度'),state:''}];
-  return { compact,nodes, edges, headings, controls: [], phaseControls,dailyBars,usageSteps,usageOutline:usageOutline.trim(),usageScale,bankedCount,retainedBanks, compactForecast: result.flexibleSchedule,
+  return { compact,nodes, edges, headings, controls: [], phaseControls,quotaScale,bankedCount,retainedBanks, compactForecast: result.flexibleSchedule,
     width: axis.width, height,
     levels: strategyTreeView(result), displayLevels: strategyMilestoneView(result), funnel,
     locale,timeZone: result.timeZone,resetLaneLabels, forecastCalendar: result.forecastCalendar,

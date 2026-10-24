@@ -97,7 +97,7 @@ test('扫描实际输出：第一次／第二次假设、备用及正常补充�
   }
 });
 
-test('每段用量统一紧贴绿色额度上沿；假设、备用、窄屏均不再把文字上下分行',()=>{
+test('只剩额度一行：名称居中、刻度固定、阶梯底边水平；假设、备用、窄屏均不把文字上下分行',()=>{
   const origin=new Date('2026-10-18T12:00:00Z'),at=hours=>new Date(origin.getTime()+hours*3600000).toISOString();
   const prediction={todayEndHours:10,todayProbability:.1,laterGivenNoReset:.2,next48Probability:.28,
     evidence:{dailyFrequency:.1},
@@ -111,21 +111,20 @@ test('每段用量统一紧贴绿色额度上沿；假设、备用、窄屏均�
       const before=structuredClone(result);
       for(const viewportWidth of [270,640,1400,2200]) {
         const graph=layoutStrategyTree(result,{prediction,viewportWidth});
-        const usage=graph.headings.find(heading=>heading.kind==='usage');
+        const quota=graph.headings.find(heading=>heading.kind==='consumption');
+        assert.equal(graph.headings.some(heading=>['usage','opportunity'].includes(heading.kind)),false,'不再单列用量行');
         if(graph.compact) {
-          // Phones: one caption above the row names both lines; no left gutter.
+          // Phones: the lane caption sits above the quota row; no left gutter.
           assert.equal(viewportWidth,270);
-          assert.ok(usage.y+usage.height<=graph.phaseControls[0].y,'说明在数字行上方');
-          assert.equal(graph.headings.some(heading=>heading.kind==='opportunity'),false);
+          assert.ok(quota.y+quota.height<=graph.dayAxis.quotaTopY,'名称在额度行上方');
           continue;
         }
-        assert.equal(usage.x,0,'用量名称位于时间轴外的左侧公共栏');
-        assert.ok(usage.width<=graph.dayAxis.leftPadding);
-        near(usage.y+usage.height/2,(graph.usageScale.ticks.at(-1).y+graph.usageScale.zeroY)/2);// 名称居中对着自己那一行
-        assert.equal(graph.headings.some(heading=>heading.kind==='opportunity'),false,'不再单列重置概率行');
+        assert.equal(quota.x,0,'额度名称位于时间轴外的左侧公共栏');
+        assert.ok(quota.width<=graph.dayAxis.leftPadding);
+        near(quota.y+quota.height/2,(graph.dayAxis.quotaTopY+graph.dayAxis.centerY)/2);// 名称居中对着自己那一行
         assert.equal(new Set(graph.phaseControls.map(phase=>phase.y)).size,1,'用量说明共用一条水平线');
         for(const [index,phase] of graph.phaseControls.entries()) {
-          near(phase.y+phase.labelHeight+14,graph.dayAxis.quotaTopY);
+          near(phase.y+phase.labelHeight,graph.dayAxis.quotaTopY);
           assert.equal(phase.quotaLabel,true);
           assert.ok(phase.x>=0&&phase.x+phase.width<=graph.width);
           if(index) {
@@ -135,7 +134,8 @@ test('每段用量统一紧贴绿色额度上沿；假设、备用、窄屏均�
         }
         const html=renderStrategyTree(graph,String);
         assert.match(html,/data-quota-label/);
-        assert.equal([...html.matchAll(/data-lane-label="usage"/g)].length,1);
+        assert.equal([...html.matchAll(/data-lane-label="usage"/g)].length,0);
+        assert.equal([...html.matchAll(/data-lane-label="consumption"/g)].length,1);
         assert.equal([...html.matchAll(/data-lane-label="opportunity"/g)].length,0);
         // Phases too narrow for a figure (< 36px) show none instead of overlapping.
         const values=[...html.matchAll(/<strong class="phase-(?:advice|budget)">([^<]+)<\/strong>/g)].map(match=>match[1]);
@@ -371,30 +371,22 @@ test('额外 reset 只显示各日累计概率，不跳日、不画假想100%补
   assert.equal(layoutStrategyTree(planUsagePath({input:flexInput,now:flexNow,timeZone})).forecastLayout.length,0);
 });
 
-test('每天一根用量柱：同一天不出现两根，落在当天格内，按固定 0-100% 刻度从额度区顶边往上，合计等于计划用量',()=>{
+test('额度一行：固定 0-100 刻度、每 6 小时一级台阶、不写额度数字，用量看台阶下降',()=>{
   for(const extra of [{},{heldResetIndices:[0]},{intensityMultiplier:1.5}])
     for(const viewportWidth of [270,640,1400]) {
-      const result=plan(extra);
-      const graph=layoutStrategyTree(result,{viewportWidth});
-      const days=graph.dayAxis.days;
-      const dayOf=bar=>days.findIndex(day=>bar.startAt===day.startAt);
-      assert.equal(new Set(graph.dailyBars.map(dayOf)).size,graph.dailyBars.length,'每天最多一根');
-      for(const bar of graph.dailyBars) {
-        const day=days[dayOf(bar)];
-        assert.ok(bar.x>=day.x-1e-6&&bar.x+bar.width<=day.x+day.width+1e-6,'柱子不越出当天');
-        assert.ok(bar.y+bar.height<=graph.dayAxis.quotaTopY,'柱子在额度区上方');
+      const graph=layoutStrategyTree(plan(extra),{viewportWidth});
+      const {quotaTopY,centerY,dayWidth}=graph.dayAxis;
+      assert.deepEqual(graph.quotaScale.ticks.map(tick=>tick.percent),[0,20,40,60,80,100],'刻度固定，不随计划变化');
+      near(graph.quotaScale.ticks.at(-1).y,quotaTopY);near(graph.quotaScale.ticks[0].y,centerY);
+      for(const band of graph.funnel.bands) {
+        assert.deepEqual(band.labels,[],'有刻度就不再标额度数字');
+        if(!['usage','pause'].includes(band.kind))continue;
+        const xs=[band.x1,...[...band.path.matchAll(/H ([\d.]+)/g)].map(match=>+match[1])];
+        for(let i=1;i<xs.length;i++)assert.ok(xs[i]-xs[i-1]<=dayWidth/4+1e-3,'每级台阶不超过 6 小时');
       }
-      const planned=result.phasePlans.reduce((sum,phase)=>sum+phase.dailyPercent*(phase.endHours-Math.max(0,phase.startHours))/24,0);
-      const shown=graph.dailyBars.reduce((sum,bar)=>sum+bar.percent,0);
-      assert.ok(Math.abs(planned-shown)<=.06*graph.dailyBars.length+.1,`${shown} != ${planned}`);
-      assert.deepEqual(graph.usageScale.ticks.map(tick=>tick.percent),[0,25,50,75,100],'刻度固定，不随计划变化');
-      const zero=graph.usageScale.zeroY,full=graph.usageScale.ticks.at(-1).y;
-      assert.ok(zero<graph.dayAxis.quotaTopY,'0% 线在额度区上方，留出间隔');
-      assert.ok(full<zero,'100% 在上方');
-      for(const bar of graph.dailyBars) {
-        assert.ok(Math.abs(bar.y+bar.height-zero)<1e-6,'每天都从 0% 线往上');
-        if(bar.percent>=1)assert.ok(Math.abs(bar.height-(zero-full)*Math.min(100,bar.percent)/100)<.1,'高度按固定刻度');
-      }
-      assert.match(renderStrategyTree(graph,String),/class="sr-only"><div class="phase-controls"/,'读屏仍能读到各段用量');
+      const html=renderStrategyTree(graph,String);
+      assert.doesNotMatch(html,/class="quota-label" /,'额度区下方不写百分比');
+      assert.match(html,/class="quota-label usage-tick"[^>]*>100<\/text>/,'刻度只写数字，不带百分号');
     }
 });
+

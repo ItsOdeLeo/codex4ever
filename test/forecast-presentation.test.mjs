@@ -106,8 +106,9 @@ test('三个轨道名称统一放在独立最左栏，分别与两条分布及�
     }
     const consumption=graph.headings.find(item=>item.kind==='consumption');
     if(graph.compact) {
-      // Phones drop the quota caption: the band and its percentages say it.
-      assert.equal(consumption,undefined);
+      // Phones: the quota caption sits above its row, like the curve names.
+      assert.equal(consumption.x,graph.dayAxis.leftPadding);
+      assert.ok(consumption.y+consumption.height<=graph.dayAxis.quotaTopY);
       continue;
     }
     assert.equal(consumption.x,0);
