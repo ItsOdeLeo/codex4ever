@@ -491,3 +491,5 @@ body[data-loading] .page-loading {position:absolute;inset:0;z-index:1;display:fl
 .share-frame .forecast-more,.share-frame .forecast-horizons .horizon-long {display:none}
 .share-frame .forecast-horizons .horizon-short {display:inline}
 .share-frame .brand-stamp {position:static;margin-top:14px}
+/* Keep pace on little or no history: one quiet line above the timeline. */
+.pace-note {margin:0 0 10px;font-size:12px;line-height:18px;color:var(--muted)}

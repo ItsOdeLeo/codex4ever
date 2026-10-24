@@ -230,6 +230,12 @@ function renderForecastCard(graph=null) {
   $('#forecast').innerHTML = `<div class="forecast-control" ${planningPrediction ? `data-forecast-48-probability="${planningPrediction.next48Probability}"` : ''}><span>${t('额外 reset 预测')}</span></div>${forecastSummary}${shareControl()}`;
 }
 
+// Keep pace is the one strategy built on the current pace, so only it notes
+// when that pace rests on under an hour of use, or on none yet.
+const paceNote=result=>result.usageStrategy!=='balanced' ? ''
+  : result.shortHistory ? `<p class="pace-note">${t('本轮使用不到 1 小时，当前速度可能不具代表性。')}</p>`
+    : result.evenSplit ? `<p class="pace-note">${t('本轮还没用过额度，先按平均分配到正常刷新来算。')}</p>` : '';
+
 function renderResult(availableWidth=$('#result').clientWidth) {
   const result=planner.result;
   if(!result)return;
@@ -254,6 +260,7 @@ function renderResult(availableWidth=$('#result').clientWidth) {
   const policyData=result.recommendation ? ` data-policy-search="${result.recommendation.method}"${result.recommendation.primary ? ' data-plan-basis="predicted-extra-resets-first"' : ''}` : '';
   $('#result').innerHTML = `<section class="strategy-panel" aria-label="${t('用量计划')}"${policyData} style="--panel-padding:${workspace.panelPadding}px">
     ${result.recommendation&&!result.recommendation.primary ? `<div class="timeline-toolbar"><span>${t('假设没有额外 reset')}</span></div>` : ''}
+    ${paceNote(result)}
     ${renderStrategyTree(graph, escape)}
     </section>`;
   $('#method').innerHTML=renderForecastMethod({source:forecastSource,prediction:planningPrediction,result,timeZone,locale:language},escape);

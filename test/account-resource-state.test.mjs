@@ -26,7 +26,7 @@ test('API 快照的刷新、到期时间和窗口平均值保持精确，不经�
   assert.deepEqual(raw,before);
 });
 
-test('缺少备用到期时间时不伪造期限，新窗口缺少消耗时按平均分配并注明',()=>{
+test('缺少备用到期时间时不伪造期限；新窗口没用过时平均分配，用了不到 1 小时用实际速度并注明',()=>{
   const raw=snapshot();raw.bankedResets=[{expiresAt:null}];
   const base=accountResourceState(raw,{now,timeZone});
   assert.equal(base.resets.length,0);assert.equal(base.resourceWarnings.length,1);
@@ -35,11 +35,13 @@ test('缺少备用到期时间时不伪造期限，新窗口缺少消耗时按�
   assert.equal(fresh.available,true);
   assert.equal(fresh.paceSource,'even-split');
   assert.ok(Math.abs(fresh.averagePercentPerDay-100*24/fresh.normalResetInHours)<1e-9);
-  // Codex reports whole percents and needs an hour of history: 97% left 58
-  // minutes after a refill is still planned, by the same even split.
+  // 97% left 58 minutes after a refill: the real pace is used, flagged as
+  // under an hour so keep pace can say it may not be representative.
   raw.weekly={remainingPercent:97,periodHours:168,resetAt:new Date(now.getTime()+167.03*3600000).toISOString()};
   const early=planUsagePath({usageSnapshot:raw,now,timeZone});
-  assert.equal(early.available,true);assert.equal(early.paceSource,'even-split');
+  assert.equal(early.available,true);assert.equal(early.paceSource,'normal-window-average');
+  assert.equal(early.shortHistory,true);
+  assert.ok(Math.abs(early.averagePercentPerDay-3/(0.97/24))<1e-6);
 });
 
 test('过期快照、非周额度、禁用账户和错误时区均明确失败',()=>{

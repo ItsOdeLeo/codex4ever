@@ -167,3 +167,14 @@ test('精简输出保留真实覆盖状态，英文未知库存提示不夹带�
   assert.match(text,/history is cached/);
   assert.doesNotMatch(text,/[\u3400-\u9fff]/);
 });
+
+test('本轮用了不到 1 小时：照常用实际速度规划，只提醒速度可能不具代表性',()=>{
+  const s=snapshot();s.weekly={remainingPercent:97,periodHours:168,
+    resetAt:new Date(now.getTime()+167.03*HOUR).toISOString()};
+  for(const language of ['en','zh-CN']) {
+    const r=plan({usageSnapshot:s,prediction:null}),a=mcpUsageAdvice(r,{usageSnapshot:s});
+    assert.equal(a.status,'ready');
+    assert.equal(a.currentUsage.shortHistory,true);
+    assert.match(renderMcpUsageAdvice(a,{language}),language==='en' ? /may not be representative/ : /可能不具代表性/);
+  }
+});

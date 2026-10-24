@@ -24,13 +24,14 @@ export function accountResourceState(snapshot,{now,timeZone,prediction=null}) {
     warnings.push('备用 reset 数量或到期详情不完整；只纳入已确认到期时间的库存');
   if(known.length>8)warnings.push('只模拟最早到期的八个备用 reset');
   const elapsedDays=(168-horizon)/24,used=100-remaining;
-  // Nothing used yet this cycle (often right after a refill): plan from an
-  // even split of what is left until the normal refresh, as the website does.
-  const observed=elapsedDays>=1/24&&used>0 ? used/elapsedDays : null;
+  // Same rule as the website: any use gives a pace, flagged under an hour;
+  // nothing used yet plans from an even split until the normal refresh.
+  const observed=elapsedDays>0&&used>0 ? used/elapsedDays : null;
+  const shortHistory=used>0&&elapsedDays<1/24;
   const evenSplit=observed===null&&remaining>0;
   const average=observed??(evenSplit ? remaining*24/horizon : null);
   return {now:now.toISOString(),timeZone,remainingPercent:remaining,elapsedDays,usedPercent:used,
-    averagePercentPerDay:average,evenSplit,normalResetInHours:horizon,normalResetAt:new Date(resetAt).toISOString(),
+    averagePercentPerDay:average,evenSplit,shortHistory,normalResetInHours:horizon,normalResetAt:new Date(resetAt).toISOString(),
     resets:known.slice(0,8),credits:{balance:0,creditsPerPercent:null,included:false},
     predictionEnabled:prediction!==null,available:average!==null,
     ...(!average ? {reason:'本轮还没有可计算的平均消耗，暂时无法估计用完日期。'} : {}),

@@ -18,7 +18,7 @@ export function mcpUsageAdvice(result,{prediction=null,usageSnapshot=null,source
       bankedCount:usageSnapshot ? usageSnapshot.bankedResetCount : result.resets.length,
       knownBankDeadlines:result.resets.map(reset=>reset.expiresAt),
       inventoryComplete:usageSnapshot?.bankedResetDetailsComplete??true},
-    currentUsage:{dailyPercent:rate,source:result.paceSource??'normal-window-average',
+    currentUsage:{dailyPercent:rate,source:result.paceSource??'normal-window-average',shortHistory:!!result.shortHistory,
       depletionAt:rate>0&&remaining*24/rate<normalHours-EPS ? at(remaining*24/rate) : null},
     recommendation:null,stages:[],contingency:null,
     forecast:{enabled:!!prediction,calibrated:prediction?.calibrated===true,sourceStatus,
@@ -120,12 +120,13 @@ export function renderMcpUsageAdvice(advice,{language='en'}={}) {
   // Right after a refill there is no pace yet: say the plan starts from an
   // even split, never present it as the user's measured consumption.
   const source=advice.currentUsage.source;
-  if(advice.currentUsage.dailyPercent!==null)rows.push(source==='even-split' ? zh
+  if(advice.currentUsage.dailyPercent!==null)rows.push(source==='even-split'&&!advice.currentUsage.shortHistory ? zh
     ? `本轮刚开始，还没有你的真实用量：先按剩余额度平均分到正常刷新前，约 ${p(advice.currentUsage.dailyPercent)} / 天；用一段时间后再规划会改用实际速度。`
     : `This window has just started, so there is no measured pace yet: the plan starts from an even split of the remaining quota until normal refresh, about ${p(advice.currentUsage.dailyPercent)} / day. Plan again after some use to switch to your actual pace.`
-    : zh
-    ? `当前日均消耗 ${p(advice.currentUsage.dailyPercent)}（${source==='normal-window-average' ? '本轮窗口平均' : '提供的估计'}）。`
-    : `Current daily consumption ${p(advice.currentUsage.dailyPercent)} (${source==='normal-window-average' ? 'window average' : 'provided estimate'}).`);
+    : (zh
+    ? `当前日均消耗 ${p(advice.currentUsage.dailyPercent)}（${source==='normal-window-average' ? '本轮窗口平均' : source==='even-split' ? '剩余额度平均分配' : '提供的估计'}）。`
+    : `Current daily consumption ${p(advice.currentUsage.dailyPercent)} (${source==='normal-window-average' ? 'window average' : source==='even-split' ? 'even split of the remaining quota' : 'provided estimate'}).`)
+      +(advice.currentUsage.shortHistory ? zh ? '本轮使用不到 1 小时，这个速度可能不具代表性。' : ' Less than an hour into this window, so this pace may not be representative.' : ''));
   if(advice.basis==='conditional-forecast-preview') {
     const times=(advice.forecastAlternative?.assumedResetTimes??[]).map(date).join(zh ? '、' : ' and ');
     rows.push(zh ? `本计划计入了较有把握的额外 reset（${times}，放在保守时刻）；若届时未发生，按下方未发生时的安排。`
