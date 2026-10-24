@@ -165,23 +165,14 @@ export function layoutTimeStrategy(result, { prediction = null, viewportWidth,di
   for(const phase of phaseControls)Object.assign(phase,{labelHeight,quotaAnchorY:centerY-quotaThickness});
   const funnel = quotaFunnelGeometry(result.milestones, { centerY, xAtHours: axis.xAtHours,
     maxThickness:quotaThickness,terminalWidth: 16,restPeriods,shape:'area' });
-  // The quota slope as fine steps, every six local hours: each step holds
-  // what is left at its start; a refill steps up. The fixed scale reads off
-  // how much each step uses. Quota values and refill times are unchanged.
+  // The quota stays a continuous slope on a fixed 0-100 scale; the scale
+  // lines read off what is left, the summary line above gives daily use.
   const quotaY=quota=>coordinate(centerY-quotaThickness*quota/100);
-  const stepCuts=axis.days.flatMap(day=>[0,1,2,3].map(part=>day.x+day.width*part/4));
   const quotaScale={x1:axis.leftPadding,x2:axis.width-axis.padding,
     // Labels sit in the lane gutter beside the axis; phones have none, so right.
     labelX:compact ? axis.width-axis.padding+4 : axis.leftPadding-6,labelAnchor:compact ? 'start' : 'end',
     ticks:[0,20,40,60,80,100].map(percent=>({percent,y:Number(quotaY(percent)),label:true}))};
   for(const band of funnel.bands)band.labels=[];
-  for(const band of funnel.bands.filter(band=>['usage','pause'].includes(band.kind)&&band.x2>band.x1)) {
-    const cuts=stepCuts.filter(x=>x>band.x1+1e-6&&x<band.x2-1e-6);
-    const at=x=>band.startQuota+(band.endQuota-band.startQuota)*(x-band.x1)/(band.x2-band.x1);
-    band.path=[band.x1,...cuts].reduce((path,x,index,starts)=>
-      `${path} V ${quotaY(at(x))} H ${coordinate(starts[index+1]??band.x2)}`,`M ${coordinate(band.x1)} ${coordinate(centerY)}`)
-      +` V ${coordinate(centerY)} Z`;
-  }
   // Use the refills actually drawn, including assumed extra resets. A refill
   // at depletion is one event to present, not an additional outage warning.
   const refillTimes=new Set(funnel.refills.filter(refill=>refill.after>0).map(refill=>refill.at));

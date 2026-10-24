@@ -97,7 +97,7 @@ test('扫描实际输出：第一次／第二次假设、备用及正常补充�
   }
 });
 
-test('只剩额度一行：名称居中、刻度固定、阶梯底边水平；假设、备用、窄屏均不把文字上下分行',()=>{
+test('只剩额度一行：名称居中、刻度固定、底边水平；假设、备用、窄屏均不把文字上下分行',()=>{
   const origin=new Date('2026-10-18T12:00:00Z'),at=hours=>new Date(origin.getTime()+hours*3600000).toISOString();
   const prediction={todayEndHours:10,todayProbability:.1,laterGivenNoReset:.2,next48Probability:.28,
     evidence:{dailyFrequency:.1},
@@ -153,13 +153,6 @@ test('只剩额度一行：名称居中、刻度固定、阶梯底边水平；�
         assert.equal(graph.funnel.shape,'area');
         for(const band of graph.funnel.bands) {
           const base=graph.dayAxis.centerY;
-          if(['usage','pause'].includes(band.kind)&&band.x2>band.x1) {
-            // Day steps: start and end on the baseline, never dip below it.
-            const c=value=>Number(value.toFixed(3));
-            assert.ok(band.path.startsWith(`M ${c(band.x1)} ${c(base)}`)&&band.path.endsWith(` V ${c(base)} Z`),'每段底边水平，只有上边缘随余额按天下降');
-            for(const [,y] of band.path.matchAll(/V ([\d.]+)/g))assert.ok(+y<=base+1e-6);
-            continue;
-          }
           const expectedBottom=`L ${band.x2} ${Number(base.toFixed(6))} L ${band.x1} ${Number(base.toFixed(6))} Z`;
           assert.ok(band.path.endsWith(expectedBottom),'每段底边水平，只有上边缘随余额下降');
         }
@@ -371,18 +364,15 @@ test('额外 reset 只显示各日累计概率，不跳日、不画假想100%补
   assert.equal(layoutStrategyTree(planUsagePath({input:flexInput,now:flexNow,timeZone})).forecastLayout.length,0);
 });
 
-test('额度一行：固定 0-100 刻度、每 6 小时一级台阶、不写额度数字，用量看台阶下降',()=>{
+test('额度一行：固定 0-100 刻度、不写额度数字，用量看斜线下降',()=>{
   for(const extra of [{},{heldResetIndices:[0]},{intensityMultiplier:1.5}])
     for(const viewportWidth of [270,640,1400]) {
       const graph=layoutStrategyTree(plan(extra),{viewportWidth});
-      const {quotaTopY,centerY,dayWidth}=graph.dayAxis;
+      const {quotaTopY,centerY}=graph.dayAxis;
       assert.deepEqual(graph.quotaScale.ticks.map(tick=>tick.percent),[0,20,40,60,80,100],'刻度固定，不随计划变化');
       near(graph.quotaScale.ticks.at(-1).y,quotaTopY);near(graph.quotaScale.ticks[0].y,centerY);
       for(const band of graph.funnel.bands) {
         assert.deepEqual(band.labels,[],'有刻度就不再标额度数字');
-        if(!['usage','pause'].includes(band.kind))continue;
-        const xs=[band.x1,...[...band.path.matchAll(/H ([\d.]+)/g)].map(match=>+match[1])];
-        for(let i=1;i<xs.length;i++)assert.ok(xs[i]-xs[i-1]<=dayWidth/4+1e-3,'每级台阶不超过 6 小时');
       }
       const html=renderStrategyTree(graph,String);
       assert.doesNotMatch(html,/class="quota-label" /,'额度区下方不写百分比');

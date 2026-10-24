@@ -236,6 +236,26 @@ const paceNote=result=>result.usageStrategy!=='balanced' ? ''
   : result.shortHistory ? `<p class="pace-note">${t('本轮使用不到 1 小时，当前速度可能不具代表性。')}</p>`
     : result.evenSplit ? `<p class="pace-note">${t('本轮还没用过额度，先按平均分配到正常刷新来算。')}</p>` : '';
 
+// The plan in one line: each stretch of equal daily use, once.
+function planSummary(result) {
+  const day=value=>new Intl.DateTimeFormat(uiLocale(language),{timeZone,month:language==='zh-CN' ? 'numeric' : 'short',day:'numeric'})
+    .format(new Date(value)).replace(/月/,'/').replace(/日/,'');
+  const stretches=[];
+  for(const phase of result.phasePlans??[]) {
+    const kind=phase.plannedRest ? 'rest' : phase.dailyPercent>0.05 ? 'use' : 'out';
+    const percent=Number(phase.dailyPercent.toFixed(1)),last=stretches.at(-1);
+    if(last&&last.kind===kind&&(kind!=='use'||last.percent===percent))last.endAt=phase.endAt;
+    else stretches.push({kind,percent,startAt:phase.startAt,endAt:phase.endAt});
+  }
+  if(!stretches.length)return '';
+  const items=stretches.slice(0,5).map(({kind,percent,startAt,endAt})=>{
+    const from=day(startAt),to=day(Date.parse(endAt)-1),span=from===to ? from : `${from}–${to}`;
+    return kind==='rest' ? t('{span} 不用',{span}) : kind==='out' ? t('{span} 额度用完，等补满',{span})
+      : t('{span} 每天 {percent}%',{span,percent});
+  });
+  return `<p class="plan-summary">${escape(items.join(' · ')+(stretches.length>5 ? ' …' : ''))}</p>`;
+}
+
 function renderResult(availableWidth=$('#result').clientWidth) {
   const result=planner.result;
   if(!result)return;
@@ -261,6 +281,7 @@ function renderResult(availableWidth=$('#result').clientWidth) {
   $('#result').innerHTML = `<section class="strategy-panel" aria-label="${t('用量计划')}"${policyData} style="--panel-padding:${workspace.panelPadding}px">
     ${result.recommendation&&!result.recommendation.primary ? `<div class="timeline-toolbar"><span>${t('假设没有额外 reset')}</span></div>` : ''}
     ${paceNote(result)}
+    ${planSummary(result)}
     ${renderStrategyTree(graph, escape)}
     </section>`;
   $('#method').innerHTML=renderForecastMethod({source:forecastSource,prediction:planningPrediction,result,timeZone,locale:language},escape);

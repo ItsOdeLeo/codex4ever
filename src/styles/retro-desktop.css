@@ -495,3 +495,5 @@ body[data-loading] .page-loading {position:absolute;inset:0;z-index:1;display:fl
 .share-frame .brand-stamp {position:static;margin-top:14px}
 /* Keep pace on little or no history: one quiet line above the timeline. */
 .pace-note {margin:0 0 10px;font-size:12px;line-height:18px;color:var(--muted)}
+/* The plan in one line above the timeline. */
+.plan-summary {margin:0 0 12px;font-size:13px;line-height:20px;color:var(--ink)}
